@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stock_mate_project/View/Screens/App/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Enter_OTB_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
@@ -34,8 +35,9 @@ class MyApp extends StatelessWidget {
           page: () => ResetPasswordPage(),
         ),
         GetPage(name: MainPage().pageName, page: () => MainPage()),
+        GetPage(name: DepartmentHeadsMainPage().pageName, page: () => DepartmentHeadsMainPage()),
       ],
-      initialRoute: SplashViewPage().pageName,
+      initialRoute: DepartmentHeadsMainPage().pageName,
     );
   }
 }

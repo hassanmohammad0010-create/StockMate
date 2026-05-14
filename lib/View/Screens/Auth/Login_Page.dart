@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
+import 'package:stock_mate_project/View/Screens/App/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Confirm_Account_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
@@ -98,7 +99,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         SizedBox(height: 16),
                         CustomDropDown(
-                          itemList: ['asd'],
+                          itemList: ['رئيس قسم','مدير المشفى','رئيس لجنة الشراء'],
                           hintText: 'الهوية',
                           icon: Icon(Icons.person_2_outlined, size: 32),
                           onChanched: (data) {},
@@ -124,7 +125,8 @@ class LoginPage extends StatelessWidget {
                           tital: 'تسجيل الدخول',
                           onTap: () {
                             if (loginPageKey.currentState!.validate()) {}
-                            Get.offNamed(MainPage().pageName);
+                            // Get.offNamed(MainPage().pageName);
+                            Get.offNamed(DepartmentHeadsMainPage().pageName);
                           },
                         ),
                         SizedBox(height: 8),
