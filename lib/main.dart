@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Stock Mate',
       getPages: [
         GetPage(name: SplashViewPage().pageName, page: () => SplashViewPage()),
         GetPage(name: LoginPage().pageName, page: () => LoginPage()),
