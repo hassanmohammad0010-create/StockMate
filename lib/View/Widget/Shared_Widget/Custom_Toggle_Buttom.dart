@@ -1,8 +1,11 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 
+// ignore: must_be_immutable
 class CustomToggleButtom extends StatelessWidget {
   CustomToggleButtom({super.key, required this.first, required this.second});
   // final ToggleController controller = Get.put(ToggleController());

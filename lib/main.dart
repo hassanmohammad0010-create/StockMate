@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           page: () => CompletedRequestPage(),
         ),
       ],
-      initialRoute: SplashViewPage().pageName,
+      initialRoute: DepartmentHeadsMainPage().pageName,
     );
   }
 }

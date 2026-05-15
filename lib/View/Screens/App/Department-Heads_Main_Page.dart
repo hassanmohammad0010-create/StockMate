@@ -1,8 +1,9 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Department_Heads_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Department_Heads_Orders_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Department_Heads_Home_Page.dart';
 
 class DepartmentHeadsMainPage extends StatelessWidget {
   const DepartmentHeadsMainPage({super.key});
@@ -14,8 +15,6 @@ class DepartmentHeadsMainPage extends StatelessWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: constColor,
-
         appBar: AppBar(
           toolbarHeight: MediaQuery.of(context).size.height * 0.1,
           actions: [
@@ -28,7 +27,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                     size: 28,
                   ),
                   onPressed: () {
-                    // TODO: فتح صفحة الإشعارات
+                    // fTODO: فتح صفحة الإشعارات
                   },
                 ),
                 // نقطة حمراء تدل على وجود إشعارات جديدة
@@ -140,9 +139,9 @@ class DepartmentHeadsMainPage extends StatelessWidget {
         body: TabBarView(
           children: [
             DepartmentHeadsHomePage(),
-            Scaffold(),
+            Scaffold(backgroundColor: Color(0xFFF4F6FA)),
             DepartmentOrdersPage(),
-            Scaffold(),
+            SettingPage(),
           ],
         ),
       ),

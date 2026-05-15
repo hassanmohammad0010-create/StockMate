@@ -3,9 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
-class CustomHeadContainer extends StatelessWidget {
-  const CustomHeadContainer({super.key, required this.empName});
-  final String empName;
+class StatusBanner extends StatelessWidget {
+  const StatusBanner({
+    super.key,
+    required this.text,
+    required this.icon,
+    required this.color,
+  });
+
+  final String text;
+  final IconData icon;
+  final Color color;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +38,7 @@ class CustomHeadContainer extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.09,
               height: MediaQuery.of(context).size.height * 0.07,
               decoration: BoxDecoration(
-                color: constBlue,
+                color: color,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -41,10 +50,12 @@ class CustomHeadContainer extends StatelessWidget {
               ),
             ),
             SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+            Icon(icon, color: color),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.02),
             Text(
-              empName,
+              text,
               style: TextStyle(
-                color: constColor,
+                color: color,
                 fontWeight: FontWeight.bold,
                 fontFamily: cairo,
                 fontSize: 18,

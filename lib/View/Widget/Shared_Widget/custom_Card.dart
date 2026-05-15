@@ -1,7 +1,9 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
-  CustomCard({
+  const CustomCard({
     super.key,
     required this.icon,
     required this.number,
@@ -22,10 +24,12 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: sized_box_for_whitespace
     return Container(
       width: MediaQuery.of(context).size.width * 0.48,
       height: MediaQuery.of(context).size.height * 0.15,
       child: Card(
+        color: Colors.white,
         child: Column(
           children: [
             Container(

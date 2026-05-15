@@ -8,6 +8,7 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF4F6FA),
       body: SingleChildScrollView(
         child: Column(
           children: [
