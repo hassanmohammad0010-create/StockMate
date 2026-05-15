@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss_Home_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -43,15 +45,16 @@ class MainPage extends StatelessWidget {
             ),
             const SizedBox(width: 8),
           ],
-          elevation: 10,
+          elevation: 5,
           shadowColor: Colors.black,
           foregroundColor: Colors.white,
           surfaceTintColor: constColor,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "StrokMate",
+                "StockMate",
                 style: TextStyle(
                   fontFamily: lateef,
                   fontSize: 32,
@@ -63,7 +66,7 @@ class MainPage extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: lateef,
                   fontSize: 24,
-                  color: constDarkBlue,
+                  color: constBlue,
                 ),
               ),
               const SizedBox(height: 8),
@@ -71,8 +74,9 @@ class MainPage extends StatelessWidget {
           ),
           backgroundColor: constColor,
           bottom: TabBar(
-            dividerColor: Theme.of(context).cardColor,
-            indicatorColor: Colors.white,
+            indicatorColor: constBlue,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white,
             labelStyle: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -80,50 +84,33 @@ class MainPage extends StatelessWidget {
 
             tabs: [
               Tab(
-                icon: const Icon(Icons.dashboard_sharp, color: Colors.white),
-
+                icon: const Icon(Icons.dashboard_sharp),
                 child: Text(
                   'الرئيسية',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: cairo,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontFamily: cairo, fontSize: 16),
                 ),
               ),
               Tab(
-                icon: const Icon(Icons.inventory_2_sharp, color: Colors.white),
+                icon: const Icon(Icons.inventory_2_sharp),
 
                 child: Text(
                   'المخزون',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: cairo,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontFamily: cairo, fontSize: 16),
                 ),
               ),
               Tab(
-                icon: const Icon(Icons.receipt_long_sharp, color: Colors.white),
+                icon: const Icon(Icons.receipt_long_sharp),
 
                 child: Text(
                   'الطلبات',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: cairo,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontFamily: cairo, fontSize: 16),
                 ),
               ),
               Tab(
-                icon: const Icon(Icons.settings, color: Colors.white),
+                icon: const Icon(Icons.settings),
                 child: Text(
                   'الاعدادات',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: cairo,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontFamily: cairo, fontSize: 16),
                 ),
               ),
             ],
@@ -131,7 +118,7 @@ class MainPage extends StatelessWidget {
         ),
         // drawer: CustomDrawer(),
         body: TabBarView(
-          children: [Scaffold(), Scaffold(), Scaffold(), Scaffold()],
+          children: [HomePage(), Scaffold(), Scaffold(), SettingPage()],
         ),
       ),
     );

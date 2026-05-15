@@ -1,0 +1,162 @@
+import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
+
+class SettingPage extends StatelessWidget {
+  const SettingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2), // لون الظل
+                      blurRadius: 8, // ضبابية الظل
+                      spreadRadius: 1, // انتشار الظل
+                      offset: Offset(0, 0), // اتجاه الظل (x, y)
+                    ),
+                  ],
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'المعلومات الشخصية',
+                      style: TextStyle(
+                        color: constColor,
+                        fontFamily: lateef,
+                        fontSize: 32,
+                      ),
+                    ),
+                    Divider(color: constLightGray, endIndent: 16, indent: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.person),
+                            Text(
+                              'الاسم',
+                              style: TextStyle(
+                                color: constColor,
+                                fontFamily: cairo,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          'الدكتور محمد الاحمد',
+                          style: TextStyle(
+                            color: constGray,
+                            fontFamily: cairo,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(color: constLightGray, endIndent: 16, indent: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.person),
+                            Text(
+                              'البريد الالكتروني',
+                              style: TextStyle(
+                                color: constColor,
+                                fontFamily: cairo,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Flexible(
+                          child: Text(
+                            'hasanmohammad@gmail.com',
+
+                            style: TextStyle(
+                              color: constGray,
+                              fontFamily: cairo,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            CustomListTile(
+              backgroundColor: constLightBlue,
+              description: 'انشاء حساب جديد لموظف',
+              icon: Icons.person,
+              iconColor: constBlue,
+              onTap: () {},
+              title: 'انشاء حساب جديد',
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            CustomListTile(
+              backgroundColor: constLightBlue,
+              description: 'طلب تغيير كلمة مرور الحساب',
+              icon: Icons.password,
+              iconColor: constBlue,
+              onTap: () {},
+              title: 'كلمة المرور',
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            CustomListTile(
+              backgroundColor: constLightBlue,
+              description: 'تقديم ابلاغ',
+              icon: Icons.report,
+              iconColor: constBlue,
+              onTap: () {},
+              title: 'ابلاغ',
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            CustomListTile(
+              backgroundColor: constLightBlue,
+              description: 'تقديم اقتراح',
+              icon: Icons.headphones,
+              iconColor: constBlue,
+              onTap: () {},
+              title: 'اقتراح',
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            CustomListTile(
+              backgroundColor: constLightBlue,
+              description: 'طلب حذف الحساب الشخصي',
+              icon: Icons.delete,
+              iconColor: constBlue,
+              onTap: () {},
+              title: 'حذف الحساب',
+            ),
+
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            CustomListTile(
+              backgroundColor: constLightBlue,
+              description: 'طلب تسجيل خروج من التطبيق',
+              icon: Icons.logout,
+              iconColor: constBlue,
+              onTap: () {},
+              title: 'تسجيل الخروج',
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          ],
+        ),
+      ),
+    );
+  }
+}

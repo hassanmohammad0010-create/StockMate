@@ -23,7 +23,7 @@ class CustomCircle extends StatelessWidget {
           shape: BoxShape.circle,
           gradient: const RadialGradient(
             center: Alignment(-0.2, 0.3), // Adjust gradient center position
-            colors: [constDarkBlue, constColor],
+            colors: [constBlue, constColor],
             stops: [0.4, 1.0],
           ),
           boxShadow: [

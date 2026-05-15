@@ -24,7 +24,7 @@ class SplashViewPage extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  constDarkBlue, // top blue
+                  constBlue, // top blue
                   constColor, // bottom dark navy
                 ],
               ),

@@ -18,7 +18,6 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: Form(
         key: loginPageKey,
         child: SizedBox(
@@ -28,7 +27,7 @@ class LoginPage extends StatelessWidget {
               CustomCircle(
                 xAlignment: -0.2,
                 yAlignment: -1.6,
-                color: constDarkBlue,
+                color: constBlue,
                 size: 0.8,
               ),
               CustomCircle(
@@ -46,7 +45,7 @@ class LoginPage extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.22,
+                  top: MediaQuery.of(context).size.height * 0.24,
                   right: 16,
                 ),
                 child: Column(
@@ -72,95 +71,103 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-              CustomCircle(
-                xAlignment: 0,
-                yAlignment: 3,
-                size: 1.75,
-                color: constColor,
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 5 / 4,
-                  width: MediaQuery.of(context).size.width,
 
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.05,
+              Align(
+                alignment: AlignmentGeometry.bottomCenter,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.58,
+                  decoration: BoxDecoration(
+                    color: constColor,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(8),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'تسجيل الدخول',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 48,
-                            fontFamily: lateef,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 5 / 4,
+                    width: MediaQuery.of(context).size.width,
+
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'تسجيل الدخول',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 48,
+                              fontFamily: lateef,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 16),
-                        CustomDropDown(
-                          itemList: ['asd'],
-                          hintText: 'الهوية',
-                          icon: Icon(Icons.person_2_outlined, size: 32),
-                          onChanched: (data) {},
-                        ),
-                        CustomTextFormFaild(
-                          labelText: 'البريد الالكتروني',
-                          icon: Icon(Icons.email_outlined, size: 32),
-                          onChange: (data) {},
-                          validator: (data) {
-                            return Validation().emailValidate(data!);
-                          },
-                        ),
-                        CustomTextFormFaild(
-                          labelText: 'كلمة المرور',
-                          icon: Icon(Icons.lock_outline, size: 32),
-                          onChange: (data) {},
-                          validator: (data) {
-                            return Validation().passwordValidator(data!);
-                          },
-                        ),
-                        SizedBox(height: 32),
-                        CustomButtom(
-                          tital: 'تسجيل الدخول',
-                          onTap: () {
-                            if (loginPageKey.currentState!.validate()) {}
-                            Get.offNamed(MainPage().pageName);
-                          },
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Get.toNamed(ConfirmAccountPage().pageName);
-                              },
-                              child: Text(
-                                'تأكيد حسابك ؟ ',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontFamily: lateef,
+                          SizedBox(height: 16),
+                          CustomDropDown(
+                            itemList: specialties,
+                            hintText: 'الهوية',
+                            icon: Icon(Icons.person_2_outlined, size: 32),
+                            onChanched: (data) {},
+                          ),
+                          CustomTextFormFaild(
+                            labelText: 'البريد الالكتروني',
+                            icon: Icon(Icons.email_outlined, size: 32),
+                            onChange: (data) {},
+                            validator: (data) {
+                              return Validation().emailValidate(data!);
+                            },
+                          ),
+                          CustomTextFormFaild(
+                            labelText: 'كلمة المرور',
+                            icon: Icon(Icons.lock_outline, size: 32),
+                            onChange: (data) {},
+                            validator: (data) {
+                              return Validation().passwordValidator(data!);
+                            },
+                          ),
+                          SizedBox(height: 32),
+                          CustomButtom(
+                            tital: 'تسجيل الدخول',
+                            onTap: () {
+                              if (loginPageKey.currentState!.validate()) {}
+                              Get.offNamed(MainPage().pageName);
+                            },
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(ConfirmAccountPage().pageName);
+                                },
+                                child: Text(
+                                  'تأكيد حسابك ؟ ',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontFamily: lateef,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: () {
-                                Get.toNamed(ResetPasswordPage().pageName);
-                              },
-                              child: Text(
-                                'هل نسيت كلمة المرور؟',
-                                style: TextStyle(
-                                  color: constDarkBlue,
-                                  fontSize: 24,
-                                  fontFamily: lateef,
+                              SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(ResetPasswordPage().pageName);
+                                },
+                                child: Text(
+                                  'هل نسيت كلمة المرور؟',
+                                  style: TextStyle(
+                                    color: constBlue,
+                                    fontSize: 24,
+                                    fontFamily: lateef,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
