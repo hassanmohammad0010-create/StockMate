@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
