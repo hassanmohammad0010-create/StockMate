@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss_Home_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Boss_Home_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 
 class MainPage extends StatelessWidget {
@@ -118,7 +119,12 @@ class MainPage extends StatelessWidget {
         ),
         // drawer: CustomDrawer(),
         body: TabBarView(
-          children: [HomePage(), Scaffold(), Scaffold(), SettingPage()],
+          children: [
+            BossHomePage(),
+            InventoryPage(),
+            Scaffold(),
+            SettingPage(),
+          ],
         ),
       ),
     );

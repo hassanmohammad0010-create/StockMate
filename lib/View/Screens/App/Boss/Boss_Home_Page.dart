@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Inventory_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Entry_And_Exit_Report_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Request_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Purchasing_Request_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Request_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Main_Page_Card.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class BossHomePage extends StatelessWidget {
+  const BossHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +33,9 @@ class HomePage extends StatelessWidget {
                   icons: Icons.check,
                   iconBackgroundColor: constlightGreen,
                   iconColor: constGreen,
+                  onTap: () {
+                    Get.toNamed(CompletedRequestPage().pageName);
+                  },
                 ),
                 CustomMainPageCard(
                   requestNum: 9,
@@ -32,6 +43,9 @@ class HomePage extends StatelessWidget {
                   icons: Icons.timelapse,
                   iconBackgroundColor: constLightBlue,
                   iconColor: constBlue,
+                  onTap: () {
+                    Get.toNamed(UnderImplementationRequestPage().pageName);
+                  },
                 ),
                 CustomMainPageCard(
                   requestNum: 5,
@@ -39,6 +53,9 @@ class HomePage extends StatelessWidget {
                   icons: Icons.warning_amber_rounded,
                   iconBackgroundColor: constLightOrange,
                   iconColor: constOrange,
+                  onTap: () {
+                    Get.toNamed(NesseryDepartmentRequestPage().pageName);
+                  },
                 ),
                 CustomMainPageCard(
                   requestNum: 4,
@@ -46,6 +63,9 @@ class HomePage extends StatelessWidget {
                   icons: Icons.warning_amber_rounded,
                   iconBackgroundColor: constLightOrange,
                   iconColor: constOrange,
+                  onTap: () {
+                    Get.toNamed(NesseryPurchasingRequestPage().pageName);
+                  },
                 ),
               ],
             ),
@@ -55,7 +75,7 @@ class HomePage extends StatelessWidget {
             Align(
               alignment: AlignmentGeometry.centerRight,
               child: Padding(
-                padding: const EdgeInsets.only(right: 16),
+                padding: const EdgeInsets.only(right: 16, bottom: 4),
                 child: Text(
                   'التقارير والادوات',
                   style: TextStyle(
@@ -72,7 +92,9 @@ class HomePage extends StatelessWidget {
               description: 'جرد شامل للمواد والكميات المتوفرة',
               icon: Icons.bar_chart_rounded,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(ElectronicInventoryPage().pageName);
+              },
               title: 'تقرير جرد الكتروني',
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -81,7 +103,9 @@ class HomePage extends StatelessWidget {
               description: 'سجل  لعمليات دخول وخروج المواد',
               icon: Icons.fact_check_rounded,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(EntryAndExitReportPage().pageName);
+              },
               title: 'تقرير عمليات الدخول والخروج',
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -90,7 +114,9 @@ class HomePage extends StatelessWidget {
               description: 'عرض كامل تفاصيل الموردين ',
               icon: Icons.shopping_cart,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(SuppliersPage().pageName);
+              },
               title: 'الموردين',
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),

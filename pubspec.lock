@@ -91,6 +91,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_toggle_button:
+    dependency: "direct main"
+    description:
+      name: flutter_toggle_button
+      sha256: "26c1d4c6f054c9ffa91389728d8f662e05ed026e9701baf6d63cfe2e635b4c07"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   get:
     dependency: "direct main"
     description:
@@ -99,6 +107,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.3"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.2"
   leak_tracker:
     dependency: transitive
     description:

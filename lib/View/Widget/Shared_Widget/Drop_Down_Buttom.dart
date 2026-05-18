@@ -73,7 +73,7 @@ class CustomDropDown extends StatelessWidget {
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
-          contentPadding: const EdgeInsets.all(22),
+          contentPadding: const EdgeInsets.all(20),
         ),
         hint: Text(
           hintText,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
 // ignore: must_be_immutable
@@ -11,15 +12,16 @@ class CustomTextFormFaild extends StatefulWidget {
   IconButton? suffixIcon;
   String? initialValue;
   int? maxLenght;
-
+  TextEditingController? textEditingController;
   TextInputType? textInputType = TextInputType.text;
-  bool? obscureText = false;
+  bool? obscureText = false, readOnly;
   int? maxLine;
-
+  VoidCallback? onTap;
   CustomTextFormFaild({
     super.key,
     this.maxLine,
     required this.labelText,
+    this.onTap,
     this.icon,
     this.obscureText,
     this.hintText,
@@ -27,8 +29,10 @@ class CustomTextFormFaild extends StatefulWidget {
     required this.onChange,
     required this.validator,
     this.suffixIcon,
+    this.textEditingController,
     this.initialValue,
     this.textInputType,
+    this.readOnly,
   });
 
   @override
@@ -40,6 +44,9 @@ class _CustomTextFormFaildState extends State<CustomTextFormFaild> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: TextFormField(
+        controller: widget.textEditingController,
+        onTap: widget.onTap,
+        readOnly: widget.readOnly ?? false,
         maxLines: widget.obscureText == null ? widget.maxLine : 1,
         maxLength: widget.maxLenght,
         keyboardType: widget.textInputType,

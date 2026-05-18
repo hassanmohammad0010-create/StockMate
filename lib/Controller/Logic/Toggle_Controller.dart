@@ -9,6 +9,7 @@ class ToggleController extends GetxController {
   void onInit() {
     super.onInit();
     pageController = PageController();
+    reset();
   }
 
   @override
@@ -19,7 +20,9 @@ class ToggleController extends GetxController {
 
   void reset() {
     selectedIndex.value = 0;
-    pageController.jumpToPage(0);
+    if (pageController.hasClients) {
+      pageController.jumpToPage(0);
+    }
   }
 
   void changeIndex(int index) {

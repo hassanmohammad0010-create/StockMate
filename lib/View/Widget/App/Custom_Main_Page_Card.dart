@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Completed_Request_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 
 // ignore: must_be_immutable
 class CustomMainPageCard extends StatelessWidget {
@@ -13,19 +13,19 @@ class CustomMainPageCard extends StatelessWidget {
     required this.icons,
     required this.iconBackgroundColor,
     required this.iconColor,
+    required this.onTap,
   });
   Color iconColor, iconBackgroundColor;
   IconData icons;
   final int requestNum;
   final String description;
+  VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       child: GestureDetector(
-        onTap: () {
-          Get.toNamed(CompletedRequestPage().pageName);
-        },
+        onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,

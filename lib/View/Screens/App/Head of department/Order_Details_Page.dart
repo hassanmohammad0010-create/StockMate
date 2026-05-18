@@ -31,6 +31,22 @@ class OrderDetailsPage extends StatelessWidget {
                     CustomDetailsCard(order: order),
                     const SizedBox(height: 16),
                     CustomStatusBanner(order: order),
+                    // Visibility(
+                    //   // visible: order.status == OrderStatus.suspended,
+                    //   child: Row(
+                    //     children: [
+                    //       Container(
+                    //         width: MediaQuery.of(context).size.width * 2 / 3,
+                    //         height: 200,
+                    //         decoration: BoxDecoration(
+                    //           color: constGreen,
+                    //           borderRadius: BorderRadius.circular(8),
+                    //         ),
+                    //         child: Text('26548sko'),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

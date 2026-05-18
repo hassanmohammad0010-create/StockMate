@@ -5,9 +5,10 @@ class CustomNameContainer extends StatelessWidget {
   const CustomNameContainer({
     super.key,
     required this.empName,
-    required this.specializationName,
+    this.specializationName,
   });
-  final String empName, specializationName;
+  final String empName;
+  final String? specializationName;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -57,12 +58,15 @@ class CustomNameContainer extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  Text(
-                    specializationName,
-                    style: TextStyle(
-                      color: constGray,
-                      fontFamily: lateef,
-                      fontSize: 22,
+                  Visibility(
+                    visible: specializationName == null ? false : true,
+                    child: Text(
+                      specializationName!,
+                      style: TextStyle(
+                        color: constGray,
+                        fontFamily: lateef,
+                        fontSize: 22,
+                      ),
                     ),
                   ),
                 ],
@@ -74,52 +78,3 @@ class CustomNameContainer extends StatelessWidget {
     );
   }
 }
-
-
-// Card(
-//         elevation: 5,
-//         child: Stack(
-//           children: [
-//             Container(
-//               alignment: Alignment.centerRight,
-//               // width: MediaQuery.of(context).size.width,
-//               // height: MediaQuery.of(context).size.height * 0.09,
-//               decoration: BoxDecoration(),
-//               child: Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 40),
-//                 child: Column(
-//                   children: [
-//                     Text(
-//                       empName,
-//                       style: TextStyle(
-//                         color: constColor,
-//                         fontFamily: cairo,
-//                         fontSize: 22,
-//                       ),
-//                     ),
-//                     Text(
-//                       specializationName,
-//                       style: TextStyle(
-//                         color: constGray,
-//                         fontFamily: lateef,
-//                         fontSize: 26,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             Align(
-//               alignment: AlignmentGeometry.centerRight,
-//               child: Container(
-//                 width: MediaQuery.of(context).size.width * 0.08,
-//                 height: MediaQuery.of(context).size.height * 0.09,
-//                 decoration: BoxDecoration(
-//                   color: constDarkBlue,
-//                   borderRadius: BorderRadius.circular(8),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),

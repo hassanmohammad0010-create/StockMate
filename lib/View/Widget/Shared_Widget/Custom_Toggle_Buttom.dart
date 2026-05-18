@@ -7,9 +7,14 @@ import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 
 // ignore: must_be_immutable
 class CustomToggleButtom extends StatelessWidget {
-  CustomToggleButtom({super.key, required this.first, required this.second});
+  CustomToggleButtom({
+    super.key,
+    required this.first,
+    required this.second,
+    required this.controller,
+  });
   // final ToggleController controller = Get.put(ToggleController());
-  final ToggleController controller = Get.put(ToggleController());
+  final ToggleController controller;
 
   String first, second;
   @override

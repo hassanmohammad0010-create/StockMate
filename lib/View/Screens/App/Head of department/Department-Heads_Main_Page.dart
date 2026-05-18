@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Department_Heads_Orders_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Department_Heads_Home_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
 
 class DepartmentHeadsMainPage extends StatelessWidget {
   const DepartmentHeadsMainPage({super.key});
