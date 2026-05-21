@@ -2,16 +2,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Priority_Badge.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Status_Badge.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Status_Badge.dart';
 
-class CustomDetailsCard extends StatelessWidget {
+class CustomRecurringDetailsCard extends StatelessWidget {
+  const CustomRecurringDetailsCard({super.key, required this.order});
+
   final Order order;
-
-  const CustomDetailsCard({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
+    // نص التكرار
+    final intervalText = order.recurringInterval != null
+        ? recurringIntervalLabel(order.recurringInterval!)
+        : '---';
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -36,13 +40,14 @@ class CustomDetailsCard extends StatelessWidget {
           _buildDetailRow(
             icon: Icons.grid_view_outlined,
             label: 'النوع',
-            value: order.type,
+            value: order.type, // "دوري"
           ),
           _buildDivider(),
+          // التكرار بدلاً من الأولوية
           _buildDetailRow(
             icon: Icons.bolt_outlined,
-            label: 'الاولوية',
-            valueWidget: PriorityBadge(priority: order.priority),
+            label: 'التكرار',
+            value: intervalText,
           ),
           _buildDivider(),
           _buildDetailRow(
@@ -82,7 +87,6 @@ class CustomDetailsCard extends StatelessWidget {
           Row(
             children: [
               Icon(icon, size: 18, color: const Color(0xFF9CA3AF)),
-
               const SizedBox(width: 6),
               Text(
                 label,

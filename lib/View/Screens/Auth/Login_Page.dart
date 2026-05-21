@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Confirm_Account_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
+import 'package:stock_mate_project/View/Screens/Auth/Enter_Account_Page.dart';
+
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Buttom.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Text_Failed.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Drop_Down_Buttom.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Buttom.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Text_Failed.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Drop_Down_Buttom.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -71,25 +70,22 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-
-              Align(
-                alignment: AlignmentGeometry.bottomCenter,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.58,
-                  decoration: BoxDecoration(
-                    color: constColor,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(8),
-                    ),
-                  ),
+              AnimatedAlign(
+                duration: Duration(milliseconds: 300),
+                alignment: MediaQuery.of(context).viewInsets.bottom > 0
+                    ? Alignment(0, -0.5)
+                    : Alignment(0, -1.2),
+                child: CustomCircle(
+                  xAlignment: 0,
+                  yAlignment: 4.5,
+                  size: 1.88,
+                  color: constColor,
                   child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 5 / 4,
+                    height: MediaQuery.of(context).size.height * 3 / 2,
                     width: MediaQuery.of(context).size.width,
-
                     child: Padding(
                       padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.02,
+                        top: MediaQuery.of(context).size.height * 0.07,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -103,44 +99,48 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 16),
+
                           CustomDropDown(
                             itemList: specialties,
                             hintText: 'الهوية',
                             icon: Icon(Icons.person_2_outlined, size: 32),
                             onChanched: (data) {},
                           ),
+
                           CustomTextFormFaild(
                             labelText: 'البريد الالكتروني',
                             icon: Icon(Icons.email_outlined, size: 32),
                             onChange: (data) {},
-                            validator: (data) {
-                              return Validation().emailValidate(data!);
-                            },
+                            validator: (data) =>
+                                Validation().emailValidate(data!),
                           ),
+
                           CustomTextFormFaild(
                             labelText: 'كلمة المرور',
                             icon: Icon(Icons.lock_outline, size: 32),
                             onChange: (data) {},
-                            validator: (data) {
-                              return Validation().passwordValidator(data!);
-                            },
+                            validator: (data) =>
+                                Validation().passwordValidator(data!),
                           ),
+
                           SizedBox(height: 32),
                           CustomButtom(
                             tital: 'تسجيل الدخول',
                             onTap: () {
                               if (loginPageKey.currentState!.validate()) {}
                               Get.offNamed(MainPage().pageName);
-                              // Get.offNamed(DepartmentHeadsMainPage().pageName);
                             },
                           ),
+
                           SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Get.toNamed(ConfirmAccountPage().pageName);
+                                  Get.to(
+                                    EnterAccountPage(operationName: 'confirm'),
+                                  );
                                 },
                                 child: Text(
                                   'تأكيد حسابك ؟ ',
@@ -154,7 +154,9 @@ class LoginPage extends StatelessWidget {
                               SizedBox(width: 8),
                               GestureDetector(
                                 onTap: () {
-                                  Get.toNamed(ResetPasswordPage().pageName);
+                                  Get.to(
+                                    EnterAccountPage(operationName: 'change'),
+                                  );
                                 },
                                 child: Text(
                                   'هل نسيت كلمة المرور؟',

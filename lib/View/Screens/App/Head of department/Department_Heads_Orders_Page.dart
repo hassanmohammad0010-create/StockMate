@@ -6,8 +6,8 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Order_Details_Page.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Animation_Filter_Chip.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Order_Card.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Animation_Filter_Chip.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Order_Card.dart';
 
 class DepartmentOrdersPage extends StatefulWidget {
   const DepartmentOrdersPage({super.key});

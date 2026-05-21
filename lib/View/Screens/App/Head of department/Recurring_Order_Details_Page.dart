@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Delete_Button.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Head_Card.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Recurring_Details_Card.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Status_Banner.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Recurring_Details_Card.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Status_Banner.dart';
 
 class RecurringOrderDetailsPage extends StatelessWidget {
   final Order order;

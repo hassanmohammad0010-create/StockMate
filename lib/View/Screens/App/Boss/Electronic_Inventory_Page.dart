@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DatePicker_Controller.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Buttom.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Buttom.dart';
 import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Head_Card.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Text_Failed.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Drop_Down_Buttom.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Text_Failed.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Drop_Down_Buttom.dart';
 
 class ElectronicInventoryPage extends StatelessWidget {
   const ElectronicInventoryPage({super.key});

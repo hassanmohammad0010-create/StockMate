@@ -12,7 +12,7 @@ import 'package:stock_mate_project/View/Screens/Auth/Enter_OTB_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Confirm_Account_Page.dart';
+import 'package:stock_mate_project/View/Screens/Auth/Enter_Account_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 
 void main() {
@@ -31,12 +31,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: SplashViewPage().pageName, page: () => SplashViewPage()),
         GetPage(name: LoginPage().pageName, page: () => LoginPage()),
-        GetPage(
-          name: ConfirmAccountPage().pageName,
-          page: () => ConfirmAccountPage(),
-        ),
 
-        GetPage(name: EnterOTBPage().pageName, page: () => EnterOTBPage()),
         GetPage(
           name: ResetPasswordPage().pageName,
           page: () => ResetPasswordPage(),

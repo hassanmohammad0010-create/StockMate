@@ -45,11 +45,11 @@ class CustomRequestContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    title,
+                    'طلب جديد',
                     style: TextStyle(
                       color: constColor,
                       fontFamily: lateef,
-                      fontSize: 26,
+                      fontSize: 28,
                     ),
                   ),
                   Container(
@@ -89,7 +89,7 @@ class CustomRequestContainer extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'الكمية :$amount',
+                    'الضرورة  :',
                     style: TextStyle(
                       color: constGray,
                       fontFamily: lateef,

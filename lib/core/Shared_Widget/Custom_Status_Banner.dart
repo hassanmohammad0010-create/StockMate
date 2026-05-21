@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Reject_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Status_Container.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Reject_Container.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Status_Container.dart';
 
 class CustomStatusBanner extends StatelessWidget {
   final Order order;

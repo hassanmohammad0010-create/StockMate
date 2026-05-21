@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Suppliers_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/custom_Head_Card.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/Shared_Widget/custom_Head_Card.dart';
 
 class SuppliersPage extends StatelessWidget {
   SuppliersPage({super.key});

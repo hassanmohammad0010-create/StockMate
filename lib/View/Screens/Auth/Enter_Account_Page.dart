@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
+import 'package:stock_mate_project/View/Screens/Auth/Enter_OTB_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
 import 'package:stock_mate_project/core/Shared_Widget/Custom_Buttom.dart';
 import 'package:stock_mate_project/core/Shared_Widget/Custom_Text_Failed.dart';
 
-class ResetPasswordPage extends StatelessWidget {
-  ResetPasswordPage({super.key});
-  final String pageName = '/ResetPasswordPage';
-  final GlobalKey<FormState> resetPasswordPageKey = GlobalKey();
+class EnterAccountPage extends StatelessWidget {
+  EnterAccountPage({super.key, required this.operationName});
+  final String pageName = '/EnterAccountPage';
+  final GlobalKey<FormState> confirmAccountKey = GlobalKey();
+  String? email;
+  String operationName;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: resetPasswordPageKey,
+        key: confirmAccountKey,
         child: Stack(
           children: [
-            Image.asset('assets/Image/Reset_Password.png'),
+            Image.asset('assets/Image/Verify_Email.png'),
             AnimatedAlign(
               duration: Duration(milliseconds: 300),
               alignment: MediaQuery.of(context).viewInsets.bottom > 0
@@ -34,7 +36,7 @@ class ResetPasswordPage extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.03,
+                      top: MediaQuery.of(context).size.height * 0.05,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +45,7 @@ class ResetPasswordPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            'اعادة تعيين كلمة المرور',
+                            'البريد الالكتروني',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 32,
@@ -53,9 +55,9 @@ class ResetPasswordPage extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 28),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            'الرجاء ادخال كلمة المرور الجديدة ',
+                            'الرجاء ادخال البريد الالكتروني الخاص بك من اجل رمز التحقق',
                             style: TextStyle(
                               color: constGray,
                               fontSize: 24,
@@ -64,30 +66,31 @@ class ResetPasswordPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
-                        CustomTextFormFaild(
-                          labelText: 'كلمة المرور',
-                          icon: Icon(Icons.lock_outline, size: 32),
-                          onChange: (data) {},
-                          validator: (data) {
-                            return Validation().passwordValidator(data!);
-                          },
-                        ),
-                        CustomTextFormFaild(
-                          labelText: 'تأكيد كلمة المرور',
-                          icon: Icon(Icons.lock_outline, size: 32),
-                          onChange: (data) {},
-                          validator: (data) {
-                            return Validation().passwordValidator(data!);
-                          },
-                        ),
                         SizedBox(height: 32),
+                        CustomTextFormFaild(
+                          labelText: 'البريد الالكتروني',
+                          icon: Icon(Icons.email_outlined, size: 32),
+                          onChange: (data) {
+                            email = data;
+                          },
+                          validator: (data) {
+                            return Validation().emailValidate(data!);
+                          },
+                        ),
+                        SizedBox(height: 40),
                         Align(
                           alignment: AlignmentGeometry.center,
                           child: CustomButtom(
                             tital: 'تأكيد',
                             onTap: () {
-                              Get.offAllNamed(LoginPage().pageName);
+                              if (confirmAccountKey.currentState!.validate()) {
+                                Get.to(
+                                  EnterOTBPage(
+                                    email: email!,
+                                    operationName: operationName,
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ),

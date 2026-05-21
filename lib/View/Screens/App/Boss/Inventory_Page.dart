@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Toggle_Buttom.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Toggle_Buttom.dart';
 
 class InventoryPage extends StatelessWidget {
   InventoryPage({super.key});

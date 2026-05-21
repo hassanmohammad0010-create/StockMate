@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Request_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Toggle_Buttom.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/Shared_Widget/Custom_Toggle_Buttom.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 
 class CompletedRequestPage extends StatelessWidget {
