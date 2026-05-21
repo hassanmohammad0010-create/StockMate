@@ -1,25 +1,29 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Status_Badge.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Status_Badge.dart';
 
-class CustomRecurringDetailsCard extends StatelessWidget {
-  const CustomRecurringDetailsCard({super.key, required this.order});
-
+class CustomDetailsCard extends StatelessWidget {
   final Order order;
+
+  const CustomDetailsCard({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
-    // نص التكرار
-    final intervalText = order.recurringInterval != null
-        ? recurringIntervalLabel(order.recurringInterval!)
-        : '---';
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 3,
+            blurRadius: 8,
+            offset: Offset(0, 0),
+          ),
+        ],
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
@@ -36,19 +40,18 @@ class CustomRecurringDetailsCard extends StatelessWidget {
             label: 'الكمية',
             value: '${order.quantity} وحدة',
           ),
-          _buildDivider(),
-          _buildDetailRow(
-            icon: Icons.grid_view_outlined,
-            label: 'النوع',
-            value: order.type, // "دوري"
-          ),
-          _buildDivider(),
-          // التكرار بدلاً من الأولوية
-          _buildDetailRow(
-            icon: Icons.bolt_outlined,
-            label: 'التكرار',
-            value: intervalText,
-          ),
+          // _buildDivider(),
+          // _buildDetailRow(
+          //   icon: Icons.grid_view_outlined,
+          //   label: 'النوع',
+          //   value: order.type,
+          // ),
+          // _buildDivider(),
+          // _buildDetailRow(
+          //   icon: Icons.bolt_outlined,
+          //   label: 'الاولوية',
+          //   valueWidget: PriorityBadge(priority: order.priority),
+          // ),
           _buildDivider(),
           _buildDetailRow(
             icon: Icons.badge_outlined,
@@ -71,7 +74,6 @@ class CustomRecurringDetailsCard extends StatelessWidget {
       ),
     );
   }
-
   // ==================== صف تفصيلة ====================
   Widget _buildDetailRow({
     required IconData icon,
@@ -86,11 +88,16 @@ class CustomRecurringDetailsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: const Color(0xFF9CA3AF)),
+              Icon(icon, size: 24, color: constGray),
+
               const SizedBox(width: 6),
               Text(
                 label,
-                style: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+                style: TextStyle(
+                  fontSize: 22,
+                  color: constGray,
+                  fontFamily: lateef,
+                ),
               ),
             ],
           ),

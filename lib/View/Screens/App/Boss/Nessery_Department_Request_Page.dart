@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Order_Details_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Request_Container.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Head_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 
 class NesseryDepartmentRequestPage extends StatelessWidget {
@@ -17,7 +16,7 @@ class NesseryDepartmentRequestPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           CustomBackContainer(),
-          CustomHeadContainer(empName: 'طلبات الاقسام الضرورية'),
+          CustomHeadContainer(title: 'طلبات الاقسام الضرورية'),
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.only(top: 0),

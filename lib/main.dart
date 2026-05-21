@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(name: SuppliersPage().pageName, page: () => SuppliersPage()),
       ],
-      initialRoute: MainPage().pageName,
+      initialRoute: DepartmentHeadsMainPage().pageName,
     );
   }
 }

@@ -95,11 +95,13 @@ final List<Order> allOrders = [
     medicineName: 'أقنعة وجه',
     date: '1/1/2026',
     quantity: 100,
-    status: OrderStatus.completed,
+    status: OrderStatus.rejected,
     isRecurring: true,
     recurringInterval: RecurringInterval.weekly,
     vendor: 'فارما',
     type: 'دوري',
+    rejectionReason: 
+    'الكمية المطلوبة تتجاوز الحد الأقصى المتاح في المستودع حالياً. الرجاء تقليل الكمية أو إعادة الطلب لاحقاً.',
   ),
 
   // طلب دوري – شهري – منجز

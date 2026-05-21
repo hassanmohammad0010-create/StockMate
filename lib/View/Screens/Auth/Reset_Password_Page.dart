@@ -4,8 +4,8 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Buttom.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Text_Failed.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Text_Failed.dart';
 
 class ResetPasswordPage extends StatelessWidget {
   ResetPasswordPage({super.key});

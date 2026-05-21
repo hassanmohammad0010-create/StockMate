@@ -3,21 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
-class StatusBanner extends StatelessWidget {
-  const StatusBanner({
-    super.key,
-    required this.text,
-    required this.icon,
-    required this.color,
-  });
-
-  final String text;
-  final IconData icon;
-  final Color color;
-
+class CustomHeadContainer extends StatelessWidget {
+  const CustomHeadContainer({super.key, required this.title});
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,      
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -35,10 +27,10 @@ class StatusBanner extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.09,
-              height: MediaQuery.of(context).size.height * 0.07,
+              width: MediaQuery.of(context).size.width * 0.08,
+              height: MediaQuery.of(context).size.height * 0.08,
               decoration: BoxDecoration(
-                color: color,
+                color: constBlue,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -50,12 +42,10 @@ class StatusBanner extends StatelessWidget {
               ),
             ),
             SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-            Icon(icon, color: color),
-            SizedBox(width: MediaQuery.of(context).size.width * 0.02),
             Text(
-              text,
+              title,
               style: TextStyle(
-                color: color,
+                color: constColor,
                 fontWeight: FontWeight.bold,
                 fontFamily: cairo,
                 fontSize: 18,

@@ -27,13 +27,13 @@ class CustomCard extends StatelessWidget {
     // ignore: sized_box_for_whitespace
     return Container(
       width: MediaQuery.of(context).size.width * 0.48,
-      height: MediaQuery.of(context).size.height * 0.15,
+      height: MediaQuery.of(context).size.height * 0.17,
       child: Card(
         color: Colors.white,
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+              margin: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
               child: Row(
                 children: [
                   Container(
@@ -49,13 +49,18 @@ class CustomCard extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 35),
-              child: Text(
-                title,
-                style: TextStyle(fontSize: 15, color: Colors.grey),
+            SizedBox(height: 4),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 15, color: Colors.grey),
+                ),
               ),
             ),
+             SizedBox(height: 4),
             Container(
               width: MediaQuery.of(context).size.width * 0.38,
               margin: EdgeInsets.symmetric(vertical: 5),
