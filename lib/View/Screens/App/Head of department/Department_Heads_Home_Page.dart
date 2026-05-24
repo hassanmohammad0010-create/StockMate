@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Card.dart';
+import 'package:stock_mate_project/core/Shared_Widget/custom_Card.dart';
 
 class DepartmentHeadsHomePage extends StatelessWidget {
   const DepartmentHeadsHomePage({super.key});

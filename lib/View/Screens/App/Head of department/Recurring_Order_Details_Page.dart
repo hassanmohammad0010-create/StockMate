@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/core/Shared_Widget/custom_Head_Card.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/View/Widget/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/Shared_Widget/Custom_Recurring_Details_Card.dart';
 import 'package:stock_mate_project/core/Shared_Widget/Custom_Status_Banner.dart';
 

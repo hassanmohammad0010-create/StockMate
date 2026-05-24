@@ -23,7 +23,7 @@ class CustomDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: DropdownButtonFormField<String>(
         menuMaxHeight: 400,
 
@@ -73,7 +73,7 @@ class CustomDropDown extends StatelessWidget {
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
-          contentPadding: const EdgeInsets.all(20),
+          contentPadding: const EdgeInsets.all(18),
         ),
         hint: Text(
           hintText,
