@@ -38,19 +38,22 @@ class StatusBadge extends StatelessWidget {
         textColor = const Color(0xFFFFBF00);
         break;
     }
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      width: MediaQuery.of(context).size.width * 0.18,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: textColor,
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            fontFamily: lateef,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: textColor,
+          ),
         ),
       ),
     );

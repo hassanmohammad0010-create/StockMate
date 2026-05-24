@@ -6,8 +6,7 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Dispaly_Consumable_Page
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Fixed_Assets_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Medicine_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
-import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Toggle_Buttom.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Toggle_Buttom.dart';
 
 class InventoryPage extends StatelessWidget {
   InventoryPage({super.key});

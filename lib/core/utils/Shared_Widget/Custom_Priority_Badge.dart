@@ -15,7 +15,8 @@ class PriorityBadge extends StatelessWidget {
     final isUrgent = priority == OrderPriority.urgent;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      width: MediaQuery.of(context).size.width * 0.15,
       decoration: BoxDecoration(
         color: isUrgent ? const Color(0xFFE53935) : constBlue,
         borderRadius: BorderRadius.circular(8),

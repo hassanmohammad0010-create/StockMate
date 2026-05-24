@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 
 class DisplayMedicinePage extends StatelessWidget {
   const DisplayMedicinePage({super.key});

@@ -3,10 +3,10 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Find_Color.dart';
 import 'package:stock_mate_project/Function/Shared/Find_Status.dart';
 import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Details_Card.dart';
-import 'package:stock_mate_project/core/Shared_Widget/custom_Head_Card.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Details_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
 // ignore: must_be_immutable
 class DisOrderDetailsPage extends StatelessWidget {
@@ -32,7 +32,7 @@ class DisOrderDetailsPage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          CustomHeadContainer(empName: 'تفاصيل الطلب'),
+          CustomHeadContainer(title: 'تفاصيل الطلب', empName: ''),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Container(

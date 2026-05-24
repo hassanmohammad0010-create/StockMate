@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Priority_Badge.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Recurring_Badge.dart';
-import 'package:stock_mate_project/core/Shared_Widget/Custom_Status_Badge.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Priority_Badge.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Badge.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Status_Badge.dart';
 
 class OrderCard extends StatelessWidget {
   final Order order;
@@ -35,12 +35,10 @@ class OrderCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── المحتوى النصي ──
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // اسم الدواء
                     Text(
                       order.medicineName,
                       style: const TextStyle(
@@ -50,22 +48,17 @@ class OrderCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-
-                    // التاريخ
                     Text(
                       'التاريخ : ${order.date}',
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF9CA3AF),
+                        color: Color(0xFF4B5563),
                       ),
                     ),
                     const SizedBox(height: 10),
-
-                    // الكمية + (تكرار أو أولوية)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // إذا كان دورياً: اعرض التكرار، وإلا: اعرض الأولوية
                         // ignore: sized_box_for_whitespace
                         Container(
                           width: MediaQuery.of(context).size.width * 0.25,
