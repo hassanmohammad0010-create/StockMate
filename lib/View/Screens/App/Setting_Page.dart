@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 
 class SettingPage extends StatelessWidget {
@@ -21,9 +23,9 @@ class SettingPage extends StatelessWidget {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2), // لون الظل
-                      blurRadius: 8, // ضبابية الظل
-                      spreadRadius: 1, // انتشار الظل
-                      offset: Offset(0, 0), // اتجاه الظل (x, y)
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                      offset: Offset(0, 0),
                     ),
                   ],
                 ),
@@ -105,10 +107,12 @@ class SettingPage extends StatelessWidget {
               description: 'انشاء حساب جديد لموظف',
               icon: Icons.person,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(CreateEmployeeAccountPage().pageName);
+              },
               title: 'انشاء حساب جديد',
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'طلب تغيير كلمة مرور الحساب',
@@ -117,7 +121,7 @@ class SettingPage extends StatelessWidget {
               onTap: () {},
               title: 'كلمة المرور',
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'تقديم ابلاغ',
@@ -126,7 +130,7 @@ class SettingPage extends StatelessWidget {
               onTap: () {},
               title: 'ابلاغ',
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'تقديم اقتراح',

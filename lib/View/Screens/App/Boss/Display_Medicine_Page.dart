@@ -1,0 +1,35 @@
+import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+
+class DisplayMedicinePage extends StatelessWidget {
+  const DisplayMedicinePage({super.key});
+  final String pageName = '/DisplayMedicinePage';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          CustomBackContainer(),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.only(top: 12, bottom: 12),
+              itemCount: specialties.length,
+              itemBuilder: (context, index) {
+                return MedicineCard(
+                  medicineName: 'باراسيتامول 500 مج',
+                  status: 'ادوية',
+                  expiryDate: '8/6/2065',
+                  unit: 'وحدة',
+                  currentQuantity: 65,
+                  totalQuantity: 500,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

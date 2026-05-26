@@ -86,7 +86,7 @@ class BossHomePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'جرد شامل للمواد والكميات المتوفرة',
@@ -97,7 +97,7 @@ class BossHomePage extends StatelessWidget {
               },
               title: 'تقرير جرد الكتروني',
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'سجل  لعمليات دخول وخروج المواد',
@@ -108,7 +108,7 @@ class BossHomePage extends StatelessWidget {
               },
               title: 'تقرير عمليات الدخول والخروج',
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'عرض كامل تفاصيل الموردين ',

@@ -19,7 +19,7 @@ class SuppliersPage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          CustomHeadContainer(title: 'الموردين'),
+          CustomHeadContainer(title: 'الموردين', empName: ''),
 
           Expanded(
             child: ListView.builder(

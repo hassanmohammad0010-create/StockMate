@@ -20,7 +20,7 @@ class ElectronicInventoryPage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          CustomHeadContainer(title: 'تقرير جرد الكتروني'),
+          CustomHeadContainer(title: 'تقرير جرد الكتروني', empName: ''),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             child: Container(
