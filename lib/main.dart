@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      title: 'Stock Mate',
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
 
