@@ -9,8 +9,8 @@ class CustomBackContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(left: 32),
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 32),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.20,
       decoration: BoxDecoration(color: constColor),
@@ -27,7 +27,7 @@ class CustomBackContainer extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: Icon(
-            Icons.arrow_forward_outlined,
+            Icons.arrow_back_rounded,
             size: 32,
             color: Colors.white,
           ),

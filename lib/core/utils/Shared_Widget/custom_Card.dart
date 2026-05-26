@@ -68,7 +68,7 @@ class CustomCard extends StatelessWidget {
                 color: buttonColor,
                 borderRadius: BorderRadius.circular(8),
               ),
-              height: 20,
+              height: MediaQuery.of(context).size.height * 0.03,
               child: MaterialButton(
                 onPressed: onTap,
                 child: Text(

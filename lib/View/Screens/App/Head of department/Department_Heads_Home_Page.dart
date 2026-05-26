@@ -1,28 +1,38 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Card.dart';
 
 class DepartmentHeadsHomePage extends StatelessWidget {
-  const DepartmentHeadsHomePage({super.key});
+  DepartmentHeadsHomePage({super.key});
 
   final String pageName = '/DepartmentHeadsHomePage';
+  final OrdersController ordersController = Get.put(OrdersController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF4F6FA),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: constBlue,
-        foregroundColor: Colors.white,
-        splashColor: constColor,
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        onPressed: () {},
-        child: Icon(Icons.add),
+      floatingActionButton: SizedBox(
+        width: 70,
+        height: 70,
+        child: FloatingActionButton(
+          backgroundColor: constBlue,
+          foregroundColor: Colors.white,
+          splashColor: constColor,
+          elevation: 2.0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          onPressed: () {
+            Get.to(() => DepartmentHeadsAddNewOrderPage());
+          },
+          child: Icon(Icons.add,size: 35),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       body: SingleChildScrollView(
@@ -51,7 +61,10 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                         title: 'طلبات منجزة',
                         buttonColor: Color(0xFF09C05E),
                         buttonTitle: 'عرض التفاصيل',
-                        onTap: () {},
+                        onTap: () {
+                          DefaultTabController.of(context).animateTo(2);
+                          ordersController.initialFilter.value = 'منجز';
+                        },
                       ),
                       CustomCard(
                         icon: Icon(Icons.more_time, size: 30, color: constBlue),
@@ -60,7 +73,10 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                         title: 'طلبات قيد التنفيذ',
                         buttonColor: constBlue,
                         buttonTitle: 'عرض التفاصيل',
-                        onTap: () {},
+                        onTap: () {
+                          DefaultTabController.of(context).animateTo(2);
+                          ordersController.initialFilter.value = 'قيد التنفيذ';
+                        },
                       ),
                     ],
                   ),
@@ -77,7 +93,10 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                         title: 'بانتظار الموافقة',
                         buttonColor: Color(0xFFFFBF00),
                         buttonTitle: 'عرض التفاصيل',
-                        onTap: () {},
+                        onTap: () {
+                          DefaultTabController.of(context).animateTo(2);
+                          ordersController.initialFilter.value = 'معلق';
+                        },
                       ),
                       CustomCard(
                         icon: Icon(
@@ -90,7 +109,10 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                         title: 'طلبات مرفوضة',
                         buttonColor: Color(0xFFFF2125),
                         buttonTitle: 'عرض التفاصيل',
-                        onTap: () {},
+                        onTap: () {
+                          DefaultTabController.of(context).animateTo(2);
+                          ordersController.initialFilter.value = 'مرفوضة';
+                        },
                       ),
                     ],
                   ),

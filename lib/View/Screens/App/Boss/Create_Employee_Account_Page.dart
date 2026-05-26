@@ -7,7 +7,7 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Containe
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Text_Failed.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Drop_Down_Buttom.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 
 // ignore: must_be_immutable
 class CreateEmployeeAccountPage extends StatelessWidget {
@@ -24,7 +24,7 @@ class CreateEmployeeAccountPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomBackContainer(),
-              CustomHeadContainer(empName: 'انشاء حساب جديد', title: ''),
+              CustomHeadContainer(title: 'انشاء حساب جديد'),
               SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),

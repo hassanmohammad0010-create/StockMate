@@ -11,11 +11,11 @@ class Order {
   final String date;
   final int quantity;
   final OrderStatus status;
-  final String rejectionReason; 
+  final String rejectionReason;
 
   final OrderPriority priority;
-  final String type;       
-  final String vendor;     
+  final String type;
+  final String vendor;
 
   final bool isRecurring;
   final RecurringInterval? recurringInterval;
@@ -47,6 +47,7 @@ final List<Order> allOrders = [
     status: OrderStatus.completed,
     priority: OrderPriority.normal,
     vendor: 'فارما',
+    type: 'عادي',
   ),
 
   // طلب عادي – مرفوض
@@ -58,6 +59,7 @@ final List<Order> allOrders = [
     priority: OrderPriority.urgent,
     rejectionReason:
         'الكمية المطلوبة تتجاوز الحد الأقصى المتاح في المستودع حالياً. الرجاء تقليل الكمية أو إعادة الطلب لاحقاً.',
+    type: 'عادي',
   ),
 
   // طلب عادي – قيد التنفيذ
@@ -67,6 +69,7 @@ final List<Order> allOrders = [
     quantity: 300,
     status: OrderStatus.inProgress,
     priority: OrderPriority.urgent,
+    type: 'عادي',
   ),
 
   // طلب عادي – معلق
@@ -76,6 +79,7 @@ final List<Order> allOrders = [
     quantity: 100,
     status: OrderStatus.suspended,
     priority: OrderPriority.normal,
+    type: 'عادي',
   ),
 
   // طلب دوري – يومي – منجز
@@ -100,8 +104,8 @@ final List<Order> allOrders = [
     recurringInterval: RecurringInterval.weekly,
     vendor: 'فارما',
     type: 'دوري',
-    rejectionReason: 
-    'الكمية المطلوبة تتجاوز الحد الأقصى المتاح في المستودع حالياً. الرجاء تقليل الكمية أو إعادة الطلب لاحقاً.',
+    rejectionReason:
+        'الكمية المطلوبة تتجاوز الحد الأقصى المتاح في المستودع حالياً. الرجاء تقليل الكمية أو إعادة الطلب لاحقاً.',
   ),
 
   // طلب دوري – شهري – منجز

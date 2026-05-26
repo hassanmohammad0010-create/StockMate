@@ -8,12 +8,11 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Purchasing_Requ
 import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Enter_OTB_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Enter_Account_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 
 void main() {
@@ -71,6 +70,10 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: CreateEmployeeAccountPage().pageName,
           page: () => CreateEmployeeAccountPage(),
+        ),
+        GetPage(
+          name: DepartmentHeadsAddNewOrderPage().pageName,
+          page: () => DepartmentHeadsAddNewOrderPage(),
         ),
       ],
       initialRoute: DepartmentHeadsMainPage().pageName,

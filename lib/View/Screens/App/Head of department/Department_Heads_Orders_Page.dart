@@ -1,17 +1,19 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Order_Details_Page.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Animation_Filter_Chip.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Card.dart';
 
 class DepartmentOrdersPage extends StatefulWidget {
-  const DepartmentOrdersPage({super.key});
-  
+  const DepartmentOrdersPage({super.key, this.initialFilter = 'الكل'});
+
+  final String initialFilter;
   final String pageName = '/DepartmentHeadsOrdersPage';
 
   @override
@@ -20,6 +22,28 @@ class DepartmentOrdersPage extends StatefulWidget {
 
 class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
   String _selectedFilter = 'الكل';
+  final OrdersController ordersController = Get.find();
+
+  late Worker _filterWorker;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedFilter = ordersController.initialFilter.value;
+
+    _filterWorker = ever(ordersController.initialFilter, (filter) {
+      if (mounted) {
+        setState(() => _selectedFilter = filter);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _filterWorker.dispose();
+    ordersController.initialFilter.value = 'الكل';
+    super.dispose();
+  }
 
   final List<String> _filters = [
     'الكل',
@@ -58,11 +82,7 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
   }
 
   void _openOrderDetails(Order order) {
-    Get.to(
-      () => order.isRecurring
-          ? RecurringOrderDetailsPage(order: order)
-          : OrderDetailsPage(order: order),
-    );
+    Get.to(() => OrderDetailsPage(order: order));
   }
 
   @override
@@ -89,20 +109,25 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: constBlue,
-        foregroundColor: Colors.white,
-        splashColor: constColor,
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        onPressed: () {},
-        child: Icon(Icons.add),
+       floatingActionButton: SizedBox(
+        width: 70,
+        height: 70,
+        child: FloatingActionButton(
+          backgroundColor: constBlue,
+          foregroundColor: Colors.white,
+          splashColor: constColor,
+          elevation: 2.0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          onPressed: () {
+            Get.to(() => DepartmentHeadsAddNewOrderPage());
+          },
+          child: Icon(Icons.add,size: 35),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 
-  // ==================== شريط الفلاتر ====================
   Widget _buildFilterBar() {
     return Container(
       color: Colors.white,
@@ -126,7 +151,6 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
     );
   }
 
-  // ==================== حالة القائمة الفارغة ====================
   Widget _buildEmptyState() {
     return Center(
       child: Column(
