@@ -38,3 +38,19 @@ List<String> specialties = [
   'صيدلية',
   'تعقيم',
 ];
+List<IconData> specialtiesIcons = [
+  Icons.hearing,
+  Icons.accessibility_new,
+  Icons.face_retouching_natural,
+  Icons.monitor_heart,
+  Icons.bubble_chart,
+  Icons.medical_services,
+  Icons.bed,
+  Icons.content_cut,
+  Icons.emergency,
+  Icons.filter_drama,
+  Icons.local_hospital,
+  Icons.science,
+  Icons.local_pharmacy,
+  Icons.cleaning_services,
+];

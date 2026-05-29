@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
           page: () => CreateEmployeeAccountPage(),
         ),
       ],
-      initialRoute: DepartmentHeadsMainPage().pageName,
+      initialRoute: SplashViewPage().pageName,
     );
   }
 }

@@ -12,6 +12,14 @@ class ToggleController extends GetxController {
     reset();
   }
 
+  void syncPage() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (pageController.hasClients) {
+        pageController.jumpToPage(selectedIndex.value);
+      }
+    });
+  }
+
   @override
   void onClose() {
     // pageController.dispose();

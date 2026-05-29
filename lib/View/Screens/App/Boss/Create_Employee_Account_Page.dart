@@ -24,7 +24,10 @@ class CreateEmployeeAccountPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomBackContainer(),
-              CustomHeadContainer(empName: 'انشاء حساب جديد', title: ''),
+              CustomHeadContainer(
+                empName: 'انشاء حساب جديد',
+                title: 'انشاء حساب جديد',
+              ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
