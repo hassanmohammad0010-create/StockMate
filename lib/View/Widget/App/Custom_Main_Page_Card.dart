@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/get_core.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 
 // ignore: must_be_immutable
 class CustomMainPageCard extends StatelessWidget {

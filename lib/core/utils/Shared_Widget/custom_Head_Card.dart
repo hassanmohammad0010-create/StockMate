@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
 class CustomHeadContainer extends StatelessWidget {
-  const CustomHeadContainer({
-    super.key,
-    required this.title,
-    required String empName,
-  });
+  const CustomHeadContainer({super.key, required this.title});
   final String title;
   @override
   Widget build(BuildContext context) {
