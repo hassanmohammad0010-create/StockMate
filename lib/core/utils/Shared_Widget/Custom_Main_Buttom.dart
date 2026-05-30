@@ -1,10 +1,15 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:stock_mate_project/Constant/Const.dart';
 
 class CustomMainButtom extends StatelessWidget {
-  const CustomMainButtom({super.key, required this.title});
+  const CustomMainButtom({super.key, required this.title, required this.color, required this.fontcolor,required this.onPressed});
 
   final String title;
+  final Color color;
+  final Color fontcolor;
+  final void Function()? onPressed;
+
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +18,11 @@ class CustomMainButtom extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.92,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: constBlue,
+                    color: color,
                   ),
                   child: MaterialButton(
-                    onPressed: () {},
-                    child: Text(title, style: TextStyle(color: Colors.white,fontFamily: 'Cairo')),
+                    onPressed: onPressed,
+                    child: Text(title, style: TextStyle(color: fontcolor,fontFamily: 'Cairo')),
                   ),
                 );
   }

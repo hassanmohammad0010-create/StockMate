@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
       title: 'Stock Mate',
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
-
+      // theme: ThemeData(
+      //   fontFamily: 'Cairo'
+      // ),
       getPages: [
         GetPage(name: SplashViewPage().pageName, page: () => SplashViewPage()),
         GetPage(name: LoginPage().pageName, page: () => LoginPage()),

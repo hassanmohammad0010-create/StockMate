@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Add_New_Order_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Choose_Card.dart';
@@ -15,7 +17,7 @@ class AddRecurringOrderPage extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: MediaQuery.of(context).size.height * 0.002),
-          CustomAddNewOrderCard(),
+          CustomAddNewOrderCard(order: OrderItem()), // ← مرر order جديد
           SizedBox(height: MediaQuery.of(context).size.height * 0.002),
           CustomRecurringChooseCard(),
           SizedBox(height: MediaQuery.of(context).size.height * 0.06),
@@ -26,7 +28,7 @@ class AddRecurringOrderPage extends StatelessWidget {
             child: Divider(),
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.002),
-          CustomMainButtom(title: 'تأكيد'),
+          CustomMainButtom(title: 'تأكيد',color: constBlue,fontcolor: Colors.white, onPressed: (){}),
           SizedBox(height: MediaQuery.of(context).size.height * 0.002),
         ],
       ),
