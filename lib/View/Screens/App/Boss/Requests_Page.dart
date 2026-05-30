@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Order_Details_Page.dart';
+
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Card.dart';
 
-class RequestsPage extends StatelessWidget {
-  RequestsPage({super.key}) {
+class RequestPage extends StatelessWidget {
+  RequestPage({super.key}) {
     // ✅ تسجيل واحد فقط مع tag
     filterController.initFilters([
       'الكل',
@@ -23,12 +23,12 @@ class RequestsPage extends StatelessWidget {
   // ✅ Controller واحد مع tag موحد
   final FilterController filterController = Get.put(
     FilterController(),
-    tag: 'InventoryPage',
+    tag: 'RequestPage',
   );
 
   final ToggleController toggleController = Get.put(
     ToggleController(),
-    tag: 'InventoryPage',
+    tag: 'RequestPage',
   );
 
   @override
@@ -38,8 +38,8 @@ class RequestsPage extends StatelessWidget {
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           // ✅ حذف كلا الـ Controller عند الخروج
-          Get.delete<FilterController>(tag: 'InventoryPage');
-          Get.delete<ToggleController>(tag: 'InventoryPage');
+          Get.delete<FilterController>(tag: 'RequestPage');
+          Get.delete<ToggleController>(tag: 'RequestPage');
         }
       },
       child: Scaffold(
@@ -48,7 +48,7 @@ class RequestsPage extends StatelessWidget {
           children: [
             // ✅ نفس الـ tag
             CustomFilterBar(
-              tag: 'InventoryPage',
+              tag: 'RequestPage',
               filters: const ['الكل', 'معلق', 'قيد التنفيذ', 'منجز', 'مرفوضة'],
             ),
             Expanded(
@@ -100,9 +100,11 @@ class RequestsPage extends StatelessWidget {
 
   void _openOrderDetails(Order order) {
     Get.to(
-      () => order.isRecurring
-          ? RecurringOrderDetailsPage(order: order)
-          : OrderDetailsPage(order: order),
+      () =>
+          // order.isRecurring
+          // ? RecurringOrderDetailsPage(order: order)
+          // :
+          OrderDetailsPage(order: order),
     );
   }
 

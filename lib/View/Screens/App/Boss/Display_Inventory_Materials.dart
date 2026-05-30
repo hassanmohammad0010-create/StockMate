@@ -14,19 +14,17 @@ class DisplayInventoryMaterials extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
+
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.only(top: 12, bottom: 12),
               itemCount: allMaterial.length,
               itemBuilder: (context, index) {
-                return GestureDetector(
+                return MaterialCard(
+                  materialItem: allMaterial[index],
                   onTap: () {
                     Get.to(DisplayMaterialInfoPage(item: allMaterial[index]));
                   },
-                  child: MaterialCard(
-                    materialItem: allMaterial[index],
-                    onTap: () {},
-                  ),
                 );
               },
             ),

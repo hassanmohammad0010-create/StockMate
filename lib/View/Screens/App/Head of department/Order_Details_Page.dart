@@ -22,13 +22,13 @@ class OrderDetailsPage extends StatelessWidget {
         body: Column(
           children: [
             CustomBackContainer(),
+            CustomHeadContainer(title: 'تفاصيل الطلب'),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   children: [
-                    CustomHeadContainer(title: 'تفاصيل الطلب', empName: ''),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     CustomRecurringDetailsCard(order: order),
                     const SizedBox(height: 16),
                     if (order.status == OrderStatus.rejected)

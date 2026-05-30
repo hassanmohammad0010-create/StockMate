@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Inventory_Materials.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Material_Info_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 
-class DisplayStockPage extends StatelessWidget {
-  DisplayStockPage({super.key}) {
+class DisplayStockMaterialPage extends StatelessWidget {
+  DisplayStockMaterialPage({super.key}) {
     // ✅ تسجيل واحد فقط مع tag
     filterController.initFilters(['الكل', 'ثابتة', 'مستهلكة', 'ادوية']);
   }

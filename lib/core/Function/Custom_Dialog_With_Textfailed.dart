@@ -36,15 +36,6 @@ void showDialogWithTextFailed({
               ),
               const SizedBox(height: 8),
 
-              // ===== Subtitle =====
-              // const Text(
-              //   'انت على وشك رفض الطلب',
-              //   style: TextStyle(fontSize: 14, color: constGray),
-              //   textAlign: TextAlign.center,
-              // ),
-              // const SizedBox(height: 16),
-
-              // ===== Text Field =====
               TextField(
                 controller: reasonController,
                 maxLines: 4,
@@ -73,10 +64,8 @@ void showDialogWithTextFailed({
               ),
               const SizedBox(height: 20),
 
-              // ===== Buttons =====
               Row(
                 children: [
-                  // Confirm Button (تأكيد)
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
@@ -99,7 +88,6 @@ void showDialogWithTextFailed({
                   ),
                   const SizedBox(width: 12),
 
-                  // Back Button (تراجع)
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
@@ -107,7 +95,7 @@ void showDialogWithTextFailed({
                         onReject?.call();
                       },
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: constlightGreen,
+                        backgroundColor: constGreen,
                         side: BorderSide.none,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
@@ -116,7 +104,7 @@ void showDialogWithTextFailed({
                       ),
                       child: const Text(
                         'تراجع',
-                        style: TextStyle(fontSize: 16, color: constGreen),
+                        style: TextStyle(fontSize: 16, color: constlightGreen),
                       ),
                     ),
                   ),

@@ -1,10 +1,8 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Priority_Badge.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Badge.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Status_Badge.dart';
 
 class CustomRecurringDetailsCard extends StatelessWidget {
   const CustomRecurringDetailsCard({super.key, required this.order});
@@ -13,11 +11,18 @@ class CustomRecurringDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 3,
+            blurRadius: 8,
+            offset: Offset(0, 0),
+          ),
+        ],
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
@@ -34,39 +39,41 @@ class CustomRecurringDetailsCard extends StatelessWidget {
             label: 'الكمية',
             value: '${order.quantity} وحدة',
           ),
-          _buildDivider(),
-          _buildDetailRow(
-            icon: Icons.grid_view_outlined,
-            label: 'النوع',
-            value: order.type, 
-          ),
-          _buildDivider(),
-          // التكرار بدلاً من الأولوية
-          _buildDetailRow(
-            icon: Icons.bolt_outlined,
-            label: order.recurringInterval != null ? 'التكرار' : 'الأولوية',
-            valueWidget: order.recurringInterval != null
-                ? RecurringBadge(interval: order.recurringInterval!) // عرض نص التكرار داخل بادج
-                : PriorityBadge(priority: order.priority),
-          ),
+          // _buildDivider(),
+          // _buildDetailRow(
+          //   icon: Icons.grid_view_outlined,
+          //   label: 'النوع',
+          //   value: order.type,
+          // ),
+          // _buildDivider(),
+          // // التكرار بدلاً من الأولوية
+          // _buildDetailRow(
+          //   icon: Icons.bolt_outlined,
+          //   label: order.recurringInterval != null ? 'التكرار' : 'الأولوية',
+          //   valueWidget: order.recurringInterval != null
+          //       ? RecurringBadge(
+          //           interval: order.recurringInterval!,
+          //         ) // عرض نص التكرار داخل بادج
+          //       : PriorityBadge(priority: order.priority),
+          // ),
           _buildDivider(),
           _buildDetailRow(
             icon: Icons.badge_outlined,
             label: 'الوكيل / الماركة',
             value: order.vendor,
           ),
-          _buildDivider(),
-          _buildDetailRow(
-            icon: Icons.calendar_month_outlined,
-            label: 'التاريخ',
-            value: order.date,
-          ),
-          _buildDivider(),
-          _buildDetailRow(
-            icon: Icons.list_alt_outlined,
-            label: 'الحالة',
-            valueWidget: StatusBadge(status: order.status),
-          ),
+          // _buildDivider(),
+          // _buildDetailRow(
+          //   icon: Icons.calendar_month_outlined,
+          //   label: 'التاريخ',
+          //   value: order.date,
+          // ),
+          // _buildDivider(),
+          // _buildDetailRow(
+          //   icon: Icons.list_alt_outlined,
+          //   label: 'الحالة',
+          //   valueWidget: StatusBadge(status: order.status),
+          // ),
         ],
       ),
     );
@@ -86,11 +93,15 @@ class CustomRecurringDetailsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: const Color(0xFF9CA3AF)),
+              Icon(icon, size: 18, color: constGray),
               const SizedBox(width: 6),
               Text(
                 label,
-                style: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: constGray,
+                  fontFamily: cairo,
+                ),
               ),
             ],
           ),
@@ -102,10 +113,10 @@ class CustomRecurringDetailsCard extends StatelessWidget {
                   valueWidget ??
                   Text(
                     value ?? '',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A2A4A),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontFamily: cairo,
                     ),
                   ),
             ),
@@ -116,6 +127,6 @@ class CustomRecurringDetailsCard extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return const Divider(height: 1, color: Color(0xFFF3F4F6));
+    return const Divider(indent: 16, endIndent: 16, thickness: 0.5);
   }
 }

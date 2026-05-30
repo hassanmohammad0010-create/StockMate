@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Inventory_Materials.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Stock_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Stock_Material_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Toggle_Buttom.dart';
 
@@ -92,7 +92,7 @@ class InventoryPage extends StatelessWidget {
                         icon: specialtiesIcons[index],
                         iconColor: constBlue,
                         onTap: () {
-                          Get.to(() => DisplayStockPage());
+                          Get.to(() => DisplayStockMaterialPage());
                         },
                         title: specialties[index],
                       );
