@@ -13,8 +13,8 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Depar
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
@@ -98,6 +98,11 @@ class MyApp extends StatelessWidget {
           name: AddRecurringOrderPage().pageName,
           page: () => AddRecurringOrderPage(),
         ),
+          GetPage(
+          name: ReportPage().pageName,
+          page: () => ReportPage(),
+        ),
+      
       ],
       initialRoute: DepartmentHeadsMainPage().pageName,
     );

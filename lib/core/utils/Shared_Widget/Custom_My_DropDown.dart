@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
+// ignore_for_file: file_names, library_private_types_in_public_api, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -23,7 +23,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.clearable   = true,
     this.errorBorder = false,
     this.errorText,
-    this.prefixIcon,
+    this.prefixIcon, this.icon,
   });
 
   final List<T>            items;
@@ -34,6 +34,8 @@ class CustomDropdown<T> extends StatefulWidget {
   final void Function(T?)  onChanged;
   final bool               searchable;
 
+  final IconData?          icon;
+ 
   /// هل يظهر زر X لمسح القيمة المختارة؟ (افتراضي: true)
   final bool               clearable;
 
@@ -194,8 +196,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                           // أيقونة يسار
                           Icon(
                             widget.prefixIcon ??
-                                Icons.arrow_drop_down_circle_outlined,
-                            size:  20,
+                            widget.icon,
+                            size:  25,
                             color: isError ? Colors.red.shade400 : constBlue,
                           ),
                           const SizedBox(width: 10),
@@ -254,7 +256,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 14),
+                          horizontal: 8, vertical: 4),
                       child: Icon(
                         Icons.close_rounded,
                         size:  18,
@@ -268,9 +270,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   onTap: _openOverlay,
                   behavior: HitTestBehavior.opaque,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      showClear ? 0 : 8, 14, 12, 14,
-                    ),
+                    padding: EdgeInsetsGeometry.only(left: 8),
+                    // padding: EdgeInsets.fromLTRB(
+                    //   showClear ? 0 : 8, 14, 12, 14,
+                    // ),
                     child: AnimatedRotation(
                       turns:    _isOpen ? 0.5 : 0,
                       duration: const Duration(milliseconds: 180),
@@ -493,7 +496,7 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                                 padding:    EdgeInsets.zero,
                                 shrinkWrap: true,
                                 itemCount:  _displayItems.length,
-                                separatorBuilder: (_, __) => Divider(
+                                separatorBuilder: (_, _) => Divider(
                                   height: 1,
                                   color:  Colors.grey.shade100,
                                 ),

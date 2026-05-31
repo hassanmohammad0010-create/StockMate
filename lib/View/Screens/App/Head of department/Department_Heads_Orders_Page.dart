@@ -3,12 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Logic/DepartmentOrdersFilterController%20.dart';
 import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Animation_Filter_Chip.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Filter.dart';
 
 class DepartmentOrdersPage extends StatefulWidget {
   const DepartmentOrdersPage({super.key, this.initialFilter = 'الكل'});
@@ -21,95 +22,82 @@ class DepartmentOrdersPage extends StatefulWidget {
 }
 
 class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
-  String _selectedFilter = 'الكل';
   final OrdersController ordersController = Get.find();
+  final DepartmentOrdersFilterController filterController = Get.put(
+    DepartmentOrdersFilterController(),
+  );
+  late Worker _worker;
 
-  late Worker _filterWorker;
+@override
+void initState() {
+  super.initState();
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedFilter = ordersController.initialFilter.value;
+  // بدلاً من widget.initialFilter استخدم ordersController.initialFilter.value
+  filterController.setFilter(ordersController.initialFilter.value);
 
-    _filterWorker = ever(ordersController.initialFilter, (filter) {
-      if (mounted) {
-        setState(() => _selectedFilter = filter);
-      }
-    });
-  }
+  _worker = ever(ordersController.initialFilter, (filter) {
+    filterController.setFilter(filter);
+  });
+}
+
 
   @override
   void dispose() {
-    _filterWorker.dispose();
+    _worker.dispose();
     ordersController.initialFilter.value = 'الكل';
     super.dispose();
   }
 
-  final List<String> _filters = [
-    'الكل',
-    'الطلبات الدورية',
-    'معلق',
-    'قيد التنفيذ',
-    'منجز',
-    'مرفوض',
-  ];
-
-  List<Order> get _filteredOrders {
-    switch (_selectedFilter) {
+  List<Order> _getFilteredOrders(String selectedFilter) {
+    switch (selectedFilter) {
       case 'الكل':
         return allOrders;
       case 'الطلبات الدورية':
         return allOrders.where((o) => o.isRecurring).toList();
       case 'معلق':
-        return allOrders
-            .where((o) => o.status == OrderStatus.suspended)
-            .toList();
+        return allOrders.where((o) => o.status == OrderStatus.suspended).toList();
       case 'قيد التنفيذ':
-        return allOrders
-            .where((o) => o.status == OrderStatus.inProgress)
-            .toList();
+        return allOrders.where((o) => o.status == OrderStatus.inProgress).toList();
       case 'منجز':
-        return allOrders
-            .where((o) => o.status == OrderStatus.completed)
-            .toList();
+        return allOrders.where((o) => o.status == OrderStatus.completed).toList();
       case 'مرفوض':
-        return allOrders
-            .where((o) => o.status == OrderStatus.rejected)
-            .toList();
+        return allOrders.where((o) => o.status == OrderStatus.rejected).toList();
       default:
         return allOrders;
     }
   }
 
-  void _openOrderDetails(Order order) {
-    Get.to(() => OrderDetailsPage(order: order));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6FA),
+      backgroundColor: constBackgroundColor,
       body: Column(
         children: [
-          _buildFilterBar(),
+          const DepartmentOrdersFilterBar(),
           Expanded(
-            child: _filteredOrders.isEmpty
-                ? _buildEmptyState()
-                : ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                    itemCount: _filteredOrders.length,
-                    itemBuilder: (context, index) {
-                      final order = _filteredOrders[index];
-                      return OrderCard(
-                        order: order,
-                        onTap: () => _openOrderDetails(order),
-                      );
-                    },
-                  ),
+            child: Obx(() {
+              final filteredOrders = _getFilteredOrders(
+                filterController.selectedFilter.value,
+              );
+
+              return filteredOrders.isEmpty
+                  ? _buildEmptyState()
+                  : ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                      itemCount: filteredOrders.length,
+                      itemBuilder: (context, index) {
+                        final order = filteredOrders[index];
+                        return OrderCard(
+                          order: order,
+                          onTap: () => Get.to(() => OrderDetailsPage(order: order)),
+                        );
+                      },
+                    );
+            }),
           ),
         ],
       ),
-       floatingActionButton: SizedBox(
+      floatingActionButton: SizedBox(
         width: 70,
         height: 70,
         child: FloatingActionButton(
@@ -117,37 +105,16 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
           foregroundColor: Colors.white,
           splashColor: constColor,
           elevation: 2.0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
           onPressed: () {
             Get.to(() => DepartmentHeadsAddNewOrderPage());
           },
-          child: Icon(Icons.add,size: 35),
+          child: const Icon(Icons.add, size: 35),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-    );
-  }
-
-  Widget _buildFilterBar() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: _filters.map((filter) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: MyFilterChip(
-                label: filter,
-                isSelected: _selectedFilter == filter,
-                onTap: () => setState(() => _selectedFilter = filter),
-              ),
-            );
-          }).toList(),
-        ),
-      ),
     );
   }
 

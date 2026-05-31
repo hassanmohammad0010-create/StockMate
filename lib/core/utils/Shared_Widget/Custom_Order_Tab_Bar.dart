@@ -13,7 +13,7 @@ class OrderTabBar extends GetView<AddOrdinaryOrderController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.03, vertical: 4),
+      padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.03, vertical: 8),
       child: Row(
         children: [
           Expanded(

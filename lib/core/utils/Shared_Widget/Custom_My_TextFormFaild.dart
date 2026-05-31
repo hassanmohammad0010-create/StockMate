@@ -20,18 +20,18 @@ class CustomMyTextFormField extends StatefulWidget {
     this.initialValue,
   });
 
-  final String                    label;
-  final String                    hint;
-  final TextEditingController?    controller;
+  final String label;
+  final String hint;
+  final TextEditingController? controller;
   final String? Function(String?)? validator;
-  final TextInputType?            keyboardType;
-  final int                       maxLines;
-  final bool                      obscureText;
-  final IconData?                 prefixIcon;
-  final Widget?                   suffixIcon;
-  final void Function(String)?    onChanged;
-  final bool                      enabled;
-  final String?                   initialValue;
+  final TextInputType? keyboardType;
+  final int maxLines;
+  final bool obscureText;
+  final IconData? prefixIcon;
+  final Widget? suffixIcon;
+  final void Function(String)? onChanged;
+  final bool enabled;
+  final String? initialValue;
 
   @override
   State<CustomMyTextFormField> createState() => _CustomMyTextFormFieldState();
@@ -54,9 +54,7 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
 
     // أنشئ controller داخلي فقط إذا لم يُعطَ controller خارجي
     if (widget.controller == null) {
-      _internalController = TextEditingController(
-        text: widget.initialValue,
-      );
+      _internalController = TextEditingController(text: widget.initialValue);
     }
 
     // الـ listener يُعيد البناء فقط إذا كان الـ widget لا يزال موجوداً
@@ -106,77 +104,89 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
     final hasText = _effectiveController.text.isNotEmpty;
 
     return TextFormField(
-      controller:   _effectiveController,
-      validator:    widget.validator,
+      controller: _effectiveController,
+      validator: widget.validator,
       keyboardType: widget.keyboardType,
-      maxLines:     widget.obscureText ? 1 : widget.maxLines,
-      obscureText:  widget.obscureText,
-      enabled:      widget.enabled,
-      onChanged:    widget.onChanged,
+      maxLines: widget.obscureText ? 1 : widget.maxLines,
+      obscureText: widget.obscureText,
+      enabled: widget.enabled,
+      onChanged: widget.onChanged,
       textDirection: TextDirection.rtl,
-      textAlign:     TextAlign.right,
-      style: const TextStyle(
-        fontSize: 14,
-        color:    Color(0xFF1E293B),
-      ),
+      textAlign: TextAlign.right,
+      style: const TextStyle(fontSize: 14, color: Color(0xFF1E293B)),
       decoration: InputDecoration(
+        alignLabelWithHint: true,
         labelText: widget.label,
-        hintText:  widget.hint,
+        hintText: widget.hint,
         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
 
-        prefixIcon: widget.prefixIcon != null
-            ? Icon(widget.prefixIcon, size: 20, color: constBlue)
-            : null,
+        // prefixIcon: widget.prefixIcon != null
+        //     ? Icon(widget.prefixIcon, size: 20, color: constBlue)
+        //     : null,
+
+
+prefixIcon: widget.prefixIcon != null
+    ? SizedBox(
+        width: 40,
+        child: Padding(
+          padding:  EdgeInsets.only(top: widget.maxLines == 1 ? 12 : 0,bottom: widget.maxLines == 1 ? 0 : 136 , right: 8, left: 8),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Icon(widget.prefixIcon, size: 25, color: constBlue),
+          ),
+        ),
+      )
+    : null,
+
 
         suffixIcon: widget.suffixIcon,
 
-        filled:    true,
+        filled: true,
         fillColor: widget.enabled ? Colors.white : Colors.grey.shade50,
 
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
 
         // border عادي
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:   BorderSide(color: Colors.grey.shade300),
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         // border عادي بدون focus
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:   BorderSide(color: Colors.grey.shade300),
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         // border عند التركيز
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:   BorderSide(color: constBlue, width: 1.5),
+          borderSide: BorderSide(color: constBlue, width: 1.5),
         ),
         // border عند الخطأ
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:   BorderSide(color: Colors.red.shade600, width: 1.5),
+          borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
         ),
         // border عند التركيز مع الخطأ
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:   BorderSide(color: Colors.red.shade600, width: 1.5),
+          borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
         ),
         // border عند التعطيل
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:   BorderSide(color: Colors.grey.shade200),
+          borderSide: BorderSide(color: Colors.grey.shade200),
         ),
 
         labelStyle: TextStyle(
-          color:      hasText ? constBlue : Colors.grey.shade500,
-          fontSize:   hasText ? 12 : 14,
+          color: hasText ? constBlue : Colors.grey.shade500,
+          fontSize: hasText ? 12 : 14,
           fontWeight: hasText ? FontWeight.w500 : FontWeight.w400,
         ),
 
-        errorStyle: TextStyle(
-          color:    Colors.red.shade700,
-          fontSize: 11,
-        ),
+        errorStyle: TextStyle(color: Colors.red.shade700, fontSize: 11),
       ),
     );
   }

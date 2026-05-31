@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
@@ -15,6 +16,8 @@ class DepartmentHeadsMainPage extends StatelessWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
+              backgroundColor: constBackgroundColor,
+
         appBar: AppBar(
           toolbarHeight: MediaQuery.of(context).size.height * 0.1,
           actions: [
@@ -139,7 +142,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
         body: TabBarView(
           children: [
             DepartmentHeadsHomePage(),
-            Scaffold(backgroundColor: Color(0xFFF4F6FA)),
+            DepartmentHeadsInventoryPage(),
             DepartmentOrdersPage(),
             SettingPage(),
           ],

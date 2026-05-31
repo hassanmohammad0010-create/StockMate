@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Ordinary_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
@@ -26,7 +27,7 @@ class DepartmentHeadsAddNewOrderPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: Color(0xFFF4F6FA),
+      backgroundColor: constBackgroundColor,
         body: Column(
           children: [
             CustomBackContainer(),

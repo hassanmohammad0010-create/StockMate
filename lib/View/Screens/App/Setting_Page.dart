@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 
 class SettingPage extends StatelessWidget {
@@ -29,7 +30,7 @@ class SettingPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -88,7 +89,9 @@ class SettingPage extends StatelessWidget {
                         Flexible(
                           child: Text(
                             'hasanmohammad@gmail.com',
-
+                                  maxLines: 1,
+                                  overflow: TextOverflow.clip,
+                                  textAlign: TextAlign.left,
                             style: TextStyle(
                               color: constGray,
                               fontFamily: cairo,
@@ -122,23 +125,34 @@ class SettingPage extends StatelessWidget {
               title: 'كلمة المرور',
             ),
 
-            CustomListTile(
+             CustomListTile(
               backgroundColor: constLightBlue,
-              description: 'تقديم ابلاغ',
+              description: 'قم بتقديم اقتراح او ابلاغ',
               icon: Icons.report,
               iconColor: constBlue,
-              onTap: () {},
-              title: 'ابلاغ',
+              onTap: () {
+                Get.toNamed(ReportPage().pageName);
+              },
+              title: 'تواصل معنا',
             ),
 
-            CustomListTile(
-              backgroundColor: constLightBlue,
-              description: 'تقديم اقتراح',
-              icon: Icons.headphones,
-              iconColor: constBlue,
-              onTap: () {},
-              title: 'اقتراح',
-            ),
+            // CustomListTile(
+            //   backgroundColor: constLightBlue,
+            //   description: 'تقديم ابلاغ',
+            //   icon: Icons.report,
+            //   iconColor: constBlue,
+            //   onTap: () {},
+            //   title: 'ابلاغ',
+            // ),
+
+            // CustomListTile(
+            //   backgroundColor: constLightBlue,
+            //   description: 'تقديم اقتراح',
+            //   icon: Icons.headphones,
+            //   iconColor: constBlue,
+            //   onTap: () {},
+            //   title: 'اقتراح',
+            // ),
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'طلب حذف الحساب الشخصي',

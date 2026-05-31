@@ -51,7 +51,6 @@ class OrdinaryOrderCard extends StatelessWidget {
                   Form(
                     key: _c.formKey(orderIndex),
                     child: Container(
-                      // height: size.height * 0.48,
                       width: size.width * 0.95,
                       child: Card(
                         child: Column(
@@ -101,6 +100,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                                       labelBuilder: (v) => v,
                                       label: 'اسم الدواء *',
                                       hint: 'اختر الدواء المطلوب',
+                                      icon: Icons.medication_outlined,
                                       searchable: true,
                                       value: _c.orders[orderIndex].medicineName,
                                       // نمرر errorBorder للـ dropdown إذا كان invalid
@@ -132,6 +132,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                                 horizontal: size.width * 0.03,
                               ),
                               child: CustomMyTextFormField(
+                                prefixIcon: Icons.numbers_outlined,
                                 keyboardType: TextInputType.number,
                                 label: 'الكمية *',
                                 hint: 'أدخل الكمية المطلوبة',
@@ -165,6 +166,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                                       labelBuilder: (v) => v,
                                       label: 'الوحدة *',
                                       hint: 'اختر الوحدة',
+                                      icon: Icons.scale_outlined,
                                       searchable: false,
                                       value: _c.orders[orderIndex].unit,
                                       errorBorder: isInvalid,
@@ -210,6 +212,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                                       labelBuilder: (v) => v,
                                       label: 'الوكيل / الماركة *',
                                       hint: 'اختر الوكيل / الماركة',
+                                      icon: Icons.store_mall_directory_outlined,
                                       searchable: true,
                                       value: _c.orders[orderIndex].brand,
                                       errorBorder: isInvalid,

@@ -73,14 +73,14 @@ final List<Order> allOrders = [
   ),
 
   // طلب عادي – معلق
-  Order(
-    medicineName: 'ميترونيدازول 500 mg',
-    date: '2025-03-22',
-    quantity: 100,
-    status: OrderStatus.suspended,
-    priority: OrderPriority.normal,
-    type: 'عادي',
-  ),
+  // Order(
+  //   medicineName: 'ميترونيدازول 500 mg',
+  //   date: '2025-03-22',
+  //   quantity: 100,
+  //   status: OrderStatus.suspended,
+  //   priority: OrderPriority.normal,
+  //   type: 'عادي',
+  // ),
 
   // طلب دوري – يومي – منجز
   Order(
@@ -132,61 +132,6 @@ String recurringIntervalLabel(RecurringInterval interval) {
   }
 }
 
-// class OrderModel {
-//   String? medicineName; // dropdown — اسم الدواء
-//   String  quantity;     // text field
-//   String? unit;         // dropdown — الوحدة
-//   String? brand;        // dropdown — الوكيل / الماركة
-//   String  priority;     // 'عادي' | 'ضروري'
-
-//   OrderModel({
-//     this.medicineName,
-//     this.quantity = '',
-//     this.unit,
-//     this.brand,
-//     this.priority = 'عادي',
-//   });
-
-//   OrderModel copyWith({
-//     String? medicineName,
-//     String? quantity,
-//     String? unit,
-//     String? brand,
-//     String? priority,
-//   }) {
-//     return OrderModel(
-//       medicineName: medicineName ?? this.medicineName,
-//       quantity:     quantity     ?? this.quantity,
-//       unit:         unit         ?? this.unit,
-//       brand:        brand        ?? this.brand,
-//       priority:     priority     ?? this.priority,
-//     );
-//   }
-
-//   // الطلب صالح إذا تم اختيار المادة والوحدة والوكيل وإدخال الكمية
-//   bool get isValid =>
-//       (medicineName?.trim().isNotEmpty ?? false) &&
-//       quantity.trim().isNotEmpty &&
-//       (unit?.trim().isNotEmpty ?? false) &&
-//       (brand?.trim().isNotEmpty ?? false);
-
-//   Map<String, dynamic> toJson() => {
-//         'medicineName': medicineName,
-//         'quantity':     quantity,
-//         'unit':         unit,
-//         'brand':        brand,
-//         'priority':     priority,
-//       };
-
-//   @override
-//   String toString() =>
-//       'OrderModel(medicine: $medicineName, qty: $quantity, unit: $unit, priority: $priority)';
-// }
-
-
-// Sentinel — قيمة وهمية تعني "امسح هذا الحقل واجعله null"
-// لا يمكن استخدام null مباشرة في copyWith لأن
-// null ?? oldValue يرجع oldValue دائماً
 const _clear = Object();
 
 class OrderModel {
@@ -204,8 +149,6 @@ class OrderModel {
     this.priority = 'عادي',
   });
 
-  /// لتمرير null صراحةً استخدم الثابت [clearField]:
-  ///   model.copyWith(medicineName: clearField)
   OrderModel copyWith({
     Object? medicineName = _clear,
     Object? quantity     = _clear,

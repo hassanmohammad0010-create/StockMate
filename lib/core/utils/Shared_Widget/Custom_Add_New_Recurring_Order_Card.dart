@@ -93,6 +93,7 @@ class RecurringOrderCard extends StatelessWidget {
                                       label: 'اسم الدواء *',
                                       hint: 'اختر الدواء المطلوب',
                                       searchable: true,
+                                      icon: Icons.medication_outlined,
                                       value: _c.order.value.medicineName,
                                       errorBorder: isInvalid,
                                       onChanged: (v) =>
@@ -124,6 +125,7 @@ class RecurringOrderCard extends StatelessWidget {
                                 horizontal: size.width * 0.03,
                               ),
                               child: CustomMyTextFormField(
+                                prefixIcon: Icons.numbers_outlined,
                                 keyboardType: TextInputType.number,
                                 label: 'الكمية *',
                                 hint: 'أدخل الكمية المطلوبة',
@@ -153,6 +155,7 @@ class RecurringOrderCard extends StatelessWidget {
                                       labelBuilder: (v) => v,
                                       label: 'الوحدة *',
                                       hint: 'اختر الوحدة',
+                                      icon: Icons.scale_outlined,
                                       searchable: false,
                                       value: _c.order.value.unit,
                                       errorBorder: isInvalid,
@@ -193,6 +196,7 @@ class RecurringOrderCard extends StatelessWidget {
                                       labelBuilder: (v) => v,
                                       label: 'الوكيل / الماركة *',
                                       hint: 'اختر الوكيل / الماركة',
+                                      icon: Icons.store_mall_directory_outlined,
                                       searchable: true,
                                       value: _c.order.value.brand,
                                       errorBorder: isInvalid,
