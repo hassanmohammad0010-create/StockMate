@@ -111,7 +111,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                         buttonTitle: 'عرض التفاصيل',
                         onTap: () {
                           DefaultTabController.of(context).animateTo(2);
-                          ordersController.initialFilter.value = 'مرفوضة';
+                          ordersController.initialFilter.value = 'مرفوض';
                         },
                       ),
                     ],

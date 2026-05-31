@@ -6,16 +6,19 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Details_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
-
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Reject_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 
 class OrderDetailsPage extends StatelessWidget {
+ const OrderDetailsPage({super.key, required this.order});
+
+
+  final String pageName = '/OrderDetailsPage';
   final Order order;
 
-  const OrderDetailsPage({super.key, required this.order});
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +29,14 @@ class OrderDetailsPage extends StatelessWidget {
         body: Column(
           children: [
             CustomBackContainer(),
+            CustomHeadContainer(title: 'تفاصيل الطلب'),
             Expanded(
-              child: Container(
-                padding: EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   children: [
-                    CustomHeadContainer(title: 'تفاصيل الطلب'),
-                    const SizedBox(height: 16),
-                    CustomRecurringDetailsCard(order: order),
+                    const SizedBox(height: 8),
+                    CustomDetailsCard(order: order),
                     const SizedBox(height: 16),
                     order.status == OrderStatus.rejected
                         ? RejectionBanner(reason: order.rejectionReason)
@@ -42,8 +45,6 @@ class OrderDetailsPage extends StatelessWidget {
                         ? const SizedBox(height: 112)
                         : order.status == OrderStatus.rejected
                         ? const SizedBox(height: 52)
-                        : order.status == OrderStatus.suspended
-                        ? const SizedBox(height: 138)
                         : const SizedBox(height: 154),
                     order.isRecurring && order.status == OrderStatus.completed
                         ? CustomMainButtom(
@@ -66,7 +67,7 @@ class OrderDetailsPage extends StatelessWidget {
                       color: constLightBlue,
                       fontcolor: constBlue,
                       onPressed: () {
-                        Get.to(() => DepartmentHeadsAddNewOrderPage());
+                        Get.toNamed(DepartmentHeadsAddNewOrderPage().pageName);
                       },
                     ),
                   ],

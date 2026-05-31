@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Dispaly_Consumable_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Fixed_Assets_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Medicine_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Inventory_Materials.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Stock_Material_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Toggle_Buttom.dart';
 
@@ -18,6 +17,9 @@ class InventoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.pageController.jumpToPage(controller.selectedIndex.value);
+    });
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
@@ -44,8 +46,7 @@ class InventoryPage extends StatelessWidget {
               child: PageView(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: controller.pageController,
-                onPageChanged: (index) =>
-                    controller.selectedIndex.value = index,
+
                 children: [
                   Column(
                     children: [
@@ -55,7 +56,7 @@ class InventoryPage extends StatelessWidget {
                         icon: Icons.medical_services_rounded,
                         iconColor: constBlue,
                         onTap: () {
-                          Get.to(() => DisplayConsumablePage());
+                          Get.to(() => DisplayInventoryMaterials());
                         },
                         title: 'مستهلكة',
                       ),
@@ -65,7 +66,7 @@ class InventoryPage extends StatelessWidget {
                         icon: Icons.devices_rounded,
                         iconColor: constBlue,
                         onTap: () {
-                          Get.to(() => DisplayFixedAssetsPage());
+                          Get.to(() => DisplayInventoryMaterials());
                         },
                         title: 'ثابتة',
                       ),
@@ -75,7 +76,7 @@ class InventoryPage extends StatelessWidget {
                         icon: Icons.medication_liquid_rounded,
                         iconColor: constBlue,
                         onTap: () {
-                          Get.to(() => DisplayMedicinePage());
+                          Get.to(() => DisplayInventoryMaterials());
                         },
                         title: 'الادوية',
                       ),
@@ -88,9 +89,11 @@ class InventoryPage extends StatelessWidget {
                       return CustomListTile(
                         backgroundColor: constLightBlue,
                         description: 'عرض تفاصيل المخزون',
-                        icon: Icons.inventory_2_outlined,
+                        icon: specialtiesIcons[index],
                         iconColor: constBlue,
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(() => DisplayStockMaterialPage());
+                        },
                         title: specialties[index],
                       );
                     },

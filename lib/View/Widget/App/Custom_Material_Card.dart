@@ -1,145 +1,143 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/core/models/Material_Model.dart';
 
-class MedicineCard extends StatelessWidget {
-  final String medicineName;
-  final String status;
-  final String expiryDate;
+class MaterialCard extends StatelessWidget {
+  final MaterialItem materialItem;
 
-  final String unit;
-  final int currentQuantity;
-  final int totalQuantity;
-
-  const MedicineCard({
+  final VoidCallback onTap;
+  const MaterialCard({
     super.key,
-    required this.medicineName,
-    required this.status,
-    required this.expiryDate,
-
-    required this.unit,
-    required this.currentQuantity,
-    required this.totalQuantity,
+    required this.materialItem,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final double progress = currentQuantity / totalQuantity;
+    final double progress =
+        materialItem.totalQuantity / materialItem.maxQuantity;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Row 1: Medicine name + Status badge
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    medicineName,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: cairo,
-                      color: const Color(0xFF1E293B),
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  // ignore: deprecated_member_use
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Row 1: Medicine name + Status badge
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      materialItem.name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: cairo,
+                        color: const Color(0xFF1E293B),
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: constLightBlue,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        materialItem.categoryLabel,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: cairo,
+                          color: constBlue,
+                        ),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: constLightBlue,
-                      borderRadius: BorderRadius.circular(20),
+                  ],
+                ),
+
+                const SizedBox(height: 14),
+
+                // Row 2: Expiry date + Quantity
+                Row(
+                  children: [
+                    _InfoChip(
+                      label: materialItem.batches[0].expiryDate
+                          .toString()
+                          .substring(0, 10),
+                      icon: Icons.calendar_today_outlined,
                     ),
-                    child: Text(
-                      status,
+                    const SizedBox(width: 12),
+                    _InfoChip(
+                      label: '${materialItem.totalQuantity}',
+                      icon: Icons.inventory_2_outlined,
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 14),
+
+                // Progress bar label
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'الكمية المتوفرة',
                       style: TextStyle(
                         fontSize: 16,
                         fontFamily: cairo,
-                        color: constBlue,
+                        color: constGray,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 14),
-
-              // Row 2: Expiry date + Quantity
-              Row(
-                children: [
-                  _InfoChip(
-                    label: expiryDate,
-                    icon: Icons.calendar_today_outlined,
-                  ),
-                  const SizedBox(width: 12),
-                  _InfoChip(
-                    label: '$currentQuantity $unit',
-                    icon: Icons.inventory_2_outlined,
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 14),
-
-              // Progress bar label
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'الكمية المتوفرة',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: cairo,
-                      color: constGray,
-                      fontWeight: FontWeight.w500,
+                    Text(
+                      '${materialItem.totalQuantity}\\${materialItem.maxQuantity}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: cairo,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '$currentQuantity\\$totalQuantity',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: cairo,
-                      color: Colors.black,
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Progress bar
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 10,
+                    backgroundColor: const Color(0xFFE2E8F0),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      progress < 0.20
+                          ? constRed // أحمر إذا أقل من 20%
+                          : constBlue, // أزرق إذا 20% أو أكثر
                     ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // Progress bar
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 10,
-                  backgroundColor: const Color(0xFFE2E8F0),
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    progress < 0.20
-                        ? constRed // أحمر إذا أقل من 20%
-                        : constBlue, // أزرق إذا 20% أو أكثر
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 6),
-            ],
+                const SizedBox(height: 6),
+              ],
+            ),
           ),
         ),
       ),

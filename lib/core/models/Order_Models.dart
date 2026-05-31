@@ -131,3 +131,122 @@ String recurringIntervalLabel(RecurringInterval interval) {
       return 'شهري';
   }
 }
+
+// class OrderModel {
+//   String? medicineName; // dropdown — اسم الدواء
+//   String  quantity;     // text field
+//   String? unit;         // dropdown — الوحدة
+//   String? brand;        // dropdown — الوكيل / الماركة
+//   String  priority;     // 'عادي' | 'ضروري'
+
+//   OrderModel({
+//     this.medicineName,
+//     this.quantity = '',
+//     this.unit,
+//     this.brand,
+//     this.priority = 'عادي',
+//   });
+
+//   OrderModel copyWith({
+//     String? medicineName,
+//     String? quantity,
+//     String? unit,
+//     String? brand,
+//     String? priority,
+//   }) {
+//     return OrderModel(
+//       medicineName: medicineName ?? this.medicineName,
+//       quantity:     quantity     ?? this.quantity,
+//       unit:         unit         ?? this.unit,
+//       brand:        brand        ?? this.brand,
+//       priority:     priority     ?? this.priority,
+//     );
+//   }
+
+//   // الطلب صالح إذا تم اختيار المادة والوحدة والوكيل وإدخال الكمية
+//   bool get isValid =>
+//       (medicineName?.trim().isNotEmpty ?? false) &&
+//       quantity.trim().isNotEmpty &&
+//       (unit?.trim().isNotEmpty ?? false) &&
+//       (brand?.trim().isNotEmpty ?? false);
+
+//   Map<String, dynamic> toJson() => {
+//         'medicineName': medicineName,
+//         'quantity':     quantity,
+//         'unit':         unit,
+//         'brand':        brand,
+//         'priority':     priority,
+//       };
+
+//   @override
+//   String toString() =>
+//       'OrderModel(medicine: $medicineName, qty: $quantity, unit: $unit, priority: $priority)';
+// }
+
+
+// Sentinel — قيمة وهمية تعني "امسح هذا الحقل واجعله null"
+// لا يمكن استخدام null مباشرة في copyWith لأن
+// null ?? oldValue يرجع oldValue دائماً
+const _clear = Object();
+
+class OrderModel {
+  String? medicineName;
+  String  quantity;
+  String? unit;
+  String? brand;
+  String  priority;
+
+  OrderModel({
+    this.medicineName,
+    this.quantity = '',
+    this.unit,
+    this.brand,
+    this.priority = 'عادي',
+  });
+
+  /// لتمرير null صراحةً استخدم الثابت [clearField]:
+  ///   model.copyWith(medicineName: clearField)
+  OrderModel copyWith({
+    Object? medicineName = _clear,
+    Object? quantity     = _clear,
+    Object? unit         = _clear,
+    Object? brand        = _clear,
+    Object? priority     = _clear,
+  }) {
+    return OrderModel(
+      medicineName: identical(medicineName, _clear)
+          ? this.medicineName
+          : medicineName as String?,
+      quantity: identical(quantity, _clear)
+          ? this.quantity
+          : (quantity as String? ?? ''),
+      unit: identical(unit, _clear)
+          ? this.unit
+          : unit as String?,
+      brand: identical(brand, _clear)
+          ? this.brand
+          : brand as String?,
+      priority: identical(priority, _clear)
+          ? this.priority
+          : (priority as String? ?? 'عادي'),
+    );
+  }
+
+  bool get isValid =>
+      (medicineName?.trim().isNotEmpty ?? false) &&
+      quantity.trim().isNotEmpty &&
+      (unit?.trim().isNotEmpty ?? false) &&
+      (brand?.trim().isNotEmpty ?? false);
+
+  Map<String, dynamic> toJson() => {
+        'medicineName': medicineName,
+        'quantity':     quantity,
+        'unit':         unit,
+        'brand':        brand,
+        'priority':     priority,
+      };
+
+  @override
+  String toString() =>
+      'OrderModel(medicine: $medicineName, qty: $quantity, unit: $unit, priority: $priority)';
+}

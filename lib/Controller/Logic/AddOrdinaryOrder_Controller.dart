@@ -1,73 +1,266 @@
 // ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-class OrderItem {
-  RxString medicine = ''.obs;
-  RxString brand = ''.obs;    // الوكيل / الماركة
-  RxInt quantity = 1.obs;
-  RxString priority = 'عادي'.obs;
-}
+import 'package:stock_mate_project/core/models/Order_Models.dart';
 
 class AddOrdinaryOrderController extends GetxController {
   static const int maxOrders = 5;
 
-  final RxList<OrderItem> orders = <OrderItem>[].obs;
-  final RxInt expandedIndex = (-1).obs;
+  // ─── Reactive state ───────────────────────────────────────────────────────
+  final RxList<OrderModel> orders          = <OrderModel>[OrderModel()].obs;
+  final RxInt              activeOrderIndex = 0.obs;
+  final RxBool             isLoading        = false.obs;
+
+  // ─── TextEditingController للكمية + GlobalKey للـ Form لكل طلب ───────────
+  final List<TextEditingController> _quantityControllers = [];
+  final List<GlobalKey<FormState>>  formKeys             = [];
+
+  // ─── Reactive بالحقول الفارغة لكل طلب (لإظهار border أحمر على الـ dropdowns) ─
+  // Map<orderIndex, Set<fieldName>>
+  final RxMap<int, Set<String>> invalidFields = <int, Set<String>>{}.obs;
 
   @override
   void onInit() {
     super.onInit();
-    addOrder(); // ابدأ بطلب واحد افتراضياً
+    _addControllerSet();
   }
 
+  @override
+  void onClose() {
+    for (final c in _quantityControllers) {
+      c.dispose();
+    }
+    super.onClose();
+  }
+
+  // ─── Helpers ──────────────────────────────────────────────────────────────
+
+  void _addControllerSet() {
+    _quantityControllers.add(TextEditingController());
+    formKeys.add(GlobalKey<FormState>());
+  }
+
+  TextEditingController quantityCtrl([int? index]) =>
+      _quantityControllers[index ?? activeOrderIndex.value];
+
+  GlobalKey<FormState> formKey([int? index]) =>
+      formKeys[index ?? activeOrderIndex.value];
+
+  /// هل الحقل [field] في الطلب [index] يعاني من خطأ validation؟
+  bool isFieldInvalid(int index, String field) =>
+      invalidFields[index]?.contains(field) ?? false;
+
+  void _markInvalid(int index, String field) {
+    final set = invalidFields[index] ?? {};
+    set.add(field);
+    invalidFields[index] = set;
+    invalidFields.refresh();
+  }
+
+  void _clearInvalid(int index, String field) {
+    invalidFields[index]?.remove(field);
+    invalidFields.refresh();
+  }
+
+  // ─── Order management ─────────────────────────────────────────────────────
+
+  bool get canAddOrder    => orders.length < maxOrders;
+  bool get canRemoveOrder => orders.length > 1;
+
   void addOrder() {
-    if (orders.length >= maxOrders) return;
-    orders.add(OrderItem());
-    expandedIndex.value = orders.length - 1; // افتح الجديد تلقائياً
+    if (!canAddOrder) {
+      Get.snackbar(
+        'تنبيه',
+        'لا يمكنك إضافة أكثر من $maxOrders طلبات',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange.shade700,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 12,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+    _saveCurrentQuantity();
+    orders.add(OrderModel());
+    _addControllerSet();
+    activeOrderIndex.value = orders.length - 1;
   }
 
   void removeOrder(int index) {
-    if (orders.length <= 1) return;
+    if (!canRemoveOrder) return;
+    _quantityControllers[index].dispose();
+    _quantityControllers.removeAt(index);
+    formKeys.removeAt(index);
     orders.removeAt(index);
-    if (expandedIndex.value == index) {
-      expandedIndex.value = -1;
-    } else if (expandedIndex.value > index) {
-      expandedIndex.value--;
+    invalidFields.remove(index);
+
+    // أعد ترقيم الـ invalidFields بعد الحذف
+    final newMap = <int, Set<String>>{};
+    invalidFields.forEach((k, v) {
+      if (k < index) newMap[k] = v;
+      if (k > index) newMap[k - 1] = v;
+    });
+    invalidFields.assignAll(newMap);
+
+    if (activeOrderIndex.value >= orders.length) {
+      activeOrderIndex.value = orders.length - 1;
     }
   }
 
-  void toggleExpanded(int index) {
-    expandedIndex.value = expandedIndex.value == index ? -1 : index;
+  void selectOrder(int index) {
+    _saveCurrentQuantity();
+    activeOrderIndex.value = index;
+    _loadQuantityToController(index);
   }
 
-  bool get canAddMore => orders.length < maxOrders;
+  // ─── Sync: quantity ↔ model ───────────────────────────────────────────────
 
- void confirmOrders() {
-  final incomplete = orders.any(
-    (o) =>
-      o.medicine.value.trim().isEmpty ||  // لم يختر مادة
-      o.brand.value.trim().isEmpty ||     // لم يختر ماركة
-      o.quantity.value <= 0,             // الكمية صفر أو أقل
-  );
-
-  if (incomplete) {
-    Get.snackbar(
-      'تنبيه',
-      'يرجى تعبئة جميع حقول الطلبات قبل الإرسال',
-      backgroundColor: Get.theme.colorScheme.error,
-      colorText: Get.theme.colorScheme.onError,
-      snackPosition: SnackPosition.TOP,
-    );
-    return;
+  void _saveCurrentQuantity() {
+    final i = activeOrderIndex.value;
+    if (i >= orders.length) return;
+    final qty = _quantityControllers[i].text;
+    orders[i] = orders[i].copyWith(quantity: qty);
+    // امسح خطأ الكمية إذا أُدخلت
+    if (qty.trim().isNotEmpty) _clearInvalid(i, 'quantity');
   }
 
-  // هنا القيم جاهزة للإرسال
-  for (final order in orders) {
-    debugPrint('دواء: ${order.medicine.value}');
-    debugPrint('ماركة: ${order.brand.value}');
-    debugPrint('كمية: ${order.quantity.value}');
-    debugPrint('أولوية: ${order.priority.value}');
+  void _loadQuantityToController(int index) {
+    _quantityControllers[index].text = orders[index].quantity;
   }
-}
+
+  // ─── Dropdown updates ─────────────────────────────────────────────────────
+
+  void updateMedicineName(int index, String? value) {
+    if (index >= orders.length) return;
+    // نمرر null صراحةً عند المسح — copyWith يدعمه بالـ sentinel
+    orders[index] = orders[index].copyWith(medicineName: value);
+    if (value != null && value.isNotEmpty) {
+      _clearInvalid(index, 'medicineName');
+    } else {
+      _markInvalid(index, 'medicineName');
+    }
+    orders.refresh();
+  }
+
+  void updateUnit(int index, String? value) {
+    if (index >= orders.length) return;
+    orders[index] = orders[index].copyWith(unit: value);
+    if (value != null && value.isNotEmpty) {
+      _clearInvalid(index, 'unit');
+    } else {
+      _markInvalid(index, 'unit');
+    }
+    orders.refresh();
+  }
+
+  void updateBrand(int index, String? value) {
+    if (index >= orders.length) return;
+    orders[index] = orders[index].copyWith(brand: value);
+    if (value != null && value.isNotEmpty) {
+      _clearInvalid(index, 'brand');
+    } else {
+      _markInvalid(index, 'brand');
+    }
+    orders.refresh();
+  }
+
+  void updatePriority(int index, String priority) {
+    if (index >= orders.length) return;
+    orders[index] = orders[index].copyWith(priority: priority);
+    orders.refresh();
+  }
+
+  // ─── Submission ───────────────────────────────────────────────────────────
+
+  Future<void> submitOrders() async {
+    _saveCurrentQuantity();
+
+    // 1. validate الـ TextFormField بالـ Form key للطلب النشط
+    final currentFormValid =
+        formKey(activeOrderIndex.value).currentState?.validate() ?? true;
+
+    // 2. validate كل الطلبات
+    bool allValid = currentFormValid;
+    for (int i = 0; i < orders.length; i++) {
+      final o = orders[i];
+      bool orderOk = true;
+
+      if (o.medicineName == null || o.medicineName!.trim().isEmpty) {
+        _markInvalid(i, 'medicineName');
+        orderOk = false;
+      }
+      if (o.quantity.trim().isEmpty) {
+        _markInvalid(i, 'quantity');
+        orderOk = false;
+      }
+      if (o.unit == null || o.unit!.trim().isEmpty) {
+        _markInvalid(i, 'unit');
+        orderOk = false;
+      }
+      if (o.brand == null || o.brand!.trim().isEmpty) {
+        _markInvalid(i, 'brand');
+        orderOk = false;
+      }
+
+      if (!orderOk) {
+        allValid = false;
+        // انتقل لأول طلب فيه خطأ
+        if (i != activeOrderIndex.value) {
+          selectOrder(i);
+          // أعد تشغيل الـ form validate بعد الانتقال
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            formKey(i).currentState?.validate();
+          });
+        }
+        break;
+      }
+    }
+
+    if (!allValid) {
+      Get.snackbar(
+        'بيانات ناقصة',
+        'يرجى تعبئة جميع الحقول المطلوبة',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade600,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 12,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+    try {
+      await Future.delayed(const Duration(seconds: 2)); // TODO: API call
+
+      final payload = orders.map((o) => o.toJson()).toList();
+      debugPrint('Submitting: $payload');
+
+      Get.snackbar(
+        'تم الإرسال ✓',
+        'تم إرسال ${orders.length} طلب بنجاح',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.shade600,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 12,
+        duration: const Duration(seconds: 3),
+      );
+      // Get.back();
+    } catch (e) {
+      Get.snackbar(
+        'خطأ',
+        'حدث خطأ أثناء الإرسال، يرجى المحاولة مجدداً',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade700,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 12,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

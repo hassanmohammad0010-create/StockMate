@@ -1,11 +1,15 @@
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 
-class FindStatus {
-  findOrderPriority({required OrderPriority orderPriority}) {
-    if (orderPriority == OrderPriority.normal) {
-      return 'عادي';
-    } else if (orderPriority == OrderPriority.urgent) {
-      return 'ضروري';
+class FindOrderStatus {
+  findOrderStatus({required OrderStatus orderStatus}) {
+    if (orderStatus == OrderStatus.completed) {
+      return 'منجز';
+    } else if (orderStatus == OrderStatus.inProgress) {
+      return 'قيد التنفيذ';
+    } else if (orderStatus == OrderStatus.rejected) {
+      return 'مرفوضة';
+    } else if (orderStatus == OrderStatus.suspended) {
+      return 'معلق';
     }
   }
 }

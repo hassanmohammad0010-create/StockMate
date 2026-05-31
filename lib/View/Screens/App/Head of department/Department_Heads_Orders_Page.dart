@@ -51,7 +51,7 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
     'معلق',
     'قيد التنفيذ',
     'منجز',
-    'مرفوضة',
+    'مرفوض',
   ];
 
   List<Order> get _filteredOrders {
@@ -72,7 +72,7 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
         return allOrders
             .where((o) => o.status == OrderStatus.completed)
             .toList();
-      case 'مرفوضة':
+      case 'مرفوض':
         return allOrders
             .where((o) => o.status == OrderStatus.rejected)
             .toList();

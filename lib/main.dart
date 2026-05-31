@@ -7,8 +7,13 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Requ
 import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Purchasing_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Request_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Ordinary_Order_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
@@ -76,6 +81,22 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: DepartmentHeadsAddNewOrderPage().pageName,
           page: () => DepartmentHeadsAddNewOrderPage(),
+        ),
+        GetPage(
+          name: DepartmentHeadsHomePage().pageName,
+          page: () => DepartmentHeadsHomePage(),
+        ),
+        GetPage(
+          name: DepartmentOrdersPage().pageName,
+          page: () => DepartmentOrdersPage(),
+        ),
+        GetPage(
+          name: AddOrdinaryOrderPage().pageName,
+          page: () => AddOrdinaryOrderPage(),
+        ),
+        GetPage(
+          name: AddRecurringOrderPage().pageName,
+          page: () => AddRecurringOrderPage(),
         ),
       ],
       initialRoute: DepartmentHeadsMainPage().pageName,

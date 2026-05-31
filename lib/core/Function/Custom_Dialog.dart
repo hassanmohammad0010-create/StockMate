@@ -53,6 +53,28 @@ void showConfirmDialog({
                       onPressed: () {
                         Get.back();
                         onReject?.call();
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: constGreen,
+                        side: BorderSide.none,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'تأكيد',
+                        style: TextStyle(fontSize: 16, color: constlightGreen),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Get.back();
+                        onReject?.call();
                         showDialogWithTextFailed(onConfirm: (data) {});
                       },
                       style: OutlinedButton.styleFrom(
@@ -69,29 +91,8 @@ void showConfirmDialog({
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
 
                   // Confirm Button
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Get.back();
-                        onReject?.call();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: constGreen,
-                        side: BorderSide.none, 
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'تأكيد',
-                        style: TextStyle(fontSize: 16, color: constlightGreen),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ],

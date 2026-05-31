@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Enter_Account_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';

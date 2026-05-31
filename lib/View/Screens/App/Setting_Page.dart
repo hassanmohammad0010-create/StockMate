@@ -139,7 +139,6 @@ class SettingPage extends StatelessWidget {
               onTap: () {},
               title: 'اقتراح',
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'طلب حذف الحساب الشخصي',
@@ -149,7 +148,6 @@ class SettingPage extends StatelessWidget {
               title: 'حذف الحساب',
             ),
 
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'طلب تسجيل خروج من التطبيق',

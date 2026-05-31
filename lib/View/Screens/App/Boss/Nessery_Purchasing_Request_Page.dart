@@ -16,12 +16,7 @@ class NesseryPurchasingRequestPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           CustomBackContainer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: CustomHeadContainer(
-              title: 'طلبات الشراء الضرورية',
-            ),
-          ),
+          CustomHeadContainer(title: 'طلبات الشراء الضرورية'),
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.only(top: 0),
