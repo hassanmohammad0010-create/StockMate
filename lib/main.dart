@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Entry_And_Exit_Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Request_Page.dart';
@@ -74,6 +75,10 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: DepartmentHeadsAddNewOrderPage().pageName,
           page: () => DepartmentHeadsAddNewOrderPage(),
+        ),
+        GetPage(
+          name: DisplayPurchasingOrderPage().pageName,
+          page: () => DisplayPurchasingOrderPage(),
         ),
       ],
       initialRoute: SplashViewPage().pageName,

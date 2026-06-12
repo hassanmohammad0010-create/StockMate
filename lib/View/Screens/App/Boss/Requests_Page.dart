@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
@@ -7,6 +8,7 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Toggle_Buttom.dart';
 
 class RequestPage extends StatelessWidget {
   RequestPage({super.key}) {
@@ -46,6 +48,20 @@ class RequestPage extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.screenWidth * 0.02, // ← بدل 8
+                vertical: context.screenHeight * 0.01, // ← بدل 8
+              ),
+              child: Align(
+                alignment: AlignmentGeometry.topRight,
+                child: CustomToggleButtom(
+                  first: 'المستودع',
+                  second: 'المخازن',
+                  controller: toggleController,
+                ),
+              ),
+            ),
             // ✅ نفس الـ tag
             CustomFilterBar(
               tag: 'RequestPage',

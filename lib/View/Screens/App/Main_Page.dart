@@ -8,35 +8,32 @@ import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
   final String pageName = '/HomePage';
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         backgroundColor: constColor,
-
         appBar: AppBar(
-          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+          toolbarHeight: context.screenHeight * 0.1,
           actions: [
             Stack(
               children: [
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.notifications,
                     color: Colors.white,
-                    size: 28,
+                    size: context.screenHeight * 0.033,
                   ),
-                  onPressed: () {
-                    // TODO: فتح صفحة الإشعارات
-                  },
+                  onPressed: () {},
                 ),
-                // نقطة حمراء تدل على وجود إشعارات جديدة
                 Positioned(
                   right: 10,
                   top: 10,
                   child: Container(
-                    width: 10,
-                    height: 10,
+                    width: context.screenHeight * 0.012,
+                    height: context.screenHeight * 0.012,
                     decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
@@ -45,7 +42,7 @@ class MainPage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: context.screenWidth * 0.02),
           ],
           elevation: 5,
           shadowColor: Colors.black,
@@ -59,7 +56,7 @@ class MainPage extends StatelessWidget {
                 "StockMate",
                 style: TextStyle(
                   fontFamily: lateef,
-                  fontSize: 32,
+                  fontSize: context.screenHeight * 0.038,
                   color: Colors.white,
                 ),
               ),
@@ -67,11 +64,11 @@ class MainPage extends StatelessWidget {
                 "مستشفى الهلال الاحمر الطبي",
                 style: TextStyle(
                   fontFamily: lateef,
-                  fontSize: 24,
+                  fontSize: context.screenHeight * 0.028,
                   color: constBlue,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: context.screenHeight * 0.01),
             ],
           ),
           backgroundColor: constColor,
@@ -79,46 +76,54 @@ class MainPage extends StatelessWidget {
             indicatorColor: constBlue,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white,
-            labelStyle: const TextStyle(
-              fontSize: 13,
+            labelStyle: TextStyle(
+              fontSize: context.screenHeight * 0.015,
               fontWeight: FontWeight.w600,
             ),
-
             tabs: [
               Tab(
                 icon: const Icon(Icons.dashboard_sharp),
                 child: Text(
                   'الرئيسية',
-                  style: TextStyle(fontFamily: cairo, fontSize: 16),
+                  style: TextStyle(
+                    fontFamily: cairo,
+                    fontSize: context.screenHeight * 0.019,
+                  ),
                 ),
               ),
               Tab(
                 icon: const Icon(Icons.inventory_2_sharp),
-
                 child: Text(
                   'المخزون',
-                  style: TextStyle(fontFamily: cairo, fontSize: 16),
+                  style: TextStyle(
+                    fontFamily: cairo,
+                    fontSize: context.screenHeight * 0.019,
+                  ),
                 ),
               ),
               Tab(
                 icon: const Icon(Icons.receipt_long_sharp),
-
                 child: Text(
                   'الطلبات',
-                  style: TextStyle(fontFamily: cairo, fontSize: 16),
+                  style: TextStyle(
+                    fontFamily: cairo,
+                    fontSize: context.screenHeight * 0.019,
+                  ),
                 ),
               ),
               Tab(
                 icon: const Icon(Icons.settings),
                 child: Text(
                   'الاعدادات',
-                  style: TextStyle(fontFamily: cairo, fontSize: 16),
+                  style: TextStyle(
+                    fontFamily: cairo,
+                    fontSize: context.screenHeight * 0.019,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        // drawer: CustomDrawer(),
         body: TabBarView(
           children: [
             BossHomePage(),

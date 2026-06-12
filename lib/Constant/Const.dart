@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ─── الألوان ───────────────────────────────────────────
 const Color constColor = Color(0xff192132);
 const Color constBlue = Color(0xff0983C0);
 const Color constLightBlue = Color(0xffE3F2FD);
@@ -15,9 +16,10 @@ const Color constLightOrange = Color(0xffFFF1E6);
 const Color constRed = Color(0xffE53935);
 const Color constLightRed = Color(0xffFFEBEE);
 
+// ─── الخطوط ───────────────────────────────────────────
 String cairo = 'Cairo';
 String lateef = 'Lateef';
-
+// ─── الصور ────────────────────────────────────────────
 String fullLogo = 'assets/Image/Logo/Full_Logo.png';
 String semiLogo = 'assets/Image/Logo/Semi_Logo.png';
 String textLogo = 'assets/Image/Logo/Text_Logo.png';
@@ -54,3 +56,10 @@ List<IconData> specialtiesIcons = [
   Icons.local_pharmacy,
   Icons.cleaning_services,
 ];
+
+// ─── Extension للقيم الديناميكية ──────────────────────
+extension AppSize on BuildContext {
+  double get screenHeight => MediaQuery.of(this).size.height;
+  double get screenWidth => MediaQuery.of(this).size.width;
+  double get keyboard => MediaQuery.of(this).viewInsets.bottom;
+}

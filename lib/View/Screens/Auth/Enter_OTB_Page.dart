@@ -16,38 +16,46 @@ class EnterOTBPage extends StatelessWidget {
   final String pageName = '/EnterOTBPage';
   final String email;
   final String operationName;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Image.asset('assets/Image/OTB.png'),
-          AnimatedAlign(
+          Padding(
+            padding: EdgeInsets.only(top: context.screenHeight * 0.08),
+            child: Image.asset('assets/Image/OTB.png'),
+          ),
+          AnimatedContainer(
             duration: Duration(milliseconds: 300),
-            alignment: MediaQuery.of(context).viewInsets.bottom > 0
-                ? Alignment(0, -0.5)
-                : Alignment(0, -1.2),
+            curve: Curves.easeOut,
+            transform: Matrix4.translationValues(
+              0,
+              -context.keyboard + context.screenHeight * 0.09,
+              0,
+            ),
             child: CustomCircle(
               xAlignment: 0,
               yAlignment: 4.5,
               size: 1.75,
               color: constColor,
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 3 / 2,
-                width: MediaQuery.of(context).size.width,
+                height: context.screenHeight * 1.5,
+                width: context.screenWidth,
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.1,
-                  ),
+                  padding: EdgeInsets.only(top: context.screenHeight * 0.1),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.04,
+                        ),
                         child: Text(
                           'تأكيد البريد الالكتروني',
                           style: TextStyle(
-                            fontSize: 36,
+                            fontSize: context.screenHeight * 0.034,
                             color: Colors.white,
                             fontFamily: lateef,
                             fontWeight: FontWeight.bold,
@@ -55,17 +63,19 @@ class EnterOTBPage extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.06,
+                        ),
                         child: Text(
                           'قمنا بأرسال رمز التأكيد على الحساب المدخل الرجاء تفقد الحساب وادخال الرمز',
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: context.screenHeight * 0.028,
                             color: constGray,
                             fontFamily: lateef,
                           ),
                         ),
                       ),
-                      SizedBox(height: 32),
+                      SizedBox(height: context.screenHeight * 0.04),
                       CustomOtb(
                         onSubmit: (data) {
                           operationName == 'confirm'

@@ -9,6 +9,7 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dar
 class NesseryDepartmentRequestPage extends StatelessWidget {
   const NesseryDepartmentRequestPage({super.key});
   final String pageName = '/NesseryDepartmentRequestPage';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

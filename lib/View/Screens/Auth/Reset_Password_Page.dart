@@ -11,63 +11,74 @@ class ResetPasswordPage extends StatelessWidget {
   ResetPasswordPage({super.key});
   final String pageName = '/ResetPasswordPage';
   final GlobalKey<FormState> resetPasswordPageKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: resetPasswordPageKey,
         child: Stack(
           children: [
-            Image.asset('assets/Image/Reset_Password.png'),
-            AnimatedAlign(
+            Padding(
+              padding: EdgeInsets.only(top: context.screenHeight * 0.04),
+              child: Image.asset('assets/Image/Reset_Password.png'),
+            ),
+            AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              alignment: MediaQuery.of(context).viewInsets.bottom > 0
-                  ? Alignment(0, -0.5)
-                  : Alignment(0, -1.2),
+              curve: Curves.easeOut,
+              transform: Matrix4.translationValues(
+                0,
+                -context.keyboard + context.screenHeight * 0.09,
+                0,
+              ),
               child: CustomCircle(
                 xAlignment: 0,
                 yAlignment: 4,
                 size: 1.75,
                 color: constColor,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 3 / 2,
-                  width: MediaQuery.of(context).size.width,
+                  height: context.screenHeight * 1.5,
+                  width: context.screenWidth,
                   child: Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.03,
-                    ),
+                    padding: EdgeInsets.only(top: context.screenHeight * 0.04),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 32),
+                        SizedBox(height: context.screenHeight * 0.04),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.04,
+                          ),
                           child: Text(
                             'اعادة تعيين كلمة المرور',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
+                              fontSize: context.screenHeight * 0.034,
                               fontFamily: lateef,
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 28),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.07,
+                          ),
                           child: Text(
                             'الرجاء ادخال كلمة المرور الجديدة ',
                             style: TextStyle(
                               color: constGray,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                              fontSize: context.screenHeight * 0.028,
                               fontFamily: lateef,
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: context.screenHeight * 0.02),
                         CustomTextFormFaild(
                           labelText: 'كلمة المرور',
-                          icon: Icon(Icons.lock_outline, size: 32),
+                          icon: Icon(
+                            Icons.lock_outline,
+                            size: context.screenHeight * 0.04,
+                          ),
                           onChange: (data) {},
                           validator: (data) {
                             return Validation().passwordValidator(data!);
@@ -75,13 +86,16 @@ class ResetPasswordPage extends StatelessWidget {
                         ),
                         CustomTextFormFaild(
                           labelText: 'تأكيد كلمة المرور',
-                          icon: Icon(Icons.lock_outline, size: 32),
+                          icon: Icon(
+                            Icons.lock_outline,
+                            size: context.screenHeight * 0.04,
+                          ),
                           onChange: (data) {},
                           validator: (data) {
                             return Validation().passwordValidator(data!);
                           },
                         ),
-                        SizedBox(height: 32),
+                        SizedBox(height: context.screenHeight * 0.02),
                         Align(
                           alignment: AlignmentGeometry.center,
                           child: CustomButtom(

@@ -15,63 +15,76 @@ class EnterAccountPage extends StatelessWidget {
   final GlobalKey<FormState> confirmAccountKey = GlobalKey();
   String? email;
   String operationName;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: confirmAccountKey,
         child: Stack(
           children: [
-            Image.asset('assets/Image/Verify_Email.png'),
-            AnimatedAlign(
+            Padding(
+              padding: EdgeInsets.only(top: context.screenHeight * 0.05),
+              child: Image.asset('assets/Image/Verify_Email.png'),
+            ),
+            AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              alignment: MediaQuery.of(context).viewInsets.bottom > 0
-                  ? Alignment(0, -0.5)
-                  : Alignment(0, -1.2),
+              curve: Curves.easeOut,
+              transform: Matrix4.translationValues(
+                0,
+                -context.keyboard + context.screenHeight * 0.09,
+                0,
+              ),
               child: CustomCircle(
                 xAlignment: 0,
                 yAlignment: 4,
                 size: 1.75,
                 color: constColor,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 3 / 2,
-                  width: MediaQuery.of(context).size.width,
+                  height: context.screenHeight * 1.5,
+                  width: context.screenWidth,
                   child: Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.05,
-                    ),
+                    padding: EdgeInsets.only(top: context.screenHeight * 0.05),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 32),
+                        SizedBox(height: context.screenHeight * 0.04),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.04,
+                          ),
                           child: Text(
                             'البريد الالكتروني',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 32,
+                              fontSize: context.screenHeight * 0.038,
                               fontWeight: FontWeight.bold,
                               fontFamily: lateef,
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.04,
+                          ),
                           child: Text(
                             'الرجاء ادخال البريد الالكتروني الخاص بك من اجل رمز التحقق',
                             style: TextStyle(
                               color: constGray,
-                              fontSize: 24,
+                              fontSize: context.screenHeight * 0.028,
                               fontWeight: FontWeight.bold,
                               fontFamily: lateef,
                             ),
                           ),
                         ),
-                        SizedBox(height: 32),
+                        SizedBox(height: context.screenHeight * 0.04),
                         CustomTextFormFaild(
                           labelText: 'البريد الالكتروني',
-                          icon: Icon(Icons.email_outlined, size: 32),
+                          icon: Icon(
+                            Icons.email_outlined,
+                            size: context.screenHeight * 0.04,
+                          ),
                           onChange: (data) {
                             email = data;
                           },
@@ -79,7 +92,7 @@ class EnterAccountPage extends StatelessWidget {
                             return Validation().emailValidate(data!);
                           },
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: context.screenHeight * 0.05),
                         Align(
                           alignment: AlignmentGeometry.center,
                           child: CustomButtom(

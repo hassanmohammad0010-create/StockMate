@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Enter_Account_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
@@ -14,15 +13,17 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Drop_Down_Buttom.dar
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-  final String pageName = '/ReceptionPage';
+  final String pageName = '/LoginPage';
   final GlobalKey<FormState> loginPageKey = GlobalKey();
+
   @override
   Widget build(context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: loginPageKey,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+          height: context.screenHeight,
           child: Stack(
             children: [
               CustomCircle(
@@ -46,8 +47,8 @@ class LoginPage extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.24,
-                  right: 16,
+                  top: context.screenHeight * 0.24,
+                  right: context.screenWidth * 0.04,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +57,7 @@ class LoginPage extends StatelessWidget {
                       'اهلا بك !  ',
                       style: TextStyle(
                         color: constColor,
-                        fontSize: 48,
+                        fontSize: context.screenHeight * 0.055,
                         fontWeight: FontWeight.bold,
                         fontFamily: lateef,
                       ),
@@ -65,29 +66,32 @@ class LoginPage extends StatelessWidget {
                       'الرجاء اكمال المعلومات لتسجيل الدخول',
                       style: TextStyle(
                         color: constGray,
-                        fontSize: 25,
+                        fontSize: context.screenHeight * 0.03,
                         fontFamily: lateef,
                       ),
                     ),
                   ],
                 ),
               ),
-              AnimatedAlign(
+              AnimatedContainer(
                 duration: Duration(milliseconds: 300),
-                alignment: MediaQuery.of(context).viewInsets.bottom > 0
-                    ? Alignment(0, -0.5)
-                    : Alignment(0, -1.2),
+                curve: Curves.easeOut,
+                transform: Matrix4.translationValues(
+                  0,
+                  -context.keyboard + context.screenHeight * 0.09,
+                  0,
+                ),
                 child: CustomCircle(
                   xAlignment: 0,
                   yAlignment: 4.5,
                   size: 1.88,
                   color: constColor,
                   child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 3 / 2,
-                    width: MediaQuery.of(context).size.width,
+                    height: context.screenHeight * 1.5,
+                    width: context.screenWidth,
                     child: Padding(
                       padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.07,
+                        top: context.screenHeight * 0.07,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -96,22 +100,28 @@ class LoginPage extends StatelessWidget {
                             'تسجيل الدخول',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 48,
+                              fontSize: context.screenHeight * 0.055,
                               fontFamily: lateef,
                             ),
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: context.screenHeight * 0.02),
 
                           CustomDropDown(
                             itemList: specialties,
                             hintText: 'الهوية',
-                            icon: Icon(Icons.person_2_outlined, size: 32),
+                            icon: Icon(
+                              Icons.person_2_outlined,
+                              size: context.screenHeight * 0.04,
+                            ),
                             onChanched: (data) {},
                           ),
 
                           CustomTextFormFaild(
                             labelText: 'البريد الالكتروني',
-                            icon: Icon(Icons.email_outlined, size: 32),
+                            icon: Icon(
+                              Icons.email_outlined,
+                              size: context.screenHeight * 0.04,
+                            ),
                             onChange: (data) {},
                             validator: (data) =>
                                 Validation().emailValidate(data!),
@@ -119,23 +129,25 @@ class LoginPage extends StatelessWidget {
 
                           CustomTextFormFaild(
                             labelText: 'كلمة المرور',
-                            icon: Icon(Icons.lock_outline, size: 32),
+                            icon: Icon(
+                              Icons.lock_outline,
+                              size: context.screenHeight * 0.04,
+                            ),
                             onChange: (data) {},
                             validator: (data) =>
                                 Validation().passwordValidator(data!),
                           ),
 
-                          SizedBox(height: 32),
+                          SizedBox(height: context.screenHeight * 0.04),
                           CustomButtom(
                             tital: 'تسجيل الدخول',
                             onTap: () {
                               if (loginPageKey.currentState!.validate()) {}
                               Get.offNamed(MainPage().pageName);
-                              // Get.offNamed(DepartmentHeadsMainPage().pageName);
                             },
                           ),
 
-                          SizedBox(height: 8),
+                          SizedBox(height: context.screenHeight * 0.01),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -149,12 +161,12 @@ class LoginPage extends StatelessWidget {
                                   'تأكيد حسابك ؟ ',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 24,
+                                    fontSize: context.screenHeight * 0.028,
                                     fontFamily: lateef,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              SizedBox(width: context.screenWidth * 0.02),
                               GestureDetector(
                                 onTap: () {
                                   Get.to(
@@ -165,7 +177,7 @@ class LoginPage extends StatelessWidget {
                                   'هل نسيت كلمة المرور؟',
                                   style: TextStyle(
                                     color: constBlue,
-                                    fontSize: 24,
+                                    fontSize: context.screenHeight * 0.028,
                                     fontFamily: lateef,
                                   ),
                                 ),

@@ -19,6 +19,7 @@ class EntryAndExitReportPage extends StatelessWidget {
     tag: 'EntryAndExitReportPage',
   );
   final GlobalKey<FormState> entryAndExitReportPageKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +30,10 @@ class EntryAndExitReportPage extends StatelessWidget {
           children: [
             CustomBackContainer(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.screenWidth * 0.04, // ← بدل 16
+                vertical: context.screenHeight * 0.015, // ← بدل 12
+              ),
               child: Align(
                 alignment: AlignmentGeometry.centerRight,
                 child: CustomToggleButtom(
@@ -46,14 +50,18 @@ class EntryAndExitReportPage extends StatelessWidget {
                 onPageChanged: (index) =>
                     controller.selectedIndex.value = index,
                 children: [
-                  //لم يتم عمل الكونتينر تئكؤ
+                  // ─── تبويب المادة ─────────────────────────
                   Align(
                     alignment: AlignmentGeometry.topCenter,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.screenWidth * 0.03, // ← بدل 12
+                      ),
                       child: Container(
-                        height: MediaQuery.of(context).size.height * 0.48,
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        height: context.screenHeight * 0.48,
+                        padding: EdgeInsets.symmetric(
+                          vertical: context.screenHeight * 0.015, // ← بدل 12
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
@@ -71,15 +79,14 @@ class EntryAndExitReportPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.screenWidth * 0.04,
+                                vertical: context.screenHeight * 0.015,
                               ),
                               child: Container(
                                 alignment: Alignment.center,
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
+                                width: context.screenWidth * 0.25,
+                                height: context.screenHeight * 0.05,
                                 decoration: BoxDecoration(
                                   color: constLightBlue,
                                   borderRadius: BorderRadius.circular(8),
@@ -89,7 +96,7 @@ class EntryAndExitReportPage extends StatelessWidget {
                                   style: TextStyle(
                                     color: constBlue,
                                     fontFamily: lateef,
-                                    fontSize: 22,
+                                    fontSize: context.screenHeight * 0.026,
                                   ),
                                 ),
                               ),
@@ -101,15 +108,14 @@ class EntryAndExitReportPage extends StatelessWidget {
                               onChanched: (data) {},
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.screenWidth * 0.04,
+                                vertical: context.screenHeight * 0.015,
                               ),
                               child: Container(
                                 alignment: Alignment.center,
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
+                                width: context.screenWidth * 0.25,
+                                height: context.screenHeight * 0.05,
                                 decoration: BoxDecoration(
                                   color: constLightBlue,
                                   borderRadius: BorderRadius.circular(8),
@@ -119,7 +125,7 @@ class EntryAndExitReportPage extends StatelessWidget {
                                   style: TextStyle(
                                     color: constBlue,
                                     fontFamily: lateef,
-                                    fontSize: 22,
+                                    fontSize: context.screenHeight * 0.026,
                                   ),
                                 ),
                               ),
@@ -131,14 +137,13 @@ class EntryAndExitReportPage extends StatelessWidget {
                                 return Validation().generalValidation(data!);
                               },
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.03,
-                            ),
+                            SizedBox(height: context.screenHeight * 0.03),
                             Align(
                               alignment: AlignmentGeometry.center,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      context.screenWidth * 0.06, // ← بدل 24
                                 ),
                                 child: CustomButtom(
                                   tital: 'طلب تقرير',
@@ -146,23 +151,25 @@ class EntryAndExitReportPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.03,
-                            ),
+                            SizedBox(height: context.screenHeight * 0.03),
                           ],
                         ),
                       ),
                     ),
                   ),
 
-                  ///
+                  // ─── تبويب اليوم ──────────────────────────
                   Align(
                     alignment: AlignmentGeometry.topCenter,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.screenWidth * 0.03,
+                      ),
                       child: Container(
-                        height: MediaQuery.of(context).size.height * 0.48,
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        height: context.screenHeight * 0.48,
+                        padding: EdgeInsets.symmetric(
+                          vertical: context.screenHeight * 0.015,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
@@ -180,15 +187,14 @@ class EntryAndExitReportPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.screenWidth * 0.04,
+                                vertical: context.screenHeight * 0.015,
                               ),
                               child: Container(
                                 alignment: Alignment.center,
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
+                                width: context.screenWidth * 0.25,
+                                height: context.screenHeight * 0.05,
                                 decoration: BoxDecoration(
                                   color: constLightBlue,
                                   borderRadius: BorderRadius.circular(8),
@@ -198,7 +204,7 @@ class EntryAndExitReportPage extends StatelessWidget {
                                   style: TextStyle(
                                     color: constBlue,
                                     fontFamily: lateef,
-                                    fontSize: 22,
+                                    fontSize: context.screenHeight * 0.026,
                                   ),
                                 ),
                               ),
@@ -210,15 +216,14 @@ class EntryAndExitReportPage extends StatelessWidget {
                               onChanched: (data) {},
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.screenWidth * 0.04,
+                                vertical: context.screenHeight * 0.015,
                               ),
                               child: Container(
                                 alignment: Alignment.center,
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
+                                width: context.screenWidth * 0.25,
+                                height: context.screenHeight * 0.05,
                                 decoration: BoxDecoration(
                                   color: constLightBlue,
                                   borderRadius: BorderRadius.circular(8),
@@ -228,7 +233,7 @@ class EntryAndExitReportPage extends StatelessWidget {
                                   style: TextStyle(
                                     color: constBlue,
                                     fontFamily: lateef,
-                                    fontSize: 22,
+                                    fontSize: context.screenHeight * 0.026,
                                   ),
                                 ),
                               ),
@@ -239,14 +244,12 @@ class EntryAndExitReportPage extends StatelessWidget {
                               icon: Icon(Icons.inventory, color: constGray),
                               onChanched: (data) {},
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.03,
-                            ),
+                            SizedBox(height: context.screenHeight * 0.03),
                             Align(
                               alignment: AlignmentGeometry.center,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: context.screenWidth * 0.06,
                                 ),
                                 child: CustomButtom(
                                   tital: 'طلب تقرير',
@@ -254,9 +257,7 @@ class EntryAndExitReportPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.03,
-                            ),
+                            SizedBox(height: context.screenHeight * 0.03),
                           ],
                         ),
                       ),

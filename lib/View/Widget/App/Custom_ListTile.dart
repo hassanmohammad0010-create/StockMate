@@ -16,12 +16,18 @@ class CustomListTile extends StatelessWidget {
   Color iconColor, backgroundColor;
   String title, description;
   VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.screenWidth * 0.03, // ← بدل 12
+        vertical: context.screenHeight * 0.005, // ← بدل 4
+      ),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(
+          vertical: context.screenHeight * 0.005, // ← بدل 8
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -36,36 +42,40 @@ class CustomListTile extends StatelessWidget {
         ),
         child: ListTile(
           leading: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(context.screenWidth * 0.025), // ← بدل 10
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: iconColor, size: 32),
+            child: Icon(
+              icon,
+              color: iconColor,
+              size: context.screenHeight * 0.038, // ← بدل 32
+            ),
           ),
-
           title: Text(
             title,
             textAlign: TextAlign.right,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontFamily: cairo,
-              fontSize: 16,
+              fontSize: context.screenHeight * 0.019, // ← بدل 16
             ),
           ),
-
           subtitle: Text(
             description,
             textAlign: TextAlign.right,
             style: TextStyle(
               color: constGray,
               fontFamily: lateef,
-              fontSize: 20,
+              fontSize: context.screenHeight * 0.024, // ← بدل 20
             ),
           ),
-
-          trailing: Icon(Icons.chevron_right, color: Colors.grey),
-
+          trailing: Icon(
+            Icons.chevron_right,
+            color: Colors.grey,
+            size: context.screenHeight * 0.028, // ← بدل default
+          ),
           onTap: onTap,
         ),
       ),

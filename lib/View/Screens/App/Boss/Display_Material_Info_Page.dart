@@ -24,21 +24,20 @@ class DisplayMaterialInfoPage extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.screenWidth * 0.03,
+                      vertical: context.screenHeight * 0.01,
                     ),
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
+                        horizontal: context.screenWidth * 0.035,
+                        vertical: context.screenHeight * 0.01,
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            // ignore: deprecated_member_use
                             color: Colors.grey.withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 8,
@@ -84,21 +83,19 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.screenWidth * 0.03,
                     ),
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
+                        horizontal: context.screenWidth * 0.035,
+                        vertical: context.screenHeight * 0.01,
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            // ignore: deprecated_member_use
                             color: Colors.grey.withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 8,
@@ -115,7 +112,7 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                               Text(
                                 'الكمية المتوفرة',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: context.screenHeight * 0.019,
                                   fontFamily: cairo,
                                   color: constGray,
                                   fontWeight: FontWeight.w500,
@@ -124,39 +121,39 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                               Text(
                                 '${item.totalQuantity}\\${item.maxQuantity}',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: context.screenHeight * 0.019,
                                   fontFamily: cairo,
                                   color: Colors.black,
                                 ),
                               ),
                             ],
                           ),
-
-                          const SizedBox(height: 12),
-
+                          SizedBox(height: context.screenHeight * 0.015),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: LinearProgressIndicator(
                               value: item.totalQuantity / item.maxQuantity,
-                              minHeight: 10,
+                              minHeight: context.screenHeight * 0.012,
                               backgroundColor: const Color(0xFFE2E8F0),
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 item.totalQuantity / item.maxQuantity < 0.20
-                                    ? constRed // أحمر إذا أقل من 20%
-                                    : constBlue, // أزرق إذا 20% أو أكثر
+                                    ? constRed
+                                    : constBlue,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: context.screenHeight * 0.008),
                           Text(
                             '${(item.totalQuantity / item.maxQuantity) * 100} %',
+                            style: TextStyle(
+                              fontSize: context.screenHeight * 0.016,
+                            ),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: context.screenHeight * 0.008),
                         ],
                       ),
                     ),
                   ),
-                  // _fmt(mat.validQuantity), 'صالحة', _validBg, _validText
                   Row(
                     children: [
                       CustomQuantityContainer(
@@ -174,8 +171,13 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-                    child: _buildBatchesCard(item),
+                    padding: EdgeInsets.fromLTRB(
+                      context.screenWidth * 0.02,
+                      context.screenHeight * 0.01,
+                      context.screenWidth * 0.02,
+                      context.screenHeight * 0.02,
+                    ),
+                    child: _buildBatchesCard(context, item),
                   ),
                 ],
               ),
@@ -186,9 +188,9 @@ class DisplayMaterialInfoPage extends StatelessWidget {
     );
   }
 
-  // ── Batches Card ─────────────────────────
-  Widget _buildBatchesCard(MaterialItem mat) {
+  Widget _buildBatchesCard(BuildContext context, MaterialItem mat) {
     return _card(
+      context: context,
       child: Column(
         children: [
           GestureDetector(
@@ -198,16 +200,16 @@ class DisplayMaterialInfoPage extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.inventory_2_outlined,
-                      size: 24,
+                      size: context.screenHeight * 0.028,
                       color: constGray,
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: context.screenWidth * 0.015),
                     Text(
                       'توزيع الكمية حسب الصلاحية',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: context.screenHeight * 0.019,
                         fontFamily: cairo,
                         color: constGray,
                       ),
@@ -218,38 +220,46 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                   () => AnimatedRotation(
                     turns: controller.showBatches.value ? 0 : 0.5,
                     duration: const Duration(milliseconds: 250),
-                    child: const Icon(Icons.keyboard_arrow_up, size: 22),
+                    child: Icon(
+                      Icons.keyboard_arrow_up,
+                      size: context.screenHeight * 0.026,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-
-          // Batch list
           Obx(() {
             if (!controller.showBatches.value) return const SizedBox.shrink();
             return Column(
               children: [
-                const SizedBox(height: 12),
-                // Column labels
+                SizedBox(height: context.screenHeight * 0.015),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.screenWidth * 0.01,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text(
                         'الكمية',
-                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                        style: TextStyle(
+                          fontSize: context.screenHeight * 0.013,
+                          color: Colors.grey,
+                        ),
                       ),
                       Text(
                         'تاريخ الانتهاء',
-                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                        style: TextStyle(
+                          fontSize: context.screenHeight * 0.013,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 6),
-                ...mat.batches.map((batch) => _buildBatchRow(batch)),
+                SizedBox(height: context.screenHeight * 0.008),
+                ...mat.batches.map((batch) => _buildBatchRow(context, batch)),
               ],
             );
           }),
@@ -258,7 +268,7 @@ class DisplayMaterialInfoPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBatchRow(MaterialBatch batch) {
+  Widget _buildBatchRow(BuildContext context, MaterialBatch batch) {
     final (bg, textColor) = switch (batch.status) {
       BatchStatus.valid => (constlightGreen, constGreen),
       BatchStatus.expiringSoon => (constLightRed, constRed),
@@ -269,8 +279,11 @@ class DisplayMaterialInfoPage extends StatelessWidget {
         '${batch.expiryDate.year}-${batch.expiryDate.month.toString().padLeft(2, '0')}-${batch.expiryDate.day.toString().padLeft(2, '0')}';
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      margin: EdgeInsets.only(bottom: context.screenHeight * 0.01),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.screenWidth * 0.03,
+        vertical: context.screenHeight * 0.012,
+      ),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(10),
@@ -279,21 +292,20 @@ class DisplayMaterialInfoPage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Quantity + badge
           Row(
             children: [
               Text(
                 _fmt(batch.quantity),
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: context.screenHeight * 0.017,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: context.screenWidth * 0.02),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 3,
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.screenWidth * 0.025,
+                  vertical: context.screenHeight * 0.004,
                 ),
                 decoration: BoxDecoration(
                   color: bg,
@@ -301,26 +313,30 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                 ),
                 child: Text(
                   batch.statusLabel,
-                  style: TextStyle(fontSize: 11, color: textColor),
+                  style: TextStyle(
+                    fontSize: context.screenHeight * 0.013,
+                    color: textColor,
+                  ),
                 ),
               ),
             ],
           ),
-          // Date
           Text(
             dateStr,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            style: TextStyle(
+              fontSize: context.screenHeight * 0.014,
+              color: Colors.grey,
+            ),
           ),
         ],
       ),
     );
   }
 
-  // ── Helpers ──────────────────────────────
-  Widget _card({required Widget child}) {
+  Widget _card({required BuildContext context, required Widget child}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(context.screenWidth * 0.04),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

@@ -12,6 +12,7 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dar
 class ElectronicInventoryPage extends StatelessWidget {
   const ElectronicInventoryPage({super.key});
   final String pageName = '/ElectronicInventoryPage';
+
   @override
   Widget build(BuildContext context) {
     final DatePickerController controller = Get.put(DatePickerController());
@@ -22,9 +23,14 @@ class ElectronicInventoryPage extends StatelessWidget {
           CustomBackContainer(),
           CustomHeadContainer(title: 'تقرير جرد الكتروني'),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.screenWidth * 0.03, // ← بدل 12
+              vertical: context.screenHeight * 0.005, // ← بدل 4
+            ),
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(
+                vertical: context.screenHeight * 0.015, // ← بدل 12
+              ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -40,15 +46,16 @@ class ElectronicInventoryPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // ─── المستودع ─────────────────────────────
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.screenWidth * 0.04, // ← بدل 16
+                      vertical: context.screenHeight * 0.01, // ← بدل 8
                     ),
                     child: Container(
                       alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      height: MediaQuery.of(context).size.height * 0.05,
+                      width: context.screenWidth * 0.25,
+                      height: context.screenHeight * 0.05,
                       decoration: BoxDecoration(
                         color: constLightBlue,
                         borderRadius: BorderRadius.circular(8),
@@ -58,7 +65,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                         style: TextStyle(
                           color: constBlue,
                           fontFamily: lateef,
-                          fontSize: 22,
+                          fontSize: context.screenHeight * 0.026, // ← بدل 22
                         ),
                       ),
                     ),
@@ -69,15 +76,16 @@ class ElectronicInventoryPage extends StatelessWidget {
                     icon: Icon(Icons.inventory, color: constGray),
                     onChanched: (data) {},
                   ),
+                  // ─── من تاريخ ─────────────────────────────
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.screenWidth * 0.04,
+                      vertical: context.screenHeight * 0.01,
                     ),
                     child: Container(
                       alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      height: MediaQuery.of(context).size.height * 0.05,
+                      width: context.screenWidth * 0.25,
+                      height: context.screenHeight * 0.05,
                       decoration: BoxDecoration(
                         color: constLightBlue,
                         borderRadius: BorderRadius.circular(8),
@@ -87,7 +95,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                         style: TextStyle(
                           color: constBlue,
                           fontFamily: lateef,
-                          fontSize: 22,
+                          fontSize: context.screenHeight * 0.026,
                         ),
                       ),
                     ),
@@ -95,8 +103,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                   Obx(
                     () => CustomTextFormFaild(
                       labelText: 'اختيار تاريخ',
-                      textEditingController:
-                          controller.fromDateTextController, // ← أضف هذا
+                      textEditingController: controller.fromDateTextController,
                       onChange: (data) {},
                       icon: Icon(Icons.date_range, color: constGray),
                       validator: (data) {
@@ -106,25 +113,26 @@ class ElectronicInventoryPage extends StatelessWidget {
                       onTap: () => controller.pickFromDate(context),
                       suffixIcon: controller.hasFromDate
                           ? IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.close,
                                 color: Colors.grey,
-                                size: 20,
+                                size: context.screenHeight * 0.024, // ← بدل 20
                               ),
                               onPressed: controller.clearFromDate,
                             )
                           : null,
                     ),
                   ),
+                  // ─── الى تاريخ ────────────────────────────
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.screenWidth * 0.04,
+                      vertical: context.screenHeight * 0.01,
                     ),
                     child: Container(
                       alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      height: MediaQuery.of(context).size.height * 0.05,
+                      width: context.screenWidth * 0.25,
+                      height: context.screenHeight * 0.05,
                       decoration: BoxDecoration(
                         color: constLightBlue,
                         borderRadius: BorderRadius.circular(8),
@@ -134,7 +142,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                         style: TextStyle(
                           color: constBlue,
                           fontFamily: lateef,
-                          fontSize: 24,
+                          fontSize: context.screenHeight * 0.028, // ← بدل 24
                         ),
                       ),
                     ),
@@ -142,8 +150,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                   Obx(
                     () => CustomTextFormFaild(
                       labelText: 'اختيار تاريخ',
-                      textEditingController:
-                          controller.toDateTextController, // ← أضف هذا
+                      textEditingController: controller.toDateTextController,
                       onChange: (data) {},
                       icon: Icon(Icons.date_range, color: constGray),
                       validator: (data) {
@@ -153,23 +160,23 @@ class ElectronicInventoryPage extends StatelessWidget {
                       onTap: () => controller.pickToDate(context),
                       suffixIcon: controller.hasToDate
                           ? IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.close,
                                 color: Colors.grey,
-                                size: 20,
+                                size: context.screenHeight * 0.024,
                               ),
                               onPressed: controller.clearToDate,
                             )
                           : null,
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  SizedBox(height: context.screenHeight * 0.01),
                   Align(
                     alignment: AlignmentGeometry.center,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.screenWidth * 0.04, // ← بدل 16
+                        vertical: context.screenHeight * 0.02, // ← بدل 16
                       ),
                       child: CustomButtom(tital: 'تأكيد', onTap: () {}),
                     ),

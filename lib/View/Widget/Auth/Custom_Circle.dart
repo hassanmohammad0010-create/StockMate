@@ -15,14 +15,16 @@ class CustomCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double base = MediaQuery.of(context).size.shortestSide;
+    final double circleSize = base * size;
+
     return OverflowBox(
       alignment: Alignment(xAlignment, yAlignment),
-
-      maxWidth: MediaQuery.of(context).size.width * size,
-      maxHeight: MediaQuery.of(context).size.width * size,
+      maxWidth: circleSize,
+      maxHeight: circleSize,
       child: Container(
-        width: MediaQuery.of(context).size.width * size,
-        height: MediaQuery.of(context).size.width * size,
+        width: circleSize,
+        height: circleSize,
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         alignment: Alignment.center,
         child: child,

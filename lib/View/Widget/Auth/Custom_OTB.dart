@@ -10,7 +10,7 @@ class CustomOtb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OtpTextField(
-      margin: EdgeInsetsGeometry.symmetric(horizontal: 6),
+      margin: EdgeInsetsGeometry.symmetric(horizontal: 4),
       filled: true,
       fillColor: Colors.white,
       numberOfFields: 6,

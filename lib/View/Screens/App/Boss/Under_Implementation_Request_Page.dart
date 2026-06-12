@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Request_Container.dart';
@@ -14,15 +15,14 @@ class UnderImplementationRequestPage extends StatelessWidget {
     ToggleController(),
     tag: 'UnderImplementationRequestPage',
   );
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          Get.delete<ToggleController>(
-            tag: 'UnderImplementationRequestPage',
-          ); // ← احذفه عند الخروج
+          Get.delete<ToggleController>(tag: 'UnderImplementationRequestPage');
         }
       },
       child: Scaffold(
@@ -31,7 +31,10 @@ class UnderImplementationRequestPage extends StatelessWidget {
           children: [
             CustomBackContainer(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.screenWidth * 0.04, // ← بدل 16
+                vertical: context.screenHeight * 0.01, // ← بدل 8
+              ),
               child: Align(
                 alignment: AlignmentGeometry.centerRight,
                 child: CustomToggleButtom(

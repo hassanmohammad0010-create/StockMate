@@ -32,7 +32,10 @@ class InventoryPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.screenWidth * 0.02, // ← بدل 8
+                vertical: context.screenHeight * 0.01, // ← بدل 8
+              ),
               child: Align(
                 alignment: AlignmentGeometry.topRight,
                 child: CustomToggleButtom(
@@ -46,7 +49,6 @@ class InventoryPage extends StatelessWidget {
               child: PageView(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: controller.pageController,
-
                 children: [
                   Column(
                     children: [
@@ -83,7 +85,10 @@ class InventoryPage extends StatelessWidget {
                     ],
                   ),
                   ListView.builder(
-                    padding: EdgeInsets.only(top: 0, bottom: 8),
+                    padding: EdgeInsets.only(
+                      top: 0,
+                      bottom: context.screenHeight * 0.01, // ← بدل 8
+                    ),
                     itemCount: specialties.length,
                     itemBuilder: (context, index) {
                       return CustomListTile(

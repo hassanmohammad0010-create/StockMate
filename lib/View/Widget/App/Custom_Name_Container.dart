@@ -9,20 +9,24 @@ class CustomNameContainer extends StatelessWidget {
   });
   final String empName;
   final String? specializationName;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.screenWidth * 0.02, // ← بدل 8
+        vertical: context.screenHeight * 0.01, // ← بدل 8
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2), // لون الظل
-              blurRadius: 8, // ضبابية الظل
-              spreadRadius: 2, // انتشار الظل
-              offset: Offset(0, 0), // اتجاه الظل (x, y)
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              spreadRadius: 2,
+              offset: Offset(0, 0),
             ),
           ],
         ),
@@ -31,22 +35,22 @@ class CustomNameContainer extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.09,
-                height: MediaQuery.of(context).size.height * 0.09,
+                width: context.screenWidth * 0.09,
+                height: context.screenHeight * 0.09,
                 decoration: BoxDecoration(
                   color: constBlue,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // لون الظل
-                      blurRadius: 8, // ضبابية الظل
-                      spreadRadius: 2, // انتشار الظل
-                      offset: Offset(0, 0), // اتجاه الظل (x, y)
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 8,
+                      spreadRadius: 2,
+                      offset: Offset(0, 0),
                     ),
                   ],
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+              SizedBox(width: context.screenWidth * 0.02),
               Column(
                 children: [
                   Text(
@@ -55,7 +59,7 @@ class CustomNameContainer extends StatelessWidget {
                       color: constColor,
                       fontWeight: FontWeight.bold,
                       fontFamily: cairo,
-                      fontSize: 18,
+                      fontSize: context.screenHeight * 0.021, // ← بدل 18
                     ),
                   ),
                   Visibility(
@@ -65,7 +69,7 @@ class CustomNameContainer extends StatelessWidget {
                       style: TextStyle(
                         color: constGray,
                         fontFamily: lateef,
-                        fontSize: 22,
+                        fontSize: context.screenHeight * 0.026, // ← بدل 22
                       ),
                     ),
                   ),

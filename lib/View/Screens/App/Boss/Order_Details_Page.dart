@@ -13,16 +13,16 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dar
 class DisOrderDetailsPage extends StatelessWidget {
   DisOrderDetailsPage({super.key, required this.order});
   Order order;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.15,
-        height: MediaQuery.of(context).size.height * 0.1,
+        width: context.screenWidth * 0.15,
+        height: context.screenHeight * 0.1,
         child: FloatingActionButton(
           backgroundColor: constBlue,
           elevation: 8,
-
           shape: const CircleBorder(),
           onPressed: () {
             showConfirmDialog(onConfirm: () {});
@@ -39,14 +39,14 @@ class DisOrderDetailsPage extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.screenWidth * 0.02,
+                      vertical: context.screenHeight * 0.005,
                     ),
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+                        horizontal: context.screenWidth * 0.04,
+                        vertical: context.screenHeight * 0.015,
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -62,9 +62,8 @@ class DisOrderDetailsPage extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
+                          SizedBox(height: context.screenHeight * 0.01),
+                          // ─── النوع ───────────────────────────────
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -72,20 +71,16 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 children: [
                                   Icon(
                                     Icons.grid_view_outlined,
-                                    size: 24,
+                                    size: context.screenHeight * 0.028,
                                     color: constGray,
                                   ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.02,
-                                  ),
+                                  SizedBox(width: context.screenWidth * 0.02),
                                   Text(
                                     'النوع',
                                     style: TextStyle(
                                       color: constGray,
                                       fontFamily: cairo,
-                                      fontSize: 16,
+                                      fontSize: context.screenHeight * 0.019,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -95,16 +90,15 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 'اعتيادي',
                                 style: TextStyle(
                                   fontFamily: cairo,
-                                  fontSize: 16,
+                                  fontSize: context.screenHeight * 0.019,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
+                          SizedBox(height: context.screenHeight * 0.01),
                           Divider(indent: 16, endIndent: 16, thickness: 0.5),
+                          // ─── التاريخ ──────────────────────────────
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -112,20 +106,16 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 children: [
                                   Icon(
                                     Icons.date_range,
-                                    size: 24,
+                                    size: context.screenHeight * 0.028,
                                     color: constGray,
                                   ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.02,
-                                  ),
+                                  SizedBox(width: context.screenWidth * 0.02),
                                   Text(
                                     'التاريخ',
                                     style: TextStyle(
                                       color: constGray,
                                       fontFamily: cairo,
-                                      fontSize: 16,
+                                      fontSize: context.screenHeight * 0.019,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -135,16 +125,15 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 '26/05/2025',
                                 style: TextStyle(
                                   fontFamily: cairo,
-                                  fontSize: 16,
+                                  fontSize: context.screenHeight * 0.019,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
+                          SizedBox(height: context.screenHeight * 0.01),
                           Divider(indent: 16, endIndent: 16, thickness: 0.5),
+                          // ─── الأولوية ─────────────────────────────
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -152,20 +141,16 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 children: [
                                   Icon(
                                     Icons.bolt_outlined,
-                                    size: 24,
+                                    size: context.screenHeight * 0.028,
                                     color: constGray,
                                   ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.02,
-                                  ),
+                                  SizedBox(width: context.screenWidth * 0.02),
                                   Text(
                                     'الاولوية',
                                     style: TextStyle(
                                       color: constGray,
                                       fontFamily: cairo,
-                                      fontSize: 16,
+                                      fontSize: context.screenHeight * 0.019,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -174,8 +159,8 @@ class DisOrderDetailsPage extends StatelessWidget {
                               Container(
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 4,
+                                  horizontal: context.screenWidth * 0.04,
+                                  vertical: context.screenHeight * 0.005,
                                 ),
                                 decoration: BoxDecoration(
                                   color: FindColor()
@@ -190,7 +175,7 @@ class DisOrderDetailsPage extends StatelessWidget {
                                   ),
                                   style: TextStyle(
                                     fontFamily: cairo,
-                                    fontSize: 16,
+                                    fontSize: context.screenHeight * 0.019,
                                     fontWeight: FontWeight.w600,
                                     color: FindColor()
                                         .findFontColorPriorityFunction(
@@ -201,10 +186,9 @@ class DisOrderDetailsPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
+                          SizedBox(height: context.screenHeight * 0.01),
                           Divider(indent: 16, endIndent: 16, thickness: 0.5),
+                          // ─── الحالة ───────────────────────────────
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -212,20 +196,16 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 children: [
                                   Icon(
                                     Icons.list_alt_outlined,
-                                    size: 24,
+                                    size: context.screenHeight * 0.028,
                                     color: constGray,
                                   ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.02,
-                                  ),
+                                  SizedBox(width: context.screenWidth * 0.02),
                                   Text(
                                     'الحالة',
                                     style: TextStyle(
                                       color: constGray,
                                       fontFamily: cairo,
-                                      fontSize: 16,
+                                      fontSize: context.screenHeight * 0.019,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -234,8 +214,8 @@ class DisOrderDetailsPage extends StatelessWidget {
                               Container(
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 4,
+                                  horizontal: context.screenWidth * 0.04,
+                                  vertical: context.screenHeight * 0.005,
                                 ),
                                 decoration: BoxDecoration(
                                   color: FindColor().findBackgroundStausColor(
@@ -249,7 +229,7 @@ class DisOrderDetailsPage extends StatelessWidget {
                                   ),
                                   style: TextStyle(
                                     fontFamily: cairo,
-                                    fontSize: 16,
+                                    fontSize: context.screenHeight * 0.019,
                                     fontWeight: FontWeight.w600,
                                     color: FindColor()
                                         .findFontColorStausFunction(
@@ -271,9 +251,9 @@ class DisOrderDetailsPage extends StatelessWidget {
                     itemCount: 5,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.02,
+                          vertical: context.screenHeight * 0.005,
                         ),
                         child: CustomRecurringDetailsCard(order: order),
                       );
