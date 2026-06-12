@@ -18,7 +18,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF4F6FA),
+      backgroundColor: constBackgroundColor,
       floatingActionButton: SizedBox(
         width: 70,
         height: 70,
@@ -40,7 +40,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
           children: [
             CustomNameContainer(
               empName: 'محمد علي',
-              specializationName: 'رئيس قسم الأشعة',
+              specializationName: 'رئيس قسم الداخلية',
             ),
             Container(
               margin: EdgeInsets.symmetric(
@@ -111,7 +111,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                         buttonTitle: 'عرض التفاصيل',
                         onTap: () {
                           DefaultTabController.of(context).animateTo(2);
-                          ordersController.initialFilter.value = 'مرفوضة';
+                          ordersController.initialFilter.value = 'مرفوض';
                         },
                       ),
                     ],

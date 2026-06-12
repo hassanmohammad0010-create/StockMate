@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 
 class MyFilterChip extends StatelessWidget {
   final String label;
@@ -22,11 +23,11 @@ class MyFilterChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1A73E8) : Colors.transparent,
+          color: isSelected ? constBlue : Colors.transparent,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF1A73E8)
+                ? constBlue
                 : const Color(0xFFDDE2EE),
             width: 1.5,
           ),

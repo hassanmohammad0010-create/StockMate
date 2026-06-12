@@ -143,7 +143,10 @@ class LoginPage extends StatelessWidget {
                             tital: 'تسجيل الدخول',
                             onTap: () {
                               if (loginPageKey.currentState!.validate()) {}
+
                               Get.offNamed(MainPage().pageName);
+                              // Get.offNamed(MainPage().pageName);
+                              // Get.offNamed(DepartmentHeadsMainPage().pageName);
                             },
                           ),
 

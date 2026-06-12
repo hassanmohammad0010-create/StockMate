@@ -1,33 +1,36 @@
 // ignore_for_file: file_names
-import 'package:flutter/material.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Add_New_Order_Card.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Priority_Choose_Card.dart';
 
-class AddOrdinaryOrderPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Add_New_Ordinary_Order_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Tab_Bar.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Ordinary_Submit_Section.dart';
+import '../../../../Controller/Logic/AddOrdinaryOrder_Controller.dart';
+
+class AddOrdinaryOrderPage extends GetView<AddOrdinaryOrderController> {
   const AddOrdinaryOrderPage({super.key});
 
-  final String pageName = "/AddOrdinaryOrderPage";
+  final String pageName = '/AddOrdinaryOrderPage';
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    if (!Get.isRegistered<AddOrdinaryOrderController>()) {
+      Get.put(AddOrdinaryOrderController());
+    }
+    return Scaffold(
+      backgroundColor: constBackgroundColor,
+      resizeToAvoidBottomInset: true,
+      body: Column(
         children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.002),
-          CustomAddNewOrderCard(),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.002),
-          CustomPriorityChooseCard(),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.04,
-            ),
-            child: Divider(),
+          const OrderTabBar(),
+          Expanded(
+            child: Obx(() {
+              final index = controller.activeOrderIndex.value;
+              return OrdinaryOrderCard(key: ValueKey(index), orderIndex: index);
+            }),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.002),
-          CustomMainButtom(title: 'تأكيد'),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.002),
+          const OrdinarySubmitSection(),
         ],
       ),
     );

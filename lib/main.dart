@@ -8,9 +8,14 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Requ
 import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Purchasing_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Request_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Ordinary_Order_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
@@ -29,7 +34,9 @@ class MyApp extends StatelessWidget {
       title: 'Stock Mate',
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
-
+      // theme: ThemeData(
+      //   fontFamily: 'Cairo'
+      // ),
       getPages: [
         GetPage(name: SplashViewPage().pageName, page: () => SplashViewPage()),
         GetPage(name: LoginPage().pageName, page: () => LoginPage()),
@@ -80,8 +87,22 @@ class MyApp extends StatelessWidget {
           name: DisplayPurchasingOrderPage().pageName,
           page: () => DisplayPurchasingOrderPage(),
         ),
+
+        GetPage(
+          name: DepartmentOrdersPage().pageName,
+          page: () => DepartmentOrdersPage(),
+        ),
+        GetPage(
+          name: AddOrdinaryOrderPage().pageName,
+          page: () => AddOrdinaryOrderPage(),
+        ),
+        GetPage(
+          name: AddRecurringOrderPage().pageName,
+          page: () => AddRecurringOrderPage(),
+        ),
+        GetPage(name: ReportPage().pageName, page: () => ReportPage()),
       ],
-      initialRoute: SplashViewPage().pageName,
+      initialRoute: DepartmentHeadsMainPage().pageName,
     );
   }
 }

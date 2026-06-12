@@ -23,7 +23,7 @@ class StatusBadge extends StatelessWidget {
         textColor = const Color(0xFF09C05E);
         break;
       case OrderStatus.rejected:
-        label = 'مرفوضة';
+        label = 'مرفوض';
         bgColor = const Color(0xFFFFEBEE);
         textColor = const Color(0xFFE53935);
         break;

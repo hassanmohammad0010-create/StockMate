@@ -17,6 +17,8 @@ const Color constRed = Color(0xffE53935);
 const Color constLightRed = Color(0xffFFEBEE);
 
 // ─── الخطوط ───────────────────────────────────────────
+const Color constBackgroundColor = Color(0xFFF4F6FA);
+
 String cairo = 'Cairo';
 String lateef = 'Lateef';
 // ─── الصور ────────────────────────────────────────────

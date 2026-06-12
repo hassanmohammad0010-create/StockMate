@@ -14,7 +14,8 @@ class MainPage extends StatelessWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: constColor,
+        // backgroundColor: constColor,
+        backgroundColor: constBackgroundColor,
         appBar: AppBar(
           toolbarHeight: context.screenHeight * 0.1,
           actions: [

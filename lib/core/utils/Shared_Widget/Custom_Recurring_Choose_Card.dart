@@ -1,82 +1,78 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:stock_mate_project/Controller/Logic/AddRecurringOrder_Controller.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Button.dart';
 
-class CustomRecurringChooseCard extends StatelessWidget {
-  const CustomRecurringChooseCard({super.key});
+class RecurringChooseCard extends StatelessWidget {
+  const RecurringChooseCard({super.key});
+
+  AddRecurringOrderController get _c => Get.find<AddRecurringOrderController>();
 
   @override
   Widget build(BuildContext context) {
-    // ignore: sized_box_for_whitespace
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.95,
-      height: MediaQuery.of(context).size.height * 0.15,
-      child: Card(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16, top: 12),
-                child: Text(
-                  'التكرار',
-                  style: TextStyle(fontSize: 20, fontFamily: 'Cairo'),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.03,
-              ),
-              child: Divider(),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+    final size = MediaQuery.of(context).size;
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Obx(() {
+      final selected = _c.selectedRecurring.value;
+
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.025),
+        child: Container(
+          width: size.height * 0.9,
+          child: Card(
+            child: Column(
               children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  width: MediaQuery.of(context).size.width * 0.27,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: MaterialButton(
-                    onPressed: () {},
-                    child: Text('يومي', style: TextStyle(color: Colors.grey,fontFamily: 'Cairo')),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  width: MediaQuery.of(context).size.width * 0.27,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: MaterialButton(
-                    onPressed: () {},
-                    child: Text('أسبوعي', style: TextStyle(color: Colors.grey,fontFamily: 'Cairo')),
+                // ── العنوان ───────────────────────────────────────────
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 24, top: 12),
+                    child: Text(
+                      'التكرار',
+                      style: const TextStyle(fontSize: 20, fontFamily: 'Cairo'),
+                    ),
                   ),
                 ),
-                    Container(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  width: MediaQuery.of(context).size.width * 0.27,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.03,
                   ),
-                  child: MaterialButton(
-                    onPressed: () {},
-                    child: Text('شهري', style: TextStyle(color: Colors.grey,fontFamily: 'Cairo')),
-                  ),
+                  child: const Divider(),
                 ),
+                SizedBox(height: size.height * 0.01),
+
+                // ── أزرار التكرار ─────────────────────────────────────
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    RecurringButton(
+                      label: 'يومي',
+                      isSelected: selected == 'daily',
+                      size: size,
+                      onTap: () => _c.selectRecurring('daily'),
+                    ),
+                    RecurringButton(
+                      label: 'أسبوعي',
+                      isSelected: selected == 'weekly',
+                      size: size,
+                      onTap: () => _c.selectRecurring('weekly'),
+                    ),
+                    RecurringButton(
+                      label: 'شهري',
+                      isSelected: selected == 'monthly',
+                      size: size,
+                      onTap: () => _c.selectRecurring('monthly'),
+                    ),
+                  ],
+                ),
+                SizedBox(height: size.height * 0.01),
               ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-          ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

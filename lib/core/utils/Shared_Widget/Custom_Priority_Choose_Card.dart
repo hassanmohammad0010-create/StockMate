@@ -1,71 +1,77 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/instance_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Priority_Button.dart';
 
-class CustomPriorityChooseCard extends StatelessWidget {
-  const CustomPriorityChooseCard({super.key});
+class PriorityChooseCard extends StatelessWidget {
+  const PriorityChooseCard({super.key, required this.orderIndex});
+
+  final int orderIndex;
+  AddOrdinaryOrderController get _c => Get.find<AddOrdinaryOrderController>();
 
   @override
   Widget build(BuildContext context) {
-    // ignore: sized_box_for_whitespace
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.95,
-      height: MediaQuery.of(context).size.height * 0.15,
-      child: Card(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16, top: 12),
-                child: Text(
-                  'الأولوية',
-                  style: TextStyle(fontSize: 20, fontFamily: 'Cairo'),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.03,
-              ),
-              child: Divider(),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+    final size = MediaQuery.of(context).size;
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Obx(() {
+      if (orderIndex >= _c.orders.length) {
+        return const SizedBox.shrink();
+      }
+      final selected = _c.orders[orderIndex].priority;
+      return Padding(
+        padding:  EdgeInsets.symmetric(horizontal: size.width * 0.025),
+        child: Container(
+          width: MediaQuery.of(context).size.height * 0.9,
+          child: Card(
+            child: Column(
               children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: constRed),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: MaterialButton(
-                    onPressed: () {},
-                    child: Text('ضروري', style: TextStyle(color: constRed,fontFamily: 'Cairo')),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 24, top: 12),
+                    child: Text(
+                      'الأولوية',
+                      style: const TextStyle(fontSize: 20, fontFamily: 'Cairo'),
+                    ),
                   ),
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: constBlue),
-                    borderRadius: BorderRadius.circular(8),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.03,
                   ),
-                  child: MaterialButton(
-                    onPressed: () {},
-                    child: Text('عادي', style: TextStyle(color: constBlue,fontFamily: 'Cairo')),
-                  ),
+                  child: const Divider(),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+        
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    PriorityButton(
+                      label: 'ضروري',
+                      color: constRed,
+                      isSelected: selected == 'ضروري',
+                      size: size,
+                      onTap: () => _c.updatePriority(orderIndex, 'ضروري'),
+                    ),
+                    PriorityButton(
+                      label: 'عادي',
+                      color: constBlue,
+                      isSelected: selected == 'عادي',
+                      size: size,
+                      onTap: () => _c.updatePriority(orderIndex, 'عادي'),
+                    ),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-          ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

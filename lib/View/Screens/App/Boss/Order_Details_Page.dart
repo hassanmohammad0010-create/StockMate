@@ -6,7 +6,7 @@ import 'package:stock_mate_project/Function/Shared/Find_Status.dart';
 import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Details_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Details_Recurring_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 
 // ignore: must_be_immutable

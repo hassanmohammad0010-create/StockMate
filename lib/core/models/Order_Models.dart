@@ -73,14 +73,14 @@ final List<Order> allOrders = [
   ),
 
   // طلب عادي – معلق
-  Order(
-    medicineName: 'ميترونيدازول 500 mg',
-    date: '2025-03-22',
-    quantity: 100,
-    status: OrderStatus.suspended,
-    priority: OrderPriority.normal,
-    type: 'عادي',
-  ),
+  // Order(
+  //   medicineName: 'ميترونيدازول 500 mg',
+  //   date: '2025-03-22',
+  //   quantity: 100,
+  //   status: OrderStatus.suspended,
+  //   priority: OrderPriority.normal,
+  //   type: 'عادي',
+  // ),
 
   // طلب دوري – يومي – منجز
   Order(
@@ -130,4 +130,66 @@ String recurringIntervalLabel(RecurringInterval interval) {
     case RecurringInterval.monthly:
       return 'شهري';
   }
+}
+
+const _clear = Object();
+
+class OrderModel {
+  String? medicineName;
+  String  quantity;
+  String? unit;
+  String? brand;
+  String  priority;
+
+  OrderModel({
+    this.medicineName,
+    this.quantity = '',
+    this.unit,
+    this.brand,
+    this.priority = 'عادي',
+  });
+
+  OrderModel copyWith({
+    Object? medicineName = _clear,
+    Object? quantity     = _clear,
+    Object? unit         = _clear,
+    Object? brand        = _clear,
+    Object? priority     = _clear,
+  }) {
+    return OrderModel(
+      medicineName: identical(medicineName, _clear)
+          ? this.medicineName
+          : medicineName as String?,
+      quantity: identical(quantity, _clear)
+          ? this.quantity
+          : (quantity as String? ?? ''),
+      unit: identical(unit, _clear)
+          ? this.unit
+          : unit as String?,
+      brand: identical(brand, _clear)
+          ? this.brand
+          : brand as String?,
+      priority: identical(priority, _clear)
+          ? this.priority
+          : (priority as String? ?? 'عادي'),
+    );
+  }
+
+  bool get isValid =>
+      (medicineName?.trim().isNotEmpty ?? false) &&
+      quantity.trim().isNotEmpty &&
+      (unit?.trim().isNotEmpty ?? false) &&
+      (brand?.trim().isNotEmpty ?? false);
+
+  Map<String, dynamic> toJson() => {
+        'medicineName': medicineName,
+        'quantity':     quantity,
+        'unit':         unit,
+        'brand':        brand,
+        'priority':     priority,
+      };
+
+  @override
+  String toString() =>
+      'OrderModel(medicine: $medicineName, qty: $quantity, unit: $unit, priority: $priority)';
 }
