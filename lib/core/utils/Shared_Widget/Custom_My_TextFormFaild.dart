@@ -97,13 +97,17 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
     super.dispose();
   }
 
+  final _fieldKey = GlobalKey<FormFieldState>();
+
   // ─── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
     final hasText = _effectiveController.text.isNotEmpty;
+    final hasError = _fieldKey.currentState?.hasError ?? false;
 
     return TextFormField(
+      key: _fieldKey,
       controller: _effectiveController,
       validator: widget.validator,
       keyboardType: widget.keyboardType,
@@ -118,26 +122,42 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
         alignLabelWithHint: true,
         labelText: widget.label,
         hintText: widget.hint,
-        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
-
+        hintStyle: TextStyle(
+          color: hasError
+              ? Colors.red.shade600
+              : hasText
+              ? constBlue
+              : Colors.grey.shade500,
+          fontSize: 13,
+        ),
         // prefixIcon: widget.prefixIcon != null
         //     ? Icon(widget.prefixIcon, size: 20, color: constBlue)
         //     : null,
-
-
-prefixIcon: widget.prefixIcon != null
-    ? SizedBox(
-        width: 40,
-        child: Padding(
-          padding:  EdgeInsets.only(top: widget.maxLines == 1 ? 12 : 0,bottom: widget.maxLines == 1 ? 0 : 136 , right: 8, left: 8),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Icon(widget.prefixIcon, size: 25, color: constBlue),
-          ),
-        ),
-      )
-    : null,
-
+        prefixIcon: widget.prefixIcon != null
+            ? SizedBox(
+                width: 40,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: widget.maxLines == 1 ? 12 : 0,
+                    bottom: widget.maxLines == 1 ? 0 : 136,
+                    right: 8,
+                    left: 8,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Icon(
+                      widget.prefixIcon,
+                      size: 25,
+                      color: hasError
+                          ? Colors.red.shade600
+                          : hasText
+                          ? constBlue
+                          : constBlue,
+                    ),
+                  ),
+                ),
+              )
+            : null,
 
         suffixIcon: widget.suffixIcon,
 
@@ -181,7 +201,11 @@ prefixIcon: widget.prefixIcon != null
         ),
 
         labelStyle: TextStyle(
-          color: hasText ? constBlue : Colors.grey.shade500,
+          color: hasError
+              ? Colors.red.shade600
+              : hasText
+              ? constBlue
+              : Colors.grey.shade500,
           fontSize: hasText ? 12 : 14,
           fontWeight: hasText ? FontWeight.w500 : FontWeight.w400,
         ),

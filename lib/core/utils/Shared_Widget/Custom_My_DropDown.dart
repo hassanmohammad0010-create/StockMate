@@ -3,13 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
-/// Dropdown احترافي يدعم:
-///  - البحث داخل القائمة [searchable]
-///  - قيمة محددة مسبقاً [value]
-///  - border أحمر عند الخطأ [errorBorder] + رسالة خطأ [errorText]
-///  - زر X لمسح القيمة [clearable]
-///  - generic type لأي نوع بيانات
-///  - RTL كامل
 class CustomDropdown<T> extends StatefulWidget {
   const CustomDropdown({
     super.key,
@@ -19,29 +12,26 @@ class CustomDropdown<T> extends StatefulWidget {
     required this.hint,
     required this.onChanged,
     this.value,
-    this.searchable  = false,
-    this.clearable   = true,
+    this.searchable = false,
+    this.clearable = true,
     this.errorBorder = false,
     this.errorText,
-    this.prefixIcon, this.icon,
+    this.prefixIcon,
+    this.icon,
   });
 
-  final List<T>            items;
+  final List<T> items;
   final String Function(T) labelBuilder;
-  final String             label;
-  final String             hint;
-  final T?                 value;
-  final void Function(T?)  onChanged;
-  final bool               searchable;
-
-  final IconData?          icon;
- 
-  /// هل يظهر زر X لمسح القيمة المختارة؟ (افتراضي: true)
-  final bool               clearable;
-
-  final bool               errorBorder;
-  final String?            errorText;
-  final IconData?          prefixIcon;
+  final String label;
+  final String hint;
+  final T? value;
+  final void Function(T?) onChanged;
+  final bool searchable;
+  final IconData? icon;
+  final bool clearable;
+  final bool errorBorder;
+  final String? errorText;
+  final IconData? prefixIcon;
 
   @override
   State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
@@ -49,17 +39,17 @@ class CustomDropdown<T> extends StatefulWidget {
 
 class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     with SingleTickerProviderStateMixin {
-  final LayerLink             _layerLink  = LayerLink();
+  final LayerLink _layerLink = LayerLink();
   final TextEditingController _searchCtrl = TextEditingController();
-  final FocusNode             _searchFocus = FocusNode();
+  final FocusNode _searchFocus = FocusNode();
 
   OverlayEntry? _overlay;
-  bool          _isOpen   = false;
-  List<T>       _filtered = [];
+  bool _isOpen = false;
+  List<T> _filtered = [];
 
   late AnimationController _animCtrl;
-  late Animation<double>   _fadeAnim;
-  late Animation<double>   _scaleAnim;
+  late Animation<double> _fadeAnim;
+  late Animation<double> _scaleAnim;
 
   @override
   void initState() {
@@ -69,10 +59,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       vsync: this,
       duration: const Duration(milliseconds: 180),
     );
-    _fadeAnim  = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
-    _scaleAnim = Tween<double>(begin: 0.95, end: 1.0).animate(
-      CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut),
-    );
+    _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
+    _scaleAnim = Tween<double>(
+      begin: 0.95,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut));
   }
 
   @override
@@ -84,6 +75,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     super.dispose();
   }
 
+  // ✅ دالة توحيد الهمزات
+  String _normalizeArabic(String text) {
+    return text
+        .replaceAll('أ', 'ا')
+        .replaceAll('إ', 'ا')
+        .replaceAll('آ', 'ا')
+        .replaceAll('ة', 'ه')
+        .replaceAll('ى', 'ي');
+  }
+
   // ─── Overlay ───────────────────────────────────────────────────────────────
 
   void _openOverlay() {
@@ -92,24 +93,27 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _searchCtrl.clear();
 
     final renderBox = context.findRenderObject() as RenderBox;
-    final size      = renderBox.size;
+    final size = renderBox.size;
 
     _overlay = OverlayEntry(
       builder: (_) => _DropdownOverlay<T>(
-        layerLink:    _layerLink,
-        anchorSize:   size,
-        items:        _filtered,
+        layerLink: _layerLink,
+        anchorSize: size,
+        items: _filtered,
         labelBuilder: widget.labelBuilder,
-        searchable:   widget.searchable,
-        searchCtrl:   _searchCtrl,
-        searchFocus:  _searchFocus,
-        fadeAnim:     _fadeAnim,
-        scaleAnim:    _scaleAnim,
+        searchable: widget.searchable,
+        searchCtrl: _searchCtrl,
+        searchFocus: _searchFocus,
+        fadeAnim: _fadeAnim,
+        scaleAnim: _scaleAnim,
         onFilter: (query) {
+          // ✅ الفلترة مع توحيد الهمزات
           _filtered = widget.items
-              .where((e) => widget.labelBuilder(e)
-                  .toLowerCase()
-                  .contains(query.toLowerCase()))
+              .where(
+                (e) => _normalizeArabic(
+                  widget.labelBuilder(e),
+                ).toLowerCase().contains(_normalizeArabic(query).toLowerCase()),
+              )
               .toList();
           _overlay?.markNeedsBuild();
         },
@@ -136,14 +140,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     if (mounted) setState(() => _isOpen = false);
   }
 
-  /// إغلاق فوري بدون animation (عند dispose)
   void _forceCloseOverlay() {
     _overlay?.remove();
     _overlay = null;
-    _isOpen  = false;
+    _isOpen = false;
   }
 
-  /// مسح القيمة المختارة
   void _clearValue() {
     if (_isOpen) _forceCloseOverlay();
     widget.onChanged(null);
@@ -154,11 +156,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   @override
   Widget build(BuildContext context) {
-    final hasValue    = widget.value != null;
-    final isError     = widget.errorBorder;
-    final showClear   = hasValue && widget.clearable;
+    final hasValue = widget.value != null;
+    final isError = widget.errorBorder;
+    final showClear = hasValue && widget.clearable;
 
-    final labelColor  = isError
+    final labelColor = isError
         ? Colors.red.shade700
         : (hasValue ? constBlue : Colors.grey.shade500);
 
@@ -174,17 +176,15 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // ── الحقل الرئيسي ────────────────────────────────────────
           AnimatedContainer(
             duration: const Duration(milliseconds: 180),
             decoration: BoxDecoration(
-              color:        Colors.white,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              border:       Border.all(color: borderColor, width: borderWidth),
+              border: Border.all(color: borderColor, width: borderWidth),
             ),
             child: Row(
               children: [
-                // ── منطقة الفتح (الأيقونة + النص) ──────────────────
                 Expanded(
                   child: GestureDetector(
                     onTap: _openOverlay,
@@ -193,20 +193,15 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       padding: const EdgeInsets.fromLTRB(14, 0, 8, 0),
                       child: Row(
                         children: [
-                          // أيقونة يسار
                           Icon(
-                            widget.prefixIcon ??
-                            widget.icon,
-                            size:  25,
+                            widget.prefixIcon ?? widget.icon,
+                            size: 25,
                             color: isError ? Colors.red.shade400 : constBlue,
                           ),
                           const SizedBox(width: 10),
-
-                          // النص / القيمة
                           Expanded(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 14),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
                               child: hasValue
                                   ? Column(
                                       crossAxisAlignment:
@@ -216,17 +211,19 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                                         Text(
                                           widget.label,
                                           style: TextStyle(
-                                            fontSize:   11,
-                                            color:      labelColor,
+                                            fontSize: 11,
+                                            color: labelColor,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                         const SizedBox(height: 2),
                                         Text(
-                                          widget.labelBuilder(widget.value as T),
+                                          widget.labelBuilder(
+                                            widget.value as T,
+                                          ),
                                           style: const TextStyle(
-                                            fontSize:   14,
-                                            color:      Color(0xFF1E293B),
+                                            fontSize: 14,
+                                            color: Color(0xFF1E293B),
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -248,34 +245,29 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                     ),
                   ),
                 ),
-
-                // ── زر X (منطقة مستقلة تماماً عن الفتح) ────────────
                 if (showClear)
                   GestureDetector(
                     onTap: _clearValue,
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       child: Icon(
                         Icons.close_rounded,
-                        size:  18,
+                        size: 18,
                         color: Colors.grey.shade400,
                       ),
                     ),
                   ),
-
-                // ── سهم الفتح/الإغلاق ────────────────────────────────
                 GestureDetector(
                   onTap: _openOverlay,
                   behavior: HitTestBehavior.opaque,
                   child: Padding(
                     padding: EdgeInsetsGeometry.only(left: 8),
-                    // padding: EdgeInsets.fromLTRB(
-                    //   showClear ? 0 : 8, 14, 12, 14,
-                    // ),
                     child: AnimatedRotation(
-                      turns:    _isOpen ? 0.5 : 0,
+                      turns: _isOpen ? 0.5 : 0,
                       duration: const Duration(milliseconds: 180),
                       child: Icon(
                         Icons.keyboard_arrow_down_rounded,
@@ -289,17 +281,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               ],
             ),
           ),
-
-          // ── رسالة الخطأ ──────────────────────────────────────────
           if (isError && widget.errorText != null)
             Padding(
               padding: const EdgeInsets.only(right: 14, top: 5),
               child: Text(
                 widget.errorText!,
-                style: TextStyle(
-                  color:    Colors.red.shade700,
-                  fontSize: 11,
-                ),
+                style: TextStyle(color: Colors.red.shade700, fontSize: 11),
               ),
             ),
         ],
@@ -329,19 +316,19 @@ class _DropdownOverlay<T> extends StatefulWidget {
     required this.selectedItem,
   });
 
-  final LayerLink             layerLink;
-  final Size                  anchorSize;
-  final List<T>               items;
-  final String Function(T)    labelBuilder;
-  final bool                  searchable;
+  final LayerLink layerLink;
+  final Size anchorSize;
+  final List<T> items;
+  final String Function(T) labelBuilder;
+  final bool searchable;
   final TextEditingController searchCtrl;
-  final FocusNode             searchFocus;
-  final Animation<double>     fadeAnim;
-  final Animation<double>     scaleAnim;
+  final FocusNode searchFocus;
+  final Animation<double> fadeAnim;
+  final Animation<double> scaleAnim;
   final void Function(String) onFilter;
-  final void Function(T?)     onSelect;
-  final VoidCallback          onDismiss;
-  final T?                    selectedItem;
+  final void Function(T?) onSelect;
+  final VoidCallback onDismiss;
+  final T? selectedItem;
 
   @override
   State<_DropdownOverlay<T>> createState() => _DropdownOverlayState<T>();
@@ -355,7 +342,6 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
     super.initState();
     _displayItems = widget.items;
     widget.searchCtrl.addListener(_onSearch);
-    // لا نطلب الـ focus تلقائياً — الكيبورد يظهر فقط عند الضغط على حقل البحث
   }
 
   @override
@@ -379,7 +365,6 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // شفافية لإغلاق القائمة عند اللمس خارجها
         Positioned.fill(
           child: GestureDetector(
             onTap: widget.onDismiss,
@@ -387,37 +372,36 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
             child: const SizedBox.expand(),
           ),
         ),
-
         CompositedTransformFollower(
-          link:             widget.layerLink,
+          link: widget.layerLink,
           showWhenUnlinked: false,
-          offset:           Offset(0, widget.anchorSize.height + 6),
+          offset: Offset(0, widget.anchorSize.height + 6),
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: FadeTransition(
               opacity: widget.fadeAnim,
               child: ScaleTransition(
-                scale:     widget.scaleAnim,
+                scale: widget.scaleAnim,
                 alignment: Alignment.topCenter,
                 child: Material(
-                  color:        Colors.transparent,
+                  color: Colors.transparent,
                   borderRadius: BorderRadius.circular(14),
                   child: Container(
-                    width:       widget.anchorSize.width,
+                    width: widget.anchorSize.width,
                     constraints: const BoxConstraints(maxHeight: 280),
                     decoration: BoxDecoration(
-                      color:        Colors.white,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(14),
                       boxShadow: [
                         BoxShadow(
-                          color:     Colors.black.withOpacity(0.10),
+                          color: Colors.black.withOpacity(0.10),
                           blurRadius: 20,
-                          offset:    const Offset(0, 6),
+                          offset: const Offset(0, 6),
                         ),
                         BoxShadow(
-                          color:     Colors.black.withOpacity(0.04),
+                          color: Colors.black.withOpacity(0.04),
                           blurRadius: 4,
-                          offset:    const Offset(0, 2),
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
@@ -426,43 +410,40 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // حقل البحث
                           if (widget.searchable) ...[
                             Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(10, 10, 10, 6),
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
                               child: TextField(
-                                controller:    widget.searchCtrl,
-                                focusNode:     widget.searchFocus,
+                                controller: widget.searchCtrl,
+                                focusNode: widget.searchFocus,
                                 textDirection: TextDirection.rtl,
-                                textAlign:     TextAlign.right,
+                                textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 13),
                                 decoration: InputDecoration(
-                                  hintText:  'بحث ...',
+                                  hintText: 'بحث ...',
                                   hintStyle: TextStyle(
-                                    color:    Colors.grey.shade400,
+                                    color: Colors.grey.shade400,
                                     fontSize: 13,
                                   ),
                                   prefixIcon: Icon(
                                     Icons.search_rounded,
-                                    size:  18,
+                                    size: 18,
                                     color: Colors.grey.shade400,
                                   ),
-                                  isDense:     true,
-                                  filled:      true,
-                                  fillColor:   Colors.grey.shade50,
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(
-                                    vertical:   10,
+                                  isDense: true,
+                                  filled: true,
+                                  fillColor: Colors.grey.shade50,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 10,
                                     horizontal: 12,
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide:   BorderSide.none,
+                                    borderSide: BorderSide.none,
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide:   BorderSide.none,
+                                    borderSide: BorderSide.none,
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -475,17 +456,17 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                             ),
                             Divider(height: 1, color: Colors.grey.shade100),
                           ],
-
-                          // قائمة العناصر
                           if (_displayItems.isEmpty)
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 24, horizontal: 16),
+                                vertical: 24,
+                                horizontal: 16,
+                              ),
                               child: Text(
                                 'لا توجد نتائج',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color:    Colors.grey.shade400,
+                                  color: Colors.grey.shade400,
                                   fontSize: 13,
                                 ),
                               ),
@@ -493,19 +474,19 @@ class _DropdownOverlayState<T> extends State<_DropdownOverlay<T>> {
                           else
                             Flexible(
                               child: ListView.separated(
-                                padding:    EdgeInsets.zero,
+                                padding: EdgeInsets.zero,
                                 shrinkWrap: true,
-                                itemCount:  _displayItems.length,
+                                itemCount: _displayItems.length,
                                 separatorBuilder: (_, _) => Divider(
                                   height: 1,
-                                  color:  Colors.grey.shade100,
+                                  color: Colors.grey.shade100,
                                 ),
                                 itemBuilder: (_, i) {
-                                  final item       = _displayItems[i];
+                                  final item = _displayItems[i];
                                   final isSelected =
                                       widget.selectedItem == item;
                                   return _DropdownItem(
-                                    label:      widget.labelBuilder(item),
+                                    label: widget.labelBuilder(item),
                                     isSelected: isSelected,
                                     onTap: () => widget.onSelect(item),
                                   );
@@ -537,8 +518,8 @@ class _DropdownItem extends StatefulWidget {
     required this.onTap,
   });
 
-  final String       label;
-  final bool         isSelected;
+  final String label;
+  final bool isSelected;
   final VoidCallback onTap;
 
   @override
@@ -554,25 +535,21 @@ class _DropdownItemState extends State<_DropdownItem> {
       onTap: widget.onTap,
       child: MouseRegion(
         onEnter: (_) => setState(() => _hovered = true),
-        onExit:  (_) => setState(() => _hovered = false),
+        onExit: (_) => setState(() => _hovered = false),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
           color: widget.isSelected
               ? constBlue.withOpacity(0.08)
               : _hovered
-                  ? Colors.grey.shade50
-                  : Colors.white,
+              ? Colors.grey.shade50
+              : Colors.white,
           child: Row(
             children: [
               AnimatedOpacity(
                 duration: const Duration(milliseconds: 150),
-                opacity:  widget.isSelected ? 1.0 : 0.0,
-                child: Icon(
-                  Icons.check_rounded,
-                  size:  16,
-                  color: constBlue,
-                ),
+                opacity: widget.isSelected ? 1.0 : 0.0,
+                child: Icon(Icons.check_rounded, size: 16, color: constBlue),
               ),
               SizedBox(width: widget.isSelected ? 8 : 0),
               Expanded(
@@ -580,7 +557,7 @@ class _DropdownItemState extends State<_DropdownItem> {
                   widget.label,
                   textAlign: TextAlign.right,
                   style: TextStyle(
-                    fontSize:   14,
+                    fontSize: 14,
                     fontWeight: widget.isSelected
                         ? FontWeight.w600
                         : FontWeight.w400,

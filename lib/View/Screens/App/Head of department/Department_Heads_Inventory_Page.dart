@@ -1,5 +1,4 @@
 // ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -8,18 +7,34 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Display_Material_Info_P
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Search_Field.dart';
 
-class DepartmentHeadsInventoryPage extends StatelessWidget {
-  DepartmentHeadsInventoryPage({super.key}) {
-    // ✅ تسجيل واحد فقط مع tag
+class DepartmentHeadsInventoryPage extends StatefulWidget {
+  const DepartmentHeadsInventoryPage({super.key});
+
+  @override
+  State<DepartmentHeadsInventoryPage> createState() =>
+      _DepartmentHeadsInventoryPageState();
+}
+
+class _DepartmentHeadsInventoryPageState
+    extends State<DepartmentHeadsInventoryPage> {
+  final FilterController filterController = Get.put(
+    FilterController(),
+    tag: 'DepartmentHeadsInventoryPage',
+  );
+
+  @override
+  void initState() {
+    super.initState();
     filterController.initFilters(['الكل', 'ثابتة', 'مستهلكة', 'ادوية']);
   }
 
-  // ✅ Controller واحد مع tag موحد
-  final FilterController filterController = Get.put(
-    FilterController(),
-    tag: 'DisplayStockPage',
-  );
+  @override
+  void dispose() {
+    Get.delete<FilterController>(tag: 'DepartmentHeadsInventoryPage');
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +43,24 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          // ✅ Filter Bar أولاً
           Align(
             alignment: AlignmentGeometry.centerRight,
             child: CustomFilterBar(
-              tag: 'DisplayStockPage',
+              tag: 'DepartmentHeadsInventoryPage',
               filters: const ['الكل', 'ثابتة', 'مستهلكة', 'ادوية'],
             ),
           ),
+
+          CustomSearchField(),
           Expanded(
             child: Obx(() {
-              // ✅ selectedFilter.value داخل Obx مباشرة = reactive
               final String selected = filterController.selectedFilter.value;
+              final String query = filterController.searchQuery.value
+                  .trim()
+                  .toLowerCase();
 
-              final List<MaterialItem> material = switch (selected) {
+              List<MaterialItem> material = switch (selected) {
                 'الكل' => allMaterial,
                 'ثابتة' =>
                   allMaterial
@@ -54,14 +74,29 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
                   allMaterial
                       .where((o) => o.category == MaterialCategory.medicine)
                       .toList(),
-
                 _ => allMaterial,
               };
 
+              if (query.isNotEmpty) {
+                material = material
+                    .where(
+                      (o) =>
+                          CustomSearchField()
+                              .normalizeArabic(o.name)
+                              .toLowerCase()
+                              .contains(query) ||
+                          CustomSearchField()
+                              .normalizeArabic(o.id)
+                              .toLowerCase()
+                              .contains(query),
+                    )
+                    .toList();
+              }
+
               return material.isEmpty
-                  ? _buildEmptyState()
+                  ? CustomSearchField().buildEmptyState()
                   : ListView.builder(
-                      padding: EdgeInsets.only(top: 0, bottom: 12),
+                      padding: const EdgeInsets.only(top: 0, bottom: 12),
                       itemCount: material.length,
                       itemBuilder: (context, index) {
                         return MaterialCard(
@@ -77,22 +112,6 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
                       },
                     );
             }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.inbox_outlined, size: 64, color: Colors.grey.shade300),
-          const SizedBox(height: 16),
-          Text(
-            'لا توجد طلبات',
-            style: TextStyle(fontSize: 18, color: Colors.grey.shade500),
           ),
         ],
       ),

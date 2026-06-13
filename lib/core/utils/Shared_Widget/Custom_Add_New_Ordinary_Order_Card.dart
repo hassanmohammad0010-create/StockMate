@@ -166,7 +166,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                                       labelBuilder: (v) => v,
                                       label: 'الوحدة *',
                                       hint: 'اختر الوحدة',
-                                      icon: Icons.scale_outlined,
+                                      icon: Icons.category_outlined,
                                       searchable: false,
                                       value: _c.orders[orderIndex].unit,
                                       errorBorder: isInvalid,

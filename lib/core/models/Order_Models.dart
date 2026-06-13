@@ -47,7 +47,7 @@ final List<Order> allOrders = [
     status: OrderStatus.completed,
     priority: OrderPriority.normal,
     vendor: 'فارما',
-    type: 'عادي',
+    type: 'اعتيادي',
   ),
 
   // طلب عادي – مرفوض
@@ -59,7 +59,7 @@ final List<Order> allOrders = [
     priority: OrderPriority.urgent,
     rejectionReason:
         'الكمية المطلوبة تتجاوز الحد الأقصى المتاح في المستودع حالياً. الرجاء تقليل الكمية أو إعادة الطلب لاحقاً.',
-    type: 'عادي',
+    type: 'اعتيادي',
   ),
 
   // طلب عادي – قيد التنفيذ
@@ -69,7 +69,7 @@ final List<Order> allOrders = [
     quantity: 300,
     status: OrderStatus.inProgress,
     priority: OrderPriority.urgent,
-    type: 'عادي',
+    type: 'اعتيادي',
   ),
 
   // طلب عادي – معلق
@@ -79,7 +79,7 @@ final List<Order> allOrders = [
   //   quantity: 100,
   //   status: OrderStatus.suspended,
   //   priority: OrderPriority.normal,
-  //   type: 'عادي',
+  //   type: 'اعتيادي',
   // ),
 
   // طلب دوري – يومي – منجز

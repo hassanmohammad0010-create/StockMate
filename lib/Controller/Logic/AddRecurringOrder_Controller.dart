@@ -5,25 +5,24 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 
 class AddRecurringOrderController extends GetxController {
-
   // ─── Reactive state ───────────────────────────────────────────────────────
-  final Rx<OrderModel>  order     = OrderModel().obs;
-  final RxBool          isLoading = false.obs;
+  final Rx<OrderModel> order = OrderModel().obs;
+  final RxBool isLoading = false.obs;
 
   // ─── TextEditingController للكمية + GlobalKey للـ Form ───────────────────
   final TextEditingController quantityController = TextEditingController();
-  final GlobalKey<FormState>  formKey            = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   // ─── التكرار — القيمة الافتراضية: أسبوعي ─────────────────────────────────
   final RxString selectedRecurring = 'weekly'.obs;
 
   static const Map<String, String> recurringLabels = {
-    'daily'  : 'يومي',
-    'weekly' : 'أسبوعي',
+    'daily': 'يومي',
+    'weekly': 'أسبوعي',
     'monthly': 'شهري',
   };
 
-  // ─── Reactive بالحقول الفارغة (لإظهار border أحمر على الـ dropdowns) ──────
+  // ─── Reactive بالحقول الفارغة ─────────────────────────────────────────────
   final RxSet<String> invalidFields = <String>{}.obs;
 
   @override
@@ -43,6 +42,11 @@ class AddRecurringOrderController extends GetxController {
 
   void _clearInvalid(String field) {
     invalidFields.remove(field);
+    invalidFields.refresh();
+  }
+
+  void markInvalidPublic(String field) {
+    invalidFields.add(field);
     invalidFields.refresh();
   }
 
@@ -84,8 +88,6 @@ class AddRecurringOrderController extends GetxController {
     order.refresh();
   }
 
-  // ─── Sync: quantity ↔ model ───────────────────────────────────────────────
-
   void _saveQuantity() {
     final qty = quantityController.text;
     order.value = order.value.copyWith(quantity: qty);
@@ -96,14 +98,11 @@ class AddRecurringOrderController extends GetxController {
     }
   }
 
-  // ─── Submission ───────────────────────────────────────────────────────────
-
-  Future<void> submitOrder() async {
+  // ─── STEP 1 : التحقق فقط ثم الانتقال لصفحة التأكيد ──────────────────────
+  void validateAndGoToConfirm() {
     _saveQuantity();
 
     final isFormValid = formKey.currentState?.validate() ?? false;
-
-    // validate الـ Dropdowns يدوياً
     final o = order.value;
     bool dropsValid = true;
 
@@ -120,6 +119,7 @@ class AddRecurringOrderController extends GetxController {
       dropsValid = false;
     }
 
+    // ❌ حقول ناقصة — أظهر snackbar وابقَ في الصفحة
     if (!isFormValid || !dropsValid) {
       Get.snackbar(
         'بيانات ناقصة',
@@ -135,12 +135,18 @@ class AddRecurringOrderController extends GetxController {
       return;
     }
 
+    // ✅ كل شيء صحيح — انتقل لصفحة التأكيد فقط بدون إرسال
+    Get.toNamed('/RecurringConfirmPage');
+  }
+
+  // ─── STEP 2 : الإرسال الفعلي من صفحة التأكيد فقط ────────────────────────
+  Future<void> submitOrder() async {
     isLoading.value = true;
     try {
       await Future.delayed(const Duration(seconds: 2)); // TODO: API call
 
       final payload = {
-        ...o.toJson(),
+        ...order.value.toJson(),
         'recurring': selectedRecurring.value,
       };
       debugPrint('Submitting: $payload');
@@ -155,7 +161,8 @@ class AddRecurringOrderController extends GetxController {
         borderRadius: 12,
         duration: const Duration(seconds: 3),
       );
-      // Get.back();
+
+      // TODO: Get.offAllNamed('/HomePage') بعد الإرسال الناجح
     } catch (e) {
       Get.snackbar(
         'خطأ',

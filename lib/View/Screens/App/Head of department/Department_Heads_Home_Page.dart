@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Card.dart';
@@ -19,22 +18,6 @@ class DepartmentHeadsHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: constBackgroundColor,
-      floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
-        child: FloatingActionButton(
-          backgroundColor: constBlue,
-          foregroundColor: Colors.white,
-          splashColor: constColor,
-          elevation: 2.0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          onPressed: () {
-            Get.to(() => DepartmentHeadsAddNewOrderPage());
-          },
-          child: Icon(Icons.add,size: 35),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -57,7 +40,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                           color: Color(0xFF09C05E),
                         ),
                         iconBackgroundColor: Color(0xFFE3FDED),
-                        number: '105',
+                        number: '2',
                         title: 'طلبات منجزة',
                         buttonColor: Color(0xFF09C05E),
                         buttonTitle: 'عرض التفاصيل',
@@ -69,7 +52,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                       CustomCard(
                         icon: Icon(Icons.more_time, size: 30, color: constBlue),
                         iconBackgroundColor: Color(0xFFE3F2FD),
-                        number: '4',
+                        number: '2',
                         title: 'طلبات قيد التنفيذ',
                         buttonColor: constBlue,
                         buttonTitle: 'عرض التفاصيل',
@@ -89,7 +72,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                           color: Color(0xFFFFBF00),
                         ),
                         iconBackgroundColor: Color(0xFFFFF8E2),
-                        number: '32',
+                        number: '0',
                         title: 'بانتظار الموافقة',
                         buttonColor: Color(0xFFFFBF00),
                         buttonTitle: 'عرض التفاصيل',
@@ -105,7 +88,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                           color: Color(0xFFFF2125),
                         ),
                         iconBackgroundColor: Color(0xFFFFEBEE),
-                        number: '10',
+                        number: '2',
                         title: 'طلبات مرفوضة',
                         buttonColor: Color(0xFFFF2125),
                         buttonTitle: 'عرض التفاصيل',

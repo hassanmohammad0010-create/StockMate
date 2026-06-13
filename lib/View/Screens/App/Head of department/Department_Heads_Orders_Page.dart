@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentOrdersFilterController%20.dart';
 import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Card.dart';
@@ -28,18 +27,17 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
   );
   late Worker _worker;
 
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  // بدلاً من widget.initialFilter استخدم ordersController.initialFilter.value
-  filterController.setFilter(ordersController.initialFilter.value);
+    // بدلاً من widget.initialFilter استخدم ordersController.initialFilter.value
+    filterController.setFilter(ordersController.initialFilter.value);
 
-  _worker = ever(ordersController.initialFilter, (filter) {
-    filterController.setFilter(filter);
-  });
-}
-
+    _worker = ever(ordersController.initialFilter, (filter) {
+      filterController.setFilter(filter);
+    });
+  }
 
   @override
   void dispose() {
@@ -55,13 +53,21 @@ void initState() {
       case 'الطلبات الدورية':
         return allOrders.where((o) => o.isRecurring).toList();
       case 'معلق':
-        return allOrders.where((o) => o.status == OrderStatus.suspended).toList();
+        return allOrders
+            .where((o) => o.status == OrderStatus.suspended)
+            .toList();
       case 'قيد التنفيذ':
-        return allOrders.where((o) => o.status == OrderStatus.inProgress).toList();
+        return allOrders
+            .where((o) => o.status == OrderStatus.inProgress)
+            .toList();
       case 'منجز':
-        return allOrders.where((o) => o.status == OrderStatus.completed).toList();
+        return allOrders
+            .where((o) => o.status == OrderStatus.completed)
+            .toList();
       case 'مرفوض':
-        return allOrders.where((o) => o.status == OrderStatus.rejected).toList();
+        return allOrders
+            .where((o) => o.status == OrderStatus.rejected)
+            .toList();
       default:
         return allOrders;
     }
@@ -89,7 +95,8 @@ void initState() {
                         final order = filteredOrders[index];
                         return OrderCard(
                           order: order,
-                          onTap: () => Get.to(() => OrderDetailsPage(order: order)),
+                          onTap: () =>
+                              Get.to(() => OrderDetailsPage(order: order)),
                         );
                       },
                     );
@@ -97,24 +104,6 @@ void initState() {
           ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
-        child: FloatingActionButton(
-          backgroundColor: constBlue,
-          foregroundColor: Colors.white,
-          splashColor: constColor,
-          elevation: 2.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
-          onPressed: () {
-            Get.to(() => DepartmentHeadsAddNewOrderPage());
-          },
-          child: const Icon(Icons.add, size: 35),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 

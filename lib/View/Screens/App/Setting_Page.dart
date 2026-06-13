@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use, file_names
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -86,12 +87,15 @@ class SettingPage extends StatelessWidget {
                             ),
                           ],
                         ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.02,
+                        ),
                         Flexible(
                           child: Text(
                             'hasanmohammad@gmail.com',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.clip,
-                                  textAlign: TextAlign.left,
+                            maxLines: 1,
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.left,
                             style: TextStyle(
                               color: constGray,
                               fontFamily: cairo,
@@ -125,7 +129,7 @@ class SettingPage extends StatelessWidget {
               title: 'كلمة المرور',
             ),
 
-             CustomListTile(
+            CustomListTile(
               backgroundColor: constLightBlue,
               description: 'قم بتقديم اقتراح او ابلاغ',
               icon: Icons.report,

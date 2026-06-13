@@ -155,7 +155,7 @@ class RecurringOrderCard extends StatelessWidget {
                                       labelBuilder: (v) => v,
                                       label: 'الوحدة *',
                                       hint: 'اختر الوحدة',
-                                      icon: Icons.scale_outlined,
+                                      icon: Icons.category_outlined,
                                       searchable: false,
                                       value: _c.order.value.unit,
                                       errorBorder: isInvalid,
@@ -226,7 +226,7 @@ class RecurringOrderCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                                    SizedBox(height: size.height * 0.008),
+                  SizedBox(height: size.height * 0.008),
 
                   RecurringChooseCard(),
                 ],

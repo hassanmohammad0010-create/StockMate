@@ -29,18 +29,20 @@ class RecurringSubmitSection extends GetView<AddRecurringOrderController> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 10),
-          Obx(() {
-            final loading = controller.isLoading.value;
-            return CustomMainButtom(
-              title: loading ? 'جاري الإرسال ...' : 'تأكيد الإرسال',
-              color: constBlue,
-              fontcolor: Colors.white,
-              onPressed: loading ? () {} : controller.submitOrder,
-            );
-          }),
+
+          // ✅ التحقق من الحقول أولاً ثم الانتقال لصفحة التأكيد
+          CustomMainButtom(
+            title: 'إرسال الطلب',
+            color: constBlue,
+            fontcolor: Colors.white,
+            onPressed: () =>
+controller.validateAndGoToConfirm(),            
+          ),
+
           const SizedBox(height: 10),
         ],
       ),
     );
   }
 }
+  

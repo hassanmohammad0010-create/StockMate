@@ -1,6 +1,8 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
@@ -16,8 +18,24 @@ class DepartmentHeadsMainPage extends StatelessWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-              backgroundColor: constBackgroundColor,
-
+        backgroundColor: constBackgroundColor,
+        floatingActionButton: SizedBox(
+          width: 70,
+          height: 70,
+          child: FloatingActionButton(
+            backgroundColor: constBlue,
+            foregroundColor: Colors.white,
+            splashColor: constColor,
+            elevation: 2.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            onPressed: () {
+              Get.to(() => DepartmentHeadsAddNewOrderPage());
+            },
+            child: Icon(Icons.add, size: 35),
+          ),
+        ),
         appBar: AppBar(
           toolbarHeight: MediaQuery.of(context).size.height * 0.1,
           actions: [

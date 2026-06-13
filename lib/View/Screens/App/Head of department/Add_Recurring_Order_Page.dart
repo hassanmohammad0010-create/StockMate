@@ -13,7 +13,6 @@ class AddRecurringOrderPage extends GetView<AddOrdinaryOrderController> {
 
   final String pageName = '/AddRecurringOrderPage';
 
-
   @override
   Widget build(BuildContext context) {
     if (!Get.isRegistered<AddRecurringOrderController>()) {
@@ -21,18 +20,19 @@ class AddRecurringOrderPage extends GetView<AddOrdinaryOrderController> {
     }
     return Scaffold(
       backgroundColor: constBackgroundColor,
-      body: Column(
-        children: [
-          Expanded(
-            child: Obx(() {
-              final index = controller.activeOrderIndex.value;
-              return RecurringOrderCard(
-                key: ValueKey(index),
-              );
-            }),
-          ),
-          const RecurringSubmitSection(),
-        ],
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Column(
+          children: [
+            Expanded(
+              child: Obx(() {
+                final index = controller.activeOrderIndex.value;
+                return RecurringOrderCard(key: ValueKey(index));
+              }),
+            ),
+            const RecurringSubmitSection(),
+          ],
+        ),
       ),
     );
   }
