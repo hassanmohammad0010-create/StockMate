@@ -3,34 +3,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/AddRecurringOrder_Controller.dart';
+import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Ordienary_Bottom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Confirm_Section.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Bottom.dart';
 
-class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
-  const RecurringConfirmPage({super.key});
+class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
+  const OrdinaryConfirmPage({super.key});
 
-  final String pageName = '/RecurringConfirmPage';
+  final String pageName = '/OrdinaryConfirmPage';
+
 
   static const String _doctorName = 'د. محمد علي';
   static const String _departmentName = 'قسم الداخلية';
 
   @override
   Widget build(BuildContext context) {
-    
     final size = MediaQuery.of(context).size;
-    final order = controller.order.value;
+    final orders = controller.orders;
     final now = DateTime.now();
 
     final String formattedDate =
-        '${now.day}/${now.month}/${now.year}  ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
-
-    final String recurringLabel =
-        AddRecurringOrderController.recurringLabels[controller
-            .selectedRecurring
-            .value] ??
-        '';
+        '${now.day}/${now.month}/${now.year}  '
+        '${now.hour.toString().padLeft(2, '0')}:'
+        '${now.minute.toString().padLeft(2, '0')}';
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -74,9 +70,9 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
                       color: constBlue,
                     ),
                   ),
-                  SizedBox(height: size.height * 0.015),
+                  SizedBox(height: size.height * 0.01),
                   Text(
-                    'يرجى مراجعة تفاصيل الطلب قبل الإرسال',
+                    'يرجى مراجعة تفاصيل الطلبات قبل الإرسال',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: cairo,
@@ -84,45 +80,53 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
                       color: Colors.grey.shade500,
                     ),
                   ),
-                  SizedBox(height: size.height * 0.025),
+                  SizedBox(height: size.height * 0.02),
                   BuildSection(
                     title: 'بيانات المُرسِل',
                     icon: Icons.person_outline_rounded,
                     children: [
+                      // _buildRow('الطبيب المُرسِل', _doctorName),
                       BuildRow(label: 'الطبيب المُرسِل', value: _doctorName),
                       BuildRow(label: 'القسم', value: _departmentName),
-                      BuildRow(label: 'نوع الطلب', value: 'دوري'),
+                      BuildRow(label: 'نوع الطلب', value: 'اعتيادي'),
+                      BuildRow(label: 'عدد الطلبات', value: '${orders.length}'),
                       BuildRow(label: 'تاريخ الإرسال', value: formattedDate),
                     ],
                   ),
-                  SizedBox(height: size.height * 0.015),
-                  BuildSection(
-                    title: 'تفاصيل الطلب',
-                    icon: Icons.medical_services_outlined,
-                    children: [
-                      BuildRow(
-                        label: 'اسم المادة',
-                        value: order.medicineName ?? '—',
+                  SizedBox(height: size.height * 0.02),
+                  ...List.generate(orders.length, (i) {
+                    final o = orders[i];
+                    final qtyCtrl = controller.quantityCtrl(i);
+                    final priority = o.priority;
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: size.height * 0.015),
+                      child: BuildSection(
+                        title: orders.length == 1
+                            ? 'تفاصيل الطلب'
+                            : 'تفاصيل الطلب ${i + 1}',
+                        icon: Icons.medical_services_outlined,
+                        children: [
+                          BuildRow(
+                            label: 'اسم المادة',
+                            value: o.medicineName ?? '—',
+                          ),
+                          BuildRow(
+                            label: 'الكمية',
+                            value: qtyCtrl.text.isEmpty ? '—' : qtyCtrl.text,
+                          ),
+                          BuildRow(label: 'الوحدة', value: o.unit ?? '—'),
+                          BuildRow(label: 'الماركة', value: o.brand ?? '—'),
+                          BuildRow(label: 'الأولوية', value: priority),
+                        ],
                       ),
-                      BuildRow(
-                        label: 'الكمية',
-                        value: controller.quantityController.text.isEmpty
-                            ? '—'
-                            : controller.quantityController.text,
-                      ),
-                      BuildRow(label: 'الوحدة', value: order.unit ?? '—'),
-                      BuildRow(
-                        label: 'الوكيل / الماركة',
-                        value: order.brand ?? '—',
-                      ),
-                      BuildRow(label: 'التكرار', value: recurringLabel),
-                    ],
-                  ),
+                    );
+                  }),
+                  SizedBox(height: size.height * 0.01),
                 ],
               ),
             ),
           ),
-          CustomRecurringBottom(),
+          CustomOrdinaryBottom(),
         ],
       ),
     );

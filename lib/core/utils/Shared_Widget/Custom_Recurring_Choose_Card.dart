@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, sized_box_for_whitespace
+// ignore_for_file: file_names, sized_box_for_whitespace, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +22,8 @@ class RecurringChooseCard extends StatelessWidget {
         child: Container(
           width: size.height * 0.9,
           child: Card(
+            color: Colors.white.withOpacity(0.9),
+            elevation: 3.0,
             child: Column(
               children: [
                 // ── العنوان ───────────────────────────────────────────
@@ -36,9 +38,7 @@ class RecurringChooseCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.03,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
                   child: const Divider(),
                 ),
                 SizedBox(height: size.height * 0.01),

@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, sized_box_for_whitespace
+// ignore_for_file: file_names, sized_box_for_whitespace, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -23,10 +23,12 @@ class PriorityChooseCard extends StatelessWidget {
       }
       final selected = _c.orders[orderIndex].priority;
       return Padding(
-        padding:  EdgeInsets.symmetric(horizontal: size.width * 0.025),
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.025),
         child: Container(
           width: MediaQuery.of(context).size.height * 0.9,
           child: Card(
+            color: Colors.white.withOpacity(0.9),
+            elevation: 3.0,
             child: Column(
               children: [
                 Align(
@@ -46,7 +48,7 @@ class PriorityChooseCard extends StatelessWidget {
                   child: const Divider(),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-        
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [

@@ -21,17 +21,23 @@ class AddOrdinaryOrderPage extends GetView<AddOrdinaryOrderController> {
     return Scaffold(
       backgroundColor: constBackgroundColor,
       resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          const OrderTabBar(),
-          Expanded(
-            child: Obx(() {
-              final index = controller.activeOrderIndex.value;
-              return OrdinaryOrderCard(key: ValueKey(index), orderIndex: index);
-            }),
-          ),
-          const OrdinarySubmitSection(),
-        ],
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Column(
+          children: [
+            const OrderTabBar(),
+            Expanded(
+              child: Obx(() {
+                final index = controller.activeOrderIndex.value;
+                return OrdinaryOrderCard(
+                  key: ValueKey(index),
+                  orderIndex: index,
+                );
+              }),
+            ),
+            const OrdinarySubmitSection(),
+          ],
+        ),
       ),
     );
   }

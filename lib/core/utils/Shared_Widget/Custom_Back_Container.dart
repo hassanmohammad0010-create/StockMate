@@ -10,9 +10,9 @@ class CustomBackContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerRight,
-      padding: EdgeInsets.only(right: 32),
+      padding: EdgeInsets.only(right: 32, top: 24),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.20,
+      height: MediaQuery.of(context).size.height * 0.18,
       decoration: BoxDecoration(color: constColor),
       child: GestureDetector(
         onTap: () {
@@ -26,11 +26,7 @@ class CustomBackContainer extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.center,
-          child: Icon(
-            Icons.arrow_back_rounded,
-            size: 32,
-            color: Colors.white,
-          ),
+          child: Icon(Icons.arrow_back_rounded, size: 32, color: Colors.white),
         ),
       ),
     );

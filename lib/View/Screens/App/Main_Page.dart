@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Boss_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Inventory_Page.dart';
@@ -28,7 +29,10 @@ class MainPage extends StatelessWidget {
                     color: Colors.white,
                     size: context.screenHeight * 0.033,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.toNamed('/NotificationPage');
+
+                  },
                 ),
                 Positioned(
                   right: 10,

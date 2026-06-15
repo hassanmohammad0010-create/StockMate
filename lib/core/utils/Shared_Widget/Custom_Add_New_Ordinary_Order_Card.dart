@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, file_names
+// ignore_for_file: sized_box_for_whitespace, file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -53,6 +53,8 @@ class OrdinaryOrderCard extends StatelessWidget {
                     child: Container(
                       width: size.width * 0.95,
                       child: Card(
+                        color: Colors.white.withOpacity(0.9),
+                        elevation: 3.0,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

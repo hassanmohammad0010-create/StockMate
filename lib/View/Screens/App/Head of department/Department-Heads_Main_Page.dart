@@ -48,7 +48,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                     size: 28,
                   ),
                   onPressed: () {
-                    // fTODO: فتح صفحة الإشعارات
+                    Get.toNamed('/NotificationPage');
                   },
                 ),
                 // نقطة حمراء تدل على وجود إشعارات جديدة

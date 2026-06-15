@@ -2,13 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 
 class AddOrdinaryOrderController extends GetxController {
   static const int maxOrders = 5;
 
   // ─── Reactive state ───────────────────────────────────────────────────────
-  final RxList<OrderModel> orders          = <OrderModel>[OrderModel()].obs;
+  final RxList<OrderModel> orders           = <OrderModel>[OrderModel()].obs;
   final RxInt              activeOrderIndex = 0.obs;
   final RxBool             isLoading        = false.obs;
 
@@ -16,8 +17,7 @@ class AddOrdinaryOrderController extends GetxController {
   final List<TextEditingController> _quantityControllers = [];
   final List<GlobalKey<FormState>>  formKeys             = [];
 
-  // ─── Reactive بالحقول الفارغة لكل طلب (لإظهار border أحمر على الـ dropdowns) ─
-  // Map<orderIndex, Set<fieldName>>
+  // ─── Reactive بالحقول الفارغة لكل طلب ────────────────────────────────────
   final RxMap<int, Set<String>> invalidFields = <int, Set<String>>{}.obs;
 
   @override
@@ -47,7 +47,6 @@ class AddOrdinaryOrderController extends GetxController {
   GlobalKey<FormState> formKey([int? index]) =>
       formKeys[index ?? activeOrderIndex.value];
 
-  /// هل الحقل [field] في الطلب [index] يعاني من خطأ validation؟
   bool isFieldInvalid(int index, String field) =>
       invalidFields[index]?.contains(field) ?? false;
 
@@ -96,7 +95,6 @@ class AddOrdinaryOrderController extends GetxController {
     orders.removeAt(index);
     invalidFields.remove(index);
 
-    // أعد ترقيم الـ invalidFields بعد الحذف
     final newMap = <int, Set<String>>{};
     invalidFields.forEach((k, v) {
       if (k < index) newMap[k] = v;
@@ -122,7 +120,6 @@ class AddOrdinaryOrderController extends GetxController {
     if (i >= orders.length) return;
     final qty = _quantityControllers[i].text;
     orders[i] = orders[i].copyWith(quantity: qty);
-    // امسح خطأ الكمية إذا أُدخلت
     if (qty.trim().isNotEmpty) _clearInvalid(i, 'quantity');
   }
 
@@ -134,7 +131,6 @@ class AddOrdinaryOrderController extends GetxController {
 
   void updateMedicineName(int index, String? value) {
     if (index >= orders.length) return;
-    // نمرر null صراحةً عند المسح — copyWith يدعمه بالـ sentinel
     orders[index] = orders[index].copyWith(medicineName: value);
     if (value != null && value.isNotEmpty) {
       _clearInvalid(index, 'medicineName');
@@ -172,17 +168,12 @@ class AddOrdinaryOrderController extends GetxController {
     orders.refresh();
   }
 
-  // ─── Submission ───────────────────────────────────────────────────────────
-
-  Future<void> submitOrders() async {
+  // ─── STEP 1: التحقق فقط ثم الانتقال لصفحة التأكيد ───────────────────────
+  void validateAndGoToConfirm() {
     _saveCurrentQuantity();
 
-    // 1. validate الـ TextFormField بالـ Form key للطلب النشط
-    final currentFormValid =
-        formKey(activeOrderIndex.value).currentState?.validate() ?? true;
+    bool allValid = true;
 
-    // 2. validate كل الطلبات
-    bool allValid = currentFormValid;
     for (int i = 0; i < orders.length; i++) {
       final o = orders[i];
       bool orderOk = true;
@@ -206,13 +197,13 @@ class AddOrdinaryOrderController extends GetxController {
 
       if (!orderOk) {
         allValid = false;
-        // انتقل لأول طلب فيه خطأ
         if (i != activeOrderIndex.value) {
           selectOrder(i);
-          // أعد تشغيل الـ form validate بعد الانتقال
           WidgetsBinding.instance.addPostFrameCallback((_) {
             formKey(i).currentState?.validate();
           });
+        } else {
+          formKey(i).currentState?.validate();
         }
         break;
       }
@@ -227,10 +218,21 @@ class AddOrdinaryOrderController extends GetxController {
         colorText: Colors.white,
         margin: const EdgeInsets.all(12),
         borderRadius: 12,
+        titleText: const SizedBox.shrink(),
+        icon: const Icon(Icons.error_outline, color: Colors.white),
       );
       return;
     }
 
+    // ✅ كل شيء صحيح — انتقل لصفحة التأكيد فقط بدون إرسال
+    Get.to(
+      () => const OrdinaryConfirmPage(),
+      transition: Transition.rightToLeft,
+    );
+  }
+
+  // ─── STEP 2: الإرسال الفعلي من صفحة التأكيد فقط ─────────────────────────
+  Future<void> submitOrders() async {
     isLoading.value = true;
     try {
       await Future.delayed(const Duration(seconds: 2)); // TODO: API call
@@ -248,7 +250,7 @@ class AddOrdinaryOrderController extends GetxController {
         borderRadius: 12,
         duration: const Duration(seconds: 3),
       );
-      // Get.back();
+      // TODO: Get.offAllNamed('/HomePage') بعد الإرسال الناجح
     } catch (e) {
       Get.snackbar(
         'خطأ',

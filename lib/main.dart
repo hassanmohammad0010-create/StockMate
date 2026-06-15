@@ -10,11 +10,17 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Ordinary_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Details_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Notification_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
@@ -101,8 +107,29 @@ class MyApp extends StatelessWidget {
           page: () => AddRecurringOrderPage(),
         ),
         GetPage(name: ReportPage().pageName, page: () => ReportPage()),
-        GetPage(name: RecurringConfirmPage().pageName, page: () => RecurringConfirmPage()),
+        GetPage(
+          name: RecurringConfirmPage().pageName,
+          page: () => RecurringConfirmPage(),
+        ),
+        GetPage(
+          name: OrdinaryConfirmPage().pageName,
+          page: () => OrdinaryConfirmPage(),
+        ),
+        GetPage(
+          name: SendPrescriptionPage().pageName,
+          page: () => SendPrescriptionPage(),
+        ),
+        GetPage(name: CartPage().pageName, page: () => CartPage()),
 
+        GetPage(name: ArchivePage().pageName, page: () => ArchivePage()),
+        GetPage(
+          name: ArchiveDetailsPage().pageName,
+          page: () => const ArchiveDetailsPage(),
+        ),
+        GetPage(
+          name: NotificationPage().pageName,
+          page: () => const NotificationPage(),
+        ),
       ],
       initialRoute: DepartmentHeadsMainPage().pageName,
     );

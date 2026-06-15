@@ -22,7 +22,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
         child: Column(
           children: [
             CustomNameContainer(
-              empName: 'محمد علي',
+              empName: 'د. محمد علي',
               specializationName: 'رئيس قسم الداخلية',
             ),
             Container(
@@ -125,7 +125,9 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               description: 'طلب رفع روشيتة لمريض',
               icon: Icons.bar_chart_rounded,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed('/SendPrescriptionPage');
+              },
               title: 'رفع روشيتة جديدة',
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -134,7 +136,9 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               description: 'عرض تفاصيل المواد اليومية المطلوبة',
               icon: Icons.shopping_cart,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed('/CartPage');
+              },
               title: 'السلة',
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -143,7 +147,9 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               description: 'عرض الأرشيف للمصروفات اليومية السابقة',
               icon: Icons.fact_check_rounded,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed('/ArchivePage');
+              },
               title: 'الأرشيف',
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),

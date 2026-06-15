@@ -3,19 +3,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/ReportController.dart';
+import 'package:stock_mate_project/Controller/Logic/PrescriptionController.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Report_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Prescription_Card.dart';
 
-class ReportPage extends StatelessWidget {
-  const ReportPage({super.key});
+class SendPrescriptionPage extends StatelessWidget {
+  const SendPrescriptionPage({super.key});
 
-  final String pageName = '/ReportPage';
+  final String pageName = '/SendPrescriptionPage';
 
   @override
   Widget build(BuildContext context) {
-    final ReportController controller = Get.put(ReportController());
+    final PrescriptionController controller = Get.put(PrescriptionController());
 
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
@@ -31,10 +32,12 @@ class ReportPage extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: w * 0.03),
+                  padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                   child: Column(
                     children: [
-                      CustomReportCard(),
+                      CustomHeadContainer(title: 'إرسال وصفة طبية'),
+                      SizedBox(height: h * 0.01),
+                      CustomPrescriptionCard(),
                       SizedBox(height: h * 0.02),
                     ],
                   ),
@@ -51,14 +54,14 @@ class ReportPage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(bottom: h * 0.02),
               child: CustomMainButtom(
-                title: 'إرسال',
+                title: 'تأكيد الارسال',
                 color: constBlue,
                 fontcolor: Colors.white,
                 onPressed: () {
                   if (controller.formKey.currentState!.validate()) {
                     Get.snackbar(
                       'تم الإرسال ✓',
-                      'تم إرسال الطلب بنجاح',
+                      'تم إرسال الوصفة بنجاح',
                       snackPosition: SnackPosition.TOP,
                       backgroundColor: Colors.green.shade600,
                       colorText: Colors.white,

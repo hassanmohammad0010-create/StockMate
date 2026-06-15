@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Details_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Reject_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
@@ -12,20 +13,17 @@ import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 
 class OrderDetailsPage extends StatelessWidget {
- const OrderDetailsPage({super.key, required this.order});
-
+  const OrderDetailsPage({super.key, required this.order});
 
   final String pageName = '/OrderDetailsPage';
   final Order order;
-
-
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-      backgroundColor: constBackgroundColor,
+        backgroundColor: constBackgroundColor,
         body: Column(
           children: [
             CustomBackContainer(),
@@ -51,7 +49,13 @@ class OrderDetailsPage extends StatelessWidget {
                             title: 'حذف الطلب',
                             color: constRed,
                             fontcolor: Colors.white,
-                            onPressed: () {},
+                            onPressed: () {
+                              CustomDialog.show(
+                                type: DialogType.danger,
+                                title: 'حذف الطلب',
+                                message: 'هل أنت متأكد من حذف هذا الطلب؟',
+                              );
+                            },
                           )
                         : const SizedBox(),
                     const SizedBox(height: 8),

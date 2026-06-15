@@ -4,12 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
 class CustomHeadContainer extends StatelessWidget {
-  const CustomHeadContainer({super.key, required this.title});
+  const CustomHeadContainer({super.key, required this.title, this.trailing});
+  
   final String title;
+  final String? trailing;
+
   @override
   Widget build(BuildContext context) {
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.01, vertical: h * 0.01),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -53,6 +59,26 @@ class CustomHeadContainer extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.22),
+              if (trailing != null)
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: w * 0.02,
+                    vertical: h * 0.005,
+                  ),
+                  decoration: BoxDecoration(
+                    color: constLightBlue,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    trailing!,
+                    style: TextStyle(
+                      color: constColor,
+                      fontFamily: cairo,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, file_names
+// ignore_for_file: sized_box_for_whitespace, file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -48,6 +48,8 @@ class RecurringOrderCard extends StatelessWidget {
                     child: Container(
                       width: size.width * 0.95,
                       child: Card(
+                        color: Colors.white.withOpacity(0.9),
+                        elevation: 3.0,
                         child: Column(
                           children: [
                             // ── عنوان الكارد ──────────────────────────────

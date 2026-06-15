@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, sized_box_for_whitespace
+// ignore_for_file: file_names, sized_box_for_whitespace, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +17,8 @@ class CustomReportCard extends StatelessWidget {
     return Form(
       key: controller.formKey,
       child: Card(
+        color: Colors.white.withOpacity(0.9),
+        elevation: 3.0,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -36,6 +38,7 @@ class CustomReportCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: h * 0.01),
                 child: CustomMyTextFormField(
+                  controller: controller.reportTitle,
                   prefixIcon: Icons.title_outlined,
                   keyboardType: TextInputType.text,
                   label: 'العنوان *',
@@ -52,6 +55,7 @@ class CustomReportCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: h * 0.01, bottom: h * 0.005),
                 child: CustomMyTextFormField(
+                  controller: controller.description,
                   maxLines: 8,
                   prefixIcon: Icons.description_outlined,
                   keyboardType: TextInputType.text,
