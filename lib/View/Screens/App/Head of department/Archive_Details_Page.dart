@@ -25,16 +25,16 @@ class ArchiveDetailsPage extends StatelessWidget {
         children: [
           CustomBackContainer(),
           SizedBox(height: h * 0.01),
+          CustomHeadContainer(
+            title: 'تفاصيل السلة',
+            trailing: 'التاريخ: ${item.date}',
+          ),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                 child: Column(
                   children: [
-                    CustomHeadContainer(
-                      title: 'تفاصيل السلة',
-                      trailing: 'التاريخ: ${item.date}',
-                    ),
                     if (item.medicines.isEmpty)
                       Padding(
                         padding: EdgeInsets.only(top: h * 0.3),

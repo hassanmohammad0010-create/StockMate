@@ -29,13 +29,13 @@ class SendPrescriptionPage extends StatelessWidget {
           children: [
             CustomBackContainer(),
             SizedBox(height: h * 0.01),
+            CustomHeadContainer(title: 'إرسال وصفة طبية'),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                   child: Column(
                     children: [
-                      CustomHeadContainer(title: 'إرسال وصفة طبية'),
                       SizedBox(height: h * 0.01),
                       CustomPrescriptionCard(),
                       SizedBox(height: h * 0.02),

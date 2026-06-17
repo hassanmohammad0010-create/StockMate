@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 
 class CustomNotificationCard extends StatelessWidget {
   const CustomNotificationCard({
@@ -55,7 +56,7 @@ class CustomNotificationCard extends StatelessWidget {
                 SizedBox(width: w * 0.015),
                 CircleAvatar(
                   radius: 16,
-                  backgroundColor: Color(0xFF2196F3),
+                  backgroundColor: constBlue,
                   child: Icon(
                     Icons.nightlight_round,
                     color: Colors.white,
@@ -95,7 +96,6 @@ class CustomNotificationCard extends StatelessWidget {
               ),
             ),
             SizedBox(width: w * 0.02),
-
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 
-enum NotificationStatus { accepted, rejected, newRequest, completed }
+enum NotificationStatus { rejected, inProgress, completed }
 
 class NotificationModel {
   final String title;
@@ -15,14 +16,12 @@ class NotificationModel {
 
   Color get statusColor {
     switch (status) {
-      case NotificationStatus.accepted:
-        return Colors.green;
-      case NotificationStatus.rejected:
-        return Colors.red;
-      case NotificationStatus.newRequest:
-        return Colors.blue;
       case NotificationStatus.completed:
-        return Colors.green;
+        return constGreen;
+      case NotificationStatus.rejected:
+        return constRed;
+      case NotificationStatus.inProgress:
+        return constBlue;
     }
   }
 }

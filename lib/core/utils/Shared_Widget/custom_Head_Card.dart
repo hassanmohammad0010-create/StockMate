@@ -5,7 +5,7 @@ import 'package:stock_mate_project/Constant/Const.dart';
 
 class CustomHeadContainer extends StatelessWidget {
   const CustomHeadContainer({super.key, required this.title, this.trailing});
-  
+
   final String title;
   final String? trailing;
 
@@ -15,7 +15,7 @@ class CustomHeadContainer extends StatelessWidget {
     final w = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: w * 0.01, vertical: h * 0.01),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: h * 0.01),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -49,7 +49,7 @@ class CustomHeadContainer extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.03),
               Text(
                 title,
                 style: TextStyle(

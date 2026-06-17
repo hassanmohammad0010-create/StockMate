@@ -35,7 +35,7 @@ class CustomPrescriptionCard extends StatelessWidget {
                   hint: 'أدخل اسم المريض الثلاثي',
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'الرجاء إدخال اسم المريض';
+                      return 'الرجاء إدخال اسم المريض الثلاثي';
                     }
                     return null;
                   },
@@ -60,6 +60,23 @@ class CustomPrescriptionCard extends StatelessWidget {
               ),
               SizedBox(height: h * 0.01),
               Padding(
+                padding: EdgeInsets.only(top: h * 0.01),
+                child: CustomMyTextFormField(
+                  controller: controller.doctorNameController,
+                  prefixIcon: Icons.healing,
+                  keyboardType: TextInputType.text,
+                  label: 'الحالة *',
+                  hint: 'أدخل حالة المريض الطبية',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'الرجاء إدخال حالة المريض الطبية';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              SizedBox(height: h * 0.01),
+              Padding(
                 padding: EdgeInsets.only(top: h * 0.01, bottom: h * 0.005),
                 child: CustomMyTextFormField(
                   controller: controller.medicationsController,
@@ -70,7 +87,7 @@ class CustomPrescriptionCard extends StatelessWidget {
                   hint: 'أدخل الأدوية الموصوفة',
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'الرجاء إدخال الأدوية';
+                      return 'الرجاء إدخال الأدوية الموصوفة';
                     }
                     return null;
                   },

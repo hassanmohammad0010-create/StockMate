@@ -23,13 +23,14 @@ class CartPage extends StatelessWidget {
         children: [
           CustomBackContainer(),
           SizedBox(height: h * 0.01),
+          CustomHeadContainer(title: 'السلة اليومية'),
+
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                 child: Column(
                   children: [
-                    CustomHeadContainer(title: 'السلة اليومية'),
                     SizedBox(height: h * 0.01),
                     CustomCartContainer(
                       buttonText: 'ارجاع الى المخزون',

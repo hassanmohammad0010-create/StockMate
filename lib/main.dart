@@ -12,11 +12,13 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_O
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Details_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Archive_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriotion_Archive_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
@@ -122,6 +124,15 @@ class MyApp extends StatelessWidget {
         GetPage(name: CartPage().pageName, page: () => CartPage()),
 
         GetPage(name: ArchivePage().pageName, page: () => ArchivePage()),
+        GetPage(
+          name: CartArchivePage().pageName,
+          page: () => CartArchivePage(),
+        ),
+        GetPage(
+          name: PrescriotionArchivePage().pageName,
+          page: () => PrescriotionArchivePage(),
+        ),
+
         GetPage(
           name: ArchiveDetailsPage().pageName,
           page: () => const ArchiveDetailsPage(),

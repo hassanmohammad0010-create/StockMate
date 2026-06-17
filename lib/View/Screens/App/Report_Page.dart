@@ -7,6 +7,7 @@ import 'package:stock_mate_project/Controller/Logic/ReportController.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Report_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
 class ReportPage extends StatelessWidget {
   const ReportPage({super.key});
@@ -28,6 +29,7 @@ class ReportPage extends StatelessWidget {
           children: [
             CustomBackContainer(),
             SizedBox(height: h * 0.01),
+            CustomHeadContainer(title: 'ادخل تفاصيل التقرير'),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(

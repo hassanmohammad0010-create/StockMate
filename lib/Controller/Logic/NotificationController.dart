@@ -6,17 +6,12 @@ class NotificationController extends GetxController {
     NotificationModel(
       title: 'تم قبول الطلب',
       subtitle: 'شاش طبي mg 250 - قسم الجراحة',
-      status: NotificationStatus.accepted,
+      status: NotificationStatus.inProgress,
     ),
     NotificationModel(
       title: 'تم رفض الطلب',
       subtitle: 'شاش طبي mg 250 - قسم الجراحة',
       status: NotificationStatus.rejected,
-    ),
-    NotificationModel(
-      title: 'طلب جديد',
-      subtitle: 'شاش طبي mg 250 - مدير المستودع',
-      status: NotificationStatus.newRequest,
     ),
     NotificationModel(
       title: 'تم تنفيذ الطلب',
