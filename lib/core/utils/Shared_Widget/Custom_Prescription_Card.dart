@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, sized_box_for_whitespace
+// ignore_for_file: file_names, sized_box_for_whitespace, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -62,7 +62,7 @@ class CustomPrescriptionCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: h * 0.01),
                 child: CustomMyTextFormField(
-                  controller: controller.doctorNameController,
+                  controller: controller.conditionController,
                   prefixIcon: Icons.healing,
                   keyboardType: TextInputType.text,
                   label: 'الحالة *',

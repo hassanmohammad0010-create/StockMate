@@ -16,7 +16,10 @@ class SendPrescriptionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PrescriptionController controller = Get.put(PrescriptionController());
+    final PrescriptionController controller =
+        Get.isRegistered<PrescriptionController>()
+            ? Get.find<PrescriptionController>()
+            : Get.put(PrescriptionController(), permanent: true);
 
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
@@ -36,7 +39,6 @@ class SendPrescriptionPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                   child: Column(
                     children: [
-                      SizedBox(height: h * 0.01),
                       CustomPrescriptionCard(),
                       SizedBox(height: h * 0.02),
                     ],
@@ -59,6 +61,8 @@ class SendPrescriptionPage extends StatelessWidget {
                 fontcolor: Colors.white,
                 onPressed: () {
                   if (controller.formKey.currentState!.validate()) {
+                    controller.addPrescriptionToArchive();
+
                     Get.snackbar(
                       'تم الإرسال ✓',
                       'تم إرسال الوصفة بنجاح',

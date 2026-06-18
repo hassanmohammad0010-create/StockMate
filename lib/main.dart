@@ -129,8 +129,8 @@ class MyApp extends StatelessWidget {
           page: () => CartArchivePage(),
         ),
         GetPage(
-          name: PrescriotionArchivePage().pageName,
-          page: () => PrescriotionArchivePage(),
+          name: PrescriptionArchivePage().pageName,
+          page: () => PrescriptionArchivePage(),
         ),
 
         GetPage(
