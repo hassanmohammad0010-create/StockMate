@@ -12,8 +12,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dar
 class ReportPage extends StatelessWidget {
   const ReportPage({super.key});
 
-  final String pageName = '/ReportPage';
-
   @override
   Widget build(BuildContext context) {
     final ReportController controller = Get.put(ReportController());

@@ -5,12 +5,13 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class CustomSearchField extends StatelessWidget {
   CustomSearchField({super.key});
 
   final FilterController filterController = Get.find(
-    tag: 'DepartmentHeadsInventoryPage',
+    tag: AppRoutes.DepartmentHeadsInventoryPage,
   );
 
   final TextEditingController _searchController = TextEditingController();

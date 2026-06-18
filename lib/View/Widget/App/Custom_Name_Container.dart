@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
@@ -14,8 +16,8 @@ class CustomNameContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: context.screenWidth * 0.02, // ← بدل 8
-        vertical: context.screenHeight * 0.01, // ← بدل 8
+        horizontal: context.screenWidth * 0.02,
+        vertical: context.screenHeight * 0.01,
       ),
       child: Container(
         decoration: BoxDecoration(
@@ -50,8 +52,9 @@ class CustomNameContainer extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: context.screenWidth * 0.02),
+              SizedBox(width: context.screenWidth * 0.04),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     empName,

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -135,7 +135,7 @@ class SettingPage extends StatelessWidget {
               icon: Icons.report,
               iconColor: constBlue,
               onTap: () {
-                Get.toNamed(ReportPage().pageName);
+                Get.toNamed(AppRoutes.ReportPage);
               },
               title: 'تواصل معنا',
             ),

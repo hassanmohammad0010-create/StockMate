@@ -11,7 +11,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dar
 class CartArchivePage extends StatelessWidget {
   const CartArchivePage({super.key});
 
-  final String pageName = '/CartArchivePage';
 
   @override
   Widget build(BuildContext context) {

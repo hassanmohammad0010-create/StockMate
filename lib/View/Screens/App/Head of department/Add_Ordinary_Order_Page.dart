@@ -11,8 +11,6 @@ import '../../../../Controller/Logic/AddOrdinaryOrder_Controller.dart';
 class AddOrdinaryOrderPage extends GetView<AddOrdinaryOrderController> {
   const AddOrdinaryOrderPage({super.key});
 
-  final String pageName = '/AddOrdinaryOrderPage';
-
   @override
   Widget build(BuildContext context) {
     if (!Get.isRegistered<AddOrdinaryOrderController>()) {
@@ -21,23 +19,20 @@ class AddOrdinaryOrderPage extends GetView<AddOrdinaryOrderController> {
     return Scaffold(
       backgroundColor: constBackgroundColor,
       resizeToAvoidBottomInset: true,
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Column(
-          children: [
-            const OrderTabBar(),
-            Expanded(
-              child: Obx(() {
-                final index = controller.activeOrderIndex.value;
-                return OrdinaryOrderCard(
-                  key: ValueKey(index),
-                  orderIndex: index,
-                );
-              }),
-            ),
-            const OrdinarySubmitSection(),
-          ],
-        ),
+      body: Column(
+        children: [
+          const OrderTabBar(),
+          Expanded(
+            child: Obx(() {
+              final index = controller.activeOrderIndex.value;
+              return OrdinaryOrderCard(
+                key: ValueKey(index),
+                orderIndex: index,
+              );
+            }),
+          ),
+          const OrdinarySubmitSection(),
+        ],
       ),
     );
   }

@@ -14,7 +14,6 @@ class DepartmentOrdersPage extends StatefulWidget {
   const DepartmentOrdersPage({super.key, this.initialFilter = 'الكل'});
 
   final String initialFilter;
-  final String pageName = '/DepartmentHeadsOrdersPage';
 
   @override
   State<DepartmentOrdersPage> createState() => _DepartmentOrdersPageState();

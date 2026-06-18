@@ -9,6 +9,7 @@ import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
+  
   final String pageName = '/HomePage';
 
   @override

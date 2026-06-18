@@ -67,7 +67,9 @@ class OrdinaryOrderCard extends StatelessWidget {
                                   top: 12,
                                 ),
                                 child: Text(
-                                  'تفاصيل الطلب ${orderIndex + 1}',
+                                  _c.orders.length > 1
+                                          ?'تفاصيل الطلب ${orderIndex + 1}' 
+                                          : 'تفاصيل الطلب',
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontFamily: 'Cairo',

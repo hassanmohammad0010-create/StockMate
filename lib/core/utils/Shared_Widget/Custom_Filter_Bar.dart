@@ -1,4 +1,5 @@
-// custom_filter_bar.dart
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -10,7 +11,10 @@ class CustomFilterBar extends StatelessWidget {
   final List<String> filters;
   @override
   Widget build(BuildContext context) {
-    final FilterController controller = Get.find<FilterController>(tag: tag);
+
+   final FilterController controller = Get.find(tag: tag);
+  
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: SingleChildScrollView(

@@ -55,7 +55,7 @@ class OrderTab extends StatelessWidget {
                 ),
               ),
             Text(
-              'طلب ${index + 1}',
+              canRemove ? 'طلب ${index + 1}' : 'طلب جديد',
               style: TextStyle(
                 fontSize:   13,
                 fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,

@@ -9,9 +9,9 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_My_TextFormFa
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Choose_Card.dart';
 
 class RecurringOrderCard extends StatelessWidget {
-  const RecurringOrderCard({super.key});
+  final AddRecurringOrderController controller;
 
-  AddRecurringOrderController get _c => Get.find<AddRecurringOrderController>();
+  const RecurringOrderCard({super.key, required this.controller});
 
   static const List<String> _medicines = [
     'باراسيتامول',
@@ -44,7 +44,7 @@ class RecurringOrderCard extends StatelessWidget {
                 children: [
                   SizedBox(height: size.height * 0.008),
                   Form(
-                    key: _c.formKey,
+                    key: controller.formKey,
                     child: Container(
                       width: size.width * 0.95,
                       child: Card(
@@ -79,9 +79,10 @@ class RecurringOrderCard extends StatelessWidget {
 
                             // ── اسم الدواء ────────────────────────────────
                             Obx(() {
-                              final isInvalid = _c.isFieldInvalid(
-                                'medicineName',
-                              );
+                              // ✅ قراءة المتغير مباشرة قبل أي شرط لضمان عدم حدوث خطأ GetX
+                              final medicineName = controller.order.value.medicineName;
+                              final isInvalid = controller.isFieldInvalid('medicineName');
+
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.03,
@@ -96,10 +97,9 @@ class RecurringOrderCard extends StatelessWidget {
                                       hint: 'اختر الدواء المطلوب',
                                       searchable: true,
                                       icon: Icons.medication_outlined,
-                                      value: _c.order.value.medicineName,
+                                      value: medicineName,
                                       errorBorder: isInvalid,
-                                      onChanged: (v) =>
-                                          _c.updateMedicineName(v),
+                                      onChanged: (v) => controller.updateMedicineName(v),
                                     ),
                                     if (isInvalid)
                                       Padding(
@@ -131,7 +131,7 @@ class RecurringOrderCard extends StatelessWidget {
                                 keyboardType: TextInputType.number,
                                 label: 'الكمية *',
                                 hint: 'أدخل الكمية المطلوبة',
-                                controller: _c.quantityController,
+                                controller: controller.quantityController,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return 'الرجاء إدخال الكمية';
@@ -144,7 +144,9 @@ class RecurringOrderCard extends StatelessWidget {
 
                             // ── الوحدة ────────────────────────────────────
                             Obx(() {
-                              final isInvalid = _c.isFieldInvalid('unit');
+                              final unit = controller.order.value.unit;
+                              final isInvalid = controller.isFieldInvalid('unit');
+
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.03,
@@ -159,9 +161,9 @@ class RecurringOrderCard extends StatelessWidget {
                                       hint: 'اختر الوحدة',
                                       icon: Icons.category_outlined,
                                       searchable: false,
-                                      value: _c.order.value.unit,
+                                      value: unit,
                                       errorBorder: isInvalid,
-                                      onChanged: (v) => _c.updateUnit(v),
+                                      onChanged: (v) => controller.updateUnit(v),
                                     ),
                                     if (isInvalid)
                                       Padding(
@@ -185,7 +187,9 @@ class RecurringOrderCard extends StatelessWidget {
 
                             // ── الوكيل / الماركة ──────────────────────────
                             Obx(() {
-                              final isInvalid = _c.isFieldInvalid('brand');
+                              final brand = controller.order.value.brand;
+                              final isInvalid = controller.isFieldInvalid('brand');
+
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.03,
@@ -200,9 +204,9 @@ class RecurringOrderCard extends StatelessWidget {
                                       hint: 'اختر الوكيل / الماركة',
                                       icon: Icons.store_mall_directory_outlined,
                                       searchable: true,
-                                      value: _c.order.value.brand,
+                                      value: brand,
                                       errorBorder: isInvalid,
-                                      onChanged: (v) => _c.updateBrand(v),
+                                      onChanged: (v) => controller.updateBrand(v),
                                     ),
                                     if (isInvalid)
                                       Padding(
@@ -230,7 +234,7 @@ class RecurringOrderCard extends StatelessWidget {
                   ),
                   SizedBox(height: size.height * 0.008),
 
-                  RecurringChooseCard(),
+                  const RecurringChooseCard(),
                 ],
               ),
             ),

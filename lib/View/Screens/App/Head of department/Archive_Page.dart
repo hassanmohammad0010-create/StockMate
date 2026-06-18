@@ -10,7 +10,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dar
 class ArchivePage extends StatelessWidget {
   const ArchivePage({super.key});
 
-  final String pageName = '/ArchivePage';
 
   @override
   Widget build(BuildContext context) {

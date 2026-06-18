@@ -11,7 +11,6 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Depar
 class DepartmentHeadsMainPage extends StatelessWidget {
   const DepartmentHeadsMainPage({super.key});
 
-  final String pageName = '/DepartmentHeadsMainPage';
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,6 @@ class DepartmentHeadsMainPage extends StatelessWidget {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          backgroundColor: constBackgroundColor,
           floatingActionButton: SizedBox(
             width: 70,
             height: 70,

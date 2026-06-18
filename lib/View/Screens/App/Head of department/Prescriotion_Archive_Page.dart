@@ -11,7 +11,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dar
 class PrescriptionArchivePage extends StatelessWidget {
   PrescriptionArchivePage({super.key});
 
-  final String pageName = '/PrescriptionArchivePage';
 
   final TextEditingController _searchController = TextEditingController();
 

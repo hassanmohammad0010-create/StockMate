@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/AddRecurringOrder_Controller.dart';
+import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Confirm_Section.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Bottom.dart';
@@ -11,14 +13,12 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Bot
 class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
   const RecurringConfirmPage({super.key});
 
-  final String pageName = '/RecurringConfirmPage';
 
   static const String _doctorName = 'د. محمد علي';
   static const String _departmentName = 'قسم الداخلية';
 
   @override
   Widget build(BuildContext context) {
-    
     final size = MediaQuery.of(context).size;
     final order = controller.order.value;
     final now = DateTime.now();
@@ -34,25 +34,13 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: constBackgroundColor,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'تأكيد الطلب',
-          style: TextStyle(
-            fontFamily: cairo,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Get.back(),
-        ),
-      ),
       body: Column(
         children: [
+          CustomBackContainer(),
+          CustomNameContainer(
+            specializationName: 'الرجاء تأكيد بيانات الطلب الدوري قبل الإرسال',
+            empName: _doctorName,
+          ),
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
@@ -61,30 +49,6 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
               ),
               child: Column(
                 children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: constBlue.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.fact_check_outlined,
-                      size: 40,
-                      color: constBlue,
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.015),
-                  Text(
-                    'يرجى مراجعة تفاصيل الطلب قبل الإرسال',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: cairo,
-                      fontSize: 13,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.025),
                   BuildSection(
                     title: 'بيانات المُرسِل',
                     icon: Icons.person_outline_rounded,
@@ -95,7 +59,7 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
                       BuildRow(label: 'تاريخ الإرسال', value: formattedDate),
                     ],
                   ),
-                  SizedBox(height: size.height * 0.015),
+                  SizedBox(height: size.height * 0.01),
                   BuildSection(
                     title: 'تفاصيل الطلب',
                     icon: Icons.medical_services_outlined,

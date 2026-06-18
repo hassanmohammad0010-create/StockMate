@@ -21,6 +21,11 @@ class CustomDialog {
     String cancelText = 'إلغاء',
     bool showCancel = true,
 
+    // ── تخصيص عمل زر التأكيد (اختياري) ─────────────────────
+    // لو مرّرتها، تُنفَّذ بدل الإغلاق الافتراضي، وتصبح أنت
+    // المسؤول عن إغلاق الـ Dialog (عبر Get.back) متى احتجت.
+    VoidCallback? onConfirm,
+
     // ── حقل النص الاختياري ───────────────────────────────
     bool showTextField = false,
     String textFieldHint = '',
@@ -48,6 +53,7 @@ class CustomDialog {
           confirmText: confirmText,
           cancelText: cancelText,
           showCancel: showCancel,
+          onConfirm: onConfirm,
           showTextField: showTextField,
           textFieldHint: textFieldHint,
           textFieldLabel: textFieldLabel,
@@ -80,6 +86,7 @@ class _DialogContent extends StatelessWidget {
     required this.textFieldKeyboard,
     required this.textFieldController,
     required this.formKey,
+    this.onConfirm,
     this.textFieldValidator,
   });
 
@@ -89,6 +96,7 @@ class _DialogContent extends StatelessWidget {
   final String confirmText;
   final String cancelText;
   final bool showCancel;
+  final VoidCallback? onConfirm;
   final bool showTextField;
   final String textFieldHint;
   final String textFieldLabel;
@@ -129,6 +137,21 @@ class _DialogContent extends StatelessWidget {
           iconBackground: constLightBlue,
           confirmColor: constBlue,
         );
+    }
+  }
+
+  // ─── منطق ضغط زر التأكيد (مشترك بين الحالتين: مع/بدون إلغاء) ───────────────
+  void _handleConfirm() {
+    if (showTextField) {
+      if (!(formKey.currentState?.validate() ?? false)) {
+        return;
+      }
+    }
+
+    if (onConfirm != null) {
+      onConfirm!();
+    } else {
+      Get.back(result: true);
     }
   }
 
@@ -295,16 +318,7 @@ class _DialogContent extends StatelessWidget {
                               label: confirmText,
                               color: style.confirmColor,
                               textColor: Colors.white,
-                              onTap: () {
-                                if (showTextField) {
-                                  if (formKey.currentState?.validate() ??
-                                      false) {
-                                    Get.back(result: true);
-                                  }
-                                } else {
-                                  Get.back(result: true);
-                                }
-                              },
+                              onTap: _handleConfirm,
                             ),
                           ),
                         ],
@@ -314,7 +328,7 @@ class _DialogContent extends StatelessWidget {
                         label: confirmText,
                         color: style.confirmColor,
                         textColor: Colors.white,
-                        onTap: () => Get.back(result: true),
+                        onTap: _handleConfirm,
                       ),
               ),
             ],

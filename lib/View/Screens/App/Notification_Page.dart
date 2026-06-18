@@ -11,8 +11,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Notification_
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
 
-  final String pageName = '/NotificationPage';
-
   @override
   Widget build(BuildContext context) {
     final NotificationController controller = Get.put(NotificationController());

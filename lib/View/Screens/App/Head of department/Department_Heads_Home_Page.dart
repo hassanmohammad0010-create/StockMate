@@ -11,7 +11,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Card.dart';
 class DepartmentHeadsHomePage extends StatelessWidget {
   DepartmentHeadsHomePage({super.key});
 
-  final String pageName = '/DepartmentHeadsHomePage';
   final OrdersController ordersController = Get.put(OrdersController());
 
   @override

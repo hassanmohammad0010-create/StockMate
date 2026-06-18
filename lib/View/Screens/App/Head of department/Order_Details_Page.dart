@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Details_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
@@ -15,7 +15,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Containe
 class OrderDetailsPage extends StatelessWidget {
   const OrderDetailsPage({super.key, required this.order});
 
-  final String pageName = '/OrderDetailsPage';
   final Order order;
 
   @override
@@ -71,7 +70,7 @@ class OrderDetailsPage extends StatelessWidget {
                       color: constLightBlue,
                       fontcolor: constBlue,
                       onPressed: () {
-                        Get.toNamed(DepartmentHeadsAddNewOrderPage().pageName);
+                        Get.toNamed(AppRoutes.DepartmentHeadsAddNewOrderPage);
                       },
                     ),
                   ],

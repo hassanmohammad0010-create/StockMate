@@ -12,7 +12,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Prescription_
 class SendPrescriptionPage extends StatelessWidget {
   const SendPrescriptionPage({super.key});
 
-  final String pageName = '/SendPrescriptionPage';
 
   @override
   Widget build(BuildContext context) {

@@ -242,7 +242,9 @@ class AddOrdinaryOrderController extends GetxController {
 
       Get.snackbar(
         'تم الإرسال ✓',
-        'تم إرسال ${orders.length} طلب بنجاح',
+        orders.length == 1
+            ? 'تم إرسال الطلب بنجاح'
+            : 'تم إرسال ${orders.length} طلبات بنجاح',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green.shade600,
         colorText: Colors.white,

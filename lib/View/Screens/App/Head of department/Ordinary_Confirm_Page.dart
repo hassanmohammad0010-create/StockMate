@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
+import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Ordienary_Bottom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Confirm_Section.dart';
 
 class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
   const OrdinaryConfirmPage({super.key});
-
-  final String pageName = '/OrdinaryConfirmPage';
 
 
   static const String _doctorName = 'د. محمد علي';
@@ -30,25 +30,14 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: constBackgroundColor,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'تأكيد الطلب',
-          style: TextStyle(
-            fontFamily: cairo,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Get.back(),
-        ),
-      ),
+
       body: Column(
         children: [
+          CustomBackContainer(),
+          CustomNameContainer(
+            specializationName: 'الرجاء تأكيد بيانات الطلبات قبل الإرسال',
+            empName: _doctorName,
+          ),
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
@@ -57,35 +46,10 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
               ),
               child: Column(
                 children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: constBlue.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.fact_check_outlined,
-                      size: 40,
-                      color: constBlue,
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.01),
-                  Text(
-                    'يرجى مراجعة تفاصيل الطلبات قبل الإرسال',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: cairo,
-                      fontSize: 13,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.02),
                   BuildSection(
                     title: 'بيانات المُرسِل',
                     icon: Icons.person_outline_rounded,
                     children: [
-                      // _buildRow('الطبيب المُرسِل', _doctorName),
                       BuildRow(label: 'الطبيب المُرسِل', value: _doctorName),
                       BuildRow(label: 'القسم', value: _departmentName),
                       BuildRow(label: 'نوع الطلب', value: 'اعتيادي'),
@@ -93,7 +57,7 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
                       BuildRow(label: 'تاريخ الإرسال', value: formattedDate),
                     ],
                   ),
-                  SizedBox(height: size.height * 0.02),
+                  SizedBox(height: size.height * 0.01),
                   ...List.generate(orders.length, (i) {
                     final o = orders[i];
                     final qtyCtrl = controller.quantityCtrl(i);

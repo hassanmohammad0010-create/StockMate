@@ -1,33 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Inventory_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Entry_And_Exit_Report_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Request_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Purchasing_Request_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Request_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Ordinary_Order_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Details_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Archive_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriotion_Archive_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Notification_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
+import 'package:stock_mate_project/core/router/app_pages.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,107 +16,106 @@ class MyApp extends StatelessWidget {
       title: 'Stock Mate',
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
-      // theme: ThemeData(
-      //   fontFamily: 'Cairo'
-      // ),
-      getPages: [
-        GetPage(name: SplashViewPage().pageName, page: () => SplashViewPage()),
-        GetPage(name: LoginPage().pageName, page: () => LoginPage()),
+      getPages: AppPages.routes,
+      initialRoute: AppRoutes.DepartmentHeadsMainPage,
 
-        GetPage(
-          name: ResetPasswordPage().pageName,
-          page: () => ResetPasswordPage(),
-        ),
-        GetPage(name: MainPage().pageName, page: () => MainPage()),
-        GetPage(
-          name: DepartmentHeadsMainPage().pageName,
-          page: () => DepartmentHeadsMainPage(),
-        ),
-        GetPage(
-          name: CompletedRequestPage().pageName,
-          page: () => CompletedRequestPage(),
-        ),
-        GetPage(
-          name: UnderImplementationRequestPage().pageName,
-          page: () => UnderImplementationRequestPage(),
-        ),
-        GetPage(
-          name: NesseryPurchasingRequestPage().pageName,
-          page: () => NesseryPurchasingRequestPage(),
-        ),
-        GetPage(
-          name: NesseryDepartmentRequestPage().pageName,
-          page: () => NesseryDepartmentRequestPage(),
-        ),
-        GetPage(
-          name: ElectronicInventoryPage().pageName,
-          page: () => ElectronicInventoryPage(),
-        ),
-        GetPage(
-          name: EntryAndExitReportPage().pageName,
-          page: () => EntryAndExitReportPage(),
-        ),
-        GetPage(name: SuppliersPage().pageName, page: () => SuppliersPage()),
-        GetPage(
-          name: CreateEmployeeAccountPage().pageName,
-          page: () => CreateEmployeeAccountPage(),
-        ),
-        GetPage(
-          name: DepartmentHeadsAddNewOrderPage().pageName,
-          page: () => DepartmentHeadsAddNewOrderPage(),
-        ),
-        GetPage(
-          name: DisplayPurchasingOrderPage().pageName,
-          page: () => DisplayPurchasingOrderPage(),
-        ),
+      //  [
+      //   GetPage(name: SplashViewPage().pageName, page: () => SplashViewPage()),
+      //   GetPage(name: LoginPage().pageName, page: () => LoginPage()),
 
-        GetPage(
-          name: DepartmentOrdersPage().pageName,
-          page: () => DepartmentOrdersPage(),
-        ),
-        GetPage(
-          name: AddOrdinaryOrderPage().pageName,
-          page: () => AddOrdinaryOrderPage(),
-        ),
-        GetPage(
-          name: AddRecurringOrderPage().pageName,
-          page: () => AddRecurringOrderPage(),
-        ),
-        GetPage(name: ReportPage().pageName, page: () => ReportPage()),
-        GetPage(
-          name: RecurringConfirmPage().pageName,
-          page: () => RecurringConfirmPage(),
-        ),
-        GetPage(
-          name: OrdinaryConfirmPage().pageName,
-          page: () => OrdinaryConfirmPage(),
-        ),
-        GetPage(
-          name: SendPrescriptionPage().pageName,
-          page: () => SendPrescriptionPage(),
-        ),
-        GetPage(name: CartPage().pageName, page: () => CartPage()),
+      //   GetPage(
+      //     name: ResetPasswordPage().pageName,
+      //     page: () => ResetPasswordPage(),
+      //   ),
+      //   GetPage(name: MainPage().pageName, page: () => MainPage()),
+      //   GetPage(
+      //     name: DepartmentHeadsMainPage().pageName,
+      //     page: () => DepartmentHeadsMainPage(),
+      //   ),
+      //   GetPage(
+      //     name: CompletedRequestPage().pageName,
+      //     page: () => CompletedRequestPage(),
+      //   ),
+      //   GetPage(
+      //     name: UnderImplementationRequestPage().pageName,
+      //     page: () => UnderImplementationRequestPage(),
+      //   ),
+      //   GetPage(
+      //     name: NesseryPurchasingRequestPage().pageName,
+      //     page: () => NesseryPurchasingRequestPage(),
+      //   ),
+      //   GetPage(
+      //     name: NesseryDepartmentRequestPage().pageName,
+      //     page: () => NesseryDepartmentRequestPage(),
+      //   ),
+      //   GetPage(
+      //     name: ElectronicInventoryPage().pageName,
+      //     page: () => ElectronicInventoryPage(),
+      //   ),
+      //   GetPage(
+      //     name: EntryAndExitReportPage().pageName,
+      //     page: () => EntryAndExitReportPage(),
+      //   ),
+      //   GetPage(name: SuppliersPage().pageName, page: () => SuppliersPage()),
+      //   GetPage(
+      //     name: CreateEmployeeAccountPage().pageName,
+      //     page: () => CreateEmployeeAccountPage(),
+      //   ),
+      //   GetPage(
+      //     name: DepartmentHeadsAddNewOrderPage().pageName,
+      //     page: () => DepartmentHeadsAddNewOrderPage(),
+      //   ),
+      //   GetPage(
+      //     name: DisplayPurchasingOrderPage().pageName,
+      //     page: () => DisplayPurchasingOrderPage(),
+      //   ),
 
-        GetPage(name: ArchivePage().pageName, page: () => ArchivePage()),
-        GetPage(
-          name: CartArchivePage().pageName,
-          page: () => CartArchivePage(),
-        ),
-        GetPage(
-          name: PrescriptionArchivePage().pageName,
-          page: () => PrescriptionArchivePage(),
-        ),
+      //   GetPage(
+      //     name: DepartmentOrdersPage().pageName,
+      //     page: () => DepartmentOrdersPage(),
+      //   ),
+      //   GetPage(
+      //     name: AddOrdinaryOrderPage().pageName,
+      //     page: () => AddOrdinaryOrderPage(),
+      //   ),
+      //   GetPage(
+      //     name: AddRecurringOrderPage().pageName,
+      //     page: () => AddRecurringOrderPage(),
+      //   ),
+      //   GetPage(name: ReportPage().pageName, page: () => ReportPage()),
+      //   GetPage(
+      //     name: RecurringConfirmPage().pageName,
+      //     page: () => RecurringConfirmPage(),
+      //   ),
+      //   GetPage(
+      //     name: OrdinaryConfirmPage().pageName,
+      //     page: () => OrdinaryConfirmPage(),
+      //   ),
+      //   GetPage(
+      //     name: SendPrescriptionPage().pageName,
+      //     page: () => SendPrescriptionPage(),
+      //   ),
+      //   GetPage(name: CartPage().pageName, page: () => CartPage()),
 
-        GetPage(
-          name: ArchiveDetailsPage().pageName,
-          page: () => const ArchiveDetailsPage(),
-        ),
-        GetPage(
-          name: NotificationPage().pageName,
-          page: () => const NotificationPage(),
-        ),
-      ],
-      initialRoute: DepartmentHeadsMainPage().pageName,
+      //   GetPage(name: ArchivePage().pageName, page: () => ArchivePage()),
+      //   GetPage(
+      //     name: CartArchivePage().pageName,
+      //     page: () => CartArchivePage(),
+      //   ),
+      //   GetPage(
+      //     name: PrescriptionArchivePage().pageName,
+      //     page: () => PrescriptionArchivePage(),
+      //   ),
+
+      //   GetPage(
+      //     name: ArchiveDetailsPage().pageName,
+      //     page: () => const ArchiveDetailsPage(),
+      //   ),
+      //   GetPage(
+      //     name: NotificationPage().pageName,
+      //     page: () => const NotificationPage(),
+      //   ),
+      // ],
     );
   }
 }

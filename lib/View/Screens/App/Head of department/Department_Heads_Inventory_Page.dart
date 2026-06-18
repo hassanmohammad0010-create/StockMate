@@ -2,10 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Material_Info_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Search_Field.dart';
 
@@ -21,7 +23,7 @@ class _DepartmentHeadsInventoryPageState
     extends State<DepartmentHeadsInventoryPage> {
   final FilterController filterController = Get.put(
     FilterController(),
-    tag: 'DepartmentHeadsInventoryPage',
+    tag: AppRoutes.DepartmentHeadsInventoryPage,
   );
 
   @override
@@ -32,7 +34,7 @@ class _DepartmentHeadsInventoryPageState
 
   @override
   void dispose() {
-    Get.delete<FilterController>(tag: 'DepartmentHeadsInventoryPage');
+    Get.delete<FilterController>(tag: AppRoutes.DepartmentHeadsInventoryPage);
     super.dispose();
   }
 
@@ -43,11 +45,10 @@ class _DepartmentHeadsInventoryPageState
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // ✅ Filter Bar أولاً
           Align(
             alignment: AlignmentGeometry.centerRight,
             child: CustomFilterBar(
-              tag: 'DepartmentHeadsInventoryPage',
+              tag: AppRoutes.DepartmentHeadsInventoryPage,
               filters: const ['الكل', 'ثابتة', 'مستهلكة', 'ادوية'],
             ),
           ),
@@ -55,6 +56,7 @@ class _DepartmentHeadsInventoryPageState
           CustomSearchField(),
           Expanded(
             child: Obx(() {
+              CartController.to.inventoryVersion.value;
               final String selected = filterController.selectedFilter.value;
               final String query = filterController.searchQuery.value
                   .trim()
@@ -102,7 +104,7 @@ class _DepartmentHeadsInventoryPageState
                         return MaterialCard(
                           onTap: () {
                             Get.to(
-                              () => DisplayMaterialInfoPage(
+                              () => InventoryDetailsPage(
                                 item: material[index],
                               ),
                             );
