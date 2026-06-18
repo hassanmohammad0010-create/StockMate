@@ -52,14 +52,18 @@ class CustomMainPageCard extends StatelessWidget {
                 children: [
                   SizedBox(width: context.screenWidth * 0.02),
                   Container(
-                    padding: EdgeInsets.all(context.screenWidth * 0.01),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.screenWidth * 0.01,
+                      vertical: context.screenWidth * 0.01,
+                    ),
                     decoration: BoxDecoration(
                       color: iconBackgroundColor,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       icons,
-                      size: context.screenHeight * 0.048, // ← بدل 40
+                      size: context.screenHeight * 0.045,
                       color: iconColor,
                     ),
                   ),

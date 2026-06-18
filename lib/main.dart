@@ -3,7 +3,12 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 
-void main() {
+// SharedPreferences? tokenSharedPreferences;
+// SharedPreferences? identitySharedPreferences;
+void main() async {
+  WidgetsFlutterBinding();
+  // tokenSharedPreferences = await SharedPreferences.getInstance();
+  // identitySharedPreferences = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 

@@ -62,51 +62,152 @@ class RequestPage extends StatelessWidget {
                 ),
               ),
             ),
-            // ✅ نفس الـ tag
-            CustomFilterBar(
-              tag: 'RequestPage',
-              filters: const ['الكل', 'معلق', 'قيد التنفيذ', 'منجز', 'مرفوضة'],
-            ),
             Expanded(
-              child: Obx(() {
-                // ✅ selectedFilter.value داخل Obx مباشرة = reactive
-                final String selected = filterController.selectedFilter.value;
+              child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: toggleController.pageController,
+                children: [
+                  // ✅ الصفحة الأولى: المستودع (فلتر + قائمة)
+                  Column(
+                    children: [
+                      CustomFilterBar(
+                        tag: 'RequestPage',
+                        filters: const [
+                          'الكل',
+                          'معلق',
+                          'قيد التنفيذ',
+                          'منجز',
+                          'مرفوضة',
+                        ],
+                      ),
+                      Expanded(
+                        child: Obx(() {
+                          final String selected =
+                              filterController.selectedFilter.value;
 
-                final List<Order> orders = switch (selected) {
-                  'الكل' => allOrders,
-                  'معلق' =>
-                    allOrders
-                        .where((o) => o.status == OrderStatus.suspended)
-                        .toList(),
-                  'قيد التنفيذ' =>
-                    allOrders
-                        .where((o) => o.status == OrderStatus.inProgress)
-                        .toList(),
-                  'منجز' =>
-                    allOrders
-                        .where((o) => o.status == OrderStatus.completed)
-                        .toList(),
-                  'مرفوضة' =>
-                    allOrders
-                        .where((o) => o.status == OrderStatus.rejected)
-                        .toList(),
-                  _ => allOrders,
-                };
+                          final List<Order> orders = switch (selected) {
+                            'الكل' => allOrders,
+                            'معلق' =>
+                              allOrders
+                                  .where(
+                                    (o) => o.status == OrderStatus.suspended,
+                                  )
+                                  .toList(),
+                            'قيد التنفيذ' =>
+                              allOrders
+                                  .where(
+                                    (o) => o.status == OrderStatus.inProgress,
+                                  )
+                                  .toList(),
+                            'منجز' =>
+                              allOrders
+                                  .where(
+                                    (o) => o.status == OrderStatus.completed,
+                                  )
+                                  .toList(),
+                            'مرفوضة' =>
+                              allOrders
+                                  .where(
+                                    (o) => o.status == OrderStatus.rejected,
+                                  )
+                                  .toList(),
+                            _ => allOrders,
+                          };
 
-                return orders.isEmpty
-                    ? _buildEmptyState()
-                    : ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                        itemCount: orders.length,
-                        itemBuilder: (context, index) {
-                          final order = orders[index];
-                          return OrderCard(
-                            order: order,
-                            onTap: () => _openOrderDetails(order),
-                          );
-                        },
-                      );
-              }),
+                          return orders.isEmpty
+                              ? _buildEmptyState()
+                              : ListView.builder(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16,
+                                    8,
+                                    16,
+                                    100,
+                                  ),
+                                  itemCount: orders.length,
+                                  itemBuilder: (context, index) {
+                                    return OrderCard(
+                                      order: orders[index],
+                                      onTap: () =>
+                                          _openOrderDetails(orders[index]),
+                                    );
+                                  },
+                                );
+                        }),
+                      ),
+                    ],
+                  ),
+
+                  // ✅ الصفحة الثانية: المخازن
+                  Column(
+                    children: [
+                      CustomFilterBar(
+                        tag: 'RequestPage',
+                        filters: const [
+                          'الكل',
+                          'معلق',
+                          'قيد التنفيذ',
+                          'منجز',
+                          'مرفوضة',
+                        ],
+                      ),
+                      Expanded(
+                        child: Obx(() {
+                          final String selected =
+                              filterController.selectedFilter.value;
+
+                          final List<Order> orders = switch (selected) {
+                            'الكل' => allOrders,
+                            'معلق' =>
+                              allOrders
+                                  .where(
+                                    (o) => o.status == OrderStatus.suspended,
+                                  )
+                                  .toList(),
+                            'قيد التنفيذ' =>
+                              allOrders
+                                  .where(
+                                    (o) => o.status == OrderStatus.inProgress,
+                                  )
+                                  .toList(),
+                            'منجز' =>
+                              allOrders
+                                  .where(
+                                    (o) => o.status == OrderStatus.completed,
+                                  )
+                                  .toList(),
+                            'مرفوضة' =>
+                              allOrders
+                                  .where(
+                                    (o) => o.status == OrderStatus.rejected,
+                                  )
+                                  .toList(),
+                            _ => allOrders,
+                          };
+
+                          return orders.isEmpty
+                              ? _buildEmptyState()
+                              : ListView.builder(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16,
+                                    8,
+                                    16,
+                                    100,
+                                  ),
+                                  itemCount: orders.length,
+                                  itemBuilder: (context, index) {
+                                    return OrderCard(
+                                      order: orders[index],
+                                      onTap: () =>
+                                          _openOrderDetails(orders[index]),
+                                    );
+                                  },
+                                );
+                        }),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

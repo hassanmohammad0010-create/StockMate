@@ -32,6 +32,22 @@ class MaterialBatch {
         return 'منتهية';
     }
   }
+
+  factory MaterialBatch.fromJson(Map<String, dynamic> json) {
+    return MaterialBatch(
+      id: json['id'].toString(),
+      quantity: json['quantity'] as int,
+      expiryDate: DateTime.parse(json['expire_date'] as String),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'quantity': quantity,
+      'expiryDate': expiryDate.toIso8601String(),
+    };
+  }
 }
 
 class MaterialItem {
@@ -56,6 +72,38 @@ class MaterialItem {
     required this.maxQuantity,
     required this.batches,
   });
+  factory MaterialItem.fromJson(Map<String, dynamic> json) {
+    return MaterialItem(
+      id: json['id'].toString(),
+      name: json['name'] as String,
+      brand: 'HASASC',
+      type: json['type'] as String,
+      category: MaterialCategory.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => MaterialCategory.consumable,
+      ),
+      storageLocation: 'HASANA',
+      minQuantity: json['minimum_stock'] as int,
+      maxQuantity: 500,
+      batches: (json['batches'] as List<dynamic>)
+          .map((b) => MaterialBatch.fromJson(b as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'brand': brand,
+      'type': type,
+      'category': category.name,
+      'storageLocation': storageLocation,
+      'minQuantity': minQuantity,
+      'maxQuantity': maxQuantity,
+      'batches': batches.map((b) => b.toJson()).toList(),
+    };
+  }
 
   int get totalQuantity => batches.fold(0, (sum, b) => sum + b.quantity);
 
