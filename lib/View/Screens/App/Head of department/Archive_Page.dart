@@ -10,7 +10,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dar
 class ArchivePage extends StatelessWidget {
   const ArchivePage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.of(context).size.height;
@@ -32,7 +31,7 @@ class ArchivePage extends StatelessWidget {
                     SizedBox(height: h * 0.02),
                     ArchiveCard(
                       title: 'أرشيف الوصفات',
-                      icon: Icons.menu_book_rounded,
+                      icon: Icons.bar_chart_rounded,
                       height: h,
                       width: w,
                       onTap: () {
@@ -42,7 +41,7 @@ class ArchivePage extends StatelessWidget {
                     SizedBox(height: h * 0.02),
                     ArchiveCard(
                       title: 'أرشيف السلة',
-                      icon: Icons.shopping_basket_rounded,
+                      icon: Icons.shopping_cart,
                       height: h,
                       width: w,
                       onTap: () {

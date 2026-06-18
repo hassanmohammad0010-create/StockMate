@@ -3,8 +3,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_mate_project/core/models/PrescriptionModel.dart';
+import 'package:stock_mate_project/main.dart';
 
 class PrescriptionController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -26,8 +26,7 @@ class PrescriptionController extends GetxController {
   }
 
   Future<void> _loadPrescriptions() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_storageKey);
+    final raw = shareprefs?.getString(_storageKey);
     if (raw != null && raw.isNotEmpty) {
       final List decoded = jsonDecode(raw);
       archivedPrescriptions.assignAll(
@@ -37,11 +36,10 @@ class PrescriptionController extends GetxController {
   }
 
   Future<void> _savePrescriptions() async {
-    final prefs = await SharedPreferences.getInstance();
     final encoded = jsonEncode(
       archivedPrescriptions.map((e) => e.toJson()).toList(),
     );
-    await prefs.setString(_storageKey, encoded);
+    await shareprefs?.setString(_storageKey, encoded);
   }
 
   void addPrescriptionToArchive() {

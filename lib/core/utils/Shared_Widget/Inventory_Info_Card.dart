@@ -5,9 +5,10 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Row.dart';
 
-class ItemInfoCard extends StatelessWidget {
+class InventoryInfoCard extends StatelessWidget {
+  const InventoryInfoCard({super.key, required this.item});
+
   final MaterialItem item;
-  const ItemInfoCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,6 @@ class ItemInfoCard extends StatelessWidget {
               color: Colors.grey.withOpacity(0.3),
               spreadRadius: 3,
               blurRadius: 8,
-              offset: const Offset(0, 0),
             ),
           ],
         ),
@@ -41,7 +41,7 @@ class ItemInfoCard extends StatelessWidget {
             CustomRow(title: 'الصنف', iconData: Icons.dashboard_outlined, label: item.categoryLabel),
             CustomRow(title: 'موقع التخزين', iconData: Icons.place_outlined, label: item.storageLocation),
             CustomRow(
-              title: 'الحدود ',
+              title: 'الحدود',
               iconData: Icons.swap_vert,
               label: 'الادنى : ${item.minQuantity} | الاقصى : ${item.maxQuantity}',
             ),

@@ -21,6 +21,8 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Depar
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriotion_Archive_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriptions_Details_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriptions_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
@@ -53,7 +55,7 @@ abstract class AppPages {
     GetPage(name: AppRoutes.ArchivePage, page: () => const ArchivePage()),
     GetPage(
       name: AppRoutes.CartArchivePage,
-      page: () => const CartArchivePage(),
+      page: () =>  CartArchivePage(),
     ),
     GetPage(name: AppRoutes.CartPage, page: () => const CartPage()),
     GetPage(
@@ -88,6 +90,14 @@ abstract class AppPages {
       name: AppRoutes.SendPrescriptionPage,
       page: () => const SendPrescriptionPage(),
     ),
+    GetPage(
+      name: AppRoutes.PrescriptionsPage,
+      page: () => const PrescriptionsPage(),
+    ),
+    GetPage(
+  name: AppRoutes.PrescriptionDetailsPage,
+  page: () => const PrescriptionDetailsPage(),
+),
     GetPage(
       name: AppRoutes.NotificationPage,
       page: () => const NotificationPage(),

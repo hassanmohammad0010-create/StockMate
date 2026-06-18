@@ -2,15 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class DepartmentHeadsMainPage extends StatelessWidget {
   const DepartmentHeadsMainPage({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +30,13 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
               ),
               onPressed: () {
-                Get.to(() => DepartmentHeadsAddNewOrderPage());
+                Get.to(AppRoutes.DepartmentHeadsAddNewOrderPage);
               },
               child: Icon(Icons.add, size: 35),
             ),
           ),
           appBar: AppBar(
-            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+            toolbarHeight: context.screenHeight * 0.1,
             actions: [
               Stack(
                 children: [
@@ -48,7 +47,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                       size: 28,
                     ),
                     onPressed: () {
-                      Get.toNamed('/NotificationPage');
+                      Get.toNamed(AppRoutes.NotificationPage);
                     },
                   ),
                   // نقطة حمراء تدل على وجود إشعارات جديدة
@@ -91,7 +90,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                     color: constBlue,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: context.screenHeight * 0.01),
               ],
             ),
             backgroundColor: constColor,

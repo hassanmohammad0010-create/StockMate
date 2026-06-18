@@ -11,10 +11,10 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dar
 class CartArchivePage extends StatelessWidget {
   const CartArchivePage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-    final ArchiveController controller = Get.put(ArchiveController());
+    // استخدم .to بدلاً من Get.put لتجنّب التعارض مع الـ singleton
+    final ArchiveController controller = ArchiveController.to;
 
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
@@ -27,26 +27,36 @@ class CartArchivePage extends StatelessWidget {
           SizedBox(height: h * 0.01),
           CustomHeadContainer(title: 'أرشيف السلة'),
           Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: w * 0.02),
-                child: Column(
-                  children: [
-                    SizedBox(height: h * 0.01),
-                    ...controller.archiveList.map((item) {
-                      return CustomCartContainer(
-                        buttonText: 'عرض التفاصيل',
-                        title: 'السلة',
-                        subtitle: 'التاريخ: ${item.date}',
-                        onTap: () => controller.goToDetails(item),
-                        buttonColor: constLightBlue,
-                        buttonTextColor: constBlue,
-                      );
-                    }),
-                  ],
+            child: Obx(() {
+              if (controller.archiveList.isEmpty) {
+                return Center(
+                  child: Text(
+                    'لا يوجد أرشيف',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                );
+              }
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: w * 0.02),
+                  child: Column(
+                    children: [
+                      SizedBox(height: h * 0.01),
+                      ...controller.archiveList.map((item) {
+                        return CustomCartContainer(
+                          buttonText: 'عرض التفاصيل',
+                          title: 'السلة',
+                          subtitle: 'التاريخ: ${item.date}',
+                          onTap: () => controller.goToDetails(item),
+                          buttonColor: constLightBlue,
+                          buttonTextColor: constBlue,
+                        );
+                      }),
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ),
         ],
       ),

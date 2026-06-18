@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Logic/ArchiveController.dart'; // ← جديد
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Cart_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';  // ← جديد
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 
@@ -67,12 +69,35 @@ class CartPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: h * 0.02),
-            child: CustomMainButtom(
-              title: 'تأكيد السلة اليومية',
-              color: constBlue,
-              fontcolor: Colors.white,
-              onPressed: () {},
-            ),
+            child: Obx(() {
+              final isEmpty = cartController.cartItems.isEmpty;
+              return CustomMainButtom(
+                title: 'تأكيد السلة اليومية',
+                color: isEmpty ? Colors.grey : constBlue, // تعطيل بصري إن كانت فارغة
+                fontcolor: Colors.white,
+                onPressed: isEmpty
+                    ? null
+                    : () {
+                        CustomDialog.show(
+                          type: DialogType.warning,
+                          title: 'تأكيد السلة',
+                          message:
+                              'هل أنت متأكد من تأكيد السلة اليومية وإرسالها إلى الأرشيف؟',
+                          confirmText: 'تأكيد',
+                          onConfirm: () {
+                            Get.back();
+                            ArchiveController.to.confirmCart(); // ← العملية الأساسية
+                            CustomDialog.show(
+                              type: DialogType.success,
+                              title: 'تم التأكيد',
+                              message: 'تمت إضافة السلة إلى الأرشيف بنجاح.',
+                              showCancel: false,
+                            );
+                          },
+                        );
+                      },
+              );
+            }),
           ),
         ],
       ),

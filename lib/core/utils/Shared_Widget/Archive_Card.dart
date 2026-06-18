@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -11,7 +11,8 @@ class ArchiveCard extends StatelessWidget {
   final double width;
   final VoidCallback? onTap;
 
-  const ArchiveCard({super.key, 
+  const ArchiveCard({
+    super.key,
     required this.title,
     required this.icon,
     required this.height,
@@ -35,7 +36,7 @@ class ArchiveCard extends StatelessWidget {
           ),
           child: Container(
             height: height * 0.12,
-            width: double.infinity,
+            width: width * 0.93,
             padding: EdgeInsets.symmetric(
               vertical: height * 0.025,
               horizontal: width * 0.04,

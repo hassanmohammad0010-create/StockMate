@@ -50,6 +50,25 @@ final List<Order> allOrders = [
     type: 'اعتيادي',
   ),
 
+  Order(
+    medicineName: 'بارا سيتامول 500 mg',
+    date: '2025-03-19',
+    quantity: 300,
+    status: OrderStatus.completed,
+    priority: OrderPriority.normal,
+    vendor: 'فارما',
+    type: 'اعتيادي',
+  ),
+  Order(
+    medicineName: 'بارا سيتامول 500 mg',
+    date: '2025-03-19',
+    quantity: 300,
+    status: OrderStatus.suspended,
+    priority: OrderPriority.normal,
+    vendor: 'فارما',
+    type: 'اعتيادي',
+  ),
+
   // طلب عادي – مرفوض
   Order(
     medicineName: 'بارا سيتامول 500 mg',
@@ -59,6 +78,15 @@ final List<Order> allOrders = [
     priority: OrderPriority.urgent,
     rejectionReason:
         'الكمية المطلوبة تتجاوز الحد الأقصى المتاح في المستودع حالياً. الرجاء تقليل الكمية أو إعادة الطلب لاحقاً.',
+    type: 'اعتيادي',
+  ),
+
+  Order(
+    medicineName: 'بارا سيتامول 500 mg',
+    date: '2025-03-19',
+    quantity: 300,
+    status: OrderStatus.rejected,
+    priority: OrderPriority.urgent,
     type: 'اعتيادي',
   ),
 
@@ -136,10 +164,10 @@ const _clear = Object();
 
 class OrderModel {
   String? medicineName;
-  String  quantity;
+  String quantity;
   String? unit;
   String? brand;
-  String  priority;
+  String priority;
 
   OrderModel({
     this.medicineName,
@@ -151,10 +179,10 @@ class OrderModel {
 
   OrderModel copyWith({
     Object? medicineName = _clear,
-    Object? quantity     = _clear,
-    Object? unit         = _clear,
-    Object? brand        = _clear,
-    Object? priority     = _clear,
+    Object? quantity = _clear,
+    Object? unit = _clear,
+    Object? brand = _clear,
+    Object? priority = _clear,
   }) {
     return OrderModel(
       medicineName: identical(medicineName, _clear)
@@ -163,12 +191,8 @@ class OrderModel {
       quantity: identical(quantity, _clear)
           ? this.quantity
           : (quantity as String? ?? ''),
-      unit: identical(unit, _clear)
-          ? this.unit
-          : unit as String?,
-      brand: identical(brand, _clear)
-          ? this.brand
-          : brand as String?,
+      unit: identical(unit, _clear) ? this.unit : unit as String?,
+      brand: identical(brand, _clear) ? this.brand : brand as String?,
       priority: identical(priority, _clear)
           ? this.priority
           : (priority as String? ?? 'عادي'),
@@ -182,12 +206,12 @@ class OrderModel {
       (brand?.trim().isNotEmpty ?? false);
 
   Map<String, dynamic> toJson() => {
-        'medicineName': medicineName,
-        'quantity':     quantity,
-        'unit':         unit,
-        'brand':        brand,
-        'priority':     priority,
-      };
+    'medicineName': medicineName,
+    'quantity': quantity,
+    'unit': unit,
+    'brand': brand,
+    'priority': priority,
+  };
 
   @override
   String toString() =>

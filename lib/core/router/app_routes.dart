@@ -17,6 +17,8 @@ abstract class AppRoutes {
   static const PrescriptionArchivePage = '/PrescriptionArchivePage';
   static const RecurringConfirmPage = '/RecurringConfirmPage';
   static const SendPrescriptionPage = '/SendPrescriptionPage';
+  static const PrescriptionsPage = '/PrescriptionsPage';
+  static const String PrescriptionDetailsPage = '/prescription-details';
   static const MainPage = '/MainPage';
   static const NotificationPage = '/NotificationPage';
   static const ReportPage = '/ReportPage';

@@ -1,8 +1,8 @@
-import 'dart:convert';
+// ignore_for_file: file_names
 
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
-import 'package:stock_mate_project/main.dart';
 
 class LoginService {
   Future<String?> loginService({

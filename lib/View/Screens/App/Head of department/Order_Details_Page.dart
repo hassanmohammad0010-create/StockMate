@@ -29,42 +29,63 @@ class OrderDetailsPage extends StatelessWidget {
             CustomHeadContainer(title: 'تفاصيل الطلب'),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.screenWidth * 0.03,
+                ),
                 child: Column(
                   children: [
-                    const SizedBox(height: 8),
+                    SizedBox(height: context.screenHeight * 0.02),
                     CustomDetailsCard(order: order),
-                    const SizedBox(height: 16),
+                    SizedBox(height: context.screenHeight * 0.02),
                     order.status == OrderStatus.rejected
-                        ? RejectionBanner(reason: order.rejectionReason)
+                        ? order.rejectionReason == ''
+                              ? SizedBox(height: context.screenHeight * 0.12)
+                              : RejectionBanner(reason: order.rejectionReason)
                         : const SizedBox(),
-                    order.isRecurring && order.status == OrderStatus.completed
-                        ? const SizedBox(height: 112)
+                    order.isRecurring &&
+                                order.status == OrderStatus.completed ||
+                            order.isRecurring == false &&
+                                order.status == OrderStatus.completed
+                        ? SizedBox(height: context.screenHeight * 0.12)
                         : order.status == OrderStatus.rejected
-                        ? const SizedBox(height: 52)
-                        : const SizedBox(height: 154),
+                        ? SizedBox(height: context.screenHeight * 0.06)
+                        : SizedBox(height: context.screenHeight * 0.18),
                     order.isRecurring && order.status == OrderStatus.completed
                         ? CustomMainButtom(
                             title: 'حذف الطلب',
                             color: constRed,
                             fontcolor: Colors.white,
-                            onPressed: () {
-                              CustomDialog.show(
-                                type: DialogType.danger,
-                                title: 'حذف الطلب',
-                                message: 'هل أنت متأكد من حذف هذا الطلب؟',
-                              );
-                            },
+                            onPressed: () => CustomDialog.show(
+                              type: DialogType.danger,
+                              title: 'حذف الطلب',
+                              message: 'هل أنت متأكد من حذف هذا الطلب؟',
+                            ),
+                          )
+                        : order.isRecurring == false &&
+                              order.status == OrderStatus.completed
+                        ? CustomMainButtom(
+                            title: 'تأكيد الاستلام',
+                            color: constGreen,
+                            fontcolor: Colors.white,
+                            onPressed: () => CustomDialog.show(
+                              type: DialogType.info,
+                              title: 'تأكيد الاستلام',
+                              message:
+                                  'هل أنت متأكد من تأكيد استلام هذا الطلب؟',
+                              showTextField: true,
+                              textFieldHint: 'ادخل الكمية المستلمة',
+                              textFieldIcon: Icons.inventory_2_outlined,
+                            ),
                           )
                         : const SizedBox(),
-                    const SizedBox(height: 8),
+                    SizedBox(height: context.screenHeight * 0.01),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.02,
+                        horizontal: context.screenWidth * 0.02,
                       ),
                       child: Divider(),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: context.screenHeight * 0.01),
                     CustomMainButtom(
                       title: 'ارسال طلب جديد',
                       color: constLightBlue,
