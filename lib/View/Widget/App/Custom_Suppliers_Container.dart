@@ -34,28 +34,91 @@ class CustomSuppliersContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.business_center_outlined, size: 40),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                Text(
-                  'شركة فارما',
-                  style: TextStyle(
-                    fontFamily: cairo,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.screenWidth * 0.01,
+                        vertical: context.screenWidth * 0.01,
+                      ),
+                      decoration: BoxDecoration(
+                        color: constLightBlue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.business_center_outlined,
+                        size: context.screenHeight * 0.045,
+                        color: constBlue,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'شركة فارما',
+                          style: TextStyle(
+                            fontFamily: cairo,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'معلومات الاتصال  ',
+                          style: TextStyle(
+                            fontFamily: lateef,
+                            fontSize: 20,
+                            color: constGray,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.screenWidth * 0.01,
+                        vertical: context.screenWidth * 0.01,
+                      ),
+                      decoration: BoxDecoration(
+                        color: constLightBlue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.mark_email_read,
+                        size: context.screenHeight * 0.028,
+                        color: constBlue,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.screenWidth * 0.01,
+                        vertical: context.screenWidth * 0.01,
+                      ),
+                      decoration: BoxDecoration(
+                        color: constLightBlue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.phone,
+                        size: context.screenHeight * 0.028,
+                        color: constBlue,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            Text(
-              'معلومات الاتصال : ',
-              style: TextStyle(
-                fontFamily: lateef,
-                fontSize: 26,
-                color: constGray,
-              ),
-            ),
+
             Align(
               alignment: AlignmentGeometry.centerLeft,
               child: Column(
@@ -66,7 +129,7 @@ class CustomSuppliersContainer extends StatelessWidget {
                     '0937417539',
                     style: TextStyle(
                       fontFamily: lateef,
-                      fontSize: 26,
+                      fontSize: 18,
                       color: constGray,
                     ),
                   ),
@@ -76,7 +139,7 @@ class CustomSuppliersContainer extends StatelessWidget {
                     // overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontFamily: lateef,
-                      fontSize: 26,
+                      fontSize: 18,
                       color: constGray,
                     ),
                   ),

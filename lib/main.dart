@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stock_mate_project/Service/Auth/Login_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_Consumable_Items_Service.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Inventory_Page.dart';
@@ -17,10 +20,13 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
+
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriotion_Archive_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
+
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Main_Page_Heap_of_Purchasing.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Notification_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
@@ -29,7 +35,12 @@ import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 
-void main() {
+// SharedPreferences? tokenSharedPreferences;
+// SharedPreferences? identitySharedPreferences;
+void main() async {
+  WidgetsFlutterBinding();
+  // tokenSharedPreferences = await SharedPreferences.getInstance();
+  // identitySharedPreferences = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -141,8 +152,37 @@ class MyApp extends StatelessWidget {
           name: NotificationPage().pageName,
           page: () => const NotificationPage(),
         ),
+        GetPage(
+          name: MainPageHeadOfPurchasingPage().pageName,
+          page: () => MainPageHeadOfPurchasingPage(),
+        ),
       ],
-      initialRoute: DepartmentHeadsMainPage().pageName,
+      initialRoute: SplashViewPage().pageName,
+    );
+  }
+}
+
+class HasanServiceTester extends StatelessWidget {
+  const HasanServiceTester({super.key});
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          SizedBox(height: 250),
+          Center(
+            child: FloatingActionButton(
+              onPressed: () async {
+                await LoginService().loginService(
+                  email: 'admin@system.com',
+                  password: '12345678',
+                );
+              },
+              child: Text('data'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
