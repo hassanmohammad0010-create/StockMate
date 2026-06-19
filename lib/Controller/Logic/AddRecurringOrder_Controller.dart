@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
 
 class AddRecurringOrderController extends GetxController {
   // ─── Reactive state ───────────────────────────────────────────────────────
@@ -151,15 +153,11 @@ class AddRecurringOrderController extends GetxController {
       };
       debugPrint('Submitting: $payload');
 
-      Get.snackbar(
-        'تم الإرسال ✓',
-        'تم إرسال الطلب بنجاح',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 12,
-        duration: const Duration(seconds: 3),
+      CustomDialog.show(
+        type: DialogType.success,
+        title: 'تم الإرسال',
+        message: 'تم إرسال الطلب بنجاح',
+        onConfirm: () => Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage),
       );
 
       // TODO: Get.offAllNamed('/HomePage') بعد الإرسال الناجح

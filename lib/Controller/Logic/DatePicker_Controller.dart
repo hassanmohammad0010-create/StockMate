@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -5,7 +7,6 @@ class DatePickerController extends GetxController {
   var fromDate = Rxn<DateTime>();
   var toDate = Rxn<DateTime>();
 
-  // أضف TextEditingController لكل حقل
   final fromDateTextController = TextEditingController();
   final toDateTextController = TextEditingController();
 
@@ -17,7 +18,7 @@ class DatePickerController extends GetxController {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  Future<void> pickFromDate(BuildContext context) async {
+  Future<void> pickFromDate(BuildContext context, {VoidCallback? onDateSelected}) async {
     final picked = await showDatePicker(
       context: context,
       initialDate: fromDate.value ?? DateTime.now(),
@@ -26,11 +27,13 @@ class DatePickerController extends GetxController {
     );
     if (picked != null) {
       fromDate.value = picked;
-      fromDateTextController.text = formatDate(picked); // ← هنا المهم
+      fromDateTextController.text = formatDate(picked);
+      // ✅ استدعاء الـ callback بعد اختيار التاريخ
+      onDateSelected?.call();
     }
   }
 
-  Future<void> pickToDate(BuildContext context) async {
+  Future<void> pickToDate(BuildContext context, {VoidCallback? onDateSelected}) async {
     final picked = await showDatePicker(
       context: context,
       initialDate: toDate.value ?? DateTime.now(),
@@ -39,18 +42,20 @@ class DatePickerController extends GetxController {
     );
     if (picked != null) {
       toDate.value = picked;
-      toDateTextController.text = formatDate(picked); // ← هنا المهم
+      toDateTextController.text = formatDate(picked);
+      // ✅ استدعاء الـ callback بعد اختيار التاريخ
+      onDateSelected?.call();
     }
   }
 
   void clearFromDate() {
     fromDate.value = null;
-    fromDateTextController.clear(); // ← امسح النص
+    fromDateTextController.clear();
   }
 
   void clearToDate() {
     toDate.value = null;
-    toDateTextController.clear(); // ← امسح النص
+    toDateTextController.clear();
   }
 
   @override

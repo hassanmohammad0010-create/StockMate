@@ -4,18 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
 
 class AddOrdinaryOrderController extends GetxController {
   static const int maxOrders = 5;
 
   // ─── Reactive state ───────────────────────────────────────────────────────
-  final RxList<OrderModel> orders           = <OrderModel>[OrderModel()].obs;
-  final RxInt              activeOrderIndex = 0.obs;
-  final RxBool             isLoading        = false.obs;
+  final RxList<OrderModel> orders = <OrderModel>[OrderModel()].obs;
+  final RxInt activeOrderIndex = 0.obs;
+  final RxBool isLoading = false.obs;
 
   // ─── TextEditingController للكمية + GlobalKey للـ Form لكل طلب ───────────
   final List<TextEditingController> _quantityControllers = [];
-  final List<GlobalKey<FormState>>  formKeys             = [];
+  final List<GlobalKey<FormState>> formKeys = [];
 
   // ─── Reactive بالحقول الفارغة لكل طلب ────────────────────────────────────
   final RxMap<int, Set<String>> invalidFields = <int, Set<String>>{}.obs;
@@ -64,7 +66,7 @@ class AddOrdinaryOrderController extends GetxController {
 
   // ─── Order management ─────────────────────────────────────────────────────
 
-  bool get canAddOrder    => orders.length < maxOrders;
+  bool get canAddOrder => orders.length < maxOrders;
   bool get canRemoveOrder => orders.length > 1;
 
   void addOrder() {
@@ -240,17 +242,13 @@ class AddOrdinaryOrderController extends GetxController {
       final payload = orders.map((o) => o.toJson()).toList();
       debugPrint('Submitting: $payload');
 
-      Get.snackbar(
-        'تم الإرسال ✓',
-        orders.length == 1
+      CustomDialog.show(
+        type: DialogType.success,
+        title: 'تم الإرسال',
+        message: orders.length == 1
             ? 'تم إرسال الطلب بنجاح'
             : 'تم إرسال ${orders.length} طلبات بنجاح',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 12,
-        duration: const Duration(seconds: 3),
+        onConfirm: () => Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage),
       );
       // TODO: Get.offAllNamed('/HomePage') بعد الإرسال الناجح
     } catch (e) {

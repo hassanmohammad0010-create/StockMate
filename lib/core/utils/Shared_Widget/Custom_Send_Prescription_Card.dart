@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Controller/Logic/PrescriptionController.dart';
+import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_My_TextFormFaild.dart';
 
 class CustomPrescriptionCard extends StatelessWidget {
@@ -10,8 +10,8 @@ class CustomPrescriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PrescriptionController controller =
-        Get.find<PrescriptionController>();
+    final SendPrescriptionController controller =
+        Get.find<SendPrescriptionController>();
 
     final h = MediaQuery.of(context).size.height;
 
@@ -80,7 +80,7 @@ class CustomPrescriptionCard extends StatelessWidget {
                 padding: EdgeInsets.only(top: h * 0.01, bottom: h * 0.005),
                 child: CustomMyTextFormField(
                   controller: controller.medicationsController,
-                  maxLines: 8,
+                  maxLines: 4,
                   prefixIcon: Icons.medication_outlined,
                   keyboardType: TextInputType.text,
                   label: 'الأدوية *',
@@ -89,6 +89,21 @@ class CustomPrescriptionCard extends StatelessWidget {
                     if (value == null || value.trim().isEmpty) {
                       return 'الرجاء إدخال الأدوية الموصوفة';
                     }
+                    return null;
+                  },
+                ),
+              ),
+              SizedBox(height: h * 0.01),
+
+              Padding(
+                padding: EdgeInsets.only(top: h * 0.01),
+                child: CustomMyTextFormField(
+                  controller: controller.notesController,
+                  prefixIcon: Icons.notes_outlined,
+                  keyboardType: TextInputType.text,
+                  label: 'ملاحظات *',
+                  hint: 'أدخل ملاحظات الوصفة',
+                  validator: (value) {
                     return null;
                   },
                 ),

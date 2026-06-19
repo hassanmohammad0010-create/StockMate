@@ -3,22 +3,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/PrescriptionController.dart';
+import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Prescription_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Send_Prescription_Card.dart';
 
 class SendPrescriptionPage extends StatelessWidget {
   const SendPrescriptionPage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-    final PrescriptionController controller =
-        Get.isRegistered<PrescriptionController>()
-            ? Get.find<PrescriptionController>()
-            : Get.put(PrescriptionController(), permanent: true);
+    final SendPrescriptionController controller =
+        Get.isRegistered<SendPrescriptionController>()
+        ? Get.find<SendPrescriptionController>()
+        : Get.put(SendPrescriptionController(), permanent: true);
 
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
@@ -62,12 +62,10 @@ class SendPrescriptionPage extends StatelessWidget {
                   if (controller.formKey.currentState!.validate()) {
                     controller.addPrescriptionToArchive();
 
-                    Get.snackbar(
-                      'تم الإرسال ✓',
-                      'تم إرسال الوصفة بنجاح',
-                      snackPosition: SnackPosition.TOP,
-                      backgroundColor: Colors.green.shade600,
-                      colorText: Colors.white,
+                    CustomDialog.show(
+                      type: DialogType.success,
+                      title: 'تم الإرسال',
+                      message: 'تم إرسال الوصفة بنجاح',
                     );
                     controller.clearFields();
                     FocusScope.of(context).unfocus();

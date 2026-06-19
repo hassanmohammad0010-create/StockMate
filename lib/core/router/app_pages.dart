@@ -19,10 +19,11 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Depar
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/New_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriotion_Archive_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriptions_Details_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriptions_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Processed_Prescriptions_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
@@ -92,12 +93,16 @@ abstract class AppPages {
     ),
     GetPage(
       name: AppRoutes.PrescriptionsPage,
-      page: () => const PrescriptionsPage(),
+      page: () =>  PrescriptionsPage(),
     ),
     GetPage(
-  name: AppRoutes.PrescriptionDetailsPage,
-  page: () => const PrescriptionDetailsPage(),
-),
+      name: AppRoutes.NewPrescriptionPage,
+      page: () => const NewPrescriptionPage(),
+    ),
+    GetPage(
+      name: AppRoutes.ProcessedPrescriptionsPage,
+      page: () => const ProcessedPrescriptionsPage(),
+    ),
     GetPage(
       name: AppRoutes.NotificationPage,
       page: () => const NotificationPage(),

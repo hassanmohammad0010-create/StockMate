@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/PrescriptionController.dart';
+import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
 import 'package:stock_mate_project/core/models/PrescriptionModel.dart';
 
 class CustomArchivePrescriptionCard extends StatelessWidget {
@@ -42,7 +42,7 @@ class CustomArchivePrescriptionCard extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Get.find<PrescriptionController>().deletePrescription(
+              Get.find<SendPrescriptionController>().deletePrescription(
                 prescription.id,
               );
               Navigator.pop(ctx);
@@ -127,6 +127,31 @@ class CustomArchivePrescriptionCard extends StatelessWidget {
               style: TextStyle(fontFamily: cairo, fontSize: 14),
             ),
             const SizedBox(height: 12),
+            prescription.notes != null && prescription.notes!.trim().isNotEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'ملاحظات',
+                          style: TextStyle(
+                            fontFamily: cairo,
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: constBlue,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        prescription.notes!,
+                        style: TextStyle(fontFamily: cairo, fontSize: 14),
+                      ),
+                      const SizedBox(height: 6),
+                    ],
+                  )
+                : const SizedBox(height: 6),
           ],
         ),
       ),

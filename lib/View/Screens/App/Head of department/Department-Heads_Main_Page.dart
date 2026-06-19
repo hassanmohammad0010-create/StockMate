@@ -30,7 +30,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
               ),
               onPressed: () {
-                Get.to(AppRoutes.DepartmentHeadsAddNewOrderPage);
+                Get.toNamed(AppRoutes.DepartmentHeadsAddNewOrderPage);
               },
               child: Icon(Icons.add, size: 35),
             ),

@@ -1,251 +1,149 @@
-// ignore_for_file: file_names, deprecated_member_use
+// ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/models/Prescriptions_Model.dart';
+import 'package:stock_mate_project/core/models/PrescriptionModel.dart';
 
+/// كونتينر احترافي لعرض ملخص الوصفة الطبية.
+/// يتغيّر شكله ولون شارته بناءً على حالة الوصفة (newRx / processed).
 class PrescriptionCard extends StatelessWidget {
+  final PrescriptionModel prescription;
+  final VoidCallback onTap;
+
   const PrescriptionCard({
     super.key,
     required this.prescription,
     required this.onTap,
   });
 
-  final Prescription prescription;
-  final VoidCallback onTap;
-
-  // ─── helpers ───────────────────────────────────────────────
-
-  Color get _statusColor {
-    switch (prescription.status) {
-      case PrescriptionStatus.newRx:
-        return constBlue;
-      case PrescriptionStatus.processed:
-        return const Color(0xFF09C05E);
-      case PrescriptionStatus.rejected:
-        return const Color(0xFFFF2125);
-    }
-  }
-
-  String get _statusLabel {
-    switch (prescription.status) {
-      case PrescriptionStatus.newRx:
-        return 'جديدة';
-      case PrescriptionStatus.processed:
-        return 'مُصرَّفة';
-      case PrescriptionStatus.rejected:
-        return 'مرفوضة';
-    }
-  }
-
-  Color get _statusBg {
-    switch (prescription.status) {
-      case PrescriptionStatus.newRx:
-        return constLightBlue;
-      case PrescriptionStatus.processed:
-        return const Color(0xFFE3FDED);
-      case PrescriptionStatus.rejected:
-        return const Color(0xFFFFEBEE);
-    }
-  }
-
-  // ─── build ─────────────────────────────────────────────────
+  bool get _isNew => prescription.status == PrescriptionStatus.newRx;
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
+    final Color accentColor = _isNew ? constRed : constGreen;
+    final Color backgroundTint = _isNew ? constLightRed : constlightGreen;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: h * 0.006),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.07),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: IntrinsicHeight(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFE5E7EB)),
+            boxShadow: const [
+              BoxShadow(
+                color: constColor,
+                blurRadius: 12,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── شريط الحالة الجانبي ──
+              // شريط جانبي ملوّن يدل على الحالة بسرعة دون قراءة النص
               Container(
-                width: w * 0.015,
+                width: 4,
+                height: 64,
                 decoration: BoxDecoration(
-                  color: _statusColor,
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
-                  ),
+                  color: accentColor,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
-
-              // ── المحتوى ──
+              const SizedBox(width: 14),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: w * 0.04,
-                    vertical: h * 0.016,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // الصف العلوي: رقم الوصفة + badge الحالة
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            prescription.id,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            prescription.patientName,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF111827),
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: backgroundTint,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            _isNew ? 'جديدة' : 'تمت المعالجة',
                             style: TextStyle(
-                              fontFamily: cairo,
-                              fontSize: 12,
-                              color: Colors.grey.shade500,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: accentColor,
                             ),
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: w * 0.03,
-                              vertical: h * 0.004,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.medical_services_outlined,
+                          size: 15,
+                          color: Color(0xFF6B7280),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            prescription.condition,
+                            style: const TextStyle(
+                              fontSize: 13.5,
+                              color: Color(0xFF4B5563),
                             ),
-                            decoration: BoxDecoration(
-                              color: _statusBg,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              _statusLabel,
-                              style: TextStyle(
-                                fontFamily: cairo,
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: _statusColor,
-                              ),
-                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ],
-                      ),
-
-                      SizedBox(height: h * 0.008),
-
-                      // اسم الطبيب
-                      Row(
-                        children: [
-                          Icon(Icons.person_outline,
-                              size: 16, color: constBlue),
-                          SizedBox(width: w * 0.015),
-                          Text(
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person_outline,
+                          size: 15,
+                          color: Color(0xFF6B7280),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
                             prescription.doctorName,
-                            style: TextStyle(
-                              fontFamily: cairo,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.black87,
+                            style: const TextStyle(
+                              fontSize: 13.5,
+                              color: Color(0xFF4B5563),
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ],
-                      ),
-
-                      SizedBox(height: h * 0.004),
-
-                      // القسم
-                      Row(
-                        children: [
-                          Icon(Icons.local_hospital_outlined,
-                              size: 14, color: Colors.grey.shade500),
-                          SizedBox(width: w * 0.015),
-                          Text(
-                            prescription.department,
-                            style: TextStyle(
-                              fontFamily: cairo,
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
+                        ),
+                        Text(
+                          DateFormat('yyyy/MM/dd').format(prescription.date),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF9CA3AF),
                           ),
-                        ],
-                      ),
-
-                      SizedBox(height: h * 0.01),
-
-                      // فاصل
-                      Divider(height: 1, color: Colors.grey.shade100),
-
-                      SizedBox(height: h * 0.01),
-
-                      // الصف السفلي: المريض + التاريخ + عدد الأدوية
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // المريض
-                          Row(
-                            children: [
-                              Icon(Icons.personal_injury_outlined,
-                                  size: 14, color: Colors.grey.shade500),
-                              SizedBox(width: w * 0.01),
-                              Text(
-                                prescription.patientName,
-                                style: TextStyle(
-                                  fontFamily: cairo,
-                                  fontSize: 12,
-                                  color: Colors.grey.shade700,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          // التاريخ
-                          Row(
-                            children: [
-                              Icon(Icons.calendar_today_outlined,
-                                  size: 13, color: Colors.grey.shade500),
-                              SizedBox(width: w * 0.01),
-                              Text(
-                                prescription.date,
-                                style: TextStyle(
-                                  fontFamily: cairo,
-                                  fontSize: 11,
-                                  color: Colors.grey.shade500,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          // عدد الأدوية
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: w * 0.025,
-                              vertical: h * 0.003,
-                            ),
-                            decoration: BoxDecoration(
-                              color: constLightBlue,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.medication_outlined,
-                                    size: 13, color: constBlue),
-                                SizedBox(width: w * 0.01),
-                                Text(
-                                  '${prescription.medicines.length} أدوية',
-                                  style: TextStyle(
-                                    fontFamily: cairo,
-                                    fontSize: 11,
-                                    color: constBlue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],

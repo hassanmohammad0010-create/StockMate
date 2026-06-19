@@ -52,7 +52,6 @@ class _DepartmentHeadsInventoryPageState
               filters: const ['الكل', 'ثابتة', 'مستهلكة', 'ادوية'],
             ),
           ),
-
           CustomSearchField(),
           Expanded(
             child: Obx(() {

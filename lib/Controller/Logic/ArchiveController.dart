@@ -26,8 +26,87 @@ class ArchiveItem {
       );
 }
 
+// class ArchiveController extends GetxController {
+//   /// Singleton — يُستخدم من أي مكان بـ ArchiveController.to
+//   static ArchiveController get to => Get.isRegistered<ArchiveController>()
+//       ? Get.find<ArchiveController>()
+//       : Get.put(ArchiveController(), permanent: true);
+
+//   static const String _archiveKey = 'archive_items';
+
+//   final RxList<ArchiveItem> archiveList = <ArchiveItem>[].obs;
+
+//   // ─── Lifecycle ────────────────────────────────────────────────────────────
+
+//   @override
+//   void onInit() {
+//     super.onInit();
+//     _loadArchive();
+//   }
+
+//   // ─── Persistence ──────────────────────────────────────────────────────────
+
+//   void _loadArchive() {
+//     final json = shareprefs?.getString(_archiveKey);
+//     if (json == null) return;
+//     try {
+//       final List<dynamic> list = jsonDecode(json);
+//       archiveList.value = list
+//           .map((e) => ArchiveItem.fromJson(e as Map<String, dynamic>))
+//           .toList();
+//     } catch (_) {}
+//   }
+
+//   void _saveArchive() {
+//     shareprefs?.setString(
+//       _archiveKey,
+//       jsonEncode(archiveList.map((e) => e.toJson()).toList()),
+//     );
+//   }
+
+//   // ─── Operations ───────────────────────────────────────────────────────────
+
+//   /// يؤكد السلة الحالية وينقلها إلى الأرشيف ثم يفرغ السلة.
+//   void confirmCart() {
+//     final cartController = CartController.to;
+//     if (cartController.cartItems.isEmpty) return;
+
+//     // تنسيق التاريخ الحالي
+//     final now = DateTime.now();
+//     final date =
+//         '${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year}';
+
+//     // تحويل عناصر السلة إلى ArchiveMedicineModel
+//     final medicines = cartController.cartItems.map((cartItem) {
+//       String company = '';
+//       try {
+//         // ابحث عن المادة في allMaterial للحصول على اسم الشركة
+//         final material =
+//             allMaterial.firstWhere((m) => m.id == cartItem.materialId);
+//         company = material.brand; // عدّل اسم الحقل إن اختلف في موديلك
+//       } catch (_) {}
+
+//       return ArchiveMedicineModel(
+//         name: cartItem.materialName,
+//         quantity: cartItem.quantity,
+//         company: company,
+//       );
+//     }).toList();
+
+//     // أضف إلى مقدمة الأرشيف (الأحدث أولاً)
+//     archiveList.insert(0, ArchiveItem(date: date, medicines: medicines));
+//     _saveArchive();
+
+//     // افرغ السلة
+//     cartController.clearCart();
+//   }
+
+//   void goToDetails(ArchiveItem item) {
+//     Get.toNamed(AppRoutes.ArchiveDetailsPage, arguments: item);
+//   }
+// }
+
 class ArchiveController extends GetxController {
-  /// Singleton — يُستخدم من أي مكان بـ ArchiveController.to
   static ArchiveController get to => Get.isRegistered<ArchiveController>()
       ? Get.find<ArchiveController>()
       : Get.put(ArchiveController(), permanent: true);
@@ -35,16 +114,15 @@ class ArchiveController extends GetxController {
   static const String _archiveKey = 'archive_items';
 
   final RxList<ArchiveItem> archiveList = <ArchiveItem>[].obs;
-
-  // ─── Lifecycle ────────────────────────────────────────────────────────────
+  
+  // ✅ أضف هذا السطر الجديد
+  final RxList<ArchiveItem> filteredArchiveList = <ArchiveItem>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     _loadArchive();
   }
-
-  // ─── Persistence ──────────────────────────────────────────────────────────
 
   void _loadArchive() {
     final json = shareprefs?.getString(_archiveKey);
@@ -54,6 +132,8 @@ class ArchiveController extends GetxController {
       archiveList.value = list
           .map((e) => ArchiveItem.fromJson(e as Map<String, dynamic>))
           .toList();
+      // ✅ أضف هذا السطر
+      filteredArchiveList.value = List.from(archiveList);
     } catch (_) {}
   }
 
@@ -64,26 +144,38 @@ class ArchiveController extends GetxController {
     );
   }
 
-  // ─── Operations ───────────────────────────────────────────────────────────
+  // ✅ أضف هذه الدالة الجديدة
+  void filterByDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      filteredArchiveList.value = List.from(archiveList);
+      return;
+    }
 
-  /// يؤكد السلة الحالية وينقلها إلى الأرشيف ثم يفرغ السلة.
+    // تحويل التاريخ من YYYY-MM-DD إلى DD/MM/YYYY للمقارنة
+    final parts = dateString.split('-');
+    if (parts.length != 3) return;
+    
+    final searchDate = '${parts[2]}/${parts[1]}/${parts[0]}';
+    
+    filteredArchiveList.value = archiveList
+        .where((item) => item.date == searchDate)
+        .toList();
+  }
+
   void confirmCart() {
     final cartController = CartController.to;
     if (cartController.cartItems.isEmpty) return;
 
-    // تنسيق التاريخ الحالي
     final now = DateTime.now();
     final date =
         '${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year}';
 
-    // تحويل عناصر السلة إلى ArchiveMedicineModel
     final medicines = cartController.cartItems.map((cartItem) {
       String company = '';
       try {
-        // ابحث عن المادة في allMaterial للحصول على اسم الشركة
         final material =
             allMaterial.firstWhere((m) => m.id == cartItem.materialId);
-        company = material.brand; // عدّل اسم الحقل إن اختلف في موديلك
+        company = material.brand;
       } catch (_) {}
 
       return ArchiveMedicineModel(
@@ -93,11 +185,12 @@ class ArchiveController extends GetxController {
       );
     }).toList();
 
-    // أضف إلى مقدمة الأرشيف (الأحدث أولاً)
     archiveList.insert(0, ArchiveItem(date: date, medicines: medicines));
     _saveArchive();
+    
+    // ✅ أضف هذا السطر
+    filteredArchiveList.value = List.from(archiveList);
 
-    // افرغ السلة
     cartController.clearCart();
   }
 
@@ -105,3 +198,4 @@ class ArchiveController extends GetxController {
     Get.toNamed(AppRoutes.ArchiveDetailsPage, arguments: item);
   }
 }
+
