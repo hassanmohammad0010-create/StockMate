@@ -115,7 +115,7 @@ class SettingPage extends StatelessWidget {
               icon: Icons.person,
               iconColor: constBlue,
               onTap: () {
-                Get.toNamed(CreateEmployeeAccountPage().pageName);
+                Get.toNamed(AppRoutes.CreateEmployeeAccountPage);
               },
               title: 'انشاء حساب جديد',
             ),

@@ -8,13 +8,8 @@ class SplashViewController extends GetxController {
   void onInit() {
     super.onInit();
     Future.delayed(const Duration(seconds: 3), () {
-<<<<<<< Updated upstream
       Get.offNamed(AppRoutes.LoginPage);
-    //  Get.to(HasanServiceTester());
-=======
-      Get.offNamed(LoginPage().pageName);
-      // Get.to(HasanServiceTester());
->>>>>>> Stashed changes
+      //  Get.to(HasanServiceTester());
     });
   }
 }

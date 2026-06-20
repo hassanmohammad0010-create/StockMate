@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Inventory_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Entry_And_Exit_Report_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Request_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Purchasing_Request_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Request_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Main_Page_Card.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class BossHomePage extends StatelessWidget {
   const BossHomePage({super.key});
@@ -35,7 +29,7 @@ class BossHomePage extends StatelessWidget {
                   iconBackgroundColor: constLightOrange,
                   iconColor: constOrange,
                   onTap: () {
-                    Get.toNamed(NesseryDepartmentRequestPage().pageName);
+                    Get.toNamed(AppRoutes.NesseryDepartmentRequestPage);
                   },
                 ),
                 CustomMainPageCard(
@@ -47,7 +41,7 @@ class BossHomePage extends StatelessWidget {
                   iconBackgroundColor: constLightOrange,
                   iconColor: constOrange,
                   onTap: () {
-                    Get.toNamed(NesseryPurchasingRequestPage().pageName);
+                    Get.toNamed(AppRoutes.NesseryPurchasingRequestPage);
                   },
                 ),
 
@@ -60,7 +54,7 @@ class BossHomePage extends StatelessWidget {
                   iconBackgroundColor: constLightBlue,
                   iconColor: constBlue,
                   onTap: () {
-                    Get.toNamed(UnderImplementationRequestPage().pageName);
+                    Get.toNamed(AppRoutes.UnderImplementationRequestPage);
                   },
                 ),
                 CustomMainPageCard(
@@ -71,7 +65,7 @@ class BossHomePage extends StatelessWidget {
                   iconBackgroundColor: constLightRed,
                   iconColor: constRed,
                   onTap: () {
-                    Get.toNamed(CompletedRequestPage().pageName);
+                    Get.toNamed(AppRoutes.CompletedRequestPage);
                   },
                 ),
               ],
@@ -102,7 +96,7 @@ class BossHomePage extends StatelessWidget {
               icon: Icons.bar_chart_rounded,
               iconColor: constBlue,
               onTap: () {
-                Get.toNamed(ElectronicInventoryPage().pageName);
+                Get.toNamed(AppRoutes.ElectronicInventoryPage);
               },
               title: 'تقرير جرد الكتروني',
             ),
@@ -112,7 +106,7 @@ class BossHomePage extends StatelessWidget {
               icon: Icons.fact_check_rounded,
               iconColor: constBlue,
               onTap: () {
-                Get.toNamed(EntryAndExitReportPage().pageName);
+                Get.toNamed(AppRoutes.EntryAndExitReportPage);
               },
               title: 'تقرير عمليات الدخول والخروج',
             ),
@@ -122,7 +116,7 @@ class BossHomePage extends StatelessWidget {
               icon: Icons.shopping_cart,
               iconColor: constBlue,
               onTap: () {
-                Get.toNamed(SuppliersPage().pageName);
+                Get.toNamed(AppRoutes.SuppliersPage);
               },
               title: 'الموردين',
             ),

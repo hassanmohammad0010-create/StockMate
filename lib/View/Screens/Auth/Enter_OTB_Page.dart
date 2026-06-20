@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Auth/Enter_OTB_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_OTB.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class EnterOTBPage extends StatelessWidget {
   const EnterOTBPage({
@@ -82,8 +81,8 @@ class EnterOTBPage extends StatelessWidget {
                       CustomOtb(
                         onSubmit: (data) {
                           operationName == 'confirm'
-                              ? Get.offAllNamed(MainPage().pageName)
-                              : Get.toNamed(ResetPasswordPage().pageName);
+                              ? Get.offAllNamed(AppRoutes.MainPage)
+                              : Get.toNamed(AppRoutes.ResetPasswordPage);
                         },
                       ),
                       SizedBox(height: context.screenHeight * 0.03),
@@ -112,9 +111,10 @@ class EnterOTBPage extends StatelessWidget {
                                       width: context.screenHeight * 0.02,
                                       child: const CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                          constBlue,
-                                        ),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              constBlue,
+                                            ),
                                       ),
                                     )
                                   : Text(

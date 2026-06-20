@@ -5,6 +5,7 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Requ
 import 'package:stock_mate_project/View/Widget/App/Custom_Main_Page_Card.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Suppliers_Container.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class HeadOfPurchasingHomePage extends StatelessWidget {
   HeadOfPurchasingHomePage({super.key});
@@ -36,7 +37,7 @@ class HeadOfPurchasingHomePage extends StatelessWidget {
                   iconBackgroundColor: constLightOrange,
                   iconColor: constOrange,
                   onTap: () {
-                    Get.toNamed(NesseryDepartmentRequestPage().pageName);
+                    Get.toNamed(AppRoutes.NesseryDepartmentRequestPage);
                   },
                 ),
                 CustomMainPageCard(
