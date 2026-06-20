@@ -4,6 +4,7 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Function/Shared/Validation.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Text_Failed.dart';
 
@@ -101,7 +102,7 @@ class ResetPasswordPage extends StatelessWidget {
                           child: CustomButtom(
                             tital: 'تأكيد',
                             onTap: () {
-                              Get.offAllNamed(LoginPage().pageName);
+                              Get.offAllNamed(AppRoutes.LoginPage);
                             },
                           ),
                         ),

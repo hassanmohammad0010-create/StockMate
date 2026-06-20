@@ -107,7 +107,7 @@ class LoginPage extends StatelessWidget {
                           SizedBox(height: context.screenHeight * 0.02),
 
                           CustomDropDown(
-                            itemList: specialties,
+                            itemList: identities,
                             hintText: 'الهوية',
                             icon: Icon(
                               Icons.person_2_outlined,

@@ -10,7 +10,7 @@ class GetConsumableItemsService {
       ),
       headers: {
         'Accept': 'application/json',
-        'Authorization': '1|SfcbNRti68N8PRTHP9VhxoTuFN5KgebevoCTRUVj28a9a130',
+        'Authorization': '13|MQbA7ZwgTfKbxWxQ9MyR2B4UjNiIMSanRDzLBak362697e89',
       },
     );
 

@@ -5,24 +5,27 @@ import 'package:stock_mate_project/Constant/Const.dart';
 void customSnackBar({
   required String title,
   required String message,
+  required Color color,
+  required Color messageColor,
   int? duration,
 }) {
   Get.snackbar(
     title,
     message,
     duration: Duration(seconds: duration ?? 3),
-    backgroundColor: title.tr == 'Warning'.tr ? Colors.red : constColor,
+    backgroundColor: color,
     titleText: Text(
-      title.tr,
-      style: const TextStyle(
+      title,
+      style: TextStyle(
         color: Colors.white,
         fontWeight: FontWeight.bold,
+        fontFamily: cairo,
         fontSize: 18,
       ),
     ),
     messageText: Text(
-      message.tr,
-      style: TextStyle(fontFamily: cairo, fontSize: 20, color: Colors.white),
+      message,
+      style: TextStyle(fontFamily: lateef, fontSize: 20, color: messageColor),
     ),
   );
 }

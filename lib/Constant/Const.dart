@@ -27,7 +27,7 @@ String lateef = 'Lateef';
 String fullLogo = 'assets/Image/Logo/Full_Logo.png';
 String semiLogo = 'assets/Image/Logo/Semi_Logo.png';
 String textLogo = 'assets/Image/Logo/Text_Logo.png';
-
+List<String> identities = ['مدير المستشفى', 'رئيس قسم', 'رئيس لجنة الشراء'];
 List<String> specialties = [
   'اذنية',
   'مفاصل',
@@ -67,3 +67,6 @@ extension AppSize on BuildContext {
   double get screenWidth => MediaQuery.of(this).size.width;
   double get keyboard => MediaQuery.of(this).viewInsets.bottom;
 }
+
+String success = 'success';
+String fail = 'fail';
