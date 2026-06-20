@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Auth/Enter_OTB_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
@@ -19,6 +19,8 @@ class EnterOTBPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(EnterOTBController(email: email));
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -32,7 +34,8 @@ class EnterOTBPage extends StatelessWidget {
             curve: Curves.easeOut,
             transform: Matrix4.translationValues(
               0,
-              -context.keyboard + context.screenHeight * 0.09,
+              0,
+              // -context.keyboard + context.screenHeight * 0.09,
               0,
             ),
             child: CustomCircle(
@@ -83,6 +86,57 @@ class EnterOTBPage extends StatelessWidget {
                               : Get.toNamed(ResetPasswordPage().pageName);
                         },
                       ),
+                      SizedBox(height: context.screenHeight * 0.03),
+                      Obx(() {
+                        final seconds = controller.secondsRemaining.value;
+                        final isLoading = controller.isLoading.value;
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'الم يصلك رمز التحقق؟ ',
+                              style: TextStyle(
+                                fontSize: context.screenHeight * 0.026,
+                                color: Colors.white,
+                                fontFamily: lateef,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: seconds == 0 && !isLoading
+                                  ? controller.resendCode
+                                  : null,
+                              child: isLoading
+                                  ? SizedBox(
+                                      height: context.screenHeight * 0.02,
+                                      width: context.screenHeight * 0.02,
+                                      child: const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          constBlue,
+                                        ),
+                                      ),
+                                    )
+                                  : Text(
+                                      seconds > 0
+                                          ? 'إعادة إرسال ($seconds ث)'
+                                          : 'إعادة إرسال',
+                                      style: TextStyle(
+                                        fontSize: context.screenHeight * 0.026,
+                                        color: seconds > 0
+                                            ? constGray
+                                            : constBlue,
+                                        fontFamily: lateef,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: seconds > 0
+                                            ? TextDecoration.none
+                                            : TextDecoration.underline,
+                                      ),
+                                    ),
+                            ),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),

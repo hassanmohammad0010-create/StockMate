@@ -2,7 +2,9 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
+import 'package:stock_mate_project/main.dart';
 
 class LoginService {
   Future<String?> loginService({
@@ -14,17 +16,25 @@ class LoginService {
       body: {'email': email, 'password': password},
       headers: {'Accept': 'application/json'},
     );
+    print('response reached');
     Map<String, dynamic> data = jsonDecode(response.body);
     if (response.statusCode == 200) {
       customSnackBar(
+        color: constColor,
+        messageColor: constLightBlue,
         title: 'Welcome back',
         message: 'We are happy you are back',
       );
       print(data['token']);
-      // tokenSharedPreferences!.setString('Token', data['token']);
+      tokenSharedPreferences!.setString('Token', data['token']);
       return data['user']['name'];
     } else {
-      customSnackBar(title: 'Warning', message: data['message']);
+      customSnackBar(
+        color: constRed,
+        messageColor: constLightRed,
+        title: 'Warning',
+        message: data['message'],
+      );
       return null;
     }
   }
