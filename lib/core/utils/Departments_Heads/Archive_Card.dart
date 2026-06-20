@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Dashed_Border_Painter.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Dashed_Border_Painter.dart';
 
 class ArchiveCard extends StatelessWidget {
   final String title;

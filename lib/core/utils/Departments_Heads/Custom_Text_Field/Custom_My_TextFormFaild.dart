@@ -139,7 +139,7 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
                 child: Padding(
                   padding: EdgeInsets.only(
                     top: widget.maxLines == 1 ? 12 : 0,
-                    bottom: widget.maxLines == 1 ? 0 : 60,
+                    bottom: widget.maxLines == 1 ? 0 : 76,
                     right: 8,
                     left: 8,
                   ),

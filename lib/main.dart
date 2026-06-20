@@ -24,7 +24,7 @@ class StockMate extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       getPages: AppPages.routes,
       initialRoute: AppRoutes.DepartmentHeadsMainPage,
-      initialBinding: CartBinding(),
+      initialBinding: AppBinding(),
     );
   }
 }

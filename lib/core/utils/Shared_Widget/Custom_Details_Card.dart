@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Priority_Badge.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Badge.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Status_Badge.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Priority_Badge.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Recurring_Badge.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Status_Badge.dart';
 
 class CustomDetailsCard extends StatelessWidget {
   const CustomDetailsCard({super.key, required this.order});

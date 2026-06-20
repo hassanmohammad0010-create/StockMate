@@ -27,7 +27,6 @@ class CustomArchivePrescriptionCard extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           'تأكيد الحذف',
-          textDirection: TextDirection.rtl,
           style: TextStyle(fontFamily: cairo, fontWeight: FontWeight.bold),
         ),
         content: Text(

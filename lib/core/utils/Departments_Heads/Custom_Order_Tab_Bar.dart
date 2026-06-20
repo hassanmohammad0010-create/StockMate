@@ -5,7 +5,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Tap.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Order_Tap.dart';
 
 class OrderTabBar extends GetView<AddOrdinaryOrderController> {
   const OrderTabBar({super.key});

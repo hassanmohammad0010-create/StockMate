@@ -6,12 +6,13 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Material_Info_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Inventory_Quantity_Card.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Inventory_Batches_Card.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Inventory_Info_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Quantity_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Batches_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Info_Card.dart';
 
 class InventoryDetailsPage extends StatefulWidget {
   const InventoryDetailsPage({super.key, required this.item});

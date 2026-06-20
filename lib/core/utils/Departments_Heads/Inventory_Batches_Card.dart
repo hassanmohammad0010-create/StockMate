@@ -6,7 +6,7 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Material_Info_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Batch_Row_Item.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Batch_Row_Item.dart';
 
 class InventoryBatchesCard extends StatelessWidget {
   const InventoryBatchesCard({

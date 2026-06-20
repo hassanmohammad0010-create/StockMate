@@ -6,9 +6,9 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Ordienary_Bottom.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Build_Row.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Confirm_Section.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Ordienary_Bottom.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Build_Row.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Confirm_Section.dart';
 
 class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
   const OrdinaryConfirmPage({super.key});

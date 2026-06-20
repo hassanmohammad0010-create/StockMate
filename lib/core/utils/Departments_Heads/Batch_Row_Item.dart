@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
 class BatchRowItem extends StatelessWidget {
   const BatchRowItem({super.key, required this.batch, required this.material});

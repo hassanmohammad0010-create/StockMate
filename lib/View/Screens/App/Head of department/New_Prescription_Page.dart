@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/PrescriptionController.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Prescription_Details_Sheet.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Patient_Search_Field.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Prescription_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Prescription_Details_Sheet.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Patient_Search_Field.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Prescription_Card.dart';
 
 class NewPrescriptionPage extends StatelessWidget {
   const NewPrescriptionPage({super.key});

@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
 class AddOrdinaryOrderController extends GetxController {
   static const int maxOrders = 5;

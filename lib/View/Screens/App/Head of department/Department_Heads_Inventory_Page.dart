@@ -9,7 +9,7 @@ import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Search_Field.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Search_Field.dart';
 
 class DepartmentHeadsInventoryPage extends StatefulWidget {
   const DepartmentHeadsInventoryPage({super.key});

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Archive_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Archive_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_My_TextFormFaild.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 
 class CustomPrescriptionCard extends StatelessWidget {
   const CustomPrescriptionCard({super.key});
@@ -80,7 +80,7 @@ class CustomPrescriptionCard extends StatelessWidget {
                 padding: EdgeInsets.only(top: h * 0.01, bottom: h * 0.005),
                 child: CustomMyTextFormField(
                   controller: controller.medicationsController,
-                  maxLines: 4,
+                  maxLines: 5,
                   prefixIcon: Icons.medication_outlined,
                   keyboardType: TextInputType.text,
                   label: 'الأدوية *',

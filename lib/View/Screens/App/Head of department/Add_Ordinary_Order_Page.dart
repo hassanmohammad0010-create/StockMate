@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Add_New_Ordinary_Order_Card.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Tab_Bar.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Ordinary_Submit_Section.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Add_New_Ordinary_Order_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Order_Tab_Bar.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Ordinary_Submit_Section.dart';
 import '../../../../Controller/Logic/AddOrdinaryOrder_Controller.dart';
 
 class AddOrdinaryOrderPage extends GetView<AddOrdinaryOrderController> {

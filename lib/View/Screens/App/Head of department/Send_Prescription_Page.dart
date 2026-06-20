@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Send_Prescription_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Send_Prescription_Card.dart';
 
 class SendPrescriptionPage extends StatelessWidget {
   const SendPrescriptionPage({super.key});

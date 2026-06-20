@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/CustomArchivePrescriptionCard.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Patient_Search_Field.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Patient_Search_Field.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/PrescriptionArchiveCard.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/showPrescriptionArchiveDetails.dart';
 
 class PrescriptionArchivePage extends StatelessWidget {
   PrescriptionArchivePage({super.key});
@@ -75,8 +76,11 @@ class PrescriptionArchivePage extends StatelessWidget {
                     child: Column(
                       children: list
                           .map(
-                            (p) =>
-                                CustomArchivePrescriptionCard(prescription: p),
+                            (p) => PrescriptionArchiveCard(
+                              prescription: p,
+                              onTap: () =>
+                                  showPrescriptionArchiveDetails(context, p),
+                            ),
                           )
                           .toList(),
                     ),

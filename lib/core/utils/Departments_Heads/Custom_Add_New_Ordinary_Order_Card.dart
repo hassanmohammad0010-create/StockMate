@@ -1,17 +1,20 @@
 // ignore_for_file: sized_box_for_whitespace, file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/instance_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/AddRecurringOrder_Controller.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_My_DropDown.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_My_TextFormFaild.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Choose_Card.dart';
+import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_DropDown/Custom_My_DropDown.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Priority_Choose_Card.dart';
 
-class RecurringOrderCard extends StatelessWidget {
-  final AddRecurringOrderController controller;
+class OrdinaryOrderCard extends StatelessWidget {
+  const OrdinaryOrderCard({super.key, required this.orderIndex});
 
-  const RecurringOrderCard({super.key, required this.controller});
+  final int orderIndex;
+
+  AddOrdinaryOrderController get _c => Get.find<AddOrdinaryOrderController>();
 
   static const List<String> _medicines = [
     'باراسيتامول',
@@ -31,6 +34,8 @@ class RecurringOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (orderIndex >= _c.orders.length) return const SizedBox.shrink();
+
     final size = MediaQuery.of(context).size;
 
     return LayoutBuilder(
@@ -44,15 +49,16 @@ class RecurringOrderCard extends StatelessWidget {
                 children: [
                   SizedBox(height: size.height * 0.008),
                   Form(
-                    key: controller.formKey,
+                    key: _c.formKey(orderIndex),
                     child: Container(
                       width: size.width * 0.95,
                       child: Card(
                         color: Colors.white.withOpacity(0.9),
                         elevation: 3.0,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // ── عنوان الكارد ──────────────────────────────
+                            // عنوان الكارد
                             Align(
                               alignment: Alignment.centerRight,
                               child: Padding(
@@ -61,7 +67,9 @@ class RecurringOrderCard extends StatelessWidget {
                                   top: 12,
                                 ),
                                 child: Text(
-                                  'تفاصيل الطلب',
+                                  _c.orders.length > 1
+                                          ?'تفاصيل الطلب ${orderIndex + 1}' 
+                                          : 'تفاصيل الطلب',
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontFamily: 'Cairo',
@@ -76,13 +84,14 @@ class RecurringOrderCard extends StatelessWidget {
                               child: const Divider(),
                             ),
                             SizedBox(height: size.height * 0.01),
-
-                            // ── اسم الدواء ────────────────────────────────
                             Obx(() {
-                              // ✅ قراءة المتغير مباشرة قبل أي شرط لضمان عدم حدوث خطأ GetX
-                              final medicineName = controller.order.value.medicineName;
-                              final isInvalid = controller.isFieldInvalid('medicineName');
-
+                              if (orderIndex >= _c.orders.length) {
+                                return const SizedBox.shrink();
+                              }
+                              final isInvalid = _c.isFieldInvalid(
+                                orderIndex,
+                                'medicineName',
+                              );
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.03,
@@ -95,11 +104,13 @@ class RecurringOrderCard extends StatelessWidget {
                                       labelBuilder: (v) => v,
                                       label: 'اسم الدواء *',
                                       hint: 'اختر الدواء المطلوب',
-                                      searchable: true,
                                       icon: Icons.medication_outlined,
-                                      value: medicineName,
+                                      searchable: true,
+                                      value: _c.orders[orderIndex].medicineName,
+                                      // نمرر errorBorder للـ dropdown إذا كان invalid
                                       errorBorder: isInvalid,
-                                      onChanged: (v) => controller.updateMedicineName(v),
+                                      onChanged: (v) =>
+                                          _c.updateMedicineName(orderIndex, v),
                                     ),
                                     if (isInvalid)
                                       Padding(
@@ -120,8 +131,6 @@ class RecurringOrderCard extends StatelessWidget {
                               );
                             }),
                             SizedBox(height: size.height * 0.015),
-
-                            // ── الكمية ────────────────────────────────────
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: size.width * 0.03,
@@ -131,7 +140,7 @@ class RecurringOrderCard extends StatelessWidget {
                                 keyboardType: TextInputType.number,
                                 label: 'الكمية *',
                                 hint: 'أدخل الكمية المطلوبة',
-                                controller: controller.quantityController,
+                                controller: _c.quantityCtrl(orderIndex),
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return 'الرجاء إدخال الكمية';
@@ -141,12 +150,14 @@ class RecurringOrderCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: size.height * 0.015),
-
-                            // ── الوحدة ────────────────────────────────────
                             Obx(() {
-                              final unit = controller.order.value.unit;
-                              final isInvalid = controller.isFieldInvalid('unit');
-
+                              if (orderIndex >= _c.orders.length) {
+                                return const SizedBox.shrink();
+                              }
+                              final isInvalid = _c.isFieldInvalid(
+                                orderIndex,
+                                'unit',
+                              );
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.03,
@@ -161,9 +172,10 @@ class RecurringOrderCard extends StatelessWidget {
                                       hint: 'اختر الوحدة',
                                       icon: Icons.category_outlined,
                                       searchable: false,
-                                      value: unit,
+                                      value: _c.orders[orderIndex].unit,
                                       errorBorder: isInvalid,
-                                      onChanged: (v) => controller.updateUnit(v),
+                                      onChanged: (v) =>
+                                          _c.updateUnit(orderIndex, v),
                                     ),
                                     if (isInvalid)
                                       Padding(
@@ -184,12 +196,14 @@ class RecurringOrderCard extends StatelessWidget {
                               );
                             }),
                             SizedBox(height: size.height * 0.015),
-
-                            // ── الوكيل / الماركة ──────────────────────────
                             Obx(() {
-                              final brand = controller.order.value.brand;
-                              final isInvalid = controller.isFieldInvalid('brand');
-
+                              if (orderIndex >= _c.orders.length) {
+                                return const SizedBox.shrink();
+                              }
+                              final isInvalid = _c.isFieldInvalid(
+                                orderIndex,
+                                'brand',
+                              );
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.03,
@@ -204,9 +218,10 @@ class RecurringOrderCard extends StatelessWidget {
                                       hint: 'اختر الوكيل / الماركة',
                                       icon: Icons.store_mall_directory_outlined,
                                       searchable: true,
-                                      value: brand,
+                                      value: _c.orders[orderIndex].brand,
                                       errorBorder: isInvalid,
-                                      onChanged: (v) => controller.updateBrand(v),
+                                      onChanged: (v) =>
+                                          _c.updateBrand(orderIndex, v),
                                     ),
                                     if (isInvalid)
                                       Padding(
@@ -226,6 +241,7 @@ class RecurringOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
+
                             SizedBox(height: size.height * 0.015),
                           ],
                         ),
@@ -233,8 +249,7 @@ class RecurringOrderCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: size.height * 0.008),
-
-                  const RecurringChooseCard(),
+                  PriorityChooseCard(orderIndex: orderIndex),
                 ],
               ),
             ),

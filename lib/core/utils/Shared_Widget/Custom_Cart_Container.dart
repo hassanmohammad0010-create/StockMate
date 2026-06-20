@@ -1,8 +1,9 @@
-// ignore_for_file: file_names, deprecated_member_use
+// ignore_for_file: file_names, deprecated_member_use, unnecessary_brace_in_string_interps
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
 class CustomCartContainer extends StatelessWidget {
   const CustomCartContainer({

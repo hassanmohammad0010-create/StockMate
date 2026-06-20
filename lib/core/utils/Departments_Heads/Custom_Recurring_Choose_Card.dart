@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Logic/AddRecurringOrder_Controller.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Recurring_Button.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Recurring_Button.dart';
 
 class RecurringChooseCard extends StatelessWidget {
   const RecurringChooseCard({super.key});

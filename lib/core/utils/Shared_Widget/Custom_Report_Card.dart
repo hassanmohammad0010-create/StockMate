@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Logic/ReportController.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_My_TextFormFaild.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 
 class CustomReportCard extends StatelessWidget {
   const CustomReportCard({super.key});
@@ -56,7 +56,7 @@ class CustomReportCard extends StatelessWidget {
                 padding: EdgeInsets.only(top: h * 0.01, bottom: h * 0.005),
                 child: CustomMyTextFormField(
                   controller: controller.description,
-                  maxLines: 8,
+                  maxLines: 5,
                   prefixIcon: Icons.description_outlined,
                   keyboardType: TextInputType.text,
                   label: 'التفاصيل *',

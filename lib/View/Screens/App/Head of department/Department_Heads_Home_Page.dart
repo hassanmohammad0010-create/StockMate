@@ -7,7 +7,7 @@ import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Card.dart';
 
 class DepartmentHeadsHomePage extends StatelessWidget {
   DepartmentHeadsHomePage({super.key});

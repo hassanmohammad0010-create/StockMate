@@ -9,7 +9,7 @@ import 'package:stock_mate_project/Function/Shared/Validation.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Cart_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Text_Form_Faild_For_Date.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Text_Form_Faild_For_Date.dart';
 
 class CartArchivePage extends StatelessWidget {
   const CartArchivePage({super.key});
@@ -91,7 +91,9 @@ class CartArchivePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'لا توجد نتائج',
+                        controller.filteredArchiveList.isEmpty
+                            ? 'لا توجد سلات في الأرشيف بعد'
+                            :  'لا توجد نتائج',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey.shade500,
