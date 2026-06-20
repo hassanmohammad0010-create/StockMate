@@ -96,7 +96,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                     Row(
                       children: [
                         const Icon(
-                          Icons.medical_services_outlined,
+                          Icons.healing,
                           size: 15,
                           color: Color(0xFF6B7280),
                         ),

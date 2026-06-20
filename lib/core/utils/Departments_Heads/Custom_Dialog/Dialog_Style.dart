@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
-/// إعدادات الشكل (أيقونة + ألوان) الخاصة بكل [DialogType].
 class DialogStyle {
   final IconData icon;
   final Color iconColor;
@@ -18,7 +17,6 @@ class DialogStyle {
     required this.confirmColor,
   });
 
-  /// يرجع [DialogStyle] المناسب حسب نوع الـ Dialog.
   factory DialogStyle.forType(DialogType type) {
     switch (type) {
       case DialogType.success:

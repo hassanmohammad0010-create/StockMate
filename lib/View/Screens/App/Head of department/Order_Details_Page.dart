@@ -19,7 +19,6 @@ class OrderDetailsPage extends StatelessWidget {
 
   final Order order;
 
-  // ── يفتح Dialog تأكيد الاستلام ويتحقق من صحة الكمية المدخلة ──
   void _showConfirmReceiveDialog(OrdersController controller) {
     final textController = TextEditingController();
 
@@ -60,7 +59,6 @@ class OrderDetailsPage extends StatelessWidget {
         Get.back();
 
         if (success) {
-          // الكمية الفعلية المستلمة: المُدخلة، أو الكمية كاملة لو ترك الحقل فارغاً
           final confirmedQty = receivedQty ?? order.quantity;
 
           CustomDialog.show(
@@ -131,7 +129,6 @@ class OrderDetailsPage extends StatelessWidget {
                         : order.isRecurring == false &&
                               order.status == OrderStatus.completed
                         ? Obx(() {
-                            // نقرأ نسخة الطلب المحدثة من الكونترولر عبر الـ id
                             final liveOrder =
                                 controller.getOrderById(order.id!) ?? order;
 

@@ -41,8 +41,8 @@ class PrescriptionsPage extends StatelessWidget {
               CustomBackContainer(),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.03,
-                  vertical: MediaQuery.of(context).size.width * 0.02,
+                  horizontal: context.screenWidth * 0.03,
+                  vertical: context.screenHeight * 0.02,
                 ),
                 child: Align(
                   alignment: AlignmentGeometry.centerRight,

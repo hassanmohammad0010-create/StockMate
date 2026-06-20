@@ -22,9 +22,6 @@ class PrescriptionArchivePage extends StatelessWidget {
         ? Get.find<SendPrescriptionController>()
         : Get.put(SendPrescriptionController(), permanent: true);
 
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: GestureDetector(
@@ -32,7 +29,7 @@ class PrescriptionArchivePage extends StatelessWidget {
         child: Column(
           children: [
             CustomBackContainer(),
-            SizedBox(height: h * 0.01),
+            SizedBox(height: context.screenHeight * 0.01),
             CustomHeadContainer(title: 'أرشيف الوصفات الطبية'),
             PatientSearchField(
               controller: _searchController,
@@ -72,7 +69,7 @@ class PrescriptionArchivePage extends StatelessWidget {
 
                 return SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: w * 0.02),
+                    padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
                     child: Column(
                       children: list
                           .map(

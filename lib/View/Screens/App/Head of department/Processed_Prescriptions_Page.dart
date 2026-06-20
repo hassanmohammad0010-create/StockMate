@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -14,7 +16,6 @@ class ProcessedPrescriptionsPage extends StatelessWidget {
     final controller = Get.find<PrescriptionController>();
     return Scaffold(
       backgroundColor: constBackgroundColor,
-
       body: Column(
         children: [
           PatientSearchField(
@@ -35,7 +36,9 @@ class ProcessedPrescriptionsPage extends StatelessWidget {
               }
 
               return ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(
+                  vertical: context.screenHeight * 0.01,
+                ),
                 itemCount: prescriptions.length,
                 itemBuilder: (context, index) {
                   final prescription = prescriptions[index];

@@ -14,7 +14,6 @@ class NewPrescriptionPage extends StatelessWidget {
     final controller = Get.find<PrescriptionController>();
     return Scaffold(
       backgroundColor: constBackgroundColor,
-
       body: Column(
         children: [
         PatientSearchField(
@@ -26,16 +25,14 @@ class NewPrescriptionPage extends StatelessWidget {
           Expanded(
             child: Obx(() {
               final prescriptions = controller.newPrescriptions;
-
               if (prescriptions.isEmpty) {
                 return const _EmptyState(
                   icon: Icons.inbox_outlined,
                   message: 'لا توجد وصفات جديدة مطابقة',
                 );
               }
-
               return ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding:  EdgeInsets.symmetric(vertical: context.screenHeight * 0.01),
                 itemCount: prescriptions.length,
                 itemBuilder: (context, index) {
                   final prescription = prescriptions[index];

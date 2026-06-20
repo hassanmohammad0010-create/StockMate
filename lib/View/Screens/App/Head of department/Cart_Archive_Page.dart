@@ -22,10 +22,6 @@ class CartArchivePage extends StatelessWidget {
       DatePickerController(),
     );
 
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
-
-    // ✅ دالة لمعالجة الفلترة
     void applyDateFilter() {
       controller.filterByDate(datePickerController.fromDateTextController.text);
     }
@@ -35,7 +31,7 @@ class CartArchivePage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          SizedBox(height: h * 0.01),
+          SizedBox(height: context.screenHeight * 0.01),
           CustomHeadContainer(title: 'أرشيف السلة'),
           Obx(
             () => TextFormFaildForDate(
@@ -53,7 +49,6 @@ class CartArchivePage extends StatelessWidget {
                 return Validation().generalValidation(data!);
               },
               readOnly: true,
-              // ✅ استدعاء filterByDate بعد اختيار التاريخ
               onTap: () async {
                 await datePickerController.pickFromDate(
                   context,
@@ -69,7 +64,6 @@ class CartArchivePage extends StatelessWidget {
                       ),
                       onPressed: () {
                         datePickerController.clearFromDate();
-                        // ✅ امسح الفلتر عند الإلغاء
                         controller.filterByDate(null);
                       },
                     )
@@ -78,7 +72,6 @@ class CartArchivePage extends StatelessWidget {
           ),
           Expanded(
             child: Obx(() {
-              // ✅ استخدم filteredArchiveList
               if (controller.filteredArchiveList.isEmpty) {
                 return Center(
                   child: Column(
@@ -89,11 +82,11 @@ class CartArchivePage extends StatelessWidget {
                         size: 64,
                         color: Colors.grey.shade300,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: context.screenHeight * 0.02),
                       Text(
                         controller.filteredArchiveList.isEmpty
                             ? 'لا توجد سلات في الأرشيف بعد'
-                            :  'لا توجد نتائج',
+                            : 'لا توجد نتائج',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey.shade500,
@@ -106,11 +99,12 @@ class CartArchivePage extends StatelessWidget {
               }
               return SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: w * 0.02),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.screenWidth * 0.02,
+                  ),
                   child: Column(
                     children: [
-                      SizedBox(height: h * 0.01),
-                      // ✅ استخدم filteredArchiveList
+                      SizedBox(height: context.screenHeight * 0.01),
                       ...controller.filteredArchiveList.map((item) {
                         return CustomCartContainer(
                           buttonText: 'عرض التفاصيل',

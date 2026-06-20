@@ -13,8 +13,8 @@ class RecurringSubmitSection extends GetView<AddRecurringOrderController> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).size.height * 0.01,
-        top: MediaQuery.of(context).size.height * 0.01,
+        bottom: context.screenHeight * 0.01,
+        top: context.screenHeight * 0.01,
       ),
       decoration: BoxDecoration(
         boxShadow: [
@@ -30,7 +30,6 @@ class RecurringSubmitSection extends GetView<AddRecurringOrderController> {
         children: [
           const SizedBox(height: 10),
 
-          // ✅ التحقق من الحقول أولاً ثم الانتقال لصفحة التأكيد
           CustomMainButtom(
             title: 'إرسال الطلب',
             color: constBlue,

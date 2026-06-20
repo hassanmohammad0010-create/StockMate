@@ -35,16 +35,12 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                     children: [
                       Obx(
                         () => CustomCard(
-                          icon: Icon(
-                            Icons.check,
-                            size: 30,
-                            color: Color(0xFF09C05E),
-                          ),
-                          iconBackgroundColor: Color(0xFFE3FDED),
+                          icon: Icon(Icons.check, size: 30, color: constGreen),
+                          iconBackgroundColor: constlightGreen,
                           number: ordersController.completedCount
                               .toString(), // ← بدلاً من '2'
                           title: 'طلبات منجزة',
-                          buttonColor: Color(0xFF09C05E),
+                          buttonColor: constGreen,
                           buttonTitle: 'عرض التفاصيل',
                           onTap: () {
                             DefaultTabController.of(context).animateTo(2);
@@ -59,7 +55,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                             size: 30,
                             color: constBlue,
                           ),
-                          iconBackgroundColor: Color(0xFFE3F2FD),
+                          iconBackgroundColor: constLightBlue,
                           number: ordersController.inProgressCount.toString(),
                           title: 'طلبات قيد التنفيذ',
                           buttonColor: constBlue,
@@ -80,12 +76,12 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                           icon: Icon(
                             Icons.warning_amber_rounded,
                             size: 30,
-                            color: Color(0xFFFFBF00),
+                            color: constOrange,
                           ),
-                          iconBackgroundColor: Color(0xFFFFF8E2),
+                          iconBackgroundColor: constLightOrange,
                           number: ordersController.suspendedCount.toString(),
                           title: 'بانتظار الموافقة',
-                          buttonColor: Color(0xFFFFBF00),
+                          buttonColor: constOrange,
                           buttonTitle: 'عرض التفاصيل',
                           onTap: () {
                             DefaultTabController.of(context).animateTo(2);
@@ -98,12 +94,12 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                           icon: Icon(
                             Icons.cancel_outlined,
                             size: 30,
-                            color: Color(0xFFFF2125),
+                            color: constRed,
                           ),
-                          iconBackgroundColor: Color(0xFFFFEBEE),
+                          iconBackgroundColor: constLightRed,
                           number: ordersController.rejectedCount.toString(),
                           title: 'طلبات مرفوضة',
-                          buttonColor: Color(0xFFFF2125),
+                          buttonColor: constRed,
                           buttonTitle: 'عرض التفاصيل',
                           onTap: () {
                             DefaultTabController.of(context).animateTo(2);
@@ -117,11 +113,15 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: context.screenHeight * 0.01),
-            Divider(endIndent: 16, indent: 16, color: constGray),
+            Divider(
+              endIndent: context.screenWidth * 0.03,
+              indent: context.screenWidth * 0.03,
+              color: constGray,
+            ),
             Align(
               alignment: AlignmentGeometry.centerRight,
               child: Padding(
-                padding: const EdgeInsets.only(right: 16),
+                padding: EdgeInsets.only(right: context.screenWidth * 0.03),
                 child: Text(
                   'وصفة طبية جديدة / السلة',
                   style: TextStyle(

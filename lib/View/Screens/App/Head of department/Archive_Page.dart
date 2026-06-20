@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Archive_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
@@ -12,40 +13,37 @@ class ArchivePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: Column(
         children: [
           CustomBackContainer(),
-          SizedBox(height: h * 0.01),
+          SizedBox(height: context.screenHeight * 0.01),
           CustomHeadContainer(title: 'الأرشيف'),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: w * 0.02),
+                padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
                 child: Column(
                   children: [
-                    SizedBox(height: h * 0.02),
+                    SizedBox(height: context.screenHeight * 0.02),
                     ArchiveCard(
                       title: 'أرشيف الوصفات',
                       icon: Icons.bar_chart_rounded,
-                      height: h,
-                      width: w,
+                      height: context.screenHeight,
+                      width: context.screenWidth,
                       onTap: () {
-                        Get.toNamed('/PrescriptionArchivePage');
+                        Get.toNamed(AppRoutes.PrescriptionArchivePage);
                       },
                     ),
-                    SizedBox(height: h * 0.02),
+                    SizedBox(height: context.screenHeight * 0.02),
                     ArchiveCard(
                       title: 'أرشيف السلة',
                       icon: Icons.shopping_cart,
-                      height: h,
-                      width: w,
+                      height: context.screenHeight,
+                      width: context.screenWidth,
                       onTap: () {
-                        Get.toNamed('/CartArchivePage');
+                        Get.toNamed(AppRoutes.CartArchivePage);
                       },
                     ),
                   ],

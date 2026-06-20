@@ -12,8 +12,11 @@ class RecurringBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      width: MediaQuery.of(context).size.width * 0.18,
+      padding: EdgeInsets.symmetric(
+        vertical: context.screenHeight * 0.002,
+        horizontal: context.screenWidth * 0.01,
+      ),
+      width: context.screenWidth * 0.18,
       decoration: BoxDecoration(
         color: const Color(0xFFEDE9FE),
         borderRadius: BorderRadius.circular(8),

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
-/// زر إجراء داخل الـ Dialog (تأكيد/إلغاء)، قابل لإعادة الاستخدام بأي لون ونص.
 class DialogButton extends StatelessWidget {
   const DialogButton({
     super.key,

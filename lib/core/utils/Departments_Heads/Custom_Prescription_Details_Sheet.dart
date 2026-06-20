@@ -177,11 +177,11 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: () {
                       controller.markAsProcessed(prescription.id);
-                      Navigator.of(context).pop();
+                      Get.back();
                       Get.snackbar(
-                        'تم التحديث',
-                        'تم نقل وصفة ${prescription.patientName} إلى الوصفات المعالجة',
-                        snackPosition: SnackPosition.BOTTOM,
+                        'نجاح العملية',
+                        'تم صرف وصفة ${prescription.patientName}',
+                        snackPosition: SnackPosition.TOP,
                         backgroundColor: constGreen,
                         colorText: Colors.white,
                         margin: const EdgeInsets.all(16),
@@ -190,7 +190,7 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
                     },
                     icon: const Icon(Icons.check_circle_outline),
                     label: const Text(
-                      'تحويل الحالة إلى تمت المعالجة',
+                      'صرف الوصفة',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
@@ -216,7 +216,7 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
                   ),
                   child: const Center(
                     child: Text(
-                      'هذه الوصفة تمت معالجتها بالفعل',
+                      'هذه الوصفة تمت صرفها بالفعل',
                       style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w600,

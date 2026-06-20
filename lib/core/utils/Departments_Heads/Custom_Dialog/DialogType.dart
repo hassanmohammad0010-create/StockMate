@@ -1,2 +1,3 @@
-/// أنواع الـ Dialog المتاحة، كل نوع له لون وأيقونة مختلفة (راجع [dialog_style.dart]).
+// ignore_for_file: file_names
+
 enum DialogType { info, success, warning, danger }

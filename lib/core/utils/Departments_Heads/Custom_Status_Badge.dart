@@ -19,28 +19,31 @@ class StatusBadge extends StatelessWidget {
     switch (status) {
       case OrderStatus.completed:
         label = 'تم الإنجاز';
-        bgColor = const Color(0xFFE3FDED);
-        textColor = const Color(0xFF09C05E);
+        bgColor = constlightGreen;
+        textColor = constGreen;
         break;
       case OrderStatus.rejected:
         label = 'مرفوض';
-        bgColor = const Color(0xFFFFEBEE);
-        textColor = const Color(0xFFE53935);
+        bgColor = constLightRed;
+        textColor = constRed;
         break;
       case OrderStatus.inProgress:
         label = 'قيد التنفيذ';
-        bgColor = const Color(0xFFE3F2FD);
+        bgColor = constLightBlue;
         textColor = constBlue;
         break;
       case OrderStatus.suspended:
         label = 'معلق';
-        bgColor = const Color(0xFFFFF8E2);
-        textColor = const Color(0xFFFFBF00);
+        bgColor = constLightOrange;
+        textColor = constOrange;
         break;
     }
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      width: MediaQuery.of(context).size.width * 0.18,
+      padding: EdgeInsets.symmetric(
+        vertical: context.screenHeight * 0.002,
+        horizontal: context.screenWidth * 0.01,
+      ),
+      width: context.screenWidth * 0.18,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8),

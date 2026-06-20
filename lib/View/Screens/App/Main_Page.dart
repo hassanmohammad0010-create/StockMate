@@ -6,6 +6,7 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Boss_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Requests_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -17,7 +18,6 @@ class MainPage extends StatelessWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        // backgroundColor: constColor,
         backgroundColor: constBackgroundColor,
         appBar: AppBar(
           toolbarHeight: context.screenHeight * 0.1,
@@ -31,8 +31,7 @@ class MainPage extends StatelessWidget {
                     size: context.screenHeight * 0.033,
                   ),
                   onPressed: () {
-                    Get.toNamed('/NotificationPage');
-
+                    Get.toNamed(AppRoutes.NotificationPage);
                   },
                 ),
                 Positioned(

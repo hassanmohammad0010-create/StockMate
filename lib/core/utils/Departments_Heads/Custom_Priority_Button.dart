@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 
 class PriorityButton extends StatelessWidget {
   const PriorityButton({super.key, 
@@ -21,8 +22,8 @@ class PriorityButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: size.height * 0.05,
-      width:  size.width  * 0.4,
+      height: context.screenHeight * 0.05,
+      width:  context.screenWidth * 0.4,
       decoration: BoxDecoration(
         color:        isSelected && label == 'ضروري' ? color : isSelected && label == 'عادي' ? color : Colors.transparent,
         border:       Border.all(color: color, width: isSelected ? 2 : 1),

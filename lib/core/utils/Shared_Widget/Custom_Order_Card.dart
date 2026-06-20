@@ -1,6 +1,7 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Priority_Badge.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Recurring_Badge.dart';
@@ -10,15 +11,14 @@ class OrderCard extends StatelessWidget {
   final Order order;
   final VoidCallback onTap;
 
-  // ignore: use_key_in_widget_constructors
-  const OrderCard({required this.order, required this.onTap});
+  const OrderCard({super.key, required this.order, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: context.screenHeight * 0.01),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -31,7 +31,10 @@ class OrderCard extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(
+            horizontal: context.screenWidth * 0.04,
+            vertical: context.screenHeight * 0.02,
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -44,10 +47,10 @@ class OrderCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1A2A4A),
+                        color: constColor,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: context.screenHeight * 0.01),
                     Text(
                       'التاريخ : ${order.date}',
                       style: const TextStyle(
@@ -61,7 +64,7 @@ class OrderCard extends StatelessWidget {
                       children: [
                         // ignore: sized_box_for_whitespace
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.25,
+                          width: context.screenWidth * 0.25,
                           child: Row(
                             children: [
                               const Icon(
@@ -69,7 +72,7 @@ class OrderCard extends StatelessWidget {
                                 size: 14,
                                 color: Color(0xFF6B7280),
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: context.screenWidth * 0.01),
                               Text(
                                 'الكمية : ${order.quantity}',
                                 style: const TextStyle(
@@ -81,7 +84,7 @@ class OrderCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: context.screenWidth * 0.02),
                         if (order.isRecurring &&
                             order.recurringInterval != null)
                           RecurringBadge(interval: order.recurringInterval!)
@@ -92,7 +95,7 @@ class OrderCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: context.screenWidth * 0.04),
               StatusBadge(status: order.status),
             ],
           ),

@@ -19,7 +19,7 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+
     final orders = controller.orders;
     final now = DateTime.now();
 
@@ -30,7 +30,6 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
-
       body: Column(
         children: [
           CustomBackContainer(),
@@ -41,8 +40,8 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.04,
-                vertical: size.height * 0.01,
+                horizontal: context.screenWidth * 0.04,
+                vertical: context.screenHeight * 0.01,
               ),
               child: Column(
                 children: [
@@ -57,13 +56,13 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
                       BuildRow(label: 'تاريخ الإرسال', value: formattedDate),
                     ],
                   ),
-                  SizedBox(height: size.height * 0.01),
+                  SizedBox(height: context.screenHeight * 0.01),
                   ...List.generate(orders.length, (i) {
                     final o = orders[i];
                     final qtyCtrl = controller.quantityCtrl(i);
                     final priority = o.priority;
                     return Padding(
-                      padding: EdgeInsets.only(bottom: size.height * 0.015),
+                      padding: EdgeInsets.only(bottom: context.screenHeight * 0.015),
                       child: BuildSection(
                         title: orders.length == 1
                             ? 'تفاصيل الطلب'
@@ -85,7 +84,7 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
                       ),
                     );
                   }),
-                  SizedBox(height: size.height * 0.01),
+                  SizedBox(height: context.screenHeight * 0.01),
                 ],
               ),
             ),

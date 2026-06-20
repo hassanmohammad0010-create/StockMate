@@ -12,12 +12,15 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF4F6FA),
+      backgroundColor: constBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.screenWidth * 0.02,
+                vertical: context.screenHeight * 0.01,
+              ),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -31,7 +34,10 @@ class SettingPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.screenWidth * 0.02,
+                  vertical: context.screenHeight * 0.02,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -43,7 +49,11 @@ class SettingPage extends StatelessWidget {
                         fontSize: 32,
                       ),
                     ),
-                    Divider(color: constLightGray, endIndent: 16, indent: 16),
+                    Divider(
+                      color: constLightGray,
+                      endIndent: context.screenWidth * 0.02,
+                      indent: context.screenWidth * 0.02,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -70,7 +80,11 @@ class SettingPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Divider(color: constLightGray, endIndent: 16, indent: 16),
+                    Divider(
+                      color: constLightGray,
+                      endIndent: context.screenWidth * 0.02,
+                      indent: context.screenWidth * 0.02,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -87,9 +101,7 @@ class SettingPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
+                        SizedBox(width: context.screenWidth * 0.02),
                         Flexible(
                           child: Text(
                             'hasanmohammad@gmail.com',
@@ -174,7 +186,7 @@ class SettingPage extends StatelessWidget {
               onTap: () {},
               title: 'تسجيل الخروج',
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            SizedBox(height: context.screenHeight * 0.01),
           ],
         ),
       ),

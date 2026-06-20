@@ -15,10 +15,13 @@ class PriorityBadge extends StatelessWidget {
     final isUrgent = priority == OrderPriority.urgent;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      width: MediaQuery.of(context).size.width * 0.15,
+      padding: EdgeInsets.symmetric(
+        vertical: context.screenHeight * 0.002,
+        horizontal: context.screenWidth * 0.01,
+      ),
+      width: context.screenWidth * 0.15,
       decoration: BoxDecoration(
-        color: isUrgent ? const Color(0xFFE53935) : constBlue,
+        color: isUrgent ? constRed : constBlue,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Center(
@@ -34,20 +37,3 @@ class PriorityBadge extends StatelessWidget {
     );
   }
 }
-// Container(
-//                     alignment: Alignment.center,
-//                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//                     decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(8),
-//                       color: FindColor().findBackgroundColor(word: necessity),
-//                     ),
-//                     child: Text(
-//                       necessity,
-//                       style: TextStyle(
-//                         color: FindColor().findFontColorFunction(
-//                           word: necessity,
-//                         ),
-//                         fontFamily: lateef,
-//                         fontSize: 20,
-//                       ),
-//                     ),

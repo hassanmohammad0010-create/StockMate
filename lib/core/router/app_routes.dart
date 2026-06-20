@@ -12,6 +12,7 @@ abstract class AppRoutes {
   static const DepartmentHeadsHomePage = '/DepartmentHeadsHomePage';
   static const DepartmentHeadsInventoryPage = '/DepartmentHeadsInventoryPage';
   static const DepartmentOrdersPage = '/DepartmentOrdersPage';
+  static const OrderDetailsPage = '/OrderDetailsPage';
   static const OrdinaryConfirmPage = '/OrdinaryConfirmPage';
   static const PrescriptionArchivePage = '/PrescriptionArchivePage';
   static const RecurringConfirmPage = '/RecurringConfirmPage';

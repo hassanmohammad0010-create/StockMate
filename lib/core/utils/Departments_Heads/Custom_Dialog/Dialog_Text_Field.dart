@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
-/// حقل النص الاختياري الذي يظهر داخل الـ Dialog عند الحاجة لإدخال قيمة
-/// من المستخدم (مثل سبب الرفض أو الكمية المستلمة).
 class DialogTextField extends StatelessWidget {
   const DialogTextField({
     super.key,

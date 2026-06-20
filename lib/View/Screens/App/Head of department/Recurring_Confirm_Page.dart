@@ -8,7 +8,7 @@ import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Confirm_Section.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Recurring_Bottom.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Confirm_Recurring_Bottom.dart';
 
 class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
   const RecurringConfirmPage({super.key});
@@ -19,7 +19,7 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+
     final order = controller.order.value;
     final now = DateTime.now();
 
@@ -44,8 +44,8 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.04,
-                vertical: size.height * 0.01,
+                horizontal: context.screenWidth * 0.04,
+                vertical: context.screenHeight * 0.01,
               ),
               child: Column(
                 children: [
@@ -59,7 +59,7 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
                       BuildRow(label: 'تاريخ الإرسال', value: formattedDate),
                     ],
                   ),
-                  SizedBox(height: size.height * 0.01),
+                  SizedBox(height: context.screenHeight * 0.01),
                   BuildSection(
                     title: 'تفاصيل الطلب',
                     icon: Icons.medical_services_outlined,

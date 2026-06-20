@@ -29,10 +29,7 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
   @override
   void initState() {
     super.initState();
-
-    // بدلاً من widget.initialFilter استخدم ordersController.initialFilter.value
     filterController.setFilter(ordersController.initialFilter.value);
-
     _worker = ever(ordersController.initialFilter, (filter) {
       filterController.setFilter(filter);
     });

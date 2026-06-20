@@ -9,7 +9,6 @@ import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Di
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Dialog_Text_Field.dart';
 
 
-/// محتوى الـ Dialog الكامل: أيقونة + عنوان + رسالة + حقل نص اختياري + أزرار.
 class DialogContent extends StatelessWidget {
   const DialogContent({
     super.key,
@@ -48,7 +47,6 @@ class DialogContent extends StatelessWidget {
 
   final GlobalKey<FormState> formKey;
 
-  /// منطق ضغط زر التأكيد، مشترك بين حالتي (مع/بدون إلغاء).
   void _handleConfirm() {
     if (showTextField && !(formKey.currentState?.validate() ?? false)) {
       return;
@@ -113,7 +111,6 @@ class DialogContent extends StatelessWidget {
   }
 }
 
-/// الجزء العلوي: الأيقونة + العنوان + الرسالة + حقل النص الاختياري.
 class _Header extends StatelessWidget {
   const _Header({
     required this.title,
@@ -195,7 +192,6 @@ class _Header extends StatelessWidget {
   }
 }
 
-/// صف الأزرار السفلي: تأكيد فقط، أو تأكيد + إلغاء.
 class _Actions extends StatelessWidget {
   const _Actions({
     required this.showCancel,

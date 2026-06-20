@@ -84,7 +84,7 @@ class PrescriptionCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            _isNew ? 'جديدة' : 'تمت المعالجة',
+                            _isNew ? 'جديدة' : 'مصروفة',
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
@@ -98,7 +98,7 @@ class PrescriptionCard extends StatelessWidget {
                     Row(
                       children: [
                         const Icon(
-                          Icons.medical_services_outlined,
+                          Icons.healing,
                           size: 15,
                           color: Color(0xFF6B7280),
                         ),

@@ -19,8 +19,8 @@ class DepartmentHeadsMainPage extends StatelessWidget {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
           floatingActionButton: SizedBox(
-            width: 70,
-            height: 70,
+            width: context.screenWidth * 0.18,
+            height: context.screenHeight * 0.08,
             child: FloatingActionButton(
               backgroundColor: constBlue,
               foregroundColor: Colors.white,
@@ -50,13 +50,12 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                       Get.toNamed(AppRoutes.NotificationPage);
                     },
                   ),
-                  // نقطة حمراء تدل على وجود إشعارات جديدة
                   Positioned(
-                    right: 10,
-                    top: 10,
+                    right: context.screenWidth * 0.02,
+                    top: context.screenHeight * 0.01,
                     child: Container(
-                      width: 10,
-                      height: 10,
+                      width: context.screenWidth * 0.02,
+                      height: context.screenHeight * 0.015,
                       decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
@@ -65,10 +64,10 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: context.screenWidth * 0.02),
             ],
-            elevation: 10,
-            shadowColor: Colors.black,
+            elevation: 4.0,
+            shadowColor: constColor,
             foregroundColor: Colors.white,
             surfaceTintColor: constColor,
             title: Column(

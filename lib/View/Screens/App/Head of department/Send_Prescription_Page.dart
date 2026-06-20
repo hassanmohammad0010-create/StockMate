@@ -21,9 +21,6 @@ class SendPrescriptionPage extends StatelessWidget {
         ? Get.find<SendPrescriptionController>()
         : Get.put(SendPrescriptionController(), permanent: true);
 
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: GestureDetector(
@@ -31,16 +28,16 @@ class SendPrescriptionPage extends StatelessWidget {
         child: Column(
           children: [
             CustomBackContainer(),
-            SizedBox(height: h * 0.01),
+            SizedBox(height: context.screenHeight * 0.01),
             CustomHeadContainer(title: 'إرسال وصفة طبية'),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: w * 0.02),
+                  padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
                   child: Column(
                     children: [
                       CustomPrescriptionCard(),
-                      SizedBox(height: h * 0.02),
+                      SizedBox(height: context.screenHeight * 0.02),
                     ],
                   ),
                 ),
@@ -48,13 +45,13 @@ class SendPrescriptionPage extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: w * 0.05,
-                vertical: h * 0.01,
+                horizontal: context.screenWidth * 0.05,
+                vertical: context.screenHeight * 0.01,
               ),
               child: Divider(),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: h * 0.02),
+              padding: EdgeInsets.only(bottom: context.screenHeight * 0.02),
               child: CustomMainButtom(
                 title: 'تأكيد الارسال',
                 color: constBlue,
