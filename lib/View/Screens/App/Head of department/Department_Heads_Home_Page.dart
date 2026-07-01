@@ -36,7 +36,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                       Obx(
                         () => CustomCard(
                           icon: Icon(Icons.check, size: 30, color: constGreen),
-                          iconBackgroundColor: constlightGreen,
+                          iconBackgroundColor: constLightGreen,
                           number: ordersController.completedCount
                               .toString(), // ← بدلاً من '2'
                           title: 'طلبات منجزة',

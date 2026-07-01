@@ -157,7 +157,7 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                   Row(
                     children: [
                       CustomQuantityContainer(
-                        bg: constlightGreen,
+                        bg: constLightGreen,
                         label: 'صالحة',
                         textColor: constGreen,
                         value: '${item.validQuantity}',
@@ -270,7 +270,7 @@ class DisplayMaterialInfoPage extends StatelessWidget {
 
   Widget _buildBatchRow(BuildContext context, MaterialBatch batch) {
     final (bg, textColor) = switch (batch.status) {
-      BatchStatus.valid => (constlightGreen, constGreen),
+      BatchStatus.valid => (constLightGreen, constGreen),
       BatchStatus.expiringSoon => (constLightRed, constRed),
       BatchStatus.expired => (constLightOrange, constOrange),
     };

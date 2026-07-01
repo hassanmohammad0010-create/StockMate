@@ -14,31 +14,19 @@ import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Quanti
 import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Batches_Card.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Info_Card.dart';
 
-class InventoryDetailsPage extends StatefulWidget {
+class InventoryDetailsPage extends GetView<MaterialInfoController> {
   const InventoryDetailsPage({super.key, required this.item});
+
   final MaterialItem item;
 
   @override
-  State<InventoryDetailsPage> createState() => _InventoryDetailsPageState();
-}
-
-class _InventoryDetailsPageState extends State<InventoryDetailsPage> {
-  late final MaterialInfoController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = Get.put(MaterialInfoController());
-  }
-
-  @override
-  void dispose() {
-    Get.delete<MaterialInfoController>();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // ✅ Guard احتياطي (زي ما عملنا في الصفحة السابقة)
+    // بيضمن اشتغال الصفحة حتى لو الـ Binding ما اتمررش وقت التنقل
+    if (!Get.isRegistered<MaterialInfoController>()) {
+      Get.put(MaterialInfoController());
+    }
+
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: Column(
@@ -48,8 +36,8 @@ class _InventoryDetailsPageState extends State<InventoryDetailsPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  InventoryInfoCard(item: widget.item),
-                  InventoryQuantityCard(item: widget.item),
+                  InventoryInfoCard(item: item),
+                  InventoryQuantityCard(item: item),
                   Padding(
                     padding: EdgeInsets.fromLTRB(
                       context.screenWidth * 0.02,
@@ -58,15 +46,15 @@ class _InventoryDetailsPageState extends State<InventoryDetailsPage> {
                       context.screenHeight * 0.02,
                     ),
                     child: InventoryBatchesCard(
-                      item: widget.item,
-                      controller: _controller,
+                      item: item,
+                      controller: controller,
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          _AddToCartButton(item: widget.item, controller: _controller),
+          _AddToCartButton(item: item, controller: controller),
           SizedBox(height: context.screenHeight * 0.02),
         ],
       ),

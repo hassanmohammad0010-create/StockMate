@@ -13,6 +13,5 @@ class FilterController extends GetxController {
 
   void selectFilter(String filter) => selectedFilter.value = filter;
   bool isSelected(String filter) => selectedFilter.value == filter;
-
   void updateSearch(String query) => searchQuery.value = query; 
 }

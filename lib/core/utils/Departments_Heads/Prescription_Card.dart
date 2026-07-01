@@ -22,7 +22,7 @@ class PrescriptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color accentColor = _isNew ? constRed : constGreen;
-    final Color backgroundTint = _isNew ? constLightRed : constlightGreen;
+    final Color backgroundTint = _isNew ? constLightRed : constLightGreen;
 
     return Material(
       color: Colors.transparent,

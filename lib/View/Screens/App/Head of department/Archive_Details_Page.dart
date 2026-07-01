@@ -10,7 +10,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dar
 class ArchiveDetailsPage extends StatelessWidget {
   const ArchiveDetailsPage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     final ArchiveItem item = Get.arguments as ArchiveItem;
@@ -28,12 +27,16 @@ class ArchiveDetailsPage extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.screenWidth * 0.02,
+                ),
                 child: Column(
                   children: [
                     if (item.medicines.isEmpty)
                       Padding(
-                        padding: EdgeInsets.only(top: context.screenHeight * 0.3),
+                        padding: EdgeInsets.only(
+                          top: context.screenHeight * 0.3,
+                        ),
                         child: Text(
                           'لا توجد أدوية مسجلة لهذا التاريخ',
                           style: TextStyle(color: Colors.grey),
@@ -48,7 +51,10 @@ class ArchiveDetailsPage extends StatelessWidget {
                           ),
                           width: context.screenWidth * 0.95,
                           height: context.screenHeight * 0.1,
-                          padding: EdgeInsets.all(8),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.05,
+                            vertical: context.screenHeight * 0.01,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
@@ -60,20 +66,42 @@ class ArchiveDetailsPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                med.name,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    med.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: context.screenHeight * 0.005,
+                                  ),
+                                  Text('الكمية: ${med.quantity}'),
+                                  SizedBox(
+                                    height: context.screenHeight * 0.003,
+                                  ),
+                                  Text('الشركة المصنعة: ${med.company}'),
+                                ],
+                              ),
+                              Container(
+                                width: 52,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  color: constLightBlue,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.inventory_rounded,
+                                  color: constBlue,
+                                  size: 24,
                                 ),
                               ),
-                              SizedBox(height: context.screenHeight * 0.005),
-                              Text('الكمية: ${med.quantity}'),
-                              SizedBox(height: context.screenHeight * 0.003),
-                              Text('الشركة المصنعة: ${med.company}'),
                             ],
                           ),
                         );

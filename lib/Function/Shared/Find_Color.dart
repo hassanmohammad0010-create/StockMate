@@ -18,7 +18,7 @@ class FindColor {
 
   findBackgroundColor({required String word}) {
     if (word == 'تم الانجاز') {
-      return constlightGreen;
+      return constLightGreen;
     } else if (word == 'قيد التنفيذ') {
       return constLightBlue;
     } else if (word == 'بأنتظار موافقتك') {
@@ -52,7 +52,7 @@ class FindColor {
 
   findBackgroundStausColor({required OrderStatus orderStatus}) {
     if (orderStatus == OrderStatus.completed) {
-      return constlightGreen;
+      return constLightGreen;
     } else if (orderStatus == OrderStatus.inProgress) {
       return constLightBlue;
     } else if (orderStatus == OrderStatus.suspended) {

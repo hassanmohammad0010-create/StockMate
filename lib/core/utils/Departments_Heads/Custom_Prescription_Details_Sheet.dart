@@ -211,7 +211,7 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
-                    color: constlightGreen,
+                    color: constLightGreen,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: const Center(

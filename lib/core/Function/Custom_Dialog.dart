@@ -64,7 +64,7 @@ void showConfirmDialog({
                       ),
                       child: const Text(
                         'تأكيد',
-                        style: TextStyle(fontSize: 16, color: constlightGreen),
+                        style: TextStyle(fontSize: 16, color: constLightGreen),
                       ),
                     ),
                   ),

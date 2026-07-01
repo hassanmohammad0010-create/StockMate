@@ -104,7 +104,7 @@ void showDialogWithTextFailed({
                       ),
                       child: const Text(
                         'تراجع',
-                        style: TextStyle(fontSize: 16, color: constlightGreen),
+                        style: TextStyle(fontSize: 16, color: constLightGreen),
                       ),
                     ),
                   ),

@@ -25,16 +25,15 @@ class OrderDetailsPage extends StatelessWidget {
     CustomDialog.show(
       type: DialogType.info,
       title: 'تأكيد الاستلام',
-      message: 'هل أنت متأكد من تأكيد استلام هذا الطلب؟',
+      message:
+          'الكمية المطلوبة: ${order.quantity}\nالرجاء إدخال الكمية المستلمة.',
       showTextField: true,
-      textFieldHint: 'ادخل الكمية المستلمة (اتركه فارغاً لاستلام الكل)',
+      textFieldHint: 'ادخل الكمية المستلمة (${order.quantity})',
       textFieldIcon: Icons.inventory_2_outlined,
       textFieldKeyboard: TextInputType.number,
       textFieldController: textController,
       textFieldValidator: (value) {
-        // فارغ => يعني استلام الكمية كاملة، هذا مقبول
         if (value == null || value.trim().isEmpty) return null;
-
         final parsed = int.tryParse(value.trim());
         if (parsed == null) {
           return 'الرجاء إدخال رقم صحيح';
@@ -50,7 +49,6 @@ class OrderDetailsPage extends StatelessWidget {
       onConfirm: () {
         final text = textController.text.trim();
         final receivedQty = text.isEmpty ? null : int.tryParse(text);
-
         final success = controller.confirmReceive(
           order.id!,
           receivedQty: receivedQty,
@@ -97,79 +95,97 @@ class OrderDetailsPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                   horizontal: context.screenWidth * 0.03,
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(height: context.screenHeight * 0.02),
-                    CustomDetailsCard(order: order),
-                    SizedBox(height: context.screenHeight * 0.02),
-                    order.status == OrderStatus.rejected
-                        ? order.rejectionReason == ''
-                              ? SizedBox(height: context.screenHeight * 0.12)
-                              : RejectionBanner(reason: order.rejectionReason)
-                        : const SizedBox(),
-                    order.isRecurring &&
-                                order.status == OrderStatus.completed ||
-                            order.isRecurring == false &&
-                                order.status == OrderStatus.completed
-                        ? SizedBox(height: context.screenHeight * 0.12)
-                        : order.status == OrderStatus.rejected
-                        ? SizedBox(height: context.screenHeight * 0.06)
-                        : SizedBox(height: context.screenHeight * 0.18),
-                    order.isRecurring && order.status == OrderStatus.completed
-                        ? CustomMainButtom(
-                            title: 'حذف الطلب',
-                            color: constRed,
-                            fontcolor: Colors.white,
-                            onPressed: () => CustomDialog.show(
-                              type: DialogType.danger,
-                              title: 'حذف الطلب',
-                              message: 'هل أنت متأكد من حذف هذا الطلب؟',
-                            ),
-                          )
-                        : order.isRecurring == false &&
-                              order.status == OrderStatus.completed
-                        ? Obx(() {
-                            final liveOrder =
-                                controller.getOrderById(order.id!) ?? order;
+                child: Obx(() {
+                  // نعتمد دائماً على النسخة الحية من الطلب حتى تنعكس
+                  // أي تغييرات (مثل تأكيد الاستلام) فوراً على الصفحة
+                  final liveOrder = controller.getOrderById(order.id!) ?? order;
 
-                            if (liveOrder.receivedConfirmed) {
-                              final confirmedQty =
-                                  liveOrder.receivedQuantity ??
-                                  liveOrder.quantity;
-                              return CustomMainButtom(
-                                title: 'تم تأكيد استلام $confirmedQty وحدة',
-                                color: constlightGreen,
-                                fontcolor: constGreen,
-                                onPressed: () {},
-                              );
-                            }
-                            return CustomMainButtom(
-                              title: 'تأكيد الاستلام',
-                              color: constGreen,
-                              fontcolor: Colors.white,
-                              onPressed: () =>
-                                  _showConfirmReceiveDialog(controller),
-                            );
-                          })
-                        : const SizedBox(),
-                    SizedBox(height: context.screenHeight * 0.01),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.screenWidth * 0.02,
+                  final showRecurringDeleteButton =
+                      liveOrder.isRecurring &&
+                      liveOrder.status == OrderStatus.completed;
+
+                  final showReceivedButton =
+                      !liveOrder.isRecurring &&
+                      liveOrder.status == OrderStatus.reserved;
+
+                  final showConfirmReceiveButton =
+                      !liveOrder.isRecurring &&
+                      liveOrder.status == OrderStatus.completed;
+
+                  final double spacerHeight =
+                      (showRecurringDeleteButton ||
+                          showReceivedButton ||
+                          showConfirmReceiveButton)
+                      ? context.screenHeight * 0.12
+                      : liveOrder.status == OrderStatus.rejected
+                      ? context.screenHeight * 0.06
+                      : context.screenHeight * 0.18;
+
+                  Widget actionButton;
+                  if (showRecurringDeleteButton) {
+                    actionButton = CustomMainButtom(
+                      title: 'حذف الطلب',
+                      color: constRed,
+                      fontcolor: Colors.white,
+                      onPressed: () => CustomDialog.show(
+                        type: DialogType.danger,
+                        title: 'حذف الطلب',
+                        message: 'هل أنت متأكد من حذف هذا الطلب؟',
                       ),
-                      child: Divider(),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.01),
-                    CustomMainButtom(
-                      title: 'ارسال طلب جديد',
-                      color: constLightBlue,
-                      fontcolor: constBlue,
-                      onPressed: () {
-                        Get.toNamed(AppRoutes.DepartmentHeadsAddNewOrderPage);
-                      },
-                    ),
-                  ],
-                ),
+                    );
+                  } else if (showReceivedButton) {
+                    final confirmedQty =
+                        liveOrder.receivedQuantity ?? liveOrder.quantity;
+                    actionButton = CustomMainButtom(
+                      title: 'تم تأكيد استلام $confirmedQty وحدة',
+                      color: constLightGreen,
+                      fontcolor: constGreen,
+                      onPressed: () {},
+                    );
+                  } else if (showConfirmReceiveButton) {
+                    actionButton = CustomMainButtom(
+                      title: 'تأكيد الاستلام',
+                      color: constGreen,
+                      fontcolor: Colors.white,
+                      onPressed: () => _showConfirmReceiveDialog(controller),
+                    );
+                  } else {
+                    actionButton = const SizedBox();
+                  }
+
+                  return Column(
+                    children: [
+                      SizedBox(height: context.screenHeight * 0.02),
+                      CustomDetailsCard(order: liveOrder),
+                      SizedBox(height: context.screenHeight * 0.02),
+                      liveOrder.status == OrderStatus.rejected
+                          ? liveOrder.rejectionReason == ''
+                                ? SizedBox(height: context.screenHeight * 0.12)
+                                : RejectionBanner(
+                                    reason: liveOrder.rejectionReason,
+                                  )
+                          : const SizedBox(),
+                      SizedBox(height: spacerHeight),
+                      actionButton,
+                      SizedBox(height: context.screenHeight * 0.01),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.02,
+                        ),
+                        child: Divider(),
+                      ),
+                      SizedBox(height: context.screenHeight * 0.01),
+                      CustomMainButtom(
+                        title: 'ارسال طلب جديد',
+                        color: constLightBlue,
+                        fontcolor: constBlue,
+                        onPressed: () {
+                          Get.toNamed(AppRoutes.DepartmentHeadsAddNewOrderPage);
+                        },
+                      ),
+                    ],
+                  );
+                }),
               ),
             ),
           ],

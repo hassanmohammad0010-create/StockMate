@@ -15,14 +15,14 @@ class BatchRowItem extends StatelessWidget {
   final MaterialItem material;
 
   static String _fmt(int n) => n.toString().replaceAllMapped(
-        RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-        (m) => '${m[1]},',
-      );
+    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+    (m) => '${m[1]},',
+  );
 
   @override
   Widget build(BuildContext context) {
     final (bg, textColor) = switch (batch.status) {
-      BatchStatus.valid => (constlightGreen, constGreen),
+      BatchStatus.valid => (constLightGreen, constGreen),
       BatchStatus.expiringSoon => (constLightRed, constRed),
       BatchStatus.expired => (constLightOrange, constOrange),
     };

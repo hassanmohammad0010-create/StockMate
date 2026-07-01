@@ -17,9 +17,14 @@ class StatusBadge extends StatelessWidget {
     late Color textColor;
 
     switch (status) {
+      case OrderStatus.reserved:
+        label = 'مستلم';
+        bgColor = constLightGreen;
+        textColor = constGreen;
+        break;
       case OrderStatus.completed:
         label = 'تم الإنجاز';
-        bgColor = constlightGreen;
+        bgColor = constLightGreen;
         textColor = constGreen;
         break;
       case OrderStatus.rejected:

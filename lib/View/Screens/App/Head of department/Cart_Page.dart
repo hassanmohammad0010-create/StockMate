@@ -8,7 +8,7 @@ import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Cart_Container.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Cart_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 
@@ -17,7 +17,6 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- 
     final cartController = CartController.to;
 
     return Scaffold(
@@ -39,7 +38,9 @@ class CartPage extends StatelessWidget {
               }
               return SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.screenWidth * 0.02,
+                  ),
                   child: Column(
                     children: [
                       SizedBox(height: context.screenHeight * 0.01),
@@ -64,7 +65,10 @@ class CartPage extends StatelessWidget {
             }),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.05, vertical: context.screenHeight * 0.01),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.screenWidth * 0.05,
+              vertical: context.screenHeight * 0.01,
+            ),
             child: Divider(),
           ),
           Padding(
@@ -73,25 +77,27 @@ class CartPage extends StatelessWidget {
               final isEmpty = cartController.cartItems.isEmpty;
               return CustomMainButtom(
                 title: 'تأكيد السلة اليومية',
-                color: isEmpty ? Colors.grey : constBlue, // تعطيل بصري إن كانت فارغة
-                fontcolor: Colors.white,
+                color: isEmpty ? constLightBlue : constBlue,
+                fontcolor: isEmpty ? constBlue : Colors.white,
                 onPressed: isEmpty
                     ? null
                     : () {
                         CustomDialog.show(
                           type: DialogType.warning,
                           title: 'تأكيد السلة',
-                          message:
-                              'هل أنت متأكد من تأكيد السلة اليومية وإرسالها إلى الأرشيف؟',
+                          message: 'هل أنت متأكد من تأكيد السلة اليومية؟',
                           confirmText: 'تأكيد',
                           onConfirm: () {
                             Get.back();
-                            ArchiveController.to.confirmCart(); // ← العملية الأساسية
-                            CustomDialog.show(
-                              type: DialogType.success,
-                              title: 'تم التأكيد',
-                              message: 'تمت إضافة السلة إلى الأرشيف بنجاح.',
-                              showCancel: false,
+                            ArchiveController.to.confirmCart();
+                            Get.snackbar(
+                              'تم التأكيد',
+                              'تم تأكيد السلة اليومية بنجاح.',
+                              snackPosition: SnackPosition.TOP,
+                              backgroundColor: constGreen,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(16),
+                              borderRadius: 12,
                             );
                           },
                         );

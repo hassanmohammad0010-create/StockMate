@@ -44,8 +44,9 @@ class PrescriptionController extends GetxController {
     try {
       final List<dynamic> decoded = jsonDecode(rawData) as List<dynamic>;
       final List<PrescriptionModel> loaded = decoded
-          .map((item) =>
-              PrescriptionModel.fromJson(item as Map<String, dynamic>))
+          .map(
+            (item) => PrescriptionModel.fromJson(item as Map<String, dynamic>),
+          )
           .toList();
       _allPrescriptions.assignAll(loaded);
     } catch (_) {
@@ -125,6 +126,25 @@ class PrescriptionController extends GetxController {
         notes: 'لا تتجاوز جرعتين خلال 24 ساعة',
         date: DateTime(2025, 1, 22),
         status: PrescriptionStatus.processed,
+      ),
+      PrescriptionModel(
+        id: '7',
+        patientName: 'محمود احمد',
+        doctorName: 'د. محمد علي',
+        condition: 'صداع نصفي مزمن',
+        medications: 'Sumatriptan 50mg - عند بدء النوبة',
+        date: DateTime(2025, 1, 22),
+        status: PrescriptionStatus.newRx,
+      ),
+      PrescriptionModel(
+        id: '8',
+        patientName: 'حمزة احمد',
+        doctorName: 'د. مجد الشيخ',
+        condition: 'صداع نصفي مزمن',
+        medications: 'Sumatriptan 50mg - عند بدء النوبة',
+        notes: 'لا تتجاوز جرعتين خلال 24 ساعة',
+        date: DateTime(2025, 1, 22),
+        status: PrescriptionStatus.newRx,
       ),
     ]);
   }

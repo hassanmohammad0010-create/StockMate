@@ -1,9 +1,11 @@
 // ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
+import 'package:stock_mate_project/Routes/Bindings/App/Inventory_Details_Binding.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
@@ -11,35 +13,26 @@ import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Search_Field.dart';
 
-class DepartmentHeadsInventoryPage extends StatefulWidget {
+class DepartmentHeadsInventoryPage extends StatelessWidget {
   const DepartmentHeadsInventoryPage({super.key});
 
-  @override
-  State<DepartmentHeadsInventoryPage> createState() =>
-      _DepartmentHeadsInventoryPageState();
-}
+  static const String _filterTag = AppRoutes.DepartmentHeadsInventoryPage;
 
-class _DepartmentHeadsInventoryPageState
-    extends State<DepartmentHeadsInventoryPage> {
-  final FilterController filterController = Get.put(
-    FilterController(),
-    tag: AppRoutes.DepartmentHeadsInventoryPage,
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    filterController.initFilters(['الكل', 'ثابتة', 'مستهلكة', 'ادوية']);
-  }
-
-  @override
-  void dispose() {
-    Get.delete<FilterController>(tag: AppRoutes.DepartmentHeadsInventoryPage);
-    super.dispose();
+  FilterController get _filterController {
+    if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
+      Get.put(
+        FilterController()
+          ..initFilters(['الكل', 'ثابتة', 'مستهلكة', 'ادوية']),
+        tag: _filterTag,
+      );
+    }
+    return Get.find<FilterController>(tag: _filterTag);
   }
 
   @override
   Widget build(BuildContext context) {
+    final FilterController filterController = _filterController;
+
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: Column(
@@ -48,7 +41,7 @@ class _DepartmentHeadsInventoryPageState
           Align(
             alignment: AlignmentGeometry.centerRight,
             child: CustomFilterBar(
-              tag: AppRoutes.DepartmentHeadsInventoryPage,
+              tag: _filterTag,
               filters: const ['الكل', 'ثابتة', 'مستهلكة', 'ادوية'],
             ),
           ),
@@ -106,6 +99,7 @@ class _DepartmentHeadsInventoryPageState
                               () => InventoryDetailsPage(
                                 item: material[index],
                               ),
+                              binding: InventoryDetailsBinding(),
                             );
                           },
                           materialItem: material[index],

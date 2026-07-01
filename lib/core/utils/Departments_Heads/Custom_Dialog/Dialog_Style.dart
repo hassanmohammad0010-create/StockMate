@@ -23,7 +23,7 @@ class DialogStyle {
         return const DialogStyle(
           icon: Icons.check_circle_outline_rounded,
           iconColor: constGreen,
-          iconBackground: constlightGreen,
+          iconBackground: constLightGreen,
           confirmColor: constGreen,
         );
       case DialogType.warning:

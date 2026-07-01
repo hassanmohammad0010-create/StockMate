@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -29,6 +31,8 @@ class OrdersController extends GetxController {
       orders.where((o) => o.status == OrderStatus.inProgress).length;
   int get suspendedCount =>
       orders.where((o) => o.status == OrderStatus.suspended).length;
+  int get receivedCount =>
+      orders.where((o) => o.status == OrderStatus.reserved).length;
 
   /// يرجع الطلب الحالي (المحدث reactively) بالاعتماد على الـ id
   /// استخدمها داخل Obx لمتابعة أي تغيير يطرأ على الطلب (مثل تأكيد الاستلام)
@@ -40,6 +44,7 @@ class OrdersController extends GetxController {
 
   /// تأكيد استلام طلب (لمرة واحدة فقط).
   /// [receivedQty] الكمية الفعلية المستلمة (null أو 0 تعني استلام الكمية كاملة).
+  /// عند النجاح تنتقل حالة الطلب من completed إلى reserved.
   /// يرجع true لو نجحت العملية، false لو الطلب غير موجود أو مؤكد مسبقاً
   /// أو الكمية المدخلة أكبر من الكمية المطلوبة.
   bool confirmReceive(String orderId, {int? receivedQty}) {
@@ -58,6 +63,7 @@ class OrdersController extends GetxController {
     if (finalQty > current.quantity) return false;
 
     orders[index] = current.copyWith(
+      status: OrderStatus.reserved, // الانتقال من completed إلى reserved
       receivedConfirmed: true,
       receivedQuantity: finalQty,
     );
@@ -99,6 +105,7 @@ class OrdersController extends GetxController {
         if (decoded.containsKey(order.id)) {
           final qty = decoded[order.id] as int;
           orders[i] = order.copyWith(
+            status: OrderStatus.reserved, // الحالة أصبحت reserved أيضاً هنا
             receivedConfirmed: true,
             receivedQuantity: qty,
           );

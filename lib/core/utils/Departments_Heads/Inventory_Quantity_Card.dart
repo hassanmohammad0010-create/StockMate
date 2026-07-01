@@ -25,7 +25,9 @@ class InventoryQuantityCard extends StatelessWidget {
         children: [
           // ── شريط التقدم ──────────────────────────────────────
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.03),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.screenWidth * 0.03,
+            ),
             child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: context.screenWidth * 0.035,
@@ -93,7 +95,7 @@ class InventoryQuantityCard extends StatelessWidget {
           Row(
             children: [
               CustomQuantityContainer(
-                bg: constlightGreen,
+                bg: constLightGreen,
                 label: 'صالحة',
                 textColor: constGreen,
                 value: '${item.validQuantity}',

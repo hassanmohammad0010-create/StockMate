@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:stock_mate_project/Routes/Bindings/App/Cart_Binding.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
-import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/Service/Auth/Create_Employee_Service.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 SharedPreferences? shareprefs;
 
@@ -17,6 +17,9 @@ void main() async {
   tokenSharedPreferences = await SharedPreferences.getInstance();
   identitySharedPreferences = await SharedPreferences.getInstance();
   shareprefs = await SharedPreferences.getInstance();
+
+  await shareprefs?.clear();
+
   runApp(const StockMate());
 }
 
@@ -29,9 +32,8 @@ class StockMate extends StatelessWidget {
       title: 'Stock Mate',
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
-
       getPages: AppPages.routes,
-      initialRoute: AppRoutes.DepartmentHeadsMainPage,
+      initialRoute: AppRoutes.DepartmentHeadsMainPage, //AppRoutes.LoginPage,
       initialBinding: AppBinding(),
     );
   }
@@ -40,6 +42,7 @@ class StockMate extends StatelessWidget {
 class HasanServiceTester extends StatelessWidget {
   const HasanServiceTester({super.key});
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -48,6 +51,7 @@ class HasanServiceTester extends StatelessWidget {
           Center(
             child: FloatingActionButton(
               onPressed: () async {
+                // ignore: avoid_print
                 print('1');
                 await CreateEmployeeService().createEmployeeService(
                   email: 'email',

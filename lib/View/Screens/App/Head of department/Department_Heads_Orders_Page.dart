@@ -4,73 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentOrdersFilterController%20.dart';
-import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
-import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Filter.dart';
 
-class DepartmentOrdersPage extends StatefulWidget {
+class DepartmentOrdersPage extends GetView<DepartmentOrdersFilterController> {
   const DepartmentOrdersPage({super.key, this.initialFilter = 'الكل'});
 
   final String initialFilter;
 
   @override
-  State<DepartmentOrdersPage> createState() => _DepartmentOrdersPageState();
-}
-
-class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
-  final OrdersController ordersController = Get.find();
-  final DepartmentOrdersFilterController filterController = Get.put(
-    DepartmentOrdersFilterController(),
-  );
-  late Worker _worker;
-
-  @override
-  void initState() {
-    super.initState();
-    filterController.setFilter(ordersController.initialFilter.value);
-    _worker = ever(ordersController.initialFilter, (filter) {
-      filterController.setFilter(filter);
-    });
-  }
-
-  @override
-  void dispose() {
-    _worker.dispose();
-    ordersController.initialFilter.value = 'الكل';
-    super.dispose();
-  }
-
-  List<Order> _getFilteredOrders(String selectedFilter) {
-    switch (selectedFilter) {
-      case 'الكل':
-        return allOrders;
-      case 'الطلبات الدورية':
-        return allOrders.where((o) => o.isRecurring).toList();
-      case 'معلق':
-        return allOrders
-            .where((o) => o.status == OrderStatus.suspended)
-            .toList();
-      case 'قيد التنفيذ':
-        return allOrders
-            .where((o) => o.status == OrderStatus.inProgress)
-            .toList();
-      case 'منجز':
-        return allOrders
-            .where((o) => o.status == OrderStatus.completed)
-            .toList();
-      case 'مرفوض':
-        return allOrders
-            .where((o) => o.status == OrderStatus.rejected)
-            .toList();
-      default:
-        return allOrders;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+
+  if (!Get.isRegistered<DepartmentOrdersFilterController>()) {
+    Get.put(DepartmentOrdersFilterController());
+  }
+
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: Column(
@@ -78,9 +27,7 @@ class _DepartmentOrdersPageState extends State<DepartmentOrdersPage> {
           const DepartmentOrdersFilterBar(),
           Expanded(
             child: Obx(() {
-              final filteredOrders = _getFilteredOrders(
-                filterController.selectedFilter.value,
-              );
+              final filteredOrders = controller.filteredOrders;
 
               return filteredOrders.isEmpty
                   ? _buildEmptyState()

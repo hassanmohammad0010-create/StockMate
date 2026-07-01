@@ -33,7 +33,9 @@ class SendPrescriptionPage extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.screenWidth * 0.02,
+                  ),
                   child: Column(
                     children: [
                       CustomPrescriptionCard(),
@@ -64,6 +66,7 @@ class SendPrescriptionPage extends StatelessWidget {
                       type: DialogType.success,
                       title: 'تم الإرسال',
                       message: 'تم إرسال الوصفة بنجاح',
+                      showCancel: false,
                     );
                     controller.clearFields();
                     FocusScope.of(context).unfocus();
