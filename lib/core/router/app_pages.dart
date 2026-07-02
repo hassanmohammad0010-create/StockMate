@@ -9,6 +9,7 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Requ
 import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Purchasing_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Request_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Main_Page_Heap_of_Purchasing.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Ordinary_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Details_Page.dart';
@@ -35,6 +36,7 @@ import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/main.dart';
 
 abstract class AppPages {
   static final routes = [
@@ -55,10 +57,7 @@ abstract class AppPages {
       page: () => const ArchiveDetailsPage(),
     ),
     GetPage(name: AppRoutes.ArchivePage, page: () => const ArchivePage()),
-    GetPage(
-      name: AppRoutes.CartArchivePage,
-      page: () =>  CartArchivePage(),
-    ),
+    GetPage(name: AppRoutes.CartArchivePage, page: () => CartArchivePage()),
     GetPage(name: AppRoutes.CartPage, page: () => const CartPage()),
     GetPage(
       name: AppRoutes.DepartmentHeadsAddNewOrderPage,
@@ -93,10 +92,7 @@ abstract class AppPages {
       name: AppRoutes.SendPrescriptionPage,
       page: () => const SendPrescriptionPage(),
     ),
-    GetPage(
-      name: AppRoutes.PrescriptionsPage,
-      page: () =>  PrescriptionsPage(),
-    ),
+    GetPage(name: AppRoutes.PrescriptionsPage, page: () => PrescriptionsPage()),
     GetPage(
       name: AppRoutes.NewPrescriptionPage,
       page: () => const NewPrescriptionPage(),
@@ -148,6 +144,14 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.DisplayPurchasingOrderPage,
       page: () => const DisplayPurchasingOrderPage(),
+    ),
+    GetPage(
+      name: AppRoutes.HasanServiceTester,
+      page: () => const HasanServiceTester(),
+    ),
+    GetPage(
+      name: AppRoutes.MainPageHeadOfPurchasingPage,
+      page: () => const MainPageHeadOfPurchasingPage(),
     ),
   ];
 }

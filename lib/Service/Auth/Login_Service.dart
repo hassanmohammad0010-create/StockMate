@@ -16,7 +16,6 @@ class LoginService {
       body: {'email': email, 'password': password},
       headers: {'Accept': 'application/json'},
     );
-    print('response reached');
     Map<String, dynamic> data = jsonDecode(response.body);
     if (response.statusCode == 200) {
       customSnackBar(
@@ -25,7 +24,7 @@ class LoginService {
         title: 'Welcome back',
         message: 'We are happy you are back',
       );
-      print(data['token']);
+
       tokenSharedPreferences!.setString('Token', data['token']);
       return data['user']['name'];
     } else {

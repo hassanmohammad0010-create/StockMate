@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
+import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class SettingPage extends StatelessWidget {
@@ -151,29 +152,18 @@ class SettingPage extends StatelessWidget {
               title: 'تواصل معنا',
             ),
 
-            // CustomListTile(
-            //   backgroundColor: constLightBlue,
-            //   description: 'تقديم ابلاغ',
-            //   icon: Icons.report,
-            //   iconColor: constBlue,
-            //   onTap: () {},
-            //   title: 'ابلاغ',
-            // ),
-
-            // CustomListTile(
-            //   backgroundColor: constLightBlue,
-            //   description: 'تقديم اقتراح',
-            //   icon: Icons.headphones,
-            //   iconColor: constBlue,
-            //   onTap: () {},
-            //   title: 'اقتراح',
-            // ),
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'طلب حذف الحساب الشخصي',
               icon: Icons.delete,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                showConfirmDialog(
+                  onConfirm: () {},
+                  tital: 'هل انت متأكد',
+                  sub: 'انت على وشك حذف حسابك',
+                );
+              },
               title: 'حذف الحساب',
             ),
 
@@ -182,7 +172,13 @@ class SettingPage extends StatelessWidget {
               description: 'طلب تسجيل خروج من التطبيق',
               icon: Icons.logout,
               iconColor: constBlue,
-              onTap: () {},
+              onTap: () {
+                showConfirmDialog(
+                  onConfirm: () {},
+                  tital: 'هل انت متأكد',
+                  sub: 'انت على وشك تسجيل الخروج من حسابك ',
+                );
+              },
               title: 'تسجيل الخروج',
             ),
             SizedBox(height: context.screenHeight * 0.01),

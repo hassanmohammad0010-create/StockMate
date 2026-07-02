@@ -1,28 +1,111 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
 
 class GetConsumableItemsService {
   Future<List<MaterialItem>> getConsumableItemsService() async {
-    http.Response response = await http.get(
-      Uri.parse(
-        'https://grud-2y91.onrender.com/api/warehouse/products/consumable',
-      ),
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': '13|MQbA7ZwgTfKbxWxQ9MyR2B4UjNiIMSanRDzLBak362697e89',
-      },
+    final Uri url = Uri.parse(
+      'https://grud-2y91.onrender.com/api/warehouse/products/consumable',
     );
+    //TODO
+    try {
+      final response = await http
+          .get(
+            url,
+            headers: {
+              'Accept': 'application/json',
+              'Authorization':
+                  'Bearer 1|SfcbNRti68N8PRTHP9VhxoTuFN5KgebevoCTRUVj28a9a130',
+            },
+          )
+          .timeout(const Duration(seconds: 15));
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonBody = jsonDecode(response.body);
-      final List<dynamic> data = jsonBody['data'];
+      if (response.statusCode == 200) {
+        return _parseResponse(response.body);
+      }
 
-      return data
-          .map((item) => MaterialItem.fromJson(item as Map<String, dynamic>))
-          .toList();
+      _showErrorByStatusCode(response.statusCode);
+      return [];
+    } on SocketException {
+      customSnackBar(
+        title: 'حدث خطأ',
+        message: 'لا يوجد اتصال بالإنترنت، تحقق من الشبكة',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+      return [];
+    } on TimeoutException {
+      customSnackBar(
+        title: 'انتهت المهلة',
+        message: 'الخادم لا يستجيب، حاول لاحقاً',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+      return [];
+    } on FormatException {
+      customSnackBar(
+        title: 'حدث خطأ',
+        message: 'حدث خطأ أثناء معالجة البيانات المستلمة',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+      return [];
+    } catch (e) {
+      debugPrint('getConsumableItemsService error: $e');
+      customSnackBar(
+        title: 'حدث خطأ',
+        message: 'الرجاء المحاولة لاحقاً',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+      return [];
+    }
+  }
+
+  List<MaterialItem> _parseResponse(String body) {
+    final dynamic jsonBody = jsonDecode(body);
+
+    if (jsonBody is! Map<String, dynamic> || jsonBody['data'] is! List) {
+      return [];
+    }
+
+    final List<dynamic> data = jsonBody['data'];
+    final List<MaterialItem> items = [];
+
+    for (final item in data) {
+      try {
+        if (item is Map<String, dynamic>) {
+          items.add(MaterialItem.fromJson(item));
+        }
+      } catch (_) {
+        continue; // تجاهل العنصر التالف بدل ما توقف كل القائمة
+      }
+    }
+
+    return items;
+  }
+
+  void _showErrorByStatusCode(int statusCode) {
+    if (statusCode == 401 || statusCode == 403) {
+      customSnackBar(
+        title: 'انتهت الجلسة',
+        message: 'الرجاء تسجيل الدخول من جديد',
+        color: constRed,
+        messageColor: constLightRed,
+      );
     } else {
-      throw Exception('فشل تحميل البيانات: ${response.statusCode}');
+      customSnackBar(
+        title: 'حدث خطأ',
+        message: 'فشل تحميل البيانات، حاول لاحقاً',
+        color: constRed,
+        messageColor: constLightRed,
+      );
     }
   }
 }

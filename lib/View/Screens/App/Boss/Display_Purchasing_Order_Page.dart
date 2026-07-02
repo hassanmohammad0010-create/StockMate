@@ -16,7 +16,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
         elevation: 8,
         shape: const CircleBorder(),
         onPressed: () {
-          showConfirmDialog(onConfirm: () {});
+          showConfirmDialog(onConfirm: () {}, sub: '', tital: '');
         },
         child: Icon(Icons.check, color: Colors.white),
       ),

@@ -6,22 +6,21 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
-import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/core/models/Request_Model.dart';
 
-class GetFixedItemsService {
-  Future<List<MaterialItem>> getFixedItemsService() async {
+class RequestService {
+  Future<List<RequestModel>> getAllDepartmentRequests() async {
     final Uri url = Uri.parse(
-      'https://grud-2y91.onrender.com/api/warehouse/products/fixed',
+      'https://grud-2y91.onrender.com/api/get/department-requests',
     );
-    //TODO
+
     try {
       final response = await http
           .get(
             url,
             headers: {
+              'Content-Type': 'application/json',
               'Accept': 'application/json',
-              'Authorization':
-                  'Bearer 1|SfcbNRti68N8PRTHP9VhxoTuFN5KgebevoCTRUVj28a9a130',
             },
           )
           .timeout(const Duration(seconds: 15));
@@ -57,7 +56,7 @@ class GetFixedItemsService {
       );
       return [];
     } catch (e) {
-      debugPrint('getFixedItemsService error: $e');
+      debugPrint('getAllDepartmentRequests error: $e');
       customSnackBar(
         title: 'حدث خطأ',
         message: 'الرجاء المحاولة لاحقاً',
@@ -68,27 +67,27 @@ class GetFixedItemsService {
     }
   }
 
-  List<MaterialItem> _parseResponse(String body) {
-    final dynamic jsonBody = jsonDecode(body);
+  List<RequestModel> _parseResponse(String body) {
+    final dynamic jsonData = jsonDecode(body);
 
-    if (jsonBody is! Map<String, dynamic> || jsonBody['data'] is! List) {
+    if (jsonData is! Map<String, dynamic> || jsonData['data'] is! List) {
       return [];
     }
 
-    final List<dynamic> data = jsonBody['data'];
-    final List<MaterialItem> items = [];
+    final List<dynamic> data = jsonData['data'];
+    final List<RequestModel> requests = [];
 
     for (final item in data) {
       try {
         if (item is Map<String, dynamic>) {
-          items.add(MaterialItem.fromJson(item));
+          requests.add(RequestModel.fromJson(item));
         }
       } catch (_) {
-        continue;
+        continue; // تجاهل العنصر التالف بدل ما توقف كل القائمة
       }
     }
 
-    return items;
+    return requests;
   }
 
   void _showErrorByStatusCode(int statusCode) {
@@ -102,7 +101,7 @@ class GetFixedItemsService {
     } else {
       customSnackBar(
         title: 'حدث خطأ',
-        message: 'فشل تحميل البيانات، حاول لاحقاً',
+        message: 'فشل تحميل الطلبات، حاول لاحقاً',
         color: constRed,
         messageColor: constLightRed,
       );
