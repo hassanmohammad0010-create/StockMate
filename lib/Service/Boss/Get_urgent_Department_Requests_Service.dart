@@ -2,26 +2,23 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
-import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/core/models/Request_Model.dart';
 
-class GetFixedItemsService {
-  Future<List<MaterialItem>> getFixedItemsService() async {
-    final Uri url = Uri.parse(
-      'https://grud-2y91.onrender.com/api/warehouse/products/fixed',
-    );
-    //TODO
+class GetUrgentDepartmentRequestsService {
+  Future<List<RequestModel>> getUrgentDepartmentRequestsService() async {
     try {
-      final response = await http
+      final http.Response response = await http
           .get(
-            url,
+            Uri.parse(
+              'https://grud-2y91.onrender.com/api/request-orders/pending/urgent',
+            ), //TODO
             headers: {
               'Accept': 'application/json',
               'Authorization':
-                  'Bearer 1|SfcbNRti68N8PRTHP9VhxoTuFN5KgebevoCTRUVj28a9a130',
+                  'Bearer 23|RkmrnP7Yu8yUd9iDbJ2uboTmRU4ZoOj28XHRWGKI8dd678c7',
             },
           )
           .timeout(const Duration(seconds: 15));
@@ -34,8 +31,8 @@ class GetFixedItemsService {
       return [];
     } on SocketException {
       customSnackBar(
-        title: 'حدث خطأ',
-        message: 'لا يوجد اتصال بالإنترنت، تحقق من الشبكة',
+        title: 'لا يوجد اتصال',
+        message: 'تأكد من اتصالك بالانترنت وحاول مرة أخرى',
         color: constRed,
         messageColor: constLightRed,
       );
@@ -50,14 +47,13 @@ class GetFixedItemsService {
       return [];
     } on FormatException {
       customSnackBar(
-        title: 'حدث خطأ',
-        message: 'حدث خطأ أثناء معالجة البيانات المستلمة',
+        title: 'خطأ في البيانات',
+        message: 'حدث خطأ غير متوقع في استجابة الخادم',
         color: constRed,
         messageColor: constLightRed,
       );
       return [];
     } catch (e) {
-      debugPrint('getFixedItemsService error: $e');
       customSnackBar(
         title: 'حدث خطأ',
         message: 'الرجاء المحاولة لاحقاً',
@@ -68,7 +64,7 @@ class GetFixedItemsService {
     }
   }
 
-  List<MaterialItem> _parseResponse(String body) {
+  List<RequestModel> _parseResponse(String body) {
     final dynamic jsonBody = jsonDecode(body);
 
     if (jsonBody is! Map<String, dynamic> || jsonBody['data'] is! List) {
@@ -76,19 +72,20 @@ class GetFixedItemsService {
     }
 
     final List<dynamic> data = jsonBody['data'];
-    final List<MaterialItem> items = [];
+    final List<RequestModel> requests = [];
 
     for (final item in data) {
       try {
         if (item is Map<String, dynamic>) {
-          items.add(MaterialItem.fromJson(item));
+          requests.add(RequestModel.fromJson(item));
         }
       } catch (_) {
+        // تجاهل العنصر التالف بدل ما توقف كل القائمة
         continue;
       }
     }
 
-    return items;
+    return requests;
   }
 
   void _showErrorByStatusCode(int statusCode) {
@@ -102,7 +99,7 @@ class GetFixedItemsService {
     } else {
       customSnackBar(
         title: 'حدث خطأ',
-        message: 'فشل تحميل البيانات، حاول لاحقاً',
+        message: 'الرجاء التحقق من اتصالك بالانترنت والمحاولة لاحقاً',
         color: constRed,
         messageColor: constLightRed,
       );

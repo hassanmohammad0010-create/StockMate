@@ -3,9 +3,15 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:stock_mate_project/Routes/Bindings/App/Cart_Binding.dart';
+import 'package:stock_mate_project/Service/Auth/OTB_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_All_Department_Requests_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_Consumable_Items_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_urgent_Department_Requests_Service.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Main_Page_Heap_of_Purchasing.dart';
+import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
+import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
-import 'package:stock_mate_project/core/router/app_routes.dart';
-import 'package:stock_mate_project/Service/Auth/Create_Employee_Service.dart';
 
 SharedPreferences? shareprefs;
 
@@ -31,7 +37,7 @@ class StockMate extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       getPages: AppPages.routes,
-      initialRoute: AppRoutes.DepartmentHeadsMainPage,
+      initialRoute: HasanServiceTester().pageName,
       initialBinding: AppBinding(),
     );
   }
@@ -39,7 +45,7 @@ class StockMate extends StatelessWidget {
 
 class HasanServiceTester extends StatelessWidget {
   const HasanServiceTester({super.key});
-
+  final String pageName = '/HasanServiceTester';
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -48,13 +54,9 @@ class HasanServiceTester extends StatelessWidget {
           Center(
             child: FloatingActionButton(
               onPressed: () async {
-                print('1');
-                await CreateEmployeeService().createEmployeeService(
-                  email: 'email',
-                  department: 'department',
-                  name: 'name',
-                  role: 'z',
-                );
+                List<MaterialItem> data = await GetConsumableItemsService()
+                    .getConsumableItemsService();
+                print(data[0].category);
               },
               child: Text('data'),
             ),

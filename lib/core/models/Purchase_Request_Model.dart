@@ -1,4 +1,4 @@
-enum RequestPriority { urgent, normal, low }
+enum RequestPriority { urgent, normal }
 
 enum RequestStatus { pendingApproval, approved, rejected, inProgress, done }
 

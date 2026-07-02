@@ -25,7 +25,7 @@ class DisOrderDetailsPage extends StatelessWidget {
           elevation: 8,
           shape: const CircleBorder(),
           onPressed: () {
-            showConfirmDialog(onConfirm: () {});
+            showConfirmDialog(onConfirm: () {}, sub: '', tital: '');
           },
           child: Icon(Icons.check, color: Colors.white),
         ),
@@ -64,6 +64,40 @@ class DisOrderDetailsPage extends StatelessWidget {
                         children: [
                           SizedBox(height: context.screenHeight * 0.01),
                           // ─── النوع ───────────────────────────────
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.person,
+                                    size: context.screenHeight * 0.028,
+                                    color: constGray,
+                                  ),
+                                  SizedBox(width: context.screenWidth * 0.02),
+                                  Text(
+                                    ' القسم',
+                                    style: TextStyle(
+                                      color: constGray,
+                                      fontFamily: cairo,
+                                      fontSize: context.screenHeight * 0.019,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'الاذنية',
+                                style: TextStyle(
+                                  fontFamily: cairo,
+                                  fontSize: context.screenHeight * 0.019,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: context.screenHeight * 0.01),
+                          Divider(indent: 16, endIndent: 16, thickness: 0.5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

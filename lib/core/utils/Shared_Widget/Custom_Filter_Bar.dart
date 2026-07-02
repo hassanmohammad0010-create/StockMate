@@ -11,9 +11,7 @@ class CustomFilterBar extends StatelessWidget {
   final List<String> filters;
   @override
   Widget build(BuildContext context) {
-
-   final FilterController controller = Get.find(tag: tag);
-  
+    final FilterController controller = Get.find(tag: tag);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),

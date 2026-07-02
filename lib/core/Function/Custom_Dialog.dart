@@ -6,6 +6,8 @@ import 'package:stock_mate_project/core/Function/Custom_Dialog_With_Textfailed.d
 void showConfirmDialog({
   required VoidCallback onConfirm,
   VoidCallback? onReject,
+  required String tital,
+  required String sub,
 }) {
   Get.dialog(
     Dialog(
@@ -27,7 +29,8 @@ void showConfirmDialog({
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'هل انت متأكد',
+                    // 'هل انت متأكد',
+                    tital,
                     style: TextStyle(fontSize: 18, fontFamily: cairo),
                   ),
                 ],
@@ -36,7 +39,8 @@ void showConfirmDialog({
 
               // ===== Subtitle =====
               Text(
-                'انت على وشك تأكيد الطلب',
+                sub,
+                // 'انت على وشك تأكيد الطلب',
                 style: TextStyle(
                   fontSize: 24,
                   color: constGray,

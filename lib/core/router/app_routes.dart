@@ -36,4 +36,6 @@ abstract class AppRoutes {
   static const SuppliersPage = '/SuppliersPage';
   static const CreateEmployeeAccountPage = '/CreateEmployeeAccountPage';
   static const DisplayPurchasingOrderPage = '/DisplayPurchasingOrderPage';
+  static const HasanServiceTester = '/HasanServiceTester';
+  static const MainPageHeadOfPurchasingPage = '/MainPageHeadOfPurchasingPage';
 }
