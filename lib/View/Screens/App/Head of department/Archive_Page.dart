@@ -30,8 +30,6 @@ class ArchivePage extends StatelessWidget {
                     ArchiveCard(
                       title: 'أرشيف الوصفات',
                       icon: Icons.bar_chart_rounded,
-                      height: context.screenHeight,
-                      width: context.screenWidth,
                       onTap: () {
                         Get.toNamed(AppRoutes.PrescriptionArchivePage);
                       },
@@ -40,8 +38,6 @@ class ArchivePage extends StatelessWidget {
                     ArchiveCard(
                       title: 'أرشيف السلة',
                       icon: Icons.shopping_cart,
-                      height: context.screenHeight,
-                      width: context.screenWidth,
                       onTap: () {
                         Get.toNamed(AppRoutes.CartArchivePage);
                       },

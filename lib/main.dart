@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:stock_mate_project/Routes/Bindings/App/Cart_Binding.dart';
+import 'package:stock_mate_project/Routes/Bindings/App/App_Binding.dart';
 
 import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/Service/Auth/Create_Employee_Service.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 SharedPreferences? shareprefs;
 
@@ -33,8 +34,7 @@ class StockMate extends StatelessWidget {
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
       getPages: AppPages.routes,
-
-      initialRoute: HasanServiceTester().pageName,
+      initialRoute: AppRoutes.DepartmentHeadsMainPage,
       initialBinding: AppBinding(),
     );
   }

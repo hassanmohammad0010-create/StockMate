@@ -7,16 +7,12 @@ import 'package:stock_mate_project/core/utils/Departments_Heads/Dashed_Border_Pa
 class ArchiveCard extends StatelessWidget {
   final String title;
   final IconData icon;
-  final double height;
-  final double width;
   final VoidCallback? onTap;
 
   const ArchiveCard({
     super.key,
     required this.title,
     required this.icon,
-    required this.height,
-    required this.width,
     this.onTap,
   });
 
@@ -35,11 +31,11 @@ class ArchiveCard extends StatelessWidget {
             radius: 18,
           ),
           child: Container(
-            height: height * 0.12,
-            width: width * 0.93,
+            height: context.screenHeight * 0.12,
+            width: context.screenWidth * 0.93,
             padding: EdgeInsets.symmetric(
-              vertical: height * 0.025,
-              horizontal: width * 0.04,
+              vertical: context.screenHeight * 0.025,
+              horizontal: context.screenWidth * 0.04,
             ),
             decoration: BoxDecoration(
               color: constBlue.withOpacity(0.05),
@@ -55,7 +51,7 @@ class ArchiveCard extends StatelessWidget {
                   ),
                   child: Icon(icon, color: constBlue, size: 40),
                 ),
-                SizedBox(width: width * 0.03),
+                SizedBox(width: context.screenWidth * 0.03),
                 Expanded(
                   child: Text(
                     title,

@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:stock_mate_project/Routes/Bindings/App/DepartmentHeadsInventoryBinding.dart';
 import 'package:stock_mate_project/Routes/Bindings/App/Department_Orders_Binding.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
@@ -70,6 +71,7 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.DepartmentHeadsInventoryPage,
       page: () => const DepartmentHeadsInventoryPage(),
+       binding: DepartmentHeadsInventoryBinding(),
     ),
     GetPage(
       name: AppRoutes.DepartmentOrdersPage,

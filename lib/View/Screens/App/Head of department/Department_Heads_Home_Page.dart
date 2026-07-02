@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabController.dart';
 import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
@@ -13,6 +14,10 @@ class DepartmentHeadsHomePage extends StatelessWidget {
   DepartmentHeadsHomePage({super.key});
 
   final OrdersController ordersController = Get.put(OrdersController());
+
+  // استخدام نفس الـ controller المسجل مسبقًا في DepartmentHeadsMainPage
+  final DepartmentHeadsMainTabController mainTabController =
+      Get.find<DepartmentHeadsMainTabController>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +42,12 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                         () => CustomCard(
                           icon: Icon(Icons.check, size: 30, color: constGreen),
                           iconBackgroundColor: constLightGreen,
-                          number: ordersController.completedCount
-                              .toString(), // ← بدلاً من '2'
+                          number: ordersController.completedCount.toString(),
                           title: 'طلبات منجزة',
                           buttonColor: constGreen,
                           buttonTitle: 'عرض التفاصيل',
                           onTap: () {
-                            DefaultTabController.of(context).animateTo(2);
+                            mainTabController.tabController.animateTo(2);
                             ordersController.initialFilter.value = 'منجز';
                           },
                         ),
@@ -61,7 +65,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                           buttonColor: constBlue,
                           buttonTitle: 'عرض التفاصيل',
                           onTap: () {
-                            DefaultTabController.of(context).animateTo(2);
+                            mainTabController.tabController.animateTo(2);
                             ordersController.initialFilter.value =
                                 'قيد التنفيذ';
                           },
@@ -84,7 +88,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                           buttonColor: constOrange,
                           buttonTitle: 'عرض التفاصيل',
                           onTap: () {
-                            DefaultTabController.of(context).animateTo(2);
+                            mainTabController.tabController.animateTo(2);
                             ordersController.initialFilter.value = 'معلق';
                           },
                         ),
@@ -102,7 +106,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                           buttonColor: constRed,
                           buttonTitle: 'عرض التفاصيل',
                           onTap: () {
-                            DefaultTabController.of(context).animateTo(2);
+                            mainTabController.tabController.animateTo(2);
                             ordersController.initialFilter.value = 'مرفوض';
                           },
                         ),

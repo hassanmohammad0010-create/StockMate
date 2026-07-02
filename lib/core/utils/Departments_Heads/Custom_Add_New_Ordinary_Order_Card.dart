@@ -36,8 +36,6 @@ class OrdinaryOrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (orderIndex >= _c.orders.length) return const SizedBox.shrink();
 
-    final size = MediaQuery.of(context).size;
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -47,11 +45,11 @@ class OrdinaryOrderCard extends StatelessWidget {
             child: IntrinsicHeight(
               child: Column(
                 children: [
-                  SizedBox(height: size.height * 0.008),
+                  SizedBox(height: context.screenHeight * 0.008),
                   Form(
                     key: _c.formKey(orderIndex),
                     child: Container(
-                      width: size.width * 0.95,
+                      width: context.screenWidth * 0.95,
                       child: Card(
                         color: Colors.white.withOpacity(0.9),
                         elevation: 3.0,
@@ -62,14 +60,14 @@ class OrdinaryOrderCard extends StatelessWidget {
                             Align(
                               alignment: Alignment.centerRight,
                               child: Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 16,
-                                  top: 12,
+                                padding: EdgeInsets.only(
+                                  right: context.screenWidth * 0.03,
+                                  top: context.screenHeight * 0.015,
                                 ),
                                 child: Text(
                                   _c.orders.length > 1
-                                          ?'تفاصيل الطلب ${orderIndex + 1}' 
-                                          : 'تفاصيل الطلب',
+                                      ? 'تفاصيل الطلب ${orderIndex + 1}'
+                                      : 'تفاصيل الطلب',
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontFamily: 'Cairo',
@@ -79,11 +77,11 @@ class OrdinaryOrderCard extends StatelessWidget {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: size.width * 0.03,
+                                horizontal: context.screenWidth * 0.03,
                               ),
                               child: const Divider(),
                             ),
-                            SizedBox(height: size.height * 0.01),
+                            SizedBox(height: context.screenHeight * 0.01),
                             Obx(() {
                               if (orderIndex >= _c.orders.length) {
                                 return const SizedBox.shrink();
@@ -94,7 +92,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                               );
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.03,
+                                  horizontal: context.screenWidth * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,9 +112,9 @@ class OrdinaryOrderCard extends StatelessWidget {
                                     ),
                                     if (isInvalid)
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 12,
-                                          top: 4,
+                                        padding:  EdgeInsets.only(
+                                          right: context.screenWidth * 0.03,
+                                          top: context.screenHeight * 0.005,
                                         ),
                                         child: Text(
                                           'الرجاء اختيار اسم الدواء',
@@ -130,10 +128,10 @@ class OrdinaryOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: size.height * 0.015),
+                            SizedBox(height: context.screenHeight * 0.015),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: size.width * 0.03,
+                                horizontal: context.screenWidth * 0.03,
                               ),
                               child: CustomMyTextFormField(
                                 prefixIcon: Icons.numbers_outlined,
@@ -149,7 +147,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: size.height * 0.015),
+                            SizedBox(height: context.screenHeight * 0.015),
                             Obx(() {
                               if (orderIndex >= _c.orders.length) {
                                 return const SizedBox.shrink();
@@ -160,7 +158,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                               );
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.03,
+                                  horizontal: context.screenWidth * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +193,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: size.height * 0.015),
+                            SizedBox(height: context.screenHeight * 0.015),
                             Obx(() {
                               if (orderIndex >= _c.orders.length) {
                                 return const SizedBox.shrink();
@@ -206,7 +204,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                               );
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.03,
+                                  horizontal: context.screenWidth * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,13 +240,13 @@ class OrdinaryOrderCard extends StatelessWidget {
                               );
                             }),
 
-                            SizedBox(height: size.height * 0.015),
+                            SizedBox(height: context.screenHeight * 0.015),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height * 0.008),
+                  SizedBox(height: context.screenHeight * 0.008),
                   PriorityChooseCard(orderIndex: orderIndex),
                 ],
               ),

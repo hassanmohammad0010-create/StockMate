@@ -55,7 +55,7 @@ class _DropdownItemState extends State<DropdownItem> {
                         : FontWeight.w400,
                     color: widget.isSelected
                         ? constBlue
-                        : const Color(0xFF374151),
+                        : constColor,
                   ),
                 ),
               ),
