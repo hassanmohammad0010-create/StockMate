@@ -31,8 +31,6 @@ class RecurringOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -42,11 +40,11 @@ class RecurringOrderCard extends StatelessWidget {
             child: IntrinsicHeight(
               child: Column(
                 children: [
-                  SizedBox(height: size.height * 0.008),
+                  SizedBox(height: context.screenHeight * 0.008),
                   Form(
                     key: controller.formKey,
                     child: Container(
-                      width: size.width * 0.95,
+                      width: context.screenWidth * 0.95,
                       child: Card(
                         color: Colors.white.withOpacity(0.9),
                         elevation: 3.0,
@@ -56,9 +54,9 @@ class RecurringOrderCard extends StatelessWidget {
                             Align(
                               alignment: Alignment.centerRight,
                               child: Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 16,
-                                  top: 12,
+                                padding: EdgeInsets.only(
+                                  right: context.screenWidth * 0.03,
+                                  top: context.screenHeight * 0.015,
                                 ),
                                 child: Text(
                                   'تفاصيل الطلب',
@@ -71,21 +69,24 @@ class RecurringOrderCard extends StatelessWidget {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: size.width * 0.03,
+                                horizontal: context.screenWidth * 0.03,
                               ),
                               child: const Divider(),
                             ),
-                            SizedBox(height: size.height * 0.01),
+                            SizedBox(height: context.screenHeight * 0.01),
 
                             // ── اسم الدواء ────────────────────────────────
                             Obx(() {
                               // ✅ قراءة المتغير مباشرة قبل أي شرط لضمان عدم حدوث خطأ GetX
-                              final medicineName = controller.order.value.medicineName;
-                              final isInvalid = controller.isFieldInvalid('medicineName');
+                              final medicineName =
+                                  controller.order.value.medicineName;
+                              final isInvalid = controller.isFieldInvalid(
+                                'medicineName',
+                              );
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.03,
+                                  horizontal: context.screenWidth * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,13 +100,14 @@ class RecurringOrderCard extends StatelessWidget {
                                       icon: Icons.medication_outlined,
                                       value: medicineName,
                                       errorBorder: isInvalid,
-                                      onChanged: (v) => controller.updateMedicineName(v),
+                                      onChanged: (v) =>
+                                          controller.updateMedicineName(v),
                                     ),
                                     if (isInvalid)
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 12,
-                                          top: 4,
+                                        padding: EdgeInsets.only(
+                                          right: context.screenWidth * 0.03,
+                                          top: context.screenHeight * 0.005,
                                         ),
                                         child: Text(
                                           'الرجاء اختيار اسم الدواء',
@@ -119,12 +121,12 @@ class RecurringOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: size.height * 0.015),
+                            SizedBox(height: context.screenHeight * 0.015),
 
                             // ── الكمية ────────────────────────────────────
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: size.width * 0.03,
+                                horizontal: context.screenWidth * 0.03,
                               ),
                               child: CustomMyTextFormField(
                                 prefixIcon: Icons.numbers_outlined,
@@ -140,16 +142,18 @@ class RecurringOrderCard extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: size.height * 0.015),
+                            SizedBox(height: context.screenHeight * 0.015),
 
                             // ── الوحدة ────────────────────────────────────
                             Obx(() {
                               final unit = controller.order.value.unit;
-                              final isInvalid = controller.isFieldInvalid('unit');
+                              final isInvalid = controller.isFieldInvalid(
+                                'unit',
+                              );
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.03,
+                                  horizontal: context.screenWidth * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +167,8 @@ class RecurringOrderCard extends StatelessWidget {
                                       searchable: false,
                                       value: unit,
                                       errorBorder: isInvalid,
-                                      onChanged: (v) => controller.updateUnit(v),
+                                      onChanged: (v) =>
+                                          controller.updateUnit(v),
                                     ),
                                     if (isInvalid)
                                       Padding(
@@ -183,16 +188,18 @@ class RecurringOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: size.height * 0.015),
+                            SizedBox(height: context.screenHeight * 0.015),
 
                             // ── الوكيل / الماركة ──────────────────────────
                             Obx(() {
                               final brand = controller.order.value.brand;
-                              final isInvalid = controller.isFieldInvalid('brand');
+                              final isInvalid = controller.isFieldInvalid(
+                                'brand',
+                              );
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.03,
+                                  horizontal: context.screenWidth * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,7 +213,8 @@ class RecurringOrderCard extends StatelessWidget {
                                       searchable: true,
                                       value: brand,
                                       errorBorder: isInvalid,
-                                      onChanged: (v) => controller.updateBrand(v),
+                                      onChanged: (v) =>
+                                          controller.updateBrand(v),
                                     ),
                                     if (isInvalid)
                                       Padding(
@@ -226,13 +234,13 @@ class RecurringOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: size.height * 0.015),
+                            SizedBox(height: context.screenHeight * 0.015),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height * 0.008),
+                  SizedBox(height: context.screenHeight * 0.008),
 
                   const RecurringChooseCard(),
                 ],

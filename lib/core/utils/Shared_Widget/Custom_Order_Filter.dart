@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/DepartmentOrdersFilterController%20.dart';
+import 'package:stock_mate_project/Controller/Logic/DepartmentOrdersFilterController.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Animation_Filter_Chip.dart';
 
 class DepartmentOrdersFilterBar extends StatelessWidget {

@@ -8,7 +8,6 @@ import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Di
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Dialog_Style.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Dialog_Text_Field.dart';
 
-
 class DialogContent extends StatelessWidget {
   const DialogContent({
     super.key,
@@ -143,26 +142,26 @@ class _Header extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 64,
-            height: 64,
+            width: context.screenWidth * 0.2,
+            height: context.screenHeight * 0.07,
             decoration: BoxDecoration(
               color: style.iconBackground,
               shape: BoxShape.circle,
             ),
             child: Icon(style.icon, color: style.iconColor, size: 32),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.screenHeight * 0.02),
           Text(
             title,
             textAlign: TextAlign.center,
-            style:  TextStyle(
+            style: TextStyle(
               fontFamily: cairo,
               fontSize: 17,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1E293B),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: context.screenHeight * 0.01),
           Text(
             message,
             textAlign: TextAlign.center,
@@ -174,7 +173,7 @@ class _Header extends StatelessWidget {
             ),
           ),
           if (showTextField) ...[
-            const SizedBox(height: 20),
+            SizedBox(height: context.screenHeight * 0.02),
             DialogTextField(
               controller: textFieldController,
               hint: textFieldHint,
@@ -185,7 +184,7 @@ class _Header extends StatelessWidget {
               validator: textFieldValidator,
             ),
           ],
-          const SizedBox(height: 24),
+          SizedBox(height: context.screenHeight * 0.03),
         ],
       ),
     );
@@ -229,7 +228,7 @@ class _Actions extends StatelessWidget {
                     onTap: () => Get.back(result: false),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: context.screenWidth * 0.025),
                 Expanded(child: confirmButton),
               ],
             )

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Drop_Down_Overlay.dart';
 
-
 class CustomDropdown<T> extends StatefulWidget {
   const CustomDropdown({
     super.key,
@@ -86,7 +85,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         .replaceAll('ى', 'ي');
   }
 
-
   void _openOverlay() {
     if (_isOpen) return;
     _filtered = widget.items;
@@ -107,7 +105,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         fadeAnim: _fadeAnim,
         scaleAnim: _scaleAnim,
         onFilter: (query) {
-          // ✅ الفلترة مع توحيد الهمزات
           _filtered = widget.items
               .where(
                 (e) => _normalizeArabic(
@@ -152,19 +149,18 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     if (mounted) setState(() {});
   }
 
-
   @override
   Widget build(BuildContext context) {
     final hasValue = widget.value != null;
     final isError = widget.errorBorder;
     final showClear = hasValue && widget.clearable;
 
-    final labelColor = isError
-        ? Colors.red.shade700
-        : (hasValue ? constBlue : Colors.grey.shade500);
+    // final labelColor = isError
+    //     ? constRed
+    //     : (hasValue ? constBlue : Colors.grey.shade500);
 
     final borderColor = isError
-        ? Colors.red.shade600
+        ? constRed
         : (_isOpen ? constBlue : Colors.grey.shade300);
 
     final borderWidth = (_isOpen || isError) ? 1.5 : 1.0;
@@ -176,7 +172,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         mainAxisSize: MainAxisSize.min,
         children: [
           AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
+            duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
@@ -195,34 +191,35 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                           Icon(
                             widget.prefixIcon ?? widget.icon,
                             size: 25,
-                            color: isError ? Colors.red.shade400 : constBlue,
+                            color: constBlue,
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: EdgeInsets.symmetric(
+                                vertical: context.screenHeight * 0.018,
+                              ),
                               child: hasValue
                                   ? Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
-                                          widget.label,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: labelColor,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
+                                        // Text(
+                                        //   widget.label,
+                                        //   style: TextStyle(
+                                        //     fontSize: 11,
+                                        //     color: labelColor,
+                                        //     fontWeight: FontWeight.w500,
+                                        //   ),
+                                        // ),
                                         Text(
                                           widget.labelBuilder(
                                             widget.value as T,
                                           ),
                                           style: const TextStyle(
                                             fontSize: 14,
-                                            color: Color(0xFF1E293B),
+                                            color: constColor,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -232,9 +229,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                                       widget.label,
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: isError
-                                            ? Colors.red.shade400
-                                            : Colors.grey.shade500,
+                                        color: Colors.grey.shade500,
                                       ),
                                     ),
                             ),
@@ -270,9 +265,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       duration: const Duration(milliseconds: 180),
                       child: Icon(
                         Icons.keyboard_arrow_down_rounded,
-                        color: isError
-                            ? Colors.red.shade400
-                            : Colors.grey.shade500,
+                        color: Colors.grey.shade500,
                       ),
                     ),
                   ),
@@ -282,10 +275,13 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           ),
           if (isError && widget.errorText != null)
             Padding(
-              padding: const EdgeInsets.only(right: 14, top: 5),
+              padding: EdgeInsets.only(
+                right: context.screenWidth * 0.05,
+                top: context.screenHeight * 0.005,
+              ),
               child: Text(
                 widget.errorText!,
-                style: TextStyle(color: Colors.red.shade700, fontSize: 11),
+                style: TextStyle(color: constRed, fontSize: 11),
               ),
             ),
         ],

@@ -13,17 +13,12 @@ InputDecoration buildCustomTextFieldDecoration({
   IconData? prefixIcon,
   Widget? suffixIcon,
 }) {
-  final activeColor = hasError
-      ? Colors.red.shade600
-      : hasText
-      ? constBlue
-      : Colors.grey.shade500;
-
+ 
   return InputDecoration(
     alignLabelWithHint: true,
     labelText: label,
     hintText: hint,
-    hintStyle: TextStyle(color: activeColor, fontSize: 13),
+    hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 13),
     prefixIcon: prefixIcon != null
         ? SizedBox(
             width: 40,
@@ -36,11 +31,7 @@ InputDecoration buildCustomTextFieldDecoration({
               ),
               child: Align(
                 alignment: Alignment.topCenter,
-                child: Icon(
-                  prefixIcon,
-                  size: 25,
-                  color: hasError ? Colors.red.shade600 : constBlue,
-                ),
+                child: Icon(prefixIcon, size: 25, color: constBlue),
               ),
             ),
           )
@@ -51,10 +42,7 @@ InputDecoration buildCustomTextFieldDecoration({
     filled: true,
     fillColor: enabled ? Colors.white : Colors.grey.shade50,
 
-    contentPadding: const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 14,
-    ),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
 
     // border عادي
     border: OutlineInputBorder(
@@ -88,11 +76,11 @@ InputDecoration buildCustomTextFieldDecoration({
     ),
 
     labelStyle: TextStyle(
-      color: activeColor,
+      color: hasText ? constBlue : Colors.grey.shade500,
       fontSize: hasText ? 12 : 14,
       fontWeight: hasText ? FontWeight.w500 : FontWeight.w400,
     ),
 
-    errorStyle: TextStyle(color: Colors.red.shade700, fontSize: 11),
+    errorStyle: TextStyle(color: constRed, fontSize: 11),
   );
 }

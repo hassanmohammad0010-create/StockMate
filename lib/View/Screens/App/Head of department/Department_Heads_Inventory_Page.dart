@@ -18,20 +18,17 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
 
   static const String _filterTag = AppRoutes.DepartmentHeadsInventoryPage;
 
-  FilterController get _filterController {
-    if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
-      Get.put(
-        FilterController()
-          ..initFilters(['الكل', 'ثابتة', 'مستهلكة', 'ادوية']),
-        tag: _filterTag,
-      );
-    }
-    return Get.find<FilterController>(tag: _filterTag);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final FilterController filterController = _filterController;
+    if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
+    Get.lazyPut<FilterController>(
+      () => FilterController()
+        ..initFilters(['الكل', 'ثابتة', 'مستهلكة', 'ادوية']),
+      tag: _filterTag,
+    );
+  }
+  final FilterController filterController =
+      Get.find<FilterController>(tag: _filterTag);
 
     return Scaffold(
       backgroundColor: constBackgroundColor,

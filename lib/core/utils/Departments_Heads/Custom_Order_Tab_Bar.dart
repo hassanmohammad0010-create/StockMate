@@ -13,26 +13,29 @@ class OrderTabBar extends GetView<AddOrdinaryOrderController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.03, vertical: 8),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.screenWidth * 0.03,
+        vertical: context.screenHeight * 0.01,
+      ),
       child: Row(
         children: [
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Obx(() {
-                final orders      = controller.orders;
+                final orders = controller.orders;
                 final activeIndex = controller.activeOrderIndex.value;
-                final canRemove   = controller.canRemoveOrder;
+                final canRemove = controller.canRemoveOrder;
                 return Row(
                   children: List.generate(
                     orders.length,
                     (i) => OrderTab(
-                      index:     i,
-                      isActive:  i == activeIndex,
-                      isValid:   orders[i].isValid,
+                      index: i,
+                      isActive: i == activeIndex,
+                      isValid: orders[i].isValid,
                       canRemove: canRemove,
-                      onTap:     () => controller.selectOrder(i),
-                      onRemove:  () => controller.removeOrder(i),
+                      onTap: () => controller.selectOrder(i),
+                      onRemove: () => controller.removeOrder(i),
                     ),
                   ),
                 );
@@ -40,44 +43,46 @@ class OrderTabBar extends GetView<AddOrdinaryOrderController> {
             ),
           ),
 
-          const SizedBox(width: 8),
+          SizedBox(width: context.screenWidth * 0.02),
 
-          Obx(() => Opacity(
-            opacity: controller.canAddOrder ? 1.0 : 0.35,
-            child: GestureDetector(
-              onTap: controller.addOrder,
-              child: Container(
-                height: 38,
-                width:  84,
-                decoration: BoxDecoration(
-                  color: constBlue,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      // ignore: deprecated_member_use
-                      color:  constBlue.withOpacity(0.3),
-                      blurRadius: 6,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child:  Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'أضف طلب',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+          Obx(
+            () => Opacity(
+              opacity: controller.canAddOrder ? 1.0 : 0.35,
+              child: GestureDetector(
+                onTap: controller.addOrder,
+                child: Container(
+                  height: context.screenHeight * 0.045,
+                  width: context.screenWidth * 0.25,
+                  decoration: BoxDecoration(
+                    color: constBlue,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        // ignore: deprecated_member_use
+                        color: constBlue.withOpacity(0.3),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
                       ),
-                    ),
-                    Icon(Icons.add, color: Colors.white, size: 20),
-                  ],
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'أضف طلب',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(Icons.add, color: Colors.white, size: 20),
+                    ],
+                  ),
                 ),
               ),
             ),
-          )),
+          ),
         ],
       ),
     );

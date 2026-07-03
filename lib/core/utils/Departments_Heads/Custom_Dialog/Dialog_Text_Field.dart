@@ -31,7 +31,7 @@ class DialogTextField extends StatelessWidget {
       textDirection: TextDirection.rtl,
       textAlign: TextAlign.right,
       validator: validator,
-      style:  TextStyle(fontFamily: cairo, fontSize: 14),
+      style: TextStyle(fontFamily: cairo, fontSize: 14),
       decoration: InputDecoration(
         hintText: hint,
         labelText: label.isEmpty ? null : label,
@@ -48,9 +48,9 @@ class DialogTextField extends StatelessWidget {
         prefixIcon: Icon(icon, size: 20, color: Colors.grey.shade400),
         filled: true,
         fillColor: Colors.grey.shade50,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: context.screenWidth * 0.02,
+          vertical: context.screenHeight * 0.015,
         ),
         border: _border(Colors.grey.shade200),
         enabledBorder: _border(Colors.grey.shade200),

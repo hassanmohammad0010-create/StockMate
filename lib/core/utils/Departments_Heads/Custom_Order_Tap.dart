@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
 class OrderTab extends StatelessWidget {
-  const OrderTab({super.key, 
+  const OrderTab({
+    super.key,
     required this.index,
     required this.isActive,
     required this.isValid,
@@ -13,10 +14,10 @@ class OrderTab extends StatelessWidget {
     required this.onRemove,
   });
 
-  final int        index;
-  final bool       isActive;
-  final bool       isValid;
-  final bool       canRemove;
+  final int index;
+  final bool isActive;
+  final bool isValid;
+  final bool canRemove;
   final VoidCallback onTap;
   final VoidCallback onRemove;
 
@@ -26,8 +27,11 @@ class OrderTab extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        margin:  const EdgeInsets.only(left: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        margin: EdgeInsets.only(left: context.screenWidth * 0.015),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.screenWidth * 0.03,
+          vertical: context.screenHeight * 0.01,
+        ),
         decoration: BoxDecoration(
           color: isActive ? constBlue : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(10),
@@ -35,20 +39,23 @@ class OrderTab extends StatelessWidget {
             color: isActive ? constBlue : Colors.grey.shade300,
           ),
           boxShadow: isActive
-              ? [BoxShadow(
-                  color: constBlue.withOpacity(0.25),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                )]
+              ? [
+                  BoxShadow(
+                    color: constBlue.withOpacity(0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
               : [],
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (!isActive)
               Container(
-                width: 7, height: 7,
-                margin: const EdgeInsets.only(left: 6),
+                width: 8,
+                height: 8,
+                margin: EdgeInsets.only(left: context.screenWidth * 0.015),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isValid ? constGreen : constOrange,
@@ -57,18 +64,19 @@ class OrderTab extends StatelessWidget {
             Text(
               canRemove ? 'طلب ${index + 1}' : 'طلب جديد',
               style: TextStyle(
-                fontSize:   13,
+                fontSize: 13,
                 fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color:      isActive ? Colors.white : Colors.grey.shade700,
+                color: isActive ? Colors.white : Colors.grey.shade700,
               ),
             ),
+            SizedBox(width: context.screenWidth * 0.02),
             if (canRemove) ...[
-              const SizedBox(width: 6),
+              SizedBox(width: context.screenWidth * 0.01),
               GestureDetector(
                 onTap: onRemove,
                 child: Icon(
                   Icons.close_rounded,
-                  size:  15,
+                  size: 20,
                   color: isActive
                       ? Colors.white.withOpacity(0.8)
                       : Colors.grey.shade500,
