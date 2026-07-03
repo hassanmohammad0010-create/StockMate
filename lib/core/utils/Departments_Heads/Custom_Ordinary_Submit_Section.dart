@@ -11,24 +11,23 @@ class OrdinarySubmitSection extends GetView<AddOrdinaryOrderController> {
 
   @override
   Widget build(BuildContext context) {
+    
+    final h = context.screenHeight;
+
     return Container(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).size.height * 0.02,
-        top:    MediaQuery.of(context).size.height * 0.01,
-      ),
+      padding: EdgeInsets.only(bottom: h * 0.02, top: h * 0.01),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color:      Colors.black.withOpacity(0.06),
+            color: Colors.black.withOpacity(0.06),
             blurRadius: 10,
-            offset:     const Offset(0, -3),
+            offset: const Offset(0, -3),
           ),
         ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // ── مؤشر عدد الطلبات ──────────────────────────────────────
           Obx(() {
             final count = controller.orders.length;
             return Row(
@@ -36,16 +35,13 @@ class OrdinarySubmitSection extends GetView<AddOrdinaryOrderController> {
               children: [
                 Text(
                   'عدد الطلبات: ',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color:    Colors.grey.shade500,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                 ),
                 ...List.generate(
                   AddOrdinaryOrderController.maxOrders,
                   (i) => Container(
                     margin: const EdgeInsets.symmetric(horizontal: 2),
-                    width:  8,
+                    width: 8,
                     height: 8,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -57,25 +53,22 @@ class OrdinarySubmitSection extends GetView<AddOrdinaryOrderController> {
                 Text(
                   '$count / ${AddOrdinaryOrderController.maxOrders}',
                   style: TextStyle(
-                    fontSize:   12,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color:      constBlue,
+                    color: constBlue,
                   ),
                 ),
               ],
             );
           }),
-
-          const SizedBox(height: 10),
-
-          // ── زر الإرسال — يذهب لصفحة التأكيد ─────────────────────
+          SizedBox(height: h * 0.01),
           Obx(() {
             final count = controller.orders.length;
             return CustomMainButtom(
-              title:     'إرسال الطلبات ($count)',
-              color:     constBlue,
+              title: 'إرسال الطلبات ($count)',
+              color: constBlue,
               fontcolor: Colors.white,
-              onPressed: controller.validateAndGoToConfirm, // ✅
+              onPressed: controller.validateAndGoToConfirm, 
             );
           }),
         ],

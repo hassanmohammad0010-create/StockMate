@@ -21,6 +21,9 @@ class BatchRowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final (bg, textColor) = switch (batch.status) {
       BatchStatus.valid => (constLightGreen, constGreen),
       BatchStatus.expiringSoon => (constLightRed, constRed),
@@ -31,11 +34,8 @@ class BatchRowItem extends StatelessWidget {
         '${batch.expiryDate.year}-${batch.expiryDate.month.toString().padLeft(2, '0')}-${batch.expiryDate.day.toString().padLeft(2, '0')}';
 
     return Container(
-      margin: EdgeInsets.only(bottom: context.screenHeight * 0.01),
-      padding: EdgeInsets.symmetric(
-        horizontal: context.screenWidth * 0.03,
-        vertical: context.screenHeight * 0.012,
-      ),
+      margin: EdgeInsets.only(bottom: h * 0.01),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: h * 0.012),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(10),
@@ -49,15 +49,15 @@ class BatchRowItem extends StatelessWidget {
               Text(
                 _fmt(batch.quantity),
                 style: TextStyle(
-                  fontSize: context.screenHeight * 0.017,
+                  fontSize: h * 0.017,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(width: context.screenWidth * 0.02),
+              SizedBox(width: w * 0.02),
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.screenWidth * 0.025,
-                  vertical: context.screenHeight * 0.004,
+                  horizontal: w * 0.025,
+                  vertical: h * 0.004,
                 ),
                 decoration: BoxDecoration(
                   color: bg,
@@ -65,10 +65,7 @@ class BatchRowItem extends StatelessWidget {
                 ),
                 child: Text(
                   batch.statusLabel,
-                  style: TextStyle(
-                    fontSize: context.screenHeight * 0.013,
-                    color: textColor,
-                  ),
+                  style: TextStyle(fontSize: h * 0.013, color: textColor),
                 ),
               ),
             ],
@@ -78,13 +75,10 @@ class BatchRowItem extends StatelessWidget {
             children: [
               Text(
                 dateStr,
-                style: TextStyle(
-                  fontSize: context.screenHeight * 0.014,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: h * 0.014, color: Colors.grey),
               ),
               if (batch.status == BatchStatus.expired) ...[
-                SizedBox(width: context.screenWidth * 0.025),
+                SizedBox(width: w * 0.025),
                 _DeleteBatchButton(batch: batch, material: material),
               ],
             ],
@@ -103,6 +97,9 @@ class _DeleteBatchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return GestureDetector(
       onTap: () => CustomDialog.show(
         type: DialogType.danger,
@@ -115,16 +112,15 @@ class _DeleteBatchButton extends StatelessWidget {
         },
       ),
       child: Container(
-        padding: EdgeInsets.all(context.screenHeight * 0.005),
+        padding: EdgeInsets.symmetric(
+          horizontal: w * 0.012,
+          vertical: h * 0.006,
+        ),
         decoration: BoxDecoration(
           color: constLightRed,
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Icon(
-          Icons.delete_outline,
-          size: context.screenHeight * 0.02,
-          color: constRed,
-        ),
+        child: Icon(Icons.delete_outline, size: 20, color: constRed),
       ),
     );
   }

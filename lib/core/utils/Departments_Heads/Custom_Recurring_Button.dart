@@ -8,21 +8,23 @@ class RecurringButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.isSelected,
-    required this.size,
     required this.onTap,
   });
 
   final String label;
   final bool isSelected;
-  final Size size;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: size.height * 0.05,
-      width: size.width * 0.25,
+      height: h * 0.05,
+      width: w * 0.25,
       decoration: BoxDecoration(
         color: isSelected ? constBlue : Colors.transparent,
         border: Border.all(color: isSelected ? constBlue : Colors.grey),

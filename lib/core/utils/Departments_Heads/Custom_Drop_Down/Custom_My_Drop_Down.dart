@@ -151,6 +151,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final hasValue = widget.value != null;
     final isError = widget.errorBorder;
     final showClear = hasValue && widget.clearable;
@@ -193,11 +196,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                             size: 25,
                             color: constBlue,
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: w * 0.04),
                           Expanded(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                vertical: context.screenHeight * 0.018,
+                                vertical: h * 0.018,
                               ),
                               child: hasValue
                                   ? Column(
@@ -244,9 +247,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                     onTap: _clearValue,
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: w * 0.02,
+                        vertical: h * 0.005,
                       ),
                       child: Icon(
                         Icons.close_rounded,
@@ -275,10 +278,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           ),
           if (isError && widget.errorText != null)
             Padding(
-              padding: EdgeInsets.only(
-                right: context.screenWidth * 0.05,
-                top: context.screenHeight * 0.005,
-              ),
+              padding: EdgeInsets.only(right: w * 0.05, top: h * 0.005),
               child: Text(
                 widget.errorText!,
                 style: TextStyle(color: constRed, fontSize: 11),

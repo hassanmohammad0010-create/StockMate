@@ -18,6 +18,7 @@ class CustomDialog {
     bool showCancel = true,
 
     VoidCallback? onConfirm,
+    VoidCallback? onCancel,
 
     bool showTextField = false,
     String textFieldHint = '',
@@ -45,6 +46,7 @@ class CustomDialog {
           cancelText: cancelText,
           showCancel: showCancel,
           onConfirm: onConfirm,
+          onCancel: onCancel,
           showTextField: showTextField,
           textFieldHint: textFieldHint,
           textFieldLabel: textFieldLabel,

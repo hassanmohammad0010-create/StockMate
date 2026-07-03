@@ -15,7 +15,8 @@ class PriorityChooseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final h = context.screenHeight;
+    final w = context.screenWidth;
 
     return Obx(() {
       if (orderIndex >= _c.orders.length) {
@@ -23,9 +24,9 @@ class PriorityChooseCard extends StatelessWidget {
       }
       final selected = _c.orders[orderIndex].priority;
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.width * 0.025),
+        padding: EdgeInsets.symmetric(horizontal: w * 0.025),
         child: Container(
-          width: MediaQuery.of(context).size.height * 0.9,
+          width: w * 0.95,
           child: Card(
             color: Colors.white.withOpacity(0.9),
             elevation: 3.0,
@@ -34,7 +35,7 @@ class PriorityChooseCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 24, top: 12),
+                    padding: EdgeInsets.only(right: w * 0.05, top: h * 0.015),
                     child: Text(
                       'الأولوية',
                       style: const TextStyle(fontSize: 20, fontFamily: 'Cairo'),
@@ -42,12 +43,10 @@ class PriorityChooseCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.03,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: w * 0.03),
                   child: const Divider(),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                SizedBox(height: h * 0.01),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -56,19 +55,19 @@ class PriorityChooseCard extends StatelessWidget {
                       label: 'ضروري',
                       color: constRed,
                       isSelected: selected == 'ضروري',
-                      size: size,
+                      size: Size(w * 0.4, h * 0.05),
                       onTap: () => _c.updatePriority(orderIndex, 'ضروري'),
                     ),
                     PriorityButton(
                       label: 'عادي',
                       color: constBlue,
                       isSelected: selected == 'عادي',
-                      size: size,
+                      size: Size(w * 0.4, h * 0.05),
                       onTap: () => _c.updatePriority(orderIndex, 'عادي'),
                     ),
                   ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                SizedBox(height: h * 0.01),
               ],
             ),
           ),

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 
 class CustomCard extends StatelessWidget {
   const CustomCard({
@@ -24,16 +25,23 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     // ignore: sized_box_for_whitespace
     return Container(
-      width: MediaQuery.of(context).size.width * 0.48,
-      height: MediaQuery.of(context).size.height * 0.17,
+      width: w * 0.48,
+      height: h * 0.17,
       child: Card(
         color: Colors.white,
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+              margin: EdgeInsets.symmetric(
+                vertical: h * 0.015,
+                horizontal: w * 0.06,
+              ),
               child: Row(
                 children: [
                   Container(
@@ -44,31 +52,33 @@ class CustomCard extends StatelessWidget {
                     ),
                     child: icon,
                   ),
-                  SizedBox(width: 20),
+                  SizedBox(width: w * 0.06),
                   Text(number, style: TextStyle(fontSize: 30)),
                 ],
               ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: h * 0.005),
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: const EdgeInsets.only(right: 20),
+                padding: EdgeInsets.only(right: w * 0.06),
                 child: Text(
                   title,
                   style: TextStyle(fontSize: 15, color: Colors.grey),
                 ),
               ),
             ),
-             SizedBox(height: 4),
+            SizedBox(height: h * 0.005),
             Container(
-              width: MediaQuery.of(context).size.width * 0.38,
-              margin: EdgeInsets.symmetric(vertical: 5),
+              width: w * 0.38,
+              margin: EdgeInsets.symmetric(
+                vertical: h * 0.005,
+              ),
               decoration: BoxDecoration(
                 color: buttonColor,
                 borderRadius: BorderRadius.circular(8),
               ),
-              height: MediaQuery.of(context).size.height * 0.03,
+              height: h * 0.03,
               child: MaterialButton(
                 onPressed: onTap,
                 child: Text(

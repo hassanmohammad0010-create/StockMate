@@ -13,12 +13,13 @@ import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Confirm_S
 class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
   const OrdinaryConfirmPage({super.key});
 
-
   static const String _doctorName = 'د. محمد علي';
   static const String _departmentName = 'قسم الداخلية';
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
 
     final orders = controller.orders;
     final now = DateTime.now();
@@ -40,8 +41,8 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
-                horizontal: context.screenWidth * 0.04,
-                vertical: context.screenHeight * 0.01,
+                horizontal: w * 0.04,
+                vertical: h * 0.01,
               ),
               child: Column(
                 children: [
@@ -56,13 +57,15 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
                       BuildRow(label: 'تاريخ الإرسال', value: formattedDate),
                     ],
                   ),
-                  SizedBox(height: context.screenHeight * 0.01),
+                  SizedBox(height: h * 0.01),
                   ...List.generate(orders.length, (i) {
                     final o = orders[i];
                     final qtyCtrl = controller.quantityCtrl(i);
                     final priority = o.priority;
                     return Padding(
-                      padding: EdgeInsets.only(bottom: context.screenHeight * 0.015),
+                      padding: EdgeInsets.only(
+                        bottom: h * 0.015,
+                      ),
                       child: BuildSection(
                         title: orders.length == 1
                             ? 'تفاصيل الطلب'
@@ -84,7 +87,7 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
                       ),
                     );
                   }),
-                  SizedBox(height: context.screenHeight * 0.01),
+                  SizedBox(height: h * 0.01),
                 ],
               ),
             ),

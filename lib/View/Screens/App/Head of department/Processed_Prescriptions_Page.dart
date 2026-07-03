@@ -13,6 +13,8 @@ class ProcessedPrescriptionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+
     final controller = Get.find<PrescriptionController>();
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -37,7 +39,7 @@ class ProcessedPrescriptionsPage extends StatelessWidget {
 
               return ListView.builder(
                 padding: EdgeInsets.symmetric(
-                  vertical: context.screenHeight * 0.01,
+                  vertical: h * 0.01,
                 ),
                 itemCount: prescriptions.length,
                 itemBuilder: (context, index) {
@@ -69,7 +71,7 @@ class _EmptyState extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 48, color: const Color(0xFFD1D5DB)),
-          const SizedBox(height: 12),
+           SizedBox(height: context.screenHeight * 0.01),
           Text(
             message,
             style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),

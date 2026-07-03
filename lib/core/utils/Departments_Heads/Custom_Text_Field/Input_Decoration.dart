@@ -13,7 +13,6 @@ InputDecoration buildCustomTextFieldDecoration({
   IconData? prefixIcon,
   Widget? suffixIcon,
 }) {
- 
   return InputDecoration(
     alignLabelWithHint: true,
     labelText: label,

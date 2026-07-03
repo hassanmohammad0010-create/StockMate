@@ -9,14 +9,16 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.d
 class CustomRecurringBottom extends StatelessWidget {
   const CustomRecurringBottom({super.key});
 
-  
-  AddRecurringOrderController get controller => Get.find<AddRecurringOrderController>();
+  AddRecurringOrderController get controller =>
+      Get.find<AddRecurringOrderController>();
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, size.height * 0.02),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.02, vertical: h * 0.024),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -41,7 +43,7 @@ class CustomRecurringBottom extends StatelessWidget {
               onPressed: loading ? () {} : controller.submitOrder,
             );
           }),
-          const SizedBox(height: 10),
+          SizedBox(height: h * 0.01),
 
           // زر العودة والتعديل
           CustomMainButtom(

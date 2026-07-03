@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,14 +14,17 @@ class CustomOrdinaryBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, size.height * 0.02),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.02, vertical: h * 0.024),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
+            
             color: Colors.black.withOpacity(0.06),
             blurRadius: 10,
             offset: const Offset(0, -3),
@@ -31,7 +34,7 @@ class CustomOrdinaryBottom extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // زر تأكيد الإرسال
+
           Obx(() {
             final loading = controller.isLoading.value;
             return CustomMainButtom(
@@ -41,9 +44,9 @@ class CustomOrdinaryBottom extends StatelessWidget {
               onPressed: loading ? () {} : controller.submitOrders,
             );
           }),
-          const SizedBox(height: 10),
 
-          // زر العودة والتعديل
+          SizedBox(height: h * 0.01),
+
           CustomMainButtom(
             title: 'العودة والتعديل',
             color: Colors.grey.shade100,

@@ -11,17 +11,19 @@ class NewPrescriptionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+
     final controller = Get.find<PrescriptionController>();
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: Column(
         children: [
-        PatientSearchField(
-                onChanged: controller.updateNewRxSearch,
-                onClear: () {
-                  controller.updateNewRxSearch('');
-                },
-              ),
+          PatientSearchField(
+            onChanged: controller.updateNewRxSearch,
+            onClear: () {
+              controller.updateNewRxSearch('');
+            },
+          ),
           Expanded(
             child: Obx(() {
               final prescriptions = controller.newPrescriptions;
@@ -32,7 +34,7 @@ class NewPrescriptionPage extends StatelessWidget {
                 );
               }
               return ListView.builder(
-                padding:  EdgeInsets.symmetric(vertical: context.screenHeight * 0.01),
+                padding: EdgeInsets.symmetric(vertical: h * 0.01),
                 itemCount: prescriptions.length,
                 itemBuilder: (context, index) {
                   final prescription = prescriptions[index];
@@ -63,7 +65,7 @@ class _EmptyState extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 48, color: const Color(0xFFD1D5DB)),
-          const SizedBox(height: 12),
+          SizedBox(height: context.screenHeight * 0.01),
           Text(
             message,
             style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),

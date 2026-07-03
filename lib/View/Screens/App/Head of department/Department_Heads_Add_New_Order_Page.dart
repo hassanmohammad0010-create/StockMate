@@ -19,24 +19,29 @@ class DepartmentHeadsAddNewOrderPage extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          Get.delete<ToggleController>(tag: AppRoutes.DepartmentHeadsAddNewOrderPage);
+          Get.delete<ToggleController>(
+            tag: AppRoutes.DepartmentHeadsAddNewOrderPage,
+          );
         }
       },
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-        backgroundColor: constBackgroundColor,
+          backgroundColor: constBackgroundColor,
           body: Column(
             children: [
               CustomBackContainer(),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.screenWidth * 0.03,
-                  vertical: context.screenHeight * 0.02,
+                  horizontal: w * 0.03,
+                  vertical: h * 0.02,
                 ),
                 child: Align(
                   alignment: AlignmentGeometry.centerRight,

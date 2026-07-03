@@ -5,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/PrescriptionModel.dart';
 
-/// كونتينر احترافي لعرض ملخص الوصفة الطبية.
-/// يتغيّر شكله ولون شارته بناءً على حالة الوصفة (newRx / processed).
 class PrescriptionCard extends StatelessWidget {
   final PrescriptionModel prescription;
   final VoidCallback onTap;
@@ -21,6 +19,10 @@ class PrescriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final Color accentColor = _isNew ? constRed : constGreen;
     final Color backgroundTint = _isNew ? constLightRed : constLightGreen;
 
@@ -30,8 +32,14 @@ class PrescriptionCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          padding: const EdgeInsets.all(16),
+          margin: EdgeInsets.symmetric(
+            horizontal: w * 0.04,
+            vertical: h * 0.01,
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: w * 0.04,
+            vertical: h * 0.018,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -47,16 +55,15 @@ class PrescriptionCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // شريط جانبي ملوّن يدل على الحالة بسرعة دون قراءة النص
               Container(
-                width: 4,
-                height: 64,
+                width: w * 0.01,
+                height: h * 0.08,
                 decoration: BoxDecoration(
                   color: accentColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: w * 0.04),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,9 +82,9 @@ class PrescriptionCard extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: w * 0.02,
+                            vertical: h * 0.005,
                           ),
                           decoration: BoxDecoration(
                             color: backgroundTint,
@@ -94,7 +101,7 @@ class PrescriptionCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: h * 0.005),
                     Row(
                       children: [
                         const Icon(
@@ -102,7 +109,7 @@ class PrescriptionCard extends StatelessWidget {
                           size: 15,
                           color: Color(0xFF6B7280),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: w * 0.01),
                         Expanded(
                           child: Text(
                             prescription.condition,
@@ -115,7 +122,7 @@ class PrescriptionCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: h * 0.005),
                     Row(
                       children: [
                         const Icon(
@@ -123,7 +130,7 @@ class PrescriptionCard extends StatelessWidget {
                           size: 15,
                           color: Color(0xFF6B7280),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: w * 0.01),
                         Expanded(
                           child: Text(
                             prescription.doctorName,

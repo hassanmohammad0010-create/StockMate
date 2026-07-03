@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/AddRecurringOrder_Controller.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Recurring_Button.dart';
 
@@ -12,25 +13,26 @@ class RecurringChooseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    
+    final h = context.screenHeight;
+    final w = context.screenWidth;
 
     return Obx(() {
       final selected = _c.selectedRecurring.value;
 
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.width * 0.025),
+        padding: EdgeInsets.symmetric(horizontal: w * 0.025),
         child: Container(
-          width: size.height * 0.9,
+          width: w * 0.95,
           child: Card(
             color: Colors.white.withOpacity(0.9),
             elevation: 3.0,
             child: Column(
               children: [
-                // ── العنوان ───────────────────────────────────────────
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 24, top: 12),
+                    padding: EdgeInsets.only(right: w * 0.05, top: h * 0.015),
                     child: Text(
                       'التكرار',
                       style: const TextStyle(fontSize: 20, fontFamily: 'Cairo'),
@@ -38,36 +40,32 @@ class RecurringChooseCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                  padding: EdgeInsets.symmetric(horizontal: w * 0.03),
                   child: const Divider(),
                 ),
-                SizedBox(height: size.height * 0.01),
+                SizedBox(height: h * 0.01),
 
-                // ── أزرار التكرار ─────────────────────────────────────
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     RecurringButton(
                       label: 'يومي',
                       isSelected: selected == 'daily',
-                      size: size,
                       onTap: () => _c.selectRecurring('daily'),
                     ),
                     RecurringButton(
                       label: 'أسبوعي',
                       isSelected: selected == 'weekly',
-                      size: size,
                       onTap: () => _c.selectRecurring('weekly'),
                     ),
                     RecurringButton(
                       label: 'شهري',
                       isSelected: selected == 'monthly',
-                      size: size,
                       onTap: () => _c.selectRecurring('monthly'),
                     ),
                   ],
                 ),
-                SizedBox(height: size.height * 0.01),
+                SizedBox(height: h * 0.01),
               ],
             ),
           ),

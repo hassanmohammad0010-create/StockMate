@@ -26,8 +26,16 @@ class CustomSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Padding(
-      padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 12),
+      padding: EdgeInsets.only(
+        left: w * 0.03,
+        right: w * 0.03,
+        top: h * 0.005,
+        bottom: h * 0.01,
+      ),
       child: TextField(
         controller: _searchController,
         textDirection: TextDirection.rtl,
@@ -63,9 +71,9 @@ class CustomSearchField extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.grey.shade100,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: w * 0.04,
+            vertical: h * 0.015,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),

@@ -19,6 +19,8 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
 
     final order = controller.order.value;
     final now = DateTime.now();
@@ -44,8 +46,8 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
-                horizontal: context.screenWidth * 0.04,
-                vertical: context.screenHeight * 0.01,
+                horizontal: w * 0.04,
+                vertical: h * 0.01,
               ),
               child: Column(
                 children: [
@@ -59,7 +61,7 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
                       BuildRow(label: 'تاريخ الإرسال', value: formattedDate),
                     ],
                   ),
-                  SizedBox(height: context.screenHeight * 0.01),
+                  SizedBox(height: h * 0.01),
                   BuildSection(
                     title: 'تفاصيل الطلب',
                     icon: Icons.medical_services_outlined,

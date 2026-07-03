@@ -17,6 +17,9 @@ class PrescriptionArchivePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final SendPrescriptionController controller =
         Get.isRegistered<SendPrescriptionController>()
         ? Get.find<SendPrescriptionController>()
@@ -29,7 +32,7 @@ class PrescriptionArchivePage extends StatelessWidget {
         child: Column(
           children: [
             CustomBackContainer(),
-            SizedBox(height: context.screenHeight * 0.01),
+            SizedBox(height: h * 0.01),
             CustomHeadContainer(title: 'أرشيف الوصفات الطبية'),
             PatientSearchField(
               controller: _searchController,
@@ -51,7 +54,7 @@ class PrescriptionArchivePage extends StatelessWidget {
                           size: 64,
                           color: Colors.grey.shade300,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: h * 0.02),
                         Text(
                           controller.searchQuery.value.isEmpty
                               ? 'لا توجد وصفات في الأرشيف بعد'
@@ -69,7 +72,7 @@ class PrescriptionArchivePage extends StatelessWidget {
 
                 return SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
+                    padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                     child: Column(
                       children: list
                           .map(

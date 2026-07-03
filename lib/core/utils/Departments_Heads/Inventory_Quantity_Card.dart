@@ -14,6 +14,9 @@ class InventoryQuantityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Obx(() {
       CartController.to.inventoryVersion.value;
 
@@ -23,15 +26,12 @@ class InventoryQuantityCard extends StatelessWidget {
 
       return Column(
         children: [
-          // ── شريط التقدم ──────────────────────────────────────
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.screenWidth * 0.03,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: w * 0.03),
             child: Container(
               padding: EdgeInsets.symmetric(
-                horizontal: context.screenWidth * 0.035,
-                vertical: context.screenHeight * 0.01,
+                horizontal: w * 0.035,
+                vertical: h * 0.01,
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -53,7 +53,7 @@ class InventoryQuantityCard extends StatelessWidget {
                       Text(
                         'الكمية المتوفرة',
                         style: TextStyle(
-                          fontSize: context.screenHeight * 0.019,
+                          fontSize: h * 0.019,
                           fontFamily: cairo,
                           color: constGray,
                           fontWeight: FontWeight.w500,
@@ -62,36 +62,37 @@ class InventoryQuantityCard extends StatelessWidget {
                       Text(
                         '${item.totalQuantity}\\${item.maxQuantity}',
                         style: TextStyle(
-                          fontSize: context.screenHeight * 0.019,
+                          fontSize: h * 0.019,
                           fontFamily: cairo,
                           color: Colors.black,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: context.screenHeight * 0.015),
+                  SizedBox(height: h * 0.015),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
                       value: ratio,
-                      minHeight: context.screenHeight * 0.012,
+                      minHeight: h * 0.012,
                       backgroundColor: const Color(0xFFE2E8F0),
                       valueColor: AlwaysStoppedAnimation<Color>(
                         ratio < 0.20 ? constRed : constBlue,
                       ),
                     ),
                   ),
-                  SizedBox(height: context.screenHeight * 0.008),
+                  SizedBox(height: h * 0.008),
                   // toStringAsFixed يمنع ظهور أرقام مثل 75.000000001
                   Text(
                     '${(ratio * 100).toStringAsFixed(1)} %',
-                    style: TextStyle(fontSize: context.screenHeight * 0.016),
+                    style: TextStyle(fontSize: h * 0.016),
                   ),
-                  SizedBox(height: context.screenHeight * 0.008),
+                  SizedBox(height: h * 0.008),
                 ],
               ),
             ),
           ),
+          SizedBox(height: h * 0.01),
           Row(
             children: [
               CustomQuantityContainer(

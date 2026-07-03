@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
@@ -9,8 +11,12 @@ class BuildRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: h * 0.01),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,7 +32,7 @@ class BuildRow extends StatelessWidget {
 
           // ignore: sized_box_for_whitespace
           Container(
-            width: 90,
+            width: w * 0.22,
             child: Text(
               value,
               textAlign: TextAlign.center,
@@ -41,4 +47,5 @@ class BuildRow extends StatelessWidget {
         ],
       ),
     );
-}}
+  }
+}

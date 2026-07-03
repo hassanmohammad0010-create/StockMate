@@ -12,10 +12,14 @@ class OrderTabBar extends GetView<AddOrdinaryOrderController> {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: context.screenWidth * 0.03,
-        vertical: context.screenHeight * 0.01,
+        horizontal: w * 0.03,
+        vertical: h * 0.01,
       ),
       child: Row(
         children: [
@@ -43,7 +47,7 @@ class OrderTabBar extends GetView<AddOrdinaryOrderController> {
             ),
           ),
 
-          SizedBox(width: context.screenWidth * 0.02),
+          SizedBox(width: w * 0.02),
 
           Obx(
             () => Opacity(
@@ -51,8 +55,8 @@ class OrderTabBar extends GetView<AddOrdinaryOrderController> {
               child: GestureDetector(
                 onTap: controller.addOrder,
                 child: Container(
-                  height: context.screenHeight * 0.045,
-                  width: context.screenWidth * 0.25,
+                  height: h * 0.045,
+                  width: w * 0.25,
                   decoration: BoxDecoration(
                     color: constBlue,
                     borderRadius: BorderRadius.circular(10),

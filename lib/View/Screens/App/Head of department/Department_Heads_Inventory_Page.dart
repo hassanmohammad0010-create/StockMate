@@ -20,15 +20,20 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
-    Get.lazyPut<FilterController>(
-      () => FilterController()
-        ..initFilters(['الكل', 'ثابتة', 'مستهلكة', 'ادوية']),
+      Get.lazyPut<FilterController>(
+        () =>
+            FilterController()
+              ..initFilters(['الكل', 'ثابتة', 'مستهلكة', 'ادوية']),
+        tag: _filterTag,
+      );
+    }
+    final FilterController filterController = Get.find<FilterController>(
       tag: _filterTag,
     );
-  }
-  final FilterController filterController =
-      Get.find<FilterController>(tag: _filterTag);
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -87,15 +92,16 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
               return material.isEmpty
                   ? CustomSearchField().buildEmptyState()
                   : ListView.builder(
-                      padding: const EdgeInsets.only(top: 0, bottom: 12),
+                      padding: EdgeInsets.symmetric(
+                        vertical: h * 0.005,
+                        horizontal: w * 0.01,
+                      ),
                       itemCount: material.length,
                       itemBuilder: (context, index) {
                         return MaterialCard(
                           onTap: () {
                             Get.to(
-                              () => InventoryDetailsPage(
-                                item: material[index],
-                              ),
+                              () => InventoryDetailsPage(item: material[index]),
                               binding: InventoryDetailsBinding(),
                             );
                           },

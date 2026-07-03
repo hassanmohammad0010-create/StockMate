@@ -16,6 +16,10 @@ class CartArchivePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+    
     final ArchiveController controller = ArchiveController.to;
 
     final DatePickerController datePickerController = Get.put(
@@ -31,7 +35,7 @@ class CartArchivePage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          SizedBox(height: context.screenHeight * 0.01),
+          SizedBox(height: h * 0.01),
           CustomHeadContainer(title: 'أرشيف السلة'),
           Obx(
             () => TextFormFaildForDate(
@@ -60,7 +64,7 @@ class CartArchivePage extends StatelessWidget {
                       icon: Icon(
                         Icons.close,
                         color: Colors.grey,
-                        size: context.screenHeight * 0.024,
+                        size: h * 0.024,
                       ),
                       onPressed: () {
                         datePickerController.clearFromDate();
@@ -82,7 +86,7 @@ class CartArchivePage extends StatelessWidget {
                         size: 64,
                         color: Colors.grey.shade300,
                       ),
-                      SizedBox(height: context.screenHeight * 0.02),
+                      SizedBox(height: h * 0.02),
                       Text(
                         controller.filteredArchiveList.isEmpty
                             ? 'لا توجد سلات في الأرشيف بعد'
@@ -100,11 +104,11 @@ class CartArchivePage extends StatelessWidget {
               return SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: context.screenWidth * 0.02,
+                    horizontal: w * 0.02,
                   ),
                   child: Column(
                     children: [
-                      SizedBox(height: context.screenHeight * 0.01),
+                      SizedBox(height: h * 0.01),
                       ...controller.filteredArchiveList.map((item) {
                         return CustomCartContainer(
                           buttonText: 'عرض التفاصيل',

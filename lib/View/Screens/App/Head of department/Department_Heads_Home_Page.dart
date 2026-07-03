@@ -15,12 +15,14 @@ class DepartmentHeadsHomePage extends StatelessWidget {
 
   final OrdersController ordersController = Get.put(OrdersController());
 
-  // استخدام نفس الـ controller المسجل مسبقًا في DepartmentHeadsMainPage
   final DepartmentHeadsMainTabController mainTabController =
       Get.find<DepartmentHeadsMainTabController>();
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: SingleChildScrollView(
@@ -32,7 +34,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.symmetric(
-                horizontal: context.screenWidth * 0.02,
+                horizontal: w * 0.02,
               ),
               child: Column(
                 children: [
@@ -116,16 +118,16 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: context.screenHeight * 0.01),
+            SizedBox(height: h * 0.01),
             Divider(
-              endIndent: context.screenWidth * 0.03,
-              indent: context.screenWidth * 0.03,
+              endIndent: w * 0.03,
+              indent: w * 0.03,
               color: constGray,
             ),
             Align(
               alignment: AlignmentGeometry.centerRight,
               child: Padding(
-                padding: EdgeInsets.only(right: context.screenWidth * 0.03),
+                padding: EdgeInsets.only(right: w * 0.03),
                 child: Text(
                   'وصفة طبية جديدة / السلة',
                   style: TextStyle(
@@ -136,7 +138,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: context.screenHeight * 0.01),
+            SizedBox(height: h * 0.01),
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'الوصفات الطبية الجديدة المرسلة من الأطباء',
@@ -147,7 +149,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               },
               title: 'الوصفات الطبية الجديدة',
             ),
-            SizedBox(height: context.screenHeight * 0.01),
+            SizedBox(height: h * 0.01),
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'طلب رفع روشيتة لمريض',
@@ -158,7 +160,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               },
               title: 'رفع روشيتة جديدة',
             ),
-            SizedBox(height: context.screenHeight * 0.01),
+            SizedBox(height: h * 0.01),
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'عرض تفاصيل المواد اليومية المطلوبة',
@@ -169,7 +171,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               },
               title: 'السلة',
             ),
-            SizedBox(height: context.screenHeight * 0.01),
+            SizedBox(height: h * 0.01),
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'عرض الأرشيف للمصروفات اليومية السابقة',
@@ -180,7 +182,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               },
               title: 'الأرشيف',
             ),
-            SizedBox(height: context.screenHeight * 0.01),
+            SizedBox(height: h * 0.01),
           ],
         ),
       ),

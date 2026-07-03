@@ -5,22 +5,28 @@ import 'package:stock_mate_project/Constant/Const.dart';
 
 // ignore: must_be_immutable
 class BuildSection extends StatelessWidget {
-   BuildSection ({super.key, required  this.title,
+  BuildSection({
+    super.key,
+    required this.title,
     required this.icon,
-    required  this.children,});
+    required this.children,
+  });
 
-    IconData icon;
-    String title;
-    List<Widget> children;
+  IconData icon;
+  String title;
+  List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       elevation: 0,
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(horizontal: w * 0.05, vertical: h * 0.02),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -29,7 +35,7 @@ class BuildSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Icon(icon, size: 20, color: constBlue),
-                const SizedBox(width: 8),
+                SizedBox(width: w * 0.02),
 
                 Text(
                   title,
@@ -42,7 +48,12 @@ class BuildSection extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(height: 20),
+            Divider(
+              indent: w * 0.004,
+              endIndent: w * 0.004,
+              height: h * 0.02,
+              color: Colors.grey.shade300,
+            ),
             ...children,
           ],
         ),

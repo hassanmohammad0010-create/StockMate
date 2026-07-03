@@ -13,6 +13,9 @@ class NotificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final NotificationController controller = Get.put(NotificationController());
 
     return Scaffold(
@@ -20,16 +23,16 @@ class NotificationPage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          SizedBox(height: context.screenHeight * 0.01),
+          SizedBox(height: h * 0.01),
           CustomHeadContainer(title: 'الاشعارات'),
 
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
+                padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                 child: Column(
                   children: [
-                    SizedBox(height: context.screenHeight * 0.01),
+                    SizedBox(height: h * 0.01),
                     ...controller.notifications.map((notification) {
                       return CustomNotificationCard(
                         title: notification.title,
@@ -38,7 +41,7 @@ class NotificationPage extends StatelessWidget {
                         onTap: () {},
                       );
                     }),
-                    SizedBox(height: context.screenHeight * 0.02),
+                    SizedBox(height: h * 0.02),
                   ],
                 ),
               ),

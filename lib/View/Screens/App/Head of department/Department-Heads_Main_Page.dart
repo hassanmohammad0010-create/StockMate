@@ -15,6 +15,9 @@ class DepartmentHeadsMainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     if (!Get.isRegistered<DepartmentHeadsMainTabController>()) {
       Get.put(DepartmentHeadsMainTabController());
     }
@@ -25,8 +28,8 @@ class DepartmentHeadsMainPage extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         floatingActionButton: SizedBox(
-          width: context.screenWidth * 0.18,
-          height: context.screenHeight * 0.08,
+          width: w * 0.18,
+          height: h * 0.08,
           child: FloatingActionButton(
             backgroundColor: constBlue,
             foregroundColor: Colors.white,
@@ -42,7 +45,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
           ),
         ),
         appBar: AppBar(
-          toolbarHeight: context.screenHeight * 0.1,
+          toolbarHeight: h * 0.1,
           actions: [
             Stack(
               children: [
@@ -57,20 +60,20 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                   },
                 ),
                 Positioned(
-                  right: context.screenWidth * 0.02,
-                  top: context.screenHeight * 0.01,
+                  right: w * 0.02,
+                  top: h * 0.01,
                   child: Container(
-                    width: context.screenWidth * 0.02,
-                    height: context.screenHeight * 0.015,
+                    width: w * 0.02,
+                    height: h * 0.015,
                     decoration: const BoxDecoration(
-                      color: Colors.red,
+                      color: constRed,
                       shape: BoxShape.circle,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(width: context.screenWidth * 0.02),
+            SizedBox(width: w * 0.02),
           ],
           elevation: 4.0,
           shadowColor: constColor,
@@ -95,7 +98,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                   color: constBlue,
                 ),
               ),
-              SizedBox(height: context.screenHeight * 0.01),
+              SizedBox(height: h * 0.01),
             ],
           ),
           backgroundColor: constColor,
@@ -122,10 +125,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                 ),
               ),
               Tab(
-                icon: const Icon(
-                  Icons.inventory_2_sharp,
-                  color: Colors.white,
-                ),
+                icon: const Icon(Icons.inventory_2_sharp, color: Colors.white),
                 child: Text(
                   'المخزون',
                   style: TextStyle(
@@ -136,10 +136,7 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                 ),
               ),
               Tab(
-                icon: const Icon(
-                  Icons.receipt_long_sharp,
-                  color: Colors.white,
-                ),
+                icon: const Icon(Icons.receipt_long_sharp, color: Colors.white),
                 child: Text(
                   'الطلبات',
                   style: TextStyle(
