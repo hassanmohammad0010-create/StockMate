@@ -4,13 +4,12 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 
-class ApproveDepartmentRequestService {
-  Future<bool> approveRequest({required int requestId}) async {
+class ApprovePurchaseRequestService {
+  Future<bool> approvePurchaseRequest({required int requestId}) async {
     final Uri url = Uri.parse(
-      'https://grud-2y91.onrender.com/api/request-orders/$requestId/approve',
+      'https://grud-2y91.onrender.com/api/purchase-requests/$requestId/approve',
     );
-    //TODO
-    //TOken
+    //TODO Token
     try {
       final response = await http
           .patch(
@@ -22,8 +21,8 @@ class ApproveDepartmentRequestService {
       if (response.statusCode == 200) {
         customSnackBar(
           title: 'تمت الموافقة',
-          message: 'تمت الموافقة على الطلب بنجاح',
-          color: constGreen, // أو أي لون نجاح عندك
+          message: 'تمت الموافقة على طلب الشراء بنجاح',
+          color: constGreen,
           messageColor: constLightGreen,
         );
         return true;

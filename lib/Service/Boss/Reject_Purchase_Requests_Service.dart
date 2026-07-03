@@ -1,29 +1,37 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 
-class ApproveDepartmentRequestService {
-  Future<bool> approveRequest({required int requestId}) async {
+class RejectPurchaseRequestService {
+  Future<bool> rejectPurchaseRequest({
+    required int requestId,
+    required String rejectionReason,
+  }) async {
     final Uri url = Uri.parse(
-      'https://grud-2y91.onrender.com/api/request-orders/$requestId/approve',
+      'https://grud-2y91.onrender.com/api/purchase-requests/$requestId/reject',
     );
-    //TODO
-    //TOken
+    //TODO Tokens
     try {
       final response = await http
           .patch(
             url,
-            headers: {'Accept': 'application/json', 'Authorization': 'Bearer '},
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ',
+            },
+            body: jsonEncode({'rejection_reason': rejectionReason}),
           )
           .timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         customSnackBar(
-          title: 'تمت الموافقة',
-          message: 'تمت الموافقة على الطلب بنجاح',
-          color: constGreen, // أو أي لون نجاح عندك
+          title: 'تم الرفض',
+          message: 'تم رفض طلب الشراء بنجاح',
+          color: constGreen,
           messageColor: constLightGreen,
         );
         return true;

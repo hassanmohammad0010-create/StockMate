@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
+import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
 
 class GetFixedItemsService {
@@ -30,40 +27,10 @@ class GetFixedItemsService {
         return _parseResponse(response.body);
       }
 
-      _showErrorByStatusCode(response.statusCode);
-      return [];
-    } on SocketException {
-      customSnackBar(
-        title: 'حدث خطأ',
-        message: 'لا يوجد اتصال بالإنترنت، تحقق من الشبكة',
-        color: constRed,
-        messageColor: constLightRed,
-      );
-      return [];
-    } on TimeoutException {
-      customSnackBar(
-        title: 'انتهت المهلة',
-        message: 'الخادم لا يستجيب، حاول لاحقاً',
-        color: constRed,
-        messageColor: constLightRed,
-      );
-      return [];
-    } on FormatException {
-      customSnackBar(
-        title: 'حدث خطأ',
-        message: 'حدث خطأ أثناء معالجة البيانات المستلمة',
-        color: constRed,
-        messageColor: constLightRed,
-      );
+      ApiErrorHandler.handleStatusCode(response.statusCode);
       return [];
     } catch (e) {
-      debugPrint('getFixedItemsService error: $e');
-      customSnackBar(
-        title: 'حدث خطأ',
-        message: 'الرجاء المحاولة لاحقاً',
-        color: constRed,
-        messageColor: constLightRed,
-      );
+      ApiErrorHandler.handleException(e);
       return [];
     }
   }
@@ -89,23 +56,5 @@ class GetFixedItemsService {
     }
 
     return items;
-  }
-
-  void _showErrorByStatusCode(int statusCode) {
-    if (statusCode == 401 || statusCode == 403) {
-      customSnackBar(
-        title: 'انتهت الجلسة',
-        message: 'الرجاء تسجيل الدخول من جديد',
-        color: constRed,
-        messageColor: constLightRed,
-      );
-    } else {
-      customSnackBar(
-        title: 'حدث خطأ',
-        message: 'فشل تحميل البيانات، حاول لاحقاً',
-        color: constRed,
-        messageColor: constLightRed,
-      );
-    }
   }
 }

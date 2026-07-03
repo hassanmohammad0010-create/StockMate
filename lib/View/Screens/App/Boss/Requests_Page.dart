@@ -57,7 +57,7 @@ class RequestPage extends StatelessWidget {
                 alignment: AlignmentGeometry.topRight,
                 child: CustomToggleButtom(
                   first: 'المستودع',
-                  second: 'المخازن',
+                  second: 'الاقسام',
                   controller: toggleController,
                 ),
               ),
