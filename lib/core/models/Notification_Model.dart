@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
-enum NotificationStatus { rejected, inProgress, completed }
+enum NotificationStatus { rejected, inProgress, completed, prescription }
 
 class NotificationModel {
   final String title;
@@ -22,6 +22,8 @@ class NotificationModel {
         return constRed;
       case NotificationStatus.inProgress:
         return constBlue;
+      case NotificationStatus.prescription:
+        return constRed;
     }
   }
 }

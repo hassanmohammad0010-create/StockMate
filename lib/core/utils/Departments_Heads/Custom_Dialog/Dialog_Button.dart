@@ -19,10 +19,13 @@ class DialogButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 13),
+        padding:  EdgeInsets.symmetric(vertical: h * 0.015),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),

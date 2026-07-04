@@ -25,6 +25,7 @@ class DialogContent extends StatelessWidget {
     required this.textFieldController,
     required this.formKey,
     this.onConfirm,
+    this.onCancel,
     this.textFieldValidator,
   });
 
@@ -35,7 +36,7 @@ class DialogContent extends StatelessWidget {
   final String cancelText;
   final bool showCancel;
   final VoidCallback? onConfirm;
-
+  final VoidCallback? onCancel;
   final bool showTextField;
   final String textFieldHint;
   final String textFieldLabel;
@@ -55,6 +56,14 @@ class DialogContent extends StatelessWidget {
       onConfirm!();
     } else {
       Get.back(result: true);
+    }
+  }
+
+  void _handleCancel() {
+    if (onCancel != null) {
+      onCancel!();
+    } else {
+      Get.back(result: false);
     }
   }
 
@@ -100,6 +109,7 @@ class DialogContent extends StatelessWidget {
                 confirmText: confirmText,
                 cancelText: cancelText,
                 confirmColor: style.confirmColor,
+                onCancel: _handleCancel,
                 onConfirm: _handleConfirm,
               ),
             ],
@@ -137,20 +147,23 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.05, vertical: h * 0.015),
       child: Column(
         children: [
           Container(
-            width: context.screenWidth * 0.2,
-            height: context.screenHeight * 0.07,
+            width: w * 0.2,
+            height: h * 0.07,
             decoration: BoxDecoration(
               color: style.iconBackground,
               shape: BoxShape.circle,
             ),
             child: Icon(style.icon, color: style.iconColor, size: 32),
           ),
-          SizedBox(height: context.screenHeight * 0.02),
+          SizedBox(height: h * 0.02),
           Text(
             title,
             textAlign: TextAlign.center,
@@ -161,7 +174,7 @@ class _Header extends StatelessWidget {
               color: Color(0xFF1E293B),
             ),
           ),
-          SizedBox(height: context.screenHeight * 0.01),
+          SizedBox(height: h * 0.01),
           Text(
             message,
             textAlign: TextAlign.center,
@@ -173,7 +186,7 @@ class _Header extends StatelessWidget {
             ),
           ),
           if (showTextField) ...[
-            SizedBox(height: context.screenHeight * 0.02),
+            SizedBox(height: h * 0.01),
             DialogTextField(
               controller: textFieldController,
               hint: textFieldHint,
@@ -184,7 +197,7 @@ class _Header extends StatelessWidget {
               validator: textFieldValidator,
             ),
           ],
-          SizedBox(height: context.screenHeight * 0.03),
+          SizedBox(height: h * 0.005),
         ],
       ),
     );
@@ -198,6 +211,7 @@ class _Actions extends StatelessWidget {
     required this.cancelText,
     required this.confirmColor,
     required this.onConfirm,
+    required this.onCancel,
   });
 
   final bool showCancel;
@@ -205,9 +219,13 @@ class _Actions extends StatelessWidget {
   final String cancelText;
   final Color confirmColor;
   final VoidCallback onConfirm;
+  final VoidCallback onCancel;
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final confirmButton = DialogButton(
       label: confirmText,
       color: confirmColor,
@@ -216,7 +234,7 @@ class _Actions extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: h * 0.02),
       child: showCancel
           ? Row(
               children: [
@@ -225,10 +243,10 @@ class _Actions extends StatelessWidget {
                     label: cancelText,
                     color: Colors.grey.shade100,
                     textColor: Colors.grey.shade700,
-                    onTap: () => Get.back(result: false),
+                    onTap: onCancel,
                   ),
                 ),
-                SizedBox(width: context.screenWidth * 0.025),
+                SizedBox(width: w * 0.025),
                 Expanded(child: confirmButton),
               ],
             )

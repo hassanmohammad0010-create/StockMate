@@ -14,6 +14,9 @@ class ReportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final ReportController controller = Get.put(ReportController());
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -22,16 +25,16 @@ class ReportPage extends StatelessWidget {
         child: Column(
           children: [
             CustomBackContainer(),
-            SizedBox(height: context.screenHeight * 0.01),
+            SizedBox(height: h * 0.01),
             CustomHeadContainer(title: 'ادخل تفاصيل التقرير'),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.03),
+                  padding: EdgeInsets.symmetric(horizontal: w * 0.03),
                   child: Column(
                     children: [
                       CustomReportCard(),
-                      SizedBox(height: context.screenHeight * 0.02),
+                      SizedBox(height: h * 0.02),
                     ],
                   ),
                 ),
@@ -39,13 +42,13 @@ class ReportPage extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: context.screenWidth * 0.05,
-                vertical: context.screenHeight * 0.01,
+                horizontal: w * 0.05,
+                vertical: h * 0.01,
               ),
               child: Divider(),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: context.screenHeight * 0.02),
+              padding: EdgeInsets.only(bottom: h * 0.02),
               child: CustomMainButtom(
                 title: 'إرسال',
                 color: constBlue,
@@ -66,7 +69,7 @@ class ReportPage extends StatelessWidget {
                       'خطأ',
                       'الرجاء ملء جميع الحقول المطلوبة',
                       snackPosition: SnackPosition.TOP,
-                      backgroundColor: Colors.red.shade600,
+                      backgroundColor: constRed,
                       colorText: Colors.white,
                     );
                   }

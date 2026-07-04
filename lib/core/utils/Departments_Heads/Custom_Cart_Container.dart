@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
@@ -61,8 +62,9 @@ class CustomCartContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
+    
+    final h = context.screenHeight;
+    final w = context.screenWidth;
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: h * 0.006, horizontal: w * 0.03),
@@ -82,10 +84,9 @@ class CustomCartContainer extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // أيقونة دائرية تعطي هوية بصرية للعنصر داخل السلة
           Container(
-            width: 46,
-            height: 46,
+            width: w * 0.12,
+            height: h * 0.06,
             decoration: BoxDecoration(
               color: buttonColor.withOpacity(0.4),
               shape: BoxShape.circle,
@@ -113,7 +114,7 @@ class CustomCartContainer extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: h * 0.005),
                 Text(
                   subtitle,
                   maxLines: 2,

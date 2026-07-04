@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -7,11 +7,14 @@ import 'package:stock_mate_project/core/models/Order_Models.dart';
 class StatusBadge extends StatelessWidget {
   final OrderStatus status;
 
-  // ignore: use_key_in_widget_constructors
   const StatusBadge({required this.status});
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     late String label;
     late Color bgColor;
     late Color textColor;
@@ -45,10 +48,10 @@ class StatusBadge extends StatelessWidget {
     }
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: context.screenHeight * 0.002,
-        horizontal: context.screenWidth * 0.01,
+        vertical: h * 0.002,
+        horizontal: w * 0.01,
       ),
-      width: context.screenWidth * 0.18,
+      width: w * 0.18,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8),

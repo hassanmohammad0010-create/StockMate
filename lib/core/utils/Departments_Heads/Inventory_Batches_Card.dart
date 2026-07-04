@@ -20,9 +20,12 @@ class InventoryBatchesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(context.screenWidth * 0.04),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.04, vertical: h * 0.02),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -49,14 +52,14 @@ class InventoryBatchesCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.inventory_2_outlined,
-                        size: context.screenHeight * 0.028,
+                        size: h * 0.028,
                         color: constGray,
                       ),
-                      SizedBox(width: context.screenWidth * 0.015),
+                      SizedBox(width: w * 0.015),
                       Text(
                         'توزيع الكمية حسب الصلاحية',
                         style: TextStyle(
-                          fontSize: context.screenHeight * 0.019,
+                          fontSize: h * 0.018,
                           fontFamily: cairo,
                           color: constGray,
                         ),
@@ -66,39 +69,30 @@ class InventoryBatchesCard extends StatelessWidget {
                   AnimatedRotation(
                     turns: controller.showBatches.value ? 0 : 0.5,
                     duration: const Duration(milliseconds: 250),
-                    child: Icon(
-                      Icons.keyboard_arrow_up,
-                      size: context.screenHeight * 0.026,
-                    ),
+                    child: Icon(Icons.keyboard_arrow_up, size: h * 0.026),
                   ),
                 ],
               ),
             ),
             if (controller.showBatches.value) ...[
-              SizedBox(height: context.screenHeight * 0.015),
+              SizedBox(height: h * 0.015),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.01),
+                padding: EdgeInsets.symmetric(horizontal: w * 0.01),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'الكمية',
-                      style: TextStyle(
-                        fontSize: context.screenHeight * 0.013,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: h * 0.014, color: Colors.grey),
                     ),
                     Text(
                       'تاريخ الانتهاء',
-                      style: TextStyle(
-                        fontSize: context.screenHeight * 0.013,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: h * 0.014, color: Colors.grey),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: context.screenHeight * 0.008),
+              SizedBox(height: h * 0.008),
               ...item.batches.map(
                 (batch) => BatchRowItem(batch: batch, material: item),
               ),

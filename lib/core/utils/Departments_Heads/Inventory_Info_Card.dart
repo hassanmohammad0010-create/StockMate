@@ -12,15 +12,19 @@ class InventoryInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: context.screenWidth * 0.03,
-        vertical: context.screenHeight * 0.01,
+        horizontal: w * 0.03,
+        vertical: h * 0.01,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: context.screenWidth * 0.035,
-          vertical: context.screenHeight * 0.01,
+          horizontal: w * 0.035,
+          vertical: h * 0.01,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),

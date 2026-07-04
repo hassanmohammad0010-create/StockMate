@@ -11,10 +11,13 @@ class RecurringSubmitSection extends GetView<AddRecurringOrderController> {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+
     return Container(
       padding: EdgeInsets.only(
-        bottom: context.screenHeight * 0.01,
-        top: context.screenHeight * 0.01,
+        bottom: h * 0.01,
+        top: h * 0.01,
       ),
       decoration: BoxDecoration(
         boxShadow: [
@@ -28,8 +31,7 @@ class RecurringSubmitSection extends GetView<AddRecurringOrderController> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 10),
-
+          SizedBox(height: h * 0.01),
           CustomMainButtom(
             title: 'إرسال الطلب',
             color: constBlue,
@@ -37,8 +39,7 @@ class RecurringSubmitSection extends GetView<AddRecurringOrderController> {
             onPressed: () =>
 controller.validateAndGoToConfirm(),            
           ),
-
-          const SizedBox(height: 10),
+           SizedBox(height: h * 0.01),
         ],
       ),
     );

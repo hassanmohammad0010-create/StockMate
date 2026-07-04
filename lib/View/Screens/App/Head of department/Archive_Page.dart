@@ -13,20 +13,24 @@ class ArchivePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: Column(
         children: [
           CustomBackContainer(),
-          SizedBox(height: context.screenHeight * 0.01),
+          SizedBox(height: h * 0.01),
           CustomHeadContainer(title: 'الأرشيف'),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: context.screenWidth * 0.02),
+                padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                 child: Column(
                   children: [
-                    SizedBox(height: context.screenHeight * 0.02),
+                    SizedBox(height: h * 0.02),
                     ArchiveCard(
                       title: 'أرشيف الوصفات',
                       icon: Icons.bar_chart_rounded,
@@ -34,7 +38,7 @@ class ArchivePage extends StatelessWidget {
                         Get.toNamed(AppRoutes.PrescriptionArchivePage);
                       },
                     ),
-                    SizedBox(height: context.screenHeight * 0.02),
+                    SizedBox(height: h * 0.02),
                     ArchiveCard(
                       title: 'أرشيف السلة',
                       icon: Icons.shopping_cart,

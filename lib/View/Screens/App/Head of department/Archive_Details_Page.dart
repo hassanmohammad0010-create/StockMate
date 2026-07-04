@@ -12,6 +12,10 @@ class ArchiveDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final ArchiveItem item = Get.arguments as ArchiveItem;
 
     return Scaffold(
@@ -19,7 +23,7 @@ class ArchiveDetailsPage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          SizedBox(height: context.screenHeight * 0.01),
+          SizedBox(height: h * 0.01),
           CustomHeadContainer(
             title: 'تفاصيل السلة',
             trailing: 'التاريخ: ${item.date}',
@@ -28,14 +32,14 @@ class ArchiveDetailsPage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.screenWidth * 0.02,
+                  horizontal: w * 0.02,
                 ),
                 child: Column(
                   children: [
                     if (item.medicines.isEmpty)
                       Padding(
                         padding: EdgeInsets.only(
-                          top: context.screenHeight * 0.3,
+                          top: h * 0.3,
                         ),
                         child: Text(
                           'لا توجد أدوية مسجلة لهذا التاريخ',
@@ -46,13 +50,13 @@ class ArchiveDetailsPage extends StatelessWidget {
                       ...item.medicines.map((med) {
                         return Container(
                           margin: EdgeInsets.symmetric(
-                            vertical: context.screenHeight * 0.005,
-                            horizontal: context.screenWidth * 0.01,
+                            vertical: h * 0.005,
+                            horizontal: w * 0.01,
                           ),
-                          width: context.screenWidth * 0.95,
-                          height: context.screenHeight * 0.1,
+                          width: w * 0.95,
+                          height: h * 0.1,
                           padding: EdgeInsets.symmetric(
-                            horizontal: context.screenWidth * 0.05,
+                            horizontal: w * 0.05,
                             vertical: context.screenHeight * 0.01,
                           ),
                           decoration: BoxDecoration(
@@ -80,11 +84,11 @@ class ArchiveDetailsPage extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: context.screenHeight * 0.005,
+                                    height: h * 0.005,
                                   ),
                                   Text('الكمية: ${med.quantity}'),
                                   SizedBox(
-                                    height: context.screenHeight * 0.003,
+                                    height: h * 0.003,
                                   ),
                                   Text('الشركة المصنعة: ${med.company}'),
                                 ],
@@ -106,7 +110,7 @@ class ArchiveDetailsPage extends StatelessWidget {
                           ),
                         );
                       }),
-                    SizedBox(height: context.screenHeight * 0.01),
+                    SizedBox(height: h * 0.01),
                   ],
                 ),
               ),

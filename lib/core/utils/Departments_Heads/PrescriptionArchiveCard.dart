@@ -5,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/PrescriptionModel.dart';
 
-/// كونتينر احترافي لعرض ملخص الوصفة الطبية.
-/// يتغيّر شكله ولون شارته بناءً على حالة الوصفة (newRx / processed).
 class PrescriptionArchiveCard extends StatelessWidget {
   final PrescriptionModel prescription;
   final VoidCallback onTap;
@@ -19,6 +17,10 @@ class PrescriptionArchiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final Color accentColor = constBlue;
     final Color backgroundTint = constLightBlue;
 
@@ -28,8 +30,14 @@ class PrescriptionArchiveCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          padding: const EdgeInsets.all(16),
+           margin: EdgeInsets.symmetric(
+            horizontal: w * 0.04,
+            vertical: h * 0.01,
+          ),
+           padding: EdgeInsets.symmetric(
+            horizontal: w * 0.04,
+            vertical: h * 0.018,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -47,8 +55,8 @@ class PrescriptionArchiveCard extends StatelessWidget {
             children: [
               // شريط جانبي ملوّن يدل على الحالة بسرعة دون قراءة النص
               Container(
-                width: 4,
-                height: 64,
+              width: w * 0.01,
+                height: h * 0.08,
                 decoration: BoxDecoration(
                   color: accentColor,
                   borderRadius: BorderRadius.circular(4),
@@ -73,9 +81,9 @@ class PrescriptionArchiveCard extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
+                         padding: EdgeInsets.symmetric(
+                            horizontal: w * 0.02,
+                            vertical: h * 0.005,
                           ),
                           decoration: BoxDecoration(
                             color: backgroundTint,
@@ -92,7 +100,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: h * 0.005),
                     Row(
                       children: [
                         const Icon(
@@ -100,7 +108,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                           size: 15,
                           color: Color(0xFF6B7280),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: w * 0.01),
                         Expanded(
                           child: Text(
                             prescription.condition,
@@ -113,7 +121,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: h * 0.005),
                     Row(
                       children: [
                         const Icon(
@@ -121,7 +129,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                           size: 15,
                           color: Color(0xFF6B7280),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: w * 0.01),
                         Expanded(
                           child: Text(
                             prescription.doctorName,

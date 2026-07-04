@@ -14,6 +14,11 @@ class NotificationController extends GetxController {
       status: NotificationStatus.rejected,
     ),
     NotificationModel(
+      title: 'وصفة طبية جديدة',
+      subtitle: 'قسم الجراحة - المريض محمد محمد',
+      status: NotificationStatus.prescription,
+    ),
+    NotificationModel(
       title: 'تم تنفيذ الطلب',
       subtitle: 'شاش طبي mg 250 - مدير المستودع',
       status: NotificationStatus.completed,

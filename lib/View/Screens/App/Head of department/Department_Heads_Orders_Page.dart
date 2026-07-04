@@ -15,10 +15,12 @@ class DepartmentOrdersPage extends GetView<DepartmentOrdersFilterController> {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
 
-  if (!Get.isRegistered<DepartmentOrdersFilterController>()) {
-    Get.put(DepartmentOrdersFilterController());
-  }
+    if (!Get.isRegistered<DepartmentOrdersFilterController>()) {
+      Get.put(DepartmentOrdersFilterController());
+    }
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -32,7 +34,10 @@ class DepartmentOrdersPage extends GetView<DepartmentOrdersFilterController> {
               return filteredOrders.isEmpty
                   ? _buildEmptyState()
                   : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                      padding: EdgeInsets.symmetric(
+                        vertical: h * 0.01,
+                        horizontal: w * 0.03,
+                      ),
                       itemCount: filteredOrders.length,
                       itemBuilder: (context, index) {
                         final order = filteredOrders[index];

@@ -25,6 +25,9 @@ class DialogTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
@@ -49,8 +52,8 @@ class DialogTextField extends StatelessWidget {
         filled: true,
         fillColor: Colors.grey.shade50,
         contentPadding: EdgeInsets.symmetric(
-          horizontal: context.screenWidth * 0.02,
-          vertical: context.screenHeight * 0.015,
+          horizontal: w * 0.02,
+          vertical: h * 0.015,
         ),
         border: _border(Colors.grey.shade200),
         enabledBorder: _border(Colors.grey.shade200),

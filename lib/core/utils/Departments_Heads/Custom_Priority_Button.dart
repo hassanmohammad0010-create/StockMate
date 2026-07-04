@@ -20,10 +20,14 @@ class PriorityButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: context.screenHeight * 0.05,
-      width:  context.screenWidth * 0.4,
+      height: h * 0.05,
+      width:  w * 0.4,
       decoration: BoxDecoration(
         color:        isSelected && label == 'ضروري' ? color : isSelected && label == 'عادي' ? color : Colors.transparent,
         border:       Border.all(color: color, width: isSelected ? 2 : 1),

@@ -21,8 +21,9 @@ class InventoryDetailsPage extends GetView<MaterialInfoController> {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Guard احتياطي (زي ما عملنا في الصفحة السابقة)
-    // بيضمن اشتغال الصفحة حتى لو الـ Binding ما اتمررش وقت التنقل
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     if (!Get.isRegistered<MaterialInfoController>()) {
       Get.put(MaterialInfoController());
     }
@@ -36,26 +37,30 @@ class InventoryDetailsPage extends GetView<MaterialInfoController> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  SizedBox(height: h * 0.01),
                   InventoryInfoCard(item: item),
+                  SizedBox(height: h * 0.01),
                   InventoryQuantityCard(item: item),
+                  SizedBox(height: h * 0.005),
                   Padding(
                     padding: EdgeInsets.fromLTRB(
-                      context.screenWidth * 0.02,
-                      context.screenHeight * 0.01,
-                      context.screenWidth * 0.02,
-                      context.screenHeight * 0.02,
+                      w * 0.02,
+                      h * 0.01,
+                      w * 0.02,
+                      h * 0.02,
                     ),
                     child: InventoryBatchesCard(
                       item: item,
                       controller: controller,
                     ),
                   ),
+                  SizedBox(height: h * 0.01),
                 ],
               ),
             ),
           ),
           _AddToCartButton(item: item, controller: controller),
-          SizedBox(height: context.screenHeight * 0.02),
+          SizedBox(height: h * 0.02),
         ],
       ),
     );

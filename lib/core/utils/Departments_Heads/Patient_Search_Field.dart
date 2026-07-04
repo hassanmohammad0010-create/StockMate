@@ -28,10 +28,14 @@ class PatientSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: context.screenWidth * 0.04,
-        vertical: context.screenHeight * 0.01,
+        horizontal: w * 0.04,
+        vertical: h * 0.01,
       ),
       child: TextField(
         controller: controller,
@@ -56,8 +60,8 @@ class PatientSearchField extends StatelessWidget {
           filled: true,
           fillColor: Colors.grey[200],
           contentPadding: EdgeInsets.symmetric(
-            horizontal: context.screenWidth * 0.02,
-            vertical: context.screenHeight * 0.015,
+            horizontal: w * 0.02,
+            vertical: h * 0.015,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),

@@ -23,15 +23,15 @@ class OrderTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        margin: EdgeInsets.only(left: context.screenWidth * 0.015),
-        padding: EdgeInsets.symmetric(
-          horizontal: context.screenWidth * 0.03,
-          vertical: context.screenHeight * 0.01,
-        ),
+        margin: EdgeInsets.only(left: w * 0.015),
+        padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: h * 0.01),
         decoration: BoxDecoration(
           color: isActive ? constBlue : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(10),
@@ -53,9 +53,9 @@ class OrderTab extends StatelessWidget {
           children: [
             if (!isActive)
               Container(
-                width: 8,
-                height: 8,
-                margin: EdgeInsets.only(left: context.screenWidth * 0.015),
+                width: w * 0.02,
+                height: h * 0.015,
+                margin: EdgeInsets.only(left: w * 0.015),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isValid ? constGreen : constOrange,
@@ -69,9 +69,9 @@ class OrderTab extends StatelessWidget {
                 color: isActive ? Colors.white : Colors.grey.shade700,
               ),
             ),
-            SizedBox(width: context.screenWidth * 0.02),
+            SizedBox(width: w * 0.02),
             if (canRemove) ...[
-              SizedBox(width: context.screenWidth * 0.01),
+              SizedBox(width: w * 0.01),
               GestureDetector(
                 onTap: onRemove,
                 child: Icon(

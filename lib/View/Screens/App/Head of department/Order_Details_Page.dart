@@ -80,6 +80,9 @@ class OrderDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final controller = Get.find<OrdersController>();
 
     return Directionality(
@@ -92,35 +95,26 @@ class OrderDetailsPage extends StatelessWidget {
             CustomHeadContainer(title: 'تفاصيل الطلب'),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.screenWidth * 0.03,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: w * 0.03),
                 child: Obx(() {
-                  // نعتمد دائماً على النسخة الحية من الطلب حتى تنعكس
-                  // أي تغييرات (مثل تأكيد الاستلام) فوراً على الصفحة
                   final liveOrder = controller.getOrderById(order.id!) ?? order;
-
                   final showRecurringDeleteButton =
                       liveOrder.isRecurring &&
                       liveOrder.status == OrderStatus.completed;
-
                   final showReceivedButton =
                       !liveOrder.isRecurring &&
                       liveOrder.status == OrderStatus.reserved;
-
                   final showConfirmReceiveButton =
                       !liveOrder.isRecurring &&
                       liveOrder.status == OrderStatus.completed;
-
                   final double spacerHeight =
                       (showRecurringDeleteButton ||
                           showReceivedButton ||
                           showConfirmReceiveButton)
-                      ? context.screenHeight * 0.12
+                      ? h * 0.12
                       : liveOrder.status == OrderStatus.rejected
-                      ? context.screenHeight * 0.06
-                      : context.screenHeight * 0.18;
-
+                      ? h * 0.06
+                      : h * 0.18;
                   Widget actionButton;
                   if (showRecurringDeleteButton) {
                     actionButton = CustomMainButtom(
@@ -155,26 +149,24 @@ class OrderDetailsPage extends StatelessWidget {
 
                   return Column(
                     children: [
-                      SizedBox(height: context.screenHeight * 0.02),
+                      SizedBox(height: h * 0.02),
                       CustomDetailsCard(order: liveOrder),
-                      SizedBox(height: context.screenHeight * 0.02),
+                      SizedBox(height: h * 0.02),
                       liveOrder.status == OrderStatus.rejected
                           ? liveOrder.rejectionReason == ''
-                                ? SizedBox(height: context.screenHeight * 0.12)
+                                ? SizedBox(height: h * 0.12)
                                 : RejectionBanner(
                                     reason: liveOrder.rejectionReason,
                                   )
                           : const SizedBox(),
                       SizedBox(height: spacerHeight),
                       actionButton,
-                      SizedBox(height: context.screenHeight * 0.01),
+                      SizedBox(height: h * 0.01),
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: context.screenWidth * 0.02,
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                         child: Divider(),
                       ),
-                      SizedBox(height: context.screenHeight * 0.01),
+                      SizedBox(height: h * 0.01),
                       CustomMainButtom(
                         title: 'ارسال طلب جديد',
                         color: constLightBlue,

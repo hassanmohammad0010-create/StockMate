@@ -43,11 +43,12 @@ class TextFormFaildForDate extends StatefulWidget {
 class _TextFormFaildForDateState extends State<TextFormFaildForDate> {
   @override
   Widget build(BuildContext context) {
+    
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.screenWidth * 0.04,
-        vertical: context.screenHeight * 0.01,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.04, vertical: h * 0.01),
       child: TextFormField(
         controller: widget.textEditingController,
         onTap: widget.onTap,

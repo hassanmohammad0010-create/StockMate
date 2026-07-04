@@ -17,6 +17,9 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     final cartController = CartController.to;
 
     return Scaffold(
@@ -24,7 +27,7 @@ class CartPage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          SizedBox(height: context.screenHeight * 0.01),
+          SizedBox(height: h * 0.01),
           CustomHeadContainer(title: 'السلة اليومية'),
           Expanded(
             child: Obx(() {
@@ -38,12 +41,10 @@ class CartPage extends StatelessWidget {
               }
               return SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.screenWidth * 0.02,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: w * 0.02),
                   child: Column(
                     children: [
-                      SizedBox(height: context.screenHeight * 0.01),
+                      SizedBox(height: h * 0.01),
                       ...cartController.cartItems.map(
                         (cartItem) => CustomCartContainer(
                           key: ValueKey(cartItem.id),
@@ -66,13 +67,13 @@ class CartPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: context.screenWidth * 0.05,
-              vertical: context.screenHeight * 0.01,
+              horizontal: w * 0.05,
+              vertical: h * 0.01,
             ),
             child: Divider(),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: context.screenHeight * 0.02),
+            padding: EdgeInsets.only(bottom: h * 0.02),
             child: Obx(() {
               final isEmpty = cartController.cartItems.isEmpty;
               return CustomMainButtom(
@@ -96,7 +97,10 @@ class CartPage extends StatelessWidget {
                               snackPosition: SnackPosition.TOP,
                               backgroundColor: constGreen,
                               colorText: Colors.white,
-                              margin: const EdgeInsets.all(16),
+                              margin: EdgeInsets.symmetric(
+                                horizontal: w * 0.04,
+                                vertical: h * 0.02,
+                              ),
                               borderRadius: 12,
                             );
                           },

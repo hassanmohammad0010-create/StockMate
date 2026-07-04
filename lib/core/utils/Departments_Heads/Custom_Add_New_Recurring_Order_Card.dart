@@ -31,6 +31,9 @@ class RecurringOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -40,23 +43,22 @@ class RecurringOrderCard extends StatelessWidget {
             child: IntrinsicHeight(
               child: Column(
                 children: [
-                  SizedBox(height: context.screenHeight * 0.008),
+                  SizedBox(height: h * 0.008),
                   Form(
                     key: controller.formKey,
                     child: Container(
-                      width: context.screenWidth * 0.95,
+                      width: w * 0.95,
                       child: Card(
                         color: Colors.white.withOpacity(0.9),
                         elevation: 3.0,
                         child: Column(
                           children: [
-                            // ── عنوان الكارد ──────────────────────────────
                             Align(
                               alignment: Alignment.centerRight,
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                  right: context.screenWidth * 0.03,
-                                  top: context.screenHeight * 0.015,
+                                  right: w * 0.05,
+                                  top: h * 0.015,
                                 ),
                                 child: Text(
                                   'تفاصيل الطلب',
@@ -69,11 +71,11 @@ class RecurringOrderCard extends StatelessWidget {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: context.screenWidth * 0.03,
+                                horizontal: w * 0.03,
                               ),
                               child: const Divider(),
                             ),
-                            SizedBox(height: context.screenHeight * 0.01),
+                            SizedBox(height: h * 0.01),
 
                             // ── اسم الدواء ────────────────────────────────
                             Obx(() {
@@ -86,7 +88,7 @@ class RecurringOrderCard extends StatelessWidget {
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: context.screenWidth * 0.03,
+                                  horizontal: w * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,8 +108,8 @@ class RecurringOrderCard extends StatelessWidget {
                                     if (isInvalid)
                                       Padding(
                                         padding: EdgeInsets.only(
-                                          right: context.screenWidth * 0.03,
-                                          top: context.screenHeight * 0.005,
+                                          right: w * 0.03,
+                                          top: h * 0.005,
                                         ),
                                         child: Text(
                                           'الرجاء اختيار اسم الدواء',
@@ -121,12 +123,12 @@ class RecurringOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: context.screenHeight * 0.015),
+                            SizedBox(height: h * 0.015),
 
                             // ── الكمية ────────────────────────────────────
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: context.screenWidth * 0.03,
+                                horizontal: w * 0.03,
                               ),
                               child: CustomMyTextFormField(
                                 prefixIcon: Icons.numbers_outlined,
@@ -142,7 +144,7 @@ class RecurringOrderCard extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: context.screenHeight * 0.015),
+                            SizedBox(height: h * 0.015),
 
                             // ── الوحدة ────────────────────────────────────
                             Obx(() {
@@ -153,7 +155,7 @@ class RecurringOrderCard extends StatelessWidget {
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: context.screenWidth * 0.03,
+                                  horizontal: w * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +190,7 @@ class RecurringOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: context.screenHeight * 0.015),
+                            SizedBox(height: h * 0.015),
 
                             // ── الوكيل / الماركة ──────────────────────────
                             Obx(() {
@@ -199,7 +201,7 @@ class RecurringOrderCard extends StatelessWidget {
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: context.screenWidth * 0.03,
+                                  horizontal: w * 0.03,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,13 +236,13 @@ class RecurringOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: context.screenHeight * 0.015),
+                            SizedBox(height: h * 0.015),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: context.screenHeight * 0.008),
+                  SizedBox(height: h * 0.008),
 
                   const RecurringChooseCard(),
                 ],

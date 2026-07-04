@@ -18,6 +18,10 @@ class ArchiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -31,11 +35,11 @@ class ArchiveCard extends StatelessWidget {
             radius: 18,
           ),
           child: Container(
-            height: context.screenHeight * 0.12,
-            width: context.screenWidth * 0.93,
+            height: h * 0.12,
+            width: w * 0.93,
             padding: EdgeInsets.symmetric(
-              vertical: context.screenHeight * 0.025,
-              horizontal: context.screenWidth * 0.04,
+              vertical: h * 0.025,
+              horizontal: w * 0.04,
             ),
             decoration: BoxDecoration(
               color: constBlue.withOpacity(0.05),
@@ -51,7 +55,7 @@ class ArchiveCard extends StatelessWidget {
                   ),
                   child: Icon(icon, color: constBlue, size: 40),
                 ),
-                SizedBox(width: context.screenWidth * 0.03),
+                SizedBox(width: w * 0.03),
                 Expanded(
                   child: Text(
                     title,

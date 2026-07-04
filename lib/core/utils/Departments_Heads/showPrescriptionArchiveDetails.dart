@@ -6,10 +6,7 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
 import 'package:stock_mate_project/core/models/PrescriptionModel.dart';
 
-/// يعرض تفاصيل الوصفة كاملة في bottom sheet، مع زر تحويل الحالة
-/// عندما تكون الوصفة جديدة. الانتقال بين الصفحتين يحدث تلقائيًا
-/// لأن الكونترولر يحدّث القائمة المصدر (Rx) ما يعيد بناء واجهتي
-/// الصفحتين عبر Obx.
+
 void showPrescriptionArchiveDetails(
   BuildContext context,
   PrescriptionModel prescription,
@@ -40,16 +37,11 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<SendPrescriptionController>();
 
-    // Obx يربط الواجهة مباشرة بحالة الوصفة داخل الكونترولر，
-    // فإذا تغيّرت الحالة (newRx -> processed) تُعاد بناء الـ sheet فورًا
-    // بدلاً من الاعتماد على نسخة (snapshot) قديمة من PrescriptionModel.
     return Obx(() {
       final prescription = controller.archivedPrescriptions.firstWhere(
         (p) => p.id == prescriptionId,
         orElse: () => controller.archivedPrescriptions.first,
       );
-
-      // قد تُحذف الوصفة أو لا توجد مؤقتًا أثناء إعادة البناء
 
       return _buildContent(
         context,
@@ -66,6 +58,10 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
     PrescriptionModel prescription,
     bool isNew,
   ) {
+
+     final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -75,26 +71,26 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+       child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: w * 0.05,
+            vertical: h * 0.02,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // مقبض السحب
               Center(
                 child: Container(
-                  width: 40,
-                  height: 4,
+                 width: w * 0.15,
+                  height: h * 0.005,
                   decoration: BoxDecoration(
                     color: const Color(0xFFE5E7EB),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
               ),
-              const SizedBox(height: 18),
-
-              // رأس البطاقة: الاسم + الشارة
+              SizedBox(height: h * 0.02),
               Row(
                 children: [
                   Expanded(
@@ -108,9 +104,9 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: w * 0.02,
+                      vertical: h * 0.006,
                     ),
                     decoration: BoxDecoration(
                       color: constLightBlue,
@@ -127,28 +123,28 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: h * 0.005),
               Text(
                 _formatDate(prescription.date),
                 style: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
               ),
 
-              const SizedBox(height: 20),
-              const Divider(height: 1, color: Color(0xFFE5E7EB)),
-              const SizedBox(height: 20),
+               SizedBox(height: h * 0.02),
+              Divider(height: h * 0.001, color: Colors.grey.shade300),
+              SizedBox(height: h * 0.02),
 
               _DetailRow(
                 icon: Icons.person_outline,
                 label: 'الطبيب المعالج',
                 value: prescription.doctorName,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: h * 0.02),
               _DetailRow(
                 icon: Icons.healing,
                 label: 'الحالة الطبية',
                 value: prescription.condition,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: h * 0.02),
               _DetailRow(
                 icon: Icons.medication_outlined,
                 label: 'الأدوية الموصوفة',
@@ -156,14 +152,14 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
               ),
               if (prescription.notes != null &&
                   prescription.notes!.trim().isNotEmpty) ...[
-                const SizedBox(height: 16),
+              SizedBox(height: h * 0.02),
                 _DetailRow(
                   icon: Icons.notes_outlined,
                   label: 'ملاحظات',
                   value: prescription.notes!,
                 ),
               ],
-              const SizedBox(height: 16),
+              SizedBox(height: h * 0.02),
             ],
           ),
         ),
@@ -185,18 +181,25 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+     final h = context.screenHeight;
+    final w = context.screenWidth;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.symmetric(
+            horizontal: w * 0.02,
+            vertical: h * 0.01,
+          ),
           decoration: BoxDecoration(
             color: const Color(0xFFF3F4F6),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(icon, size: 18, color: const Color(0xFF4B5563)),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: w * 0.03),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,7 +212,7 @@ class _DetailRow extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: h * 0.002),
               Text(
                 value,
                 style: const TextStyle(
