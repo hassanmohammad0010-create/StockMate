@@ -71,7 +71,7 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.DepartmentHeadsInventoryPage,
       page: () => const DepartmentHeadsInventoryPage(),
-       binding: DepartmentHeadsInventoryBinding(),
+      binding: DepartmentHeadsInventoryBinding(),
     ),
     GetPage(
       name: AppRoutes.DepartmentOrdersPage,
@@ -127,7 +127,7 @@ abstract class AppPages {
     ),
     GetPage(
       name: AppRoutes.NesseryDepartmentRequestPage,
-      page: () => const NesseryDepartmentRequestPage(),
+      page: () => NesseryDepartmentRequestPage(),
     ),
     GetPage(
       name: AppRoutes.ElectronicInventoryPage,
@@ -149,7 +149,7 @@ abstract class AppPages {
     ),
     GetPage(
       name: AppRoutes.HasanServiceTester,
-      page: () => const HasanServiceTester(),
+      page: () => HasanServiceTester(),
     ),
     GetPage(
       name: AppRoutes.MainPageHeadOfPurchasingPage,

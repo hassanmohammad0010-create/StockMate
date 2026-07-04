@@ -76,15 +76,17 @@ class MaterialItem {
     return MaterialItem(
       id: json['id'].toString(),
       name: json['name'] as String,
-      brand: 'HASASC',
       type: json['type'] as String,
       category: MaterialCategory.values.firstWhere(
         (e) => e.name == json['type'],
         orElse: () => MaterialCategory.consumable,
       ),
-      storageLocation: 'HASANA',
+      storageLocation: 'storage_location',
+      brand: 'brand',
+      // brand: json['brand'] as String,
+      // storageLocation: json['storage_location'] as String,
       minQuantity: json['minimum_stock'] as int,
-      maxQuantity: 500,
+      maxQuantity: json['maximum_stock'] as int,
       batches: (json['batches'] as List<dynamic>)
           .map((b) => MaterialBatch.fromJson(b as Map<String, dynamic>))
           .toList(),
@@ -139,10 +141,26 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 2000,
     maxQuantity: 100000,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 35000, expiryDate: DateTime(2027, 6, 1)),
-      MaterialBatch(id: 'B002', quantity: 30000, expiryDate: DateTime(2026, 12, 15)),
-      MaterialBatch(id: 'B003', quantity: 10000, expiryDate: DateTime(2026, 7, 10)),
-      MaterialBatch(id: 'B004', quantity: 5000,  expiryDate: DateTime(2026, 3, 1)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 35000,
+        expiryDate: DateTime(2027, 6, 1),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 30000,
+        expiryDate: DateTime(2026, 12, 15),
+      ),
+      MaterialBatch(
+        id: 'B003',
+        quantity: 10000,
+        expiryDate: DateTime(2026, 7, 10),
+      ),
+      MaterialBatch(
+        id: 'B004',
+        quantity: 5000,
+        expiryDate: DateTime(2026, 3, 1),
+      ),
     ],
   ),
   MaterialItem(
@@ -155,8 +173,16 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 500,
     maxQuantity: 20000,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 8000, expiryDate: DateTime(2027, 3, 1)),
-      MaterialBatch(id: 'B002', quantity: 4500, expiryDate: DateTime(2026, 9, 20)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 8000,
+        expiryDate: DateTime(2027, 3, 1),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 4500,
+        expiryDate: DateTime(2026, 9, 20),
+      ),
     ],
   ),
   MaterialItem(
@@ -169,8 +195,16 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 50,
     maxQuantity: 500,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 120, expiryDate: DateTime(2028, 1, 1)),
-      MaterialBatch(id: 'B002', quantity: 80,  expiryDate: DateTime(2026, 8, 15)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 120,
+        expiryDate: DateTime(2028, 1, 1),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 80,
+        expiryDate: DateTime(2026, 8, 15),
+      ),
     ],
   ),
 
@@ -185,9 +219,21 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 1000,
     maxQuantity: 50000,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 12000, expiryDate: DateTime(2027, 11, 1)),
-      MaterialBatch(id: 'B002', quantity: 8000,  expiryDate: DateTime(2026, 7, 30)),
-      MaterialBatch(id: 'B003', quantity: 3000,  expiryDate: DateTime(2026, 4, 10)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 12000,
+        expiryDate: DateTime(2027, 11, 1),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 8000,
+        expiryDate: DateTime(2026, 7, 30),
+      ),
+      MaterialBatch(
+        id: 'B003',
+        quantity: 3000,
+        expiryDate: DateTime(2026, 4, 10),
+      ),
     ],
   ),
   MaterialItem(
@@ -200,8 +246,16 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 500,
     maxQuantity: 30000,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 6000, expiryDate: DateTime(2027, 5, 1)),
-      MaterialBatch(id: 'B002', quantity: 2500, expiryDate: DateTime(2026, 6, 20)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 6000,
+        expiryDate: DateTime(2027, 5, 1),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 2500,
+        expiryDate: DateTime(2026, 6, 20),
+      ),
     ],
   ),
   MaterialItem(
@@ -214,8 +268,16 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 200,
     maxQuantity: 10000,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 3000, expiryDate: DateTime(2027, 2, 28)),
-      MaterialBatch(id: 'B002', quantity: 1500, expiryDate: DateTime(2026, 5, 15)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 3000,
+        expiryDate: DateTime(2027, 2, 28),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 1500,
+        expiryDate: DateTime(2026, 5, 15),
+      ),
     ],
   ),
 
@@ -230,9 +292,21 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 1000,
     maxQuantity: 40000,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 15000, expiryDate: DateTime(2027, 8, 1)),
-      MaterialBatch(id: 'B002', quantity: 7000,  expiryDate: DateTime(2026, 6, 10)),
-      MaterialBatch(id: 'B003', quantity: 2000,  expiryDate: DateTime(2026, 3, 25)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 15000,
+        expiryDate: DateTime(2027, 8, 1),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 7000,
+        expiryDate: DateTime(2026, 6, 10),
+      ),
+      MaterialBatch(
+        id: 'B003',
+        quantity: 2000,
+        expiryDate: DateTime(2026, 3, 25),
+      ),
     ],
   ),
   MaterialItem(
@@ -245,8 +319,16 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 500,
     maxQuantity: 20000,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 9000, expiryDate: DateTime(2027, 4, 1)),
-      MaterialBatch(id: 'B002', quantity: 3500, expiryDate: DateTime(2026, 7, 1)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 9000,
+        expiryDate: DateTime(2027, 4, 1),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 3500,
+        expiryDate: DateTime(2026, 7, 1),
+      ),
     ],
   ),
   MaterialItem(
@@ -259,9 +341,21 @@ final List<MaterialItem> allMaterial = [
     minQuantity: 200,
     maxQuantity: 5000,
     batches: [
-      MaterialBatch(id: 'B001', quantity: 800,  expiryDate: DateTime(2027, 9, 15)),
-      MaterialBatch(id: 'B002', quantity: 400,  expiryDate: DateTime(2026, 5, 30)),
-      MaterialBatch(id: 'B003', quantity: 150,  expiryDate: DateTime(2026, 3, 5)),
+      MaterialBatch(
+        id: 'B001',
+        quantity: 800,
+        expiryDate: DateTime(2027, 9, 15),
+      ),
+      MaterialBatch(
+        id: 'B002',
+        quantity: 400,
+        expiryDate: DateTime(2026, 5, 30),
+      ),
+      MaterialBatch(
+        id: 'B003',
+        quantity: 150,
+        expiryDate: DateTime(2026, 3, 5),
+      ),
     ],
   ),
 ];

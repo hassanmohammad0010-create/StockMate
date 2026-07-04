@@ -13,7 +13,7 @@ class PurchaseRequest {
   final double expectedBudget; // الميزانية المتوقعة
   final RequestPriority priority; // الأولوية
   final RequestStatus status; // الحالة
-
+  final String? reason;
   const PurchaseRequest({
     required this.id,
     required this.materialName,
@@ -25,6 +25,7 @@ class PurchaseRequest {
     required this.expectedBudget,
     required this.priority,
     required this.status,
+    this.reason,
   });
 
   factory PurchaseRequest.fromJson(Map<String, dynamic> json) {
@@ -35,6 +36,7 @@ class PurchaseRequest {
       unit: json['unit'] as String,
       date: DateTime.parse(json['date'] as String),
       requesterName: json['requester_name'] as String,
+      reason: json['reason'] as String,
       supplierName: json['supplier_name'] as String,
       expectedBudget: (json['expected_budget'] as num).toDouble(),
       priority: RequestPriority.values.firstWhere(

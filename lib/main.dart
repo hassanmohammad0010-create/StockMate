@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:stock_mate_project/Service/Boss/Get_urgent_Department_Requests_Service.dart';
-import 'package:stock_mate_project/core/models/Request_Model.dart';
-
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Service/Boss/Get_Suppliers_Service.dart';
+import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/models/Supplier_Model.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/Routes/Bindings/App/App_Binding.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Dialog_Text_Field.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 SharedPreferences? shareprefs;
 
@@ -35,31 +38,31 @@ class StockMate extends StatelessWidget {
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
       getPages: AppPages.routes,
-      initialRoute: AppRoutes.DepartmentHeadsMainPage,
+      initialRoute: AppRoutes.SplashViewPage,
       initialBinding: AppBinding(),
     );
   }
 }
 
 class HasanServiceTester extends StatelessWidget {
-  const HasanServiceTester({super.key});
+  HasanServiceTester({super.key});
 
   @override
   final String pageName = '/HasanServiceTester';
-
+  TextEditingController? c = TextEditingController();
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
           SizedBox(height: 250),
+          // CustomLoadingIndicator(message: 'جاري تحميل الموردين...'),
           Center(
             child: FloatingActionButton(
               onPressed: () async {
                 // ignore: avoid_print
-                print('1');
-                List<RequestModel> data =
-                    await GetUrgentDepartmentRequestsService()
-                        .getUrgentDepartmentRequestsService();
+                List<SupplierModel> datad = await GetSuppliersService()
+                    .getSuppliersService();
+                print(datad);
               },
 
               child: Text('data'),

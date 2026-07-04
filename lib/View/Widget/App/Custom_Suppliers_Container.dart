@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/core/models/Supplier_Model.dart';
 
 // ignore: must_be_immutable
 class CustomSuppliersContainer extends StatelessWidget {
-  CustomSuppliersContainer({super.key, required this.category});
-  List<String> category = [
-    'بارا سيتامول',
-    'شاش',
-    'قفازات',
-    'بارا سيتامول',
-    'انسولين',
-  ];
+  CustomSuppliersContainer({super.key, required this.supplierModel});
+  SupplierModel supplierModel;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -59,7 +54,7 @@ class CustomSuppliersContainer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'شركة فارما',
+                          supplierModel.name,
                           style: TextStyle(
                             fontFamily: cairo,
                             fontSize: 18,
@@ -67,7 +62,7 @@ class CustomSuppliersContainer extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'معلومات الاتصال  ',
+                          supplierModel.address ?? '-------',
                           style: TextStyle(
                             fontFamily: lateef,
                             fontSize: 20,
@@ -78,69 +73,89 @@ class CustomSuppliersContainer extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.screenWidth * 0.01,
-                        vertical: context.screenWidth * 0.01,
-                      ),
-                      decoration: BoxDecoration(
-                        color: constLightBlue,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.mark_email_read,
-                        size: context.screenHeight * 0.028,
-                        color: constBlue,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.screenWidth * 0.01,
-                        vertical: context.screenWidth * 0.01,
-                      ),
-                      decoration: BoxDecoration(
-                        color: constLightBlue,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.phone,
-                        size: context.screenHeight * 0.028,
-                        color: constBlue,
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
 
-            Align(
-              alignment: AlignmentGeometry.centerLeft,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    '0937417539',
-                    style: TextStyle(
-                      fontFamily: lateef,
-                      fontSize: 18,
-                      color: constGray,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        supplierModel.email,
+                        style: TextStyle(
+                          color: constGray,
+                          fontFamily: cairo,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.01,
+                          vertical: context.screenWidth * 0.01,
+                        ),
+                        decoration: BoxDecoration(
+                          color: constLightBlue,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.mark_email_read,
+                          size: context.screenHeight * 0.028,
+                          color: constBlue,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'hasnamohammadew@gmail.com',
-                    softWrap: true,
-                    // overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontFamily: lateef,
-                      fontSize: 18,
-                      color: constGray,
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        supplierModel.phone,
+                        style: TextStyle(
+                          color: constGray,
+                          fontFamily: cairo,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.01,
+                          vertical: context.screenWidth * 0.01,
+                        ),
+                        decoration: BoxDecoration(
+                          color: constLightBlue,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.phone,
+                          size: context.screenHeight * 0.028,
+                          color: constBlue,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Align(
+                    alignment: AlignmentGeometry.centerRight,
+                    child: Text(
+                      'ملاحظات : ${supplierModel.notes ?? '----------'}',
+                      softWrap: true,
+                      // overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: lateef,
+                        fontSize: 18,
+                        color: constGray,
+                      ),
                     ),
                   ),
                 ],
@@ -153,7 +168,7 @@ class CustomSuppliersContainer extends StatelessWidget {
               runSpacing: 8, // المسافة بين الصفوف عامودياً
               textDirection: TextDirection.rtl, // ← من اليمين لليسار
               children: List.generate(
-                category.length, // قائمة البيانات
+                supplierModel.products.length, // قائمة البيانات
                 (index) => Container(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
@@ -161,7 +176,7 @@ class CustomSuppliersContainer extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Text(
-                    category[index],
+                    supplierModel.products[index].name,
                     style: TextStyle(
                       color: constBlue,
                       fontFamily: lateef,

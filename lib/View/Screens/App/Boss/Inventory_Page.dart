@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Inventory_Materials.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Consunble_Inventory_Materials_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Fixed_Inventory_Materials_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Medicine_Inventory_Materials_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Stock_Material_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Toggle_Buttom.dart';
@@ -58,7 +60,7 @@ class InventoryPage extends StatelessWidget {
                         icon: Icons.medical_services_rounded,
                         iconColor: constBlue,
                         onTap: () {
-                          Get.to(() => DisplayInventoryMaterials());
+                          Get.to(() => DisplayConsunbleInventoryMaterials());
                         },
                         title: 'مستهلكة',
                       ),
@@ -68,7 +70,7 @@ class InventoryPage extends StatelessWidget {
                         icon: Icons.devices_rounded,
                         iconColor: constBlue,
                         onTap: () {
-                          Get.to(() => DisplayInventoryMaterials());
+                          Get.to(() => DisplayFixedInventoryMaterials());
                         },
                         title: 'ثابتة',
                       ),
@@ -78,7 +80,7 @@ class InventoryPage extends StatelessWidget {
                         icon: Icons.medication_liquid_rounded,
                         iconColor: constBlue,
                         onTap: () {
-                          Get.to(() => DisplayInventoryMaterials());
+                          Get.to(() => DisplayMedicineInventoryMaterials());
                         },
                         title: 'الادوية',
                       ),

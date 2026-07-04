@@ -77,7 +77,8 @@ class HeadOfPurchasingHomePage extends StatelessWidget {
               padding: EdgeInsets.only(top: 4, bottom: 16),
               itemCount: 6,
               itemBuilder: (context, index) {
-                return CustomSuppliersContainer(category: suppliersCategories);
+                return Container();
+                // return CustomSuppliersContainer(category: suppliersCategories);
               },
             ),
             SizedBox(height: context.screenHeight * 0.01),

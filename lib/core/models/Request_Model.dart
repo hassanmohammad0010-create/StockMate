@@ -1,11 +1,11 @@
-class SupplierModel {
+class Supplier {
   final int id;
   final String name;
 
-  SupplierModel({required this.id, required this.name});
+  Supplier({required this.id, required this.name});
 
-  factory SupplierModel.fromJson(Map<String, dynamic> json) {
-    return SupplierModel(id: json['id'] as int, name: json['name'] ?? '');
+  factory Supplier.fromJson(Map<String, dynamic> json) {
+    return Supplier(id: json['id'] as int, name: json['name'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -59,7 +59,7 @@ class RequestItemModel {
   final int productId;
   final String productName;
   final String? brand;
-  final List<SupplierModel> suppliers;
+  final List<Supplier> suppliers;
   final int quantity;
   final int? approvedQuantity;
 
@@ -78,7 +78,7 @@ class RequestItemModel {
       productName: json['product_name'] ?? '',
       brand: json['brand'],
       suppliers: (json['suppliers'] as List<dynamic>? ?? [])
-          .map((e) => SupplierModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => Supplier.fromJson(e as Map<String, dynamic>))
           .toList(),
       quantity: json['quantity'] as int,
       approvedQuantity: json['approved_quantity'] as int?,

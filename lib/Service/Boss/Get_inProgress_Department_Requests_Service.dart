@@ -1,24 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
-import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/core/models/Request_Model.dart';
 
-class GetFixedItemsService {
-  Future<List<MaterialItem>> getFixedItemsService() async {
-    final Uri url = Uri.parse(
-      'https://grud-2y91.onrender.com/api/warehouse/products/fixed',
-    );
-
+class GetinProgressDepartmentRequestsService {
+  Future<List<RequestModel>> getUrgentDepartmentRequestsService() async {
     try {
-      final response = await http
+      final http.Response response = await http
           .get(
-            url,
+            Uri.parse(
+              'https://grud-2y91.onrender.com/api/request-orders/in-progress',
+            ), //TODO TOken
             headers: {
               'Accept': 'application/json',
               'Authorization':
-                  'Bearer 1|SfcbNRti68N8PRTHP9VhxoTuFN5KgebevoCTRUVj28a9a130',
+                  'Bearer 23|RkmrnP7Yu8yUd9iDbJ2uboTmRU4ZoOj28XHRWGKI8dd678c7',
             },
           )
           .timeout(const Duration(seconds: 15));
@@ -26,7 +23,6 @@ class GetFixedItemsService {
       if (response.statusCode == 200) {
         return _parseResponse(response.body);
       }
-
       ApiErrorHandler.handleStatusCode(response.statusCode);
       return [];
     } catch (e) {
@@ -35,7 +31,7 @@ class GetFixedItemsService {
     }
   }
 
-  List<MaterialItem> _parseResponse(String body) {
+  List<RequestModel> _parseResponse(String body) {
     final dynamic jsonBody = jsonDecode(body);
 
     if (jsonBody is! Map<String, dynamic> || jsonBody['data'] is! List) {
@@ -43,18 +39,19 @@ class GetFixedItemsService {
     }
 
     final List<dynamic> data = jsonBody['data'];
-    final List<MaterialItem> items = [];
+    final List<RequestModel> requests = [];
 
     for (final item in data) {
       try {
         if (item is Map<String, dynamic>) {
-          items.add(MaterialItem.fromJson(item));
+          requests.add(RequestModel.fromJson(item));
         }
       } catch (_) {
+        // تجاهل العنصر التالف بدل ما توقف كل القائمة
         continue;
       }
     }
 
-    return items;
+    return requests;
   }
 }
