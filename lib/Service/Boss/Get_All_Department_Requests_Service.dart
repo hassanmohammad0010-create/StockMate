@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
 import 'package:stock_mate_project/core/models/Request_Model.dart';
 
-class RequestService {
+class GetAllRequestService {
   Future<List<RequestModel>> getAllDepartmentRequests() async {
     final Uri url = Uri.parse(
       'https://grud-2y91.onrender.com/api/get/department-requests',

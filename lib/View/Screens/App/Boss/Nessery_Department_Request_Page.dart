@@ -42,21 +42,11 @@ class NesseryDepartmentRequestPage extends StatelessWidget {
                         itemCount: controller.requests!.length,
                         itemBuilder: (context, index) {
                           return CustomRequestContainer(
-                            title: 'بارا سيتامول 500 mg ',
-                            state: 'بأنتظار موافقتك',
-                            department: 'باطنية',
-                            date: '19-03-2025',
-                            amount: '600',
-                            necessity: 'ضروري',
+                            requestModel: controller.requests![index],
                             onTap: () {
                               Get.to(
-                                DisOrderDetailsPage(
-                                  order: Order(
-                                    medicineName: 'medicineName',
-                                    date: 'date',
-                                    quantity: 56,
-                                    status: OrderStatus.completed,
-                                  ),
+                                () => DisOrderDetailsPage(
+                                  requestModel: controller.requests![index],
                                 ),
                               );
                             },

@@ -21,7 +21,6 @@ class GetConsumableItemsService {
             },
           )
           .timeout(const Duration(seconds: 15));
-
       if (response.statusCode == 200) {
         return _parseResponse(response.body);
       }

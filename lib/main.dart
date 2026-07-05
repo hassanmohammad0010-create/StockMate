@@ -2,19 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Service/Boss/Get_Suppliers_Service.dart';
-import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
-import 'package:stock_mate_project/core/models/Supplier_Model.dart';
-
-import 'package:stock_mate_project/Service/Boss/Get_urgent_Department_Requests_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_All_Department_Requests_Service.dart';
 import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/Routes/Bindings/App/App_Binding.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Dialog_Text_Field.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 SharedPreferences? shareprefs;
 
@@ -64,9 +56,9 @@ class HasanServiceTester extends StatelessWidget {
             child: FloatingActionButton(
               onPressed: () async {
                 // ignore: avoid_print
-                List<SupplierModel> datad = await GetSuppliersService()
-                    .getSuppliersService();
-                print(datad);
+                List<RequestModel> datad = await GetAllRequestService()
+                    .getAllDepartmentRequests();
+                print(datad[0].requestFrequency.arabicLabel);
               },
 
               child: Text('data'),

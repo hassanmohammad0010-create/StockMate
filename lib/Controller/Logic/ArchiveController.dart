@@ -14,16 +14,16 @@ class ArchiveItem {
   ArchiveItem({required this.date, required this.medicines});
 
   Map<String, dynamic> toJson() => {
-        'date': date,
-        'medicines': medicines.map((m) => m.toJson()).toList(),
-      };
+    'date': date,
+    'medicines': medicines.map((m) => m.toJson()).toList(),
+  };
 
   factory ArchiveItem.fromJson(Map<String, dynamic> json) => ArchiveItem(
-        date: json['date'] as String,
-        medicines: (json['medicines'] as List)
-            .map((m) => ArchiveMedicineModel.fromJson(m as Map<String, dynamic>))
-            .toList(),
-      );
+    date: json['date'] as String,
+    medicines: (json['medicines'] as List)
+        .map((m) => ArchiveMedicineModel.fromJson(m as Map<String, dynamic>))
+        .toList(),
+  );
 }
 
 // class ArchiveController extends GetxController {
@@ -114,7 +114,7 @@ class ArchiveController extends GetxController {
   static const String _archiveKey = 'archive_items';
 
   final RxList<ArchiveItem> archiveList = <ArchiveItem>[].obs;
-  
+
   // ✅ أضف هذا السطر الجديد
   final RxList<ArchiveItem> filteredArchiveList = <ArchiveItem>[].obs;
 
@@ -154,9 +154,9 @@ class ArchiveController extends GetxController {
     // تحويل التاريخ من YYYY-MM-DD إلى DD/MM/YYYY للمقارنة
     final parts = dateString.split('-');
     if (parts.length != 3) return;
-    
+
     final searchDate = '${parts[2]}/${parts[1]}/${parts[0]}';
-    
+
     filteredArchiveList.value = archiveList
         .where((item) => item.date == searchDate)
         .toList();
@@ -173,9 +173,10 @@ class ArchiveController extends GetxController {
     final medicines = cartController.cartItems.map((cartItem) {
       String company = '';
       try {
-        final material =
-            allMaterial.firstWhere((m) => m.id == cartItem.materialId);
-        company = material.brand;
+        final material = allMaterial.firstWhere(
+          (m) => m.id == cartItem.materialId,
+        );
+        company = material.brand ?? '---';
       } catch (_) {}
 
       return ArchiveMedicineModel(
@@ -187,7 +188,7 @@ class ArchiveController extends GetxController {
 
     archiveList.insert(0, ArchiveItem(date: date, medicines: medicines));
     _saveArchive();
-    
+
     // ✅ أضف هذا السطر
     filteredArchiveList.value = List.from(archiveList);
 
@@ -198,4 +199,3 @@ class ArchiveController extends GetxController {
     Get.toNamed(AppRoutes.ArchiveDetailsPage, arguments: item);
   }
 }
-

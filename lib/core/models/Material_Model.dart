@@ -53,10 +53,10 @@ class MaterialBatch {
 class MaterialItem {
   final String id;
   final String name;
-  final String brand;
+  final String? brand;
   final String type;
   final MaterialCategory category;
-  final String storageLocation;
+  final String? storageLocation;
   final int minQuantity;
   final int maxQuantity;
   final List<MaterialBatch> batches;
@@ -81,10 +81,10 @@ class MaterialItem {
         (e) => e.name == json['type'],
         orElse: () => MaterialCategory.consumable,
       ),
-      storageLocation: 'storage_location',
-      brand: 'brand',
-      // brand: json['brand'] as String,
-      // storageLocation: json['storage_location'] as String,
+      // storageLocation: 'storage_location',
+      // brand: 'brand',
+      brand: json['brand'],
+      storageLocation: json['storage_location'],
       minQuantity: json['minimum_stock'] as int,
       maxQuantity: json['maximum_stock'] as int,
       batches: (json['batches'] as List<dynamic>)

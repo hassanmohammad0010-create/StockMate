@@ -10,7 +10,7 @@ class GetUrgentDepartmentRequestsService {
       final http.Response response = await http
           .get(
             Uri.parse(
-              'https://grud-2y91.onrender.com/api/request-orders/pending/urgent',
+              'https://grud-2y91.onrender.com/api/request-orders/pending/normal',
             ), //TODO TOken
             headers: {
               'Accept': 'application/json',

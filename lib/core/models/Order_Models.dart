@@ -10,7 +10,7 @@ const _clearOrder = Object();
 
 class Order {
   final String? id;
-  final String medicineName; 
+  final String medicineName;
   final String date;
   final int quantity;
   final OrderStatus status;
@@ -201,7 +201,7 @@ final List<Order> allOrders = [
     vendor: 'فارما',
     type: 'اعتيادي',
   ),
-   Order(
+  Order(
     id: 'o10',
     medicineName: 'بارا سيتامول 500 mg',
     date: '2025-03-19',
@@ -211,7 +211,7 @@ final List<Order> allOrders = [
     vendor: 'فارما',
     type: 'اعتيادي',
   ),
-   Order(
+  Order(
     id: 'o11',
     medicineName: 'فلاك-م',
     date: '2025-03-19',
@@ -221,7 +221,7 @@ final List<Order> allOrders = [
     vendor: 'فارما',
     type: 'اعتيادي',
   ),
-   Order(
+  Order(
     id: 'o12',
     medicineName: 'سيتامول 500 mg',
     date: '2025-03-19',

@@ -5,6 +5,7 @@ import 'package:stock_mate_project/Controller/Service/Get_Consunble_Inventory_Ma
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Material_Info_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 // ignore: must_be_immutable
@@ -26,12 +27,7 @@ class DisplayConsunbleInventoryMaterials extends StatelessWidget {
                   ? Expanded(child: Center(child: CustomLoadingIndicator()))
                   : controller.consunble!.isEmpty
                   ? Expanded(
-                      child: Center(
-                        child: Text(
-                          'لا يوجد مواد لعرضهم....',
-                          style: TextStyle(fontFamily: cairo, fontSize: 24),
-                        ),
-                      ),
+                      child: CustomEmptyState(tital: 'لا يوجد مواد لعرضهم....'),
                     )
                   : Expanded(
                       child: ListView.builder(

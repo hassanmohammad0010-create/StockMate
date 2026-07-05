@@ -1,5 +1,5 @@
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/models/Order_Models.dart';
+import 'package:stock_mate_project/core/models/Request_Model.dart';
 
 class FindColor {
   findFontColorFunction({required String word}) {
@@ -30,42 +30,44 @@ class FindColor {
     }
   }
 
-  findFontColorStausFunction({required OrderStatus orderStatus}) {
-    if (orderStatus == OrderStatus.completed) {
+  findFontColorStausFunction({required RequestStatus requestStatus}) {
+    if (requestStatus == RequestStatus.deliveried) {
       return constGreen;
-    } else if (orderStatus == OrderStatus.inProgress) {
+    } else if (requestStatus == RequestStatus.in_progress) {
       return constBlue;
-    } else if (orderStatus == OrderStatus.suspended) {
+    } else if (requestStatus == RequestStatus.pending) {
       return constOrange;
-    } else if (orderStatus == OrderStatus.rejected) {
+    } else if (requestStatus == RequestStatus.rejected) {
       return constRed;
     }
   }
 
-  findFontColorPriorityFunction({required OrderPriority orderPriority}) {
-    if (orderPriority == OrderPriority.normal) {
+  findFontColorPriorityFunction({required RequestPriority requestPriority}) {
+    if (requestPriority == RequestPriority.normal) {
       return constBlue;
-    } else if (orderPriority == OrderPriority.urgent) {
+    } else if (requestPriority == RequestPriority.urgent) {
       return constRed;
     }
   }
 
-  findBackgroundStausColor({required OrderStatus orderStatus}) {
-    if (orderStatus == OrderStatus.completed) {
+  findBackgroundStausColor({required RequestStatus requestStatus}) {
+    if (requestStatus == RequestStatus.deliveried) {
       return constLightGreen;
-    } else if (orderStatus == OrderStatus.inProgress) {
+    } else if (requestStatus == RequestStatus.in_progress) {
       return constLightBlue;
-    } else if (orderStatus == OrderStatus.suspended) {
+    } else if (requestStatus == RequestStatus.pending) {
       return constLightOrange;
-    } else if (orderStatus == OrderStatus.rejected) {
+    } else if (requestStatus == RequestStatus.rejected) {
       return constLightRed;
+    } else if (requestStatus == RequestStatus.ready_for_delivery) {
+      return constLightGreen;
     }
   }
 
-  findBackgroundPriorityColor({required OrderPriority orderPriority}) {
-    if (orderPriority == OrderPriority.normal) {
+  findBackgroundPriorityColor({required RequestPriority requestPriority}) {
+    if (requestPriority == RequestPriority.normal) {
       return constLightBlue;
-    } else if (orderPriority == OrderPriority.urgent) {
+    } else if (requestPriority == RequestPriority.urgent) {
       return constLightRed;
     }
   }

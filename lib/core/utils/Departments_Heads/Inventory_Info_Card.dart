@@ -12,15 +12,11 @@ class InventoryInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final h = context.screenHeight;
     final w = context.screenWidth;
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: w * 0.03,
-        vertical: h * 0.01,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: h * 0.01),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: w * 0.035,
@@ -39,15 +35,36 @@ class InventoryInfoCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            CustomRow(title: 'الاسم', iconData: Icons.label_outline, label: item.name),
-            CustomRow(title: 'الماركة', iconData: Icons.badge_outlined, label: item.brand),
-            CustomRow(title: 'النوع', iconData: Icons.layers_outlined, label: item.type),
-            CustomRow(title: 'الصنف', iconData: Icons.dashboard_outlined, label: item.categoryLabel),
-            CustomRow(title: 'موقع التخزين', iconData: Icons.place_outlined, label: item.storageLocation),
+            CustomRow(
+              title: 'الاسم',
+              iconData: Icons.label_outline,
+              label: item.name,
+            ),
+            CustomRow(
+              title: 'الماركة',
+              iconData: Icons.badge_outlined,
+              label: item.brand ?? '---',
+            ),
+            CustomRow(
+              title: 'النوع',
+              iconData: Icons.layers_outlined,
+              label: item.type,
+            ),
+            CustomRow(
+              title: 'الصنف',
+              iconData: Icons.dashboard_outlined,
+              label: item.categoryLabel,
+            ),
+            CustomRow(
+              title: 'موقع التخزين',
+              iconData: Icons.place_outlined,
+              label: item.storageLocation ?? '---',
+            ),
             CustomRow(
               title: 'الحدود',
               iconData: Icons.swap_vert,
-              label: 'الادنى : ${item.minQuantity} | الاقصى : ${item.maxQuantity}',
+              label:
+                  'الادنى : ${item.minQuantity} | الاقصى : ${item.maxQuantity}',
             ),
           ],
         ),

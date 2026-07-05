@@ -4,32 +4,34 @@ import 'package:stock_mate_project/core/Function/Find_Color.dart';
 import 'package:stock_mate_project/core/Function/Find_Priority.dart';
 import 'package:stock_mate_project/core/Function/Find_Status.dart';
 import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
-import 'package:stock_mate_project/core/models/Order_Models.dart';
+import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Details_Recurring_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Version_Custom_Recurring_Details_Card.dart';
 
 // ignore: must_be_immutable
 class DisOrderDetailsPage extends StatelessWidget {
-  DisOrderDetailsPage({super.key, required this.order});
-  Order order;
-
+  DisOrderDetailsPage({super.key, required this.requestModel});
+  // Order order;
+  RequestModel requestModel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: SizedBox(
-        width: context.screenWidth * 0.15,
-        height: context.screenHeight * 0.1,
-        child: FloatingActionButton(
-          backgroundColor: constBlue,
-          elevation: 8,
-          shape: const CircleBorder(),
-          onPressed: () {
-            showConfirmDialog(onConfirm: () {}, sub: '', tital: '');
-          },
-          child: Icon(Icons.check, color: Colors.white),
-        ),
-      ),
+      floatingActionButton: requestModel.status == RequestStatus.pending
+          ? SizedBox(
+              width: context.screenWidth * 0.15,
+              height: context.screenHeight * 0.1,
+              child: FloatingActionButton(
+                backgroundColor: constBlue,
+                elevation: 8,
+                shape: const CircleBorder(),
+                onPressed: () {
+                  showConfirmDialog(onConfirm: () {}, sub: '', tital: '');
+                },
+                child: Icon(Icons.check, color: Colors.white),
+              ),
+            )
+          : null,
       body: Column(
         children: [
           CustomBackContainer(),
@@ -41,7 +43,7 @@ class DisOrderDetailsPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: context.screenWidth * 0.02,
-                      vertical: context.screenHeight * 0.005,
+                      vertical: context.screenHeight * 0.003,
                     ),
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -87,7 +89,7 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                'الاذنية',
+                                requestModel.departmentName,
                                 style: TextStyle(
                                   fontFamily: cairo,
                                   fontSize: context.screenHeight * 0.019,
@@ -121,7 +123,8 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                'اعتيادي',
+                                requestModel.requestFrequency.arabicLabel,
+
                                 style: TextStyle(
                                   fontFamily: cairo,
                                   fontSize: context.screenHeight * 0.019,
@@ -156,7 +159,7 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                '26/05/2025',
+                                '${requestModel.date.year}-${requestModel.date.month}-${requestModel.date.day}',
                                 style: TextStyle(
                                   fontFamily: cairo,
                                   fontSize: context.screenHeight * 0.019,
@@ -199,13 +202,14 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: FindColor()
                                       .findBackgroundPriorityColor(
-                                        orderPriority: order.priority,
+                                        requestPriority:
+                                            requestModel.requestType,
                                       ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  FindOrderPriority().findOrderPriority(
-                                    orderPriority: order.priority,
+                                  FindRequestPriority().findRequestPriority(
+                                    requestPriority: requestModel.requestType,
                                   ),
                                   style: TextStyle(
                                     fontFamily: cairo,
@@ -213,7 +217,8 @@ class DisOrderDetailsPage extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                     color: FindColor()
                                         .findFontColorPriorityFunction(
-                                          orderPriority: order.priority,
+                                          requestPriority:
+                                              requestModel.requestType,
                                         ),
                                   ),
                                 ),
@@ -253,13 +258,13 @@ class DisOrderDetailsPage extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: FindColor().findBackgroundStausColor(
-                                    orderStatus: order.status,
+                                    requestStatus: requestModel.status,
                                   ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  FindOrderStatus().findOrderStatus(
-                                    orderStatus: order.status,
+                                  FindREquestStatus().findRequestStatus(
+                                    requestStatus: requestModel.status,
                                   ),
                                   style: TextStyle(
                                     fontFamily: cairo,
@@ -267,7 +272,7 @@ class DisOrderDetailsPage extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                     color: FindColor()
                                         .findFontColorStausFunction(
-                                          orderStatus: order.status,
+                                          requestStatus: requestModel.status,
                                         ),
                                   ),
                                 ),
@@ -282,14 +287,16 @@ class DisOrderDetailsPage extends StatelessWidget {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.only(top: 0),
-                    itemCount: 5,
+                    itemCount: requestModel.items.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: context.screenWidth * 0.02,
                           vertical: context.screenHeight * 0.005,
                         ),
-                        child: CustomRecurringDetailsCard(order: order),
+                        child: VersionCustomRecurringDetailsCard(
+                          requestItemModel: requestModel.items[index],
+                        ),
                       );
                     },
                   ),
