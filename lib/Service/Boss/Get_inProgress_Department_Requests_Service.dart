@@ -4,13 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
 import 'package:stock_mate_project/core/models/Request_Model.dart';
 
-class GetUrgentDepartmentRequestsService {
+class GetinProgressDepartmentRequestsService {
   Future<List<RequestModel>> getUrgentDepartmentRequestsService() async {
     try {
       final http.Response response = await http
           .get(
             Uri.parse(
-              'https://grud-2y91.onrender.com/api/request-orders/pending/normal',
+              'https://grud-2y91.onrender.com/api/request-orders/in-progress',
             ), //TODO TOken
             headers: {
               'Accept': 'application/json',

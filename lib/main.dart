@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stock_mate_project/Service/Boss/Get_urgent_Department_Requests_Service.dart';
+
+import 'package:stock_mate_project/Service/Boss/Get_All_Department_Requests_Service.dart';
 import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/Routes/Bindings/App/App_Binding.dart';
@@ -33,31 +34,31 @@ class StockMate extends StatelessWidget {
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
       getPages: AppPages.routes,
-      initialRoute: AppRoutes.DepartmentHeadsMainPage,
+      initialRoute: AppRoutes.SplashViewPage,
       initialBinding: AppBinding(),
     );
   }
 }
 
 class HasanServiceTester extends StatelessWidget {
-  const HasanServiceTester({super.key});
+  HasanServiceTester({super.key});
 
   @override
   final String pageName = '/HasanServiceTester';
-
+  TextEditingController? c = TextEditingController();
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
           SizedBox(height: 250),
+          // CustomLoadingIndicator(message: 'جاري تحميل الموردين...'),
           Center(
             child: FloatingActionButton(
               onPressed: () async {
                 // ignore: avoid_print
-                print('1');
-                List<RequestModel> data =
-                    await GetUrgentDepartmentRequestsService()
-                        .getUrgentDepartmentRequestsService();
+                List<RequestModel> datad = await GetAllRequestService()
+                    .getAllDepartmentRequests();
+                print(datad[0].requestFrequency.arabicLabel);
               },
               child: Text('data'),
             ),

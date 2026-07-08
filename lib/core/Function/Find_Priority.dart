@@ -1,10 +1,10 @@
-import 'package:stock_mate_project/core/models/Order_Models.dart';
+import 'package:stock_mate_project/core/models/Request_Model.dart';
 
-class FindOrderPriority {
-  findOrderPriority({required OrderPriority orderPriority}) {
-    if (orderPriority == OrderPriority.normal) {
+class FindRequestPriority {
+  findRequestPriority({required RequestPriority requestPriority}) {
+    if (requestPriority == RequestPriority.normal) {
       return 'عادي';
-    } else if (orderPriority == OrderPriority.urgent) {
+    } else if (requestPriority == RequestPriority.urgent) {
       return 'ضروري';
     }
   }

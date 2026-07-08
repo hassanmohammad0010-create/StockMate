@@ -48,50 +48,79 @@ void showConfirmDialog({
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
-
+              const SizedBox(height: 8),
+              Divider(endIndent: 16, indent: 16, color: constLightGray),
+              const SizedBox(height: 4),
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Get.back();
-                        onReject?.call();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: constGreen,
-                        side: BorderSide.none,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: constBlue,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2), // لون الظل
+                            blurRadius: 8, // ضبابية الظل
+                            spreadRadius: 1, // انتشار الظل
+                            offset: Offset(0, 0), // اتجاه الظل (x, y)
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Text(
-                        'تأكيد',
-                        style: TextStyle(fontSize: 16, color: constLightGreen),
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Get.back();
+                          onReject?.call();
+                        },
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: constBlue,
+                          side: BorderSide.none,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          'تأكيد',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
 
                   const SizedBox(width: 12),
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Get.back();
-                        onReject?.call();
-                        showDialogWithTextFailed(onConfirm: (data) {});
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: constRed,
-                        side: BorderSide.none, // ← هذا يزيل الحواف
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2), // لون الظل
+                            blurRadius: 8, // ضبابية الظل
+                            spreadRadius: 1, // انتشار الظل
+                            offset: Offset(0, 0), // اتجاه الظل (x, y)
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Text(
-                        'رفض',
-                        style: TextStyle(fontSize: 16, color: constLightRed),
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Get.back();
+                          onReject?.call();
+                          showDialogWithTextFailed(onConfirm: (data) {});
+                        },
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide.none, // ← هذا يزيل الحواف
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          'رفض',
+                          style: TextStyle(fontSize: 16, color: constGray),
+                        ),
                       ),
                     ),
                   ),

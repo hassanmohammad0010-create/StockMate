@@ -55,13 +55,13 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                           CustomRow(
                             title: 'الماركة',
                             iconData: Icons.badge_outlined,
-                            label: item.brand,
+                            label: item.brand ?? '---',
                           ),
-                          CustomRow(
-                            title: 'النوع',
-                            iconData: Icons.layers_outlined,
-                            label: item.type,
-                          ),
+                          // CustomRow(
+                          //   title: 'النوع',
+                          //   iconData: Icons.layers_outlined,
+                          //   label: item.type,
+                          // ),
                           CustomRow(
                             title: 'الصنف',
                             iconData: Icons.dashboard_outlined,
@@ -70,7 +70,7 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                           CustomRow(
                             title: 'موقع التخزين',
                             iconData: Icons.place_outlined,
-                            label: item.storageLocation,
+                            label: item.storageLocation ?? '---',
                           ),
                           CustomRow(
                             title: 'الحدود ',
