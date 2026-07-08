@@ -78,6 +78,76 @@ class OrderDetailsPage extends StatelessWidget {
     );
   }
 
+  Widget _buildStatusActionButton(
+    Order liveOrder,
+    OrdersController controller,
+  ) {
+    final showRecurringDeleteButton =
+        liveOrder.isRecurring && liveOrder.status == OrderStatus.completed;
+    final showReceivedButton =
+        !liveOrder.isRecurring && liveOrder.status == OrderStatus.reserved;
+    final showConfirmReceiveButton =
+        !liveOrder.isRecurring && liveOrder.status == OrderStatus.completed;
+
+    if (showRecurringDeleteButton) {
+      return CustomMainButtom(
+        title: 'حذف الطلب',
+        color: constRed,
+        fontcolor: Colors.white,
+        onPressed: () => CustomDialog.show(
+          type: DialogType.danger,
+          title: 'حذف الطلب',
+          message: 'هل أنت متأكد من حذف هذا الطلب؟',
+        ),
+      );
+    }
+
+    if (showReceivedButton) {
+      final confirmedQty = liveOrder.receivedQuantity ?? liveOrder.quantity;
+      return CustomMainButtom(
+        title: 'تم تأكيد استلام $confirmedQty وحدة',
+        color: constLightGreen,
+        fontcolor: constGreen,
+        onPressed: () {},
+      );
+    }
+
+    if (showConfirmReceiveButton) {
+      return CustomMainButtom(
+        title: 'تأكيد الاستلام',
+        color: constGreen,
+        fontcolor: Colors.white,
+        onPressed: () => _showConfirmReceiveDialog(controller),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildBottomBar(double h, double w) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: h * 0.02),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Divider(),
+            SizedBox(height: h * 0.01),
+            CustomMainButtom(
+              title: 'ارسال طلب جديد',
+              color: constLightBlue,
+              fontcolor: constBlue,
+              onPressed: () {
+                Get.toNamed(AppRoutes.DepartmentHeadsAddNewOrderPage);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final h = context.screenHeight;
@@ -94,92 +164,35 @@ class OrderDetailsPage extends StatelessWidget {
             CustomBackContainer(),
             CustomHeadContainer(title: 'تفاصيل الطلب'),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: w * 0.03),
-                child: Obx(() {
-                  final liveOrder = controller.getOrderById(order.id!) ?? order;
-                  final showRecurringDeleteButton =
-                      liveOrder.isRecurring &&
-                      liveOrder.status == OrderStatus.completed;
-                  final showReceivedButton =
-                      !liveOrder.isRecurring &&
-                      liveOrder.status == OrderStatus.reserved;
-                  final showConfirmReceiveButton =
-                      !liveOrder.isRecurring &&
-                      liveOrder.status == OrderStatus.completed;
-                  final double spacerHeight =
-                      (showRecurringDeleteButton ||
-                          showReceivedButton ||
-                          showConfirmReceiveButton)
-                      ? h * 0.12
-                      : liveOrder.status == OrderStatus.rejected
-                      ? h * 0.06
-                      : h * 0.18;
-                  Widget actionButton;
-                  if (showRecurringDeleteButton) {
-                    actionButton = CustomMainButtom(
-                      title: 'حذف الطلب',
-                      color: constRed,
-                      fontcolor: Colors.white,
-                      onPressed: () => CustomDialog.show(
-                        type: DialogType.danger,
-                        title: 'حذف الطلب',
-                        message: 'هل أنت متأكد من حذف هذا الطلب؟',
-                      ),
-                    );
-                  } else if (showReceivedButton) {
-                    final confirmedQty =
-                        liveOrder.receivedQuantity ?? liveOrder.quantity;
-                    actionButton = CustomMainButtom(
-                      title: 'تم تأكيد استلام $confirmedQty وحدة',
-                      color: constLightGreen,
-                      fontcolor: constGreen,
-                      onPressed: () {},
-                    );
-                  } else if (showConfirmReceiveButton) {
-                    actionButton = CustomMainButtom(
-                      title: 'تأكيد الاستلام',
-                      color: constGreen,
-                      fontcolor: Colors.white,
-                      onPressed: () => _showConfirmReceiveDialog(controller),
-                    );
-                  } else {
-                    actionButton = const SizedBox();
-                  }
+              child: Obx(() {
+                final liveOrder = controller.getOrderById(order.id!) ?? order;
+                final isRejectedWithReason =
+                    liveOrder.status == OrderStatus.rejected &&
+                    liveOrder.rejectionReason.trim().isNotEmpty;
 
-                  return Column(
+                return SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: w * 0.03),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       SizedBox(height: h * 0.02),
                       CustomDetailsCard(order: liveOrder),
+
+                      if (isRejectedWithReason) ...[
+                        SizedBox(height: h * 0.02),
+                        RejectionBanner(reason: liveOrder.rejectionReason),
+                      ],
+
+                      SizedBox(height: h * 0.03),
+                      _buildStatusActionButton(liveOrder, controller),
+
                       SizedBox(height: h * 0.02),
-                      liveOrder.status == OrderStatus.rejected
-                          ? liveOrder.rejectionReason == ''
-                                ? SizedBox(height: h * 0.12)
-                                : RejectionBanner(
-                                    reason: liveOrder.rejectionReason,
-                                  )
-                          : const SizedBox(),
-                      SizedBox(height: spacerHeight),
-                      actionButton,
-                      SizedBox(height: h * 0.01),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: w * 0.02),
-                        child: Divider(),
-                      ),
-                      SizedBox(height: h * 0.01),
-                      CustomMainButtom(
-                        title: 'ارسال طلب جديد',
-                        color: constLightBlue,
-                        fontcolor: constBlue,
-                        onPressed: () {
-                          Get.toNamed(AppRoutes.DepartmentHeadsAddNewOrderPage);
-                        },
-                      ),
                     ],
-                  );
-                }),
-              ),
+                  ),
+                );
+              }),
             ),
+            _buildBottomBar(h, w),
           ],
         ),
       ),

@@ -10,7 +10,6 @@ class RejectionBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final h = context.screenHeight;
     final w = context.screenWidth;
 
@@ -35,7 +34,7 @@ class RejectionBanner extends StatelessWidget {
           children: [
             Container(
               width: w * 0.08,
-              height: h * 0.12,
+              height: h * 0.1,
               decoration: BoxDecoration(
                 color: constRed,
                 borderRadius: BorderRadius.circular(12),

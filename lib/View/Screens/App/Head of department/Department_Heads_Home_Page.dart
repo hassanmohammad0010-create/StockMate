@@ -33,9 +33,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               specializationName: 'رئيس قسم الداخلية',
             ),
             Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: w * 0.02,
-              ),
+              margin: EdgeInsets.symmetric(horizontal: w * 0.02),
               child: Column(
                 children: [
                   Row(
@@ -119,15 +117,11 @@ class DepartmentHeadsHomePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: h * 0.01),
-            Divider(
-              endIndent: w * 0.03,
-              indent: w * 0.03,
-              color: constGray,
-            ),
+            Divider(endIndent: w * 0.03, indent: w * 0.03, color: constGray),
             Align(
               alignment: AlignmentGeometry.centerRight,
               child: Padding(
-                padding: EdgeInsets.only(right: w * 0.03),
+                padding: EdgeInsets.only(right: w * 0.05),
                 child: Text(
                   'وصفة طبية جديدة / السلة',
                   style: TextStyle(

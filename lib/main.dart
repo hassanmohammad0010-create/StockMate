@@ -59,7 +59,6 @@ class HasanServiceTester extends StatelessWidget {
                     await GetUrgentDepartmentRequestsService()
                         .getUrgentDepartmentRequestsService();
               },
-
               child: Text('data'),
             ),
           ),
