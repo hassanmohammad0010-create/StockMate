@@ -55,11 +55,11 @@ class InventoryInfoCard extends StatelessWidget {
               iconData: Icons.dashboard_outlined,
               label: item.categoryLabel,
             ),
-            CustomRow(
-              title: 'موقع التخزين',
-              iconData: Icons.place_outlined,
-              label: item.storageLocation ?? '---',
-            ),
+            // CustomRow(
+            //   title: 'موقع التخزين',
+            //   iconData: Icons.place_outlined,
+            //   label: item.storageLocation ?? '---',
+            // ),
             CustomRow(
               title: 'الحدود',
               iconData: Icons.swap_vert,

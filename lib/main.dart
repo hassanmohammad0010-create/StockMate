@@ -34,7 +34,7 @@ class StockMate extends StatelessWidget {
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
       getPages: AppPages.routes,
-      initialRoute: AppRoutes.SplashViewPage,
+      initialRoute: AppRoutes.DepartmentHeadsMainPage,
       initialBinding: AppBinding(),
     );
   }

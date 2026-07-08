@@ -1,6 +1,6 @@
 {
-    "name": "stock_mate_project",
-    "short_name": "stock_mate_project",
+    "name": "Stock_Mate",
+    "short_name": "Stock_Mate",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
