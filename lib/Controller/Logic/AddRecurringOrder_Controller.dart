@@ -159,6 +159,7 @@ class AddRecurringOrderController extends GetxController {
         title: 'تم الإرسال',
         message: 'تم إرسال الطلب بنجاح',
         onConfirm: () => Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage),
+        showCancel: false,
       );
 
       // TODO: Get.offAllNamed('/HomePage') بعد الإرسال الناجح

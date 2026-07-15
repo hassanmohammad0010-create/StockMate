@@ -17,7 +17,6 @@ class PrescriptionArchiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final h = context.screenHeight;
     final w = context.screenWidth;
 
@@ -30,11 +29,11 @@ class PrescriptionArchiveCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
-           margin: EdgeInsets.symmetric(
-            horizontal: w * 0.04,
+          margin: EdgeInsets.symmetric(
+            horizontal: w * 0.02,
             vertical: h * 0.01,
           ),
-           padding: EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: w * 0.04,
             vertical: h * 0.018,
           ),
@@ -53,16 +52,15 @@ class PrescriptionArchiveCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // شريط جانبي ملوّن يدل على الحالة بسرعة دون قراءة النص
               Container(
-              width: w * 0.01,
+                width: w * 0.01,
                 height: h * 0.08,
                 decoration: BoxDecoration(
                   color: accentColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: w * 0.04),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +79,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                           ),
                         ),
                         Container(
-                         padding: EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: w * 0.02,
                             vertical: h * 0.005,
                           ),

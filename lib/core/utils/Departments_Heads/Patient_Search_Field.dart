@@ -28,15 +28,11 @@ class PatientSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final h = context.screenHeight;
     final w = context.screenWidth;
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: w * 0.04,
-        vertical: h * 0.01,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.035, vertical: h * 0.01),
       child: TextField(
         controller: controller,
         autofocus: autofocus,

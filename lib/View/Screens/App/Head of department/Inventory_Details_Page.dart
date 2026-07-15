@@ -13,6 +13,7 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.d
 import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Quantity_Card.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Batches_Card.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Inventory_Info_Card.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
 class InventoryDetailsPage extends GetView<MaterialInfoController> {
   const InventoryDetailsPage({super.key, required this.item});
@@ -37,7 +38,9 @@ class InventoryDetailsPage extends GetView<MaterialInfoController> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: h * 0.01),
+                  SizedBox(height: h * 0.005),
+                  CustomHeadContainer(title: 'تفاصيل المادة'),
+                  SizedBox(height: h * 0.005),
                   InventoryInfoCard(item: item),
                   SizedBox(height: h * 0.01),
                   InventoryQuantityCard(item: item),
