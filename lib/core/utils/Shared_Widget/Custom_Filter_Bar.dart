@@ -6,12 +6,13 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
 
 class CustomFilterBar extends StatelessWidget {
-  const CustomFilterBar({super.key, required this.tag, required this.filters});
+  const CustomFilterBar({super.key, required this.tag, required this.filters,this.controller});
   final String tag;
   final List<String> filters;
+  final FilterController? controller;
   @override
   Widget build(BuildContext context) {
-    final FilterController controller = Get.find(tag: tag);
+    // final FilterController controller = Get.find(tag: tag);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -20,13 +21,13 @@ class CustomFilterBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Obx(
           () => Row(
-            children: controller.filters.map((filter) {
+            children: controller!.filters.map((filter) {
               return Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: _FilterChip(
                   label: filter,
-                  isSelected: controller.isSelected(filter),
-                  onTap: () => controller.selectFilter(filter),
+                  isSelected: controller!.isSelected(filter),
+                  onTap: () => controller!.selectFilter(filter),
                 ),
               );
             }).toList(),
@@ -86,3 +87,4 @@ class _FilterChip extends StatelessWidget {
     );
   }
 }
+

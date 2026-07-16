@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:stock_mate_project/Service/App/openrouter_service.dart';
 import 'package:stock_mate_project/Service/Boss/Get_All_Department_Requests_Service.dart';
+import 'package:stock_mate_project/core/Function/prompt_manager.dart';
 import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
@@ -13,12 +15,16 @@ SharedPreferences? tokenSharedPreferences;
 SharedPreferences? identitySharedPreferences;
 
 void main() async {
-  WidgetsFlutterBinding();
+  WidgetsFlutterBinding.ensureInitialized();
   tokenSharedPreferences = await SharedPreferences.getInstance();
   identitySharedPreferences = await SharedPreferences.getInstance();
   shareprefs = await SharedPreferences.getInstance();
 
   await shareprefs?.clear();
+
+  await dotenv.load(fileName: ".env");
+
+  await PromptManager.initialize();
 
   runApp(const StockMate());
 }
