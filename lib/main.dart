@@ -9,15 +9,17 @@ import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 
 SharedPreferences? shareprefs;
-
 SharedPreferences? tokenSharedPreferences;
 SharedPreferences? identitySharedPreferences;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  tokenSharedPreferences = await SharedPreferences.getInstance();
-  identitySharedPreferences = await SharedPreferences.getInstance();
-  shareprefs = await SharedPreferences.getInstance();
+
+  final prefs = await SharedPreferences.getInstance();
+  
+  tokenSharedPreferences = prefs;
+  identitySharedPreferences = prefs;
+  shareprefs = prefs;
 
   await shareprefs?.clear();
 
