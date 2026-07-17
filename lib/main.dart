@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stock_mate_project/Service/App/openrouter_service.dart';
 import 'package:stock_mate_project/Service/Boss/Get_All_Department_Requests_Service.dart';
 import 'package:stock_mate_project/core/Function/prompt_manager.dart';
 import 'package:stock_mate_project/core/models/Request_Model.dart';
