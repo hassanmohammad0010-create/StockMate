@@ -83,7 +83,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 child: CustomCircle(
                   xAlignment: 0,
-                  yAlignment: 4.5,
+                  yAlignment: 3,
                   size: 1.88,
                   color: constColor,
                   child: SizedBox(

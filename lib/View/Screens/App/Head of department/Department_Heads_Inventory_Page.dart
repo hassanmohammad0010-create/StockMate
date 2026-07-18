@@ -44,10 +44,14 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
             alignment: AlignmentGeometry.centerRight,
             child: CustomFilterBar(
               tag: _filterTag,
+              controller: filterController,
               filters: const ['الكل', 'ثابتة', 'مستهلكة', 'ادوية'],
             ),
           ),
-          CustomSearchField(),
+          CustomSearchField(
+            controller: filterController.searchController,
+            onChanged: (value) => filterController.updateSearch(value),
+          ),
           Expanded(
             child: Obx(() {
               CartController.to.inventoryVersion.value;
@@ -77,20 +81,16 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
                 material = material
                     .where(
                       (o) =>
-                          CustomSearchField()
-                              .normalizeArabic(o.name)
-                              .toLowerCase()
-                              .contains(query) ||
-                          CustomSearchField()
-                              .normalizeArabic(o.id)
-                              .toLowerCase()
-                              .contains(query),
+                          normalizeArabic(
+                            o.name,
+                          ).toLowerCase().contains(query) ||
+                          normalizeArabic(o.id).toLowerCase().contains(query),
                     )
                     .toList();
               }
 
               return material.isEmpty
-                  ? CustomSearchField().buildEmptyState()
+                  ? const SearchEmptyState()
                   : ListView.builder(
                       padding: EdgeInsets.symmetric(
                         vertical: h * 0.005,

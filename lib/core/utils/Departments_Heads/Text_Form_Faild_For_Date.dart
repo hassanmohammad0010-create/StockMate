@@ -43,7 +43,6 @@ class TextFormFaildForDate extends StatefulWidget {
 class _TextFormFaildForDateState extends State<TextFormFaildForDate> {
   @override
   Widget build(BuildContext context) {
-    
     final h = context.screenHeight;
     final w = context.screenWidth;
 

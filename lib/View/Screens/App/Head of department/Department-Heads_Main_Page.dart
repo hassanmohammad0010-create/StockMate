@@ -47,29 +47,43 @@ class DepartmentHeadsMainPage extends StatelessWidget {
         appBar: AppBar(
           toolbarHeight: h * 0.1,
           actions: [
-            Stack(
+            Row(
               children: [
                 IconButton(
                   icon: const Icon(
-                    Icons.notifications,
+                    Icons.smart_toy,
                     color: Colors.white,
                     size: 28,
                   ),
                   onPressed: () {
-                    Get.toNamed(AppRoutes.NotificationPage);
+                    Get.toNamed(AppRoutes.ChatPage);
                   },
                 ),
-                Positioned(
-                  right: w * 0.02,
-                  top: h * 0.01,
-                  child: Container(
-                    width: w * 0.02,
-                    height: h * 0.015,
-                    decoration: const BoxDecoration(
-                      color: constRed,
-                      shape: BoxShape.circle,
+                Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.notifications,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        Get.toNamed(AppRoutes.NotificationPage);
+                      },
                     ),
-                  ),
+                    Positioned(
+                      right: w * 0.02,
+                      top: h * 0.01,
+                      child: Container(
+                        width: w * 0.02,
+                        height: h * 0.015,
+                        decoration: const BoxDecoration(
+                          color: constRed,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

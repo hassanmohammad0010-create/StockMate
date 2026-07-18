@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:stock_mate_project/Service/Boss/Get_All_Department_Requests_Service.dart';
 import 'package:stock_mate_project/Service/Boss/Get_urgent_Purchase_Requests_Service.dart';
+import 'package:stock_mate_project/core/Function/prompt_manager.dart';
 import 'package:stock_mate_project/core/models/Purchase_Request_Model.dart';
 import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
-import 'package:stock_mate_project/Routes/Bindings/App/App_Binding.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 
 SharedPreferences? shareprefs;
-
 SharedPreferences? tokenSharedPreferences;
 SharedPreferences? identitySharedPreferences;
 
 void main() async {
-  WidgetsFlutterBinding();
-  tokenSharedPreferences = await SharedPreferences.getInstance();
-  identitySharedPreferences = await SharedPreferences.getInstance();
-  shareprefs = await SharedPreferences.getInstance();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+  
+  tokenSharedPreferences = prefs;
+  identitySharedPreferences = prefs;
+  shareprefs = prefs;
 
   await shareprefs?.clear();
+
+  await dotenv.load(fileName: ".env");
+
+  await PromptManager.initialize();
 
   runApp(const StockMate());
 }
@@ -36,8 +42,7 @@ class StockMate extends StatelessWidget {
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
       getPages: AppPages.routes,
-      initialRoute: AppRoutes.SplashViewPage,
-      initialBinding: AppBinding(),
+      initialRoute: AppRoutes.DepartmentHeadsMainPage,
     );
   }
 }
@@ -63,7 +68,6 @@ class HasanServiceTester extends StatelessWidget {
                         .getUrgentPurchaseRequestsService();
                 print(datad[0].requester);
               },
-
               child: Text('data'),
             ),
           ),

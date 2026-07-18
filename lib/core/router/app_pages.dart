@@ -36,11 +36,16 @@ import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
+import 'package:stock_mate_project/View/Screens/Chat/chat_page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/main.dart';
 
 abstract class AppPages {
   static final routes = [
+    GetPage(
+      name: AppRoutes.ChatPage,
+      page: () => ChatPage(),
+    ),
     GetPage(
       name: AppRoutes.DepartmentHeadsMainPage,
       page: () => const DepartmentHeadsMainPage(),

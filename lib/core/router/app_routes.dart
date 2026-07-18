@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 abstract class AppRoutes {
+  static const ChatPage = '/ChatPage';
   static const DepartmentHeadsMainPage = '/DepartmentHeadsMainPage';
   static const AddOrdinaryOrderPage = '/AddOrdinaryOrderPage';
   static const AddRecurringOrderPage = '/AddRecurringOrderPage';

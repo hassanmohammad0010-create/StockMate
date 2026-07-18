@@ -250,6 +250,7 @@ class AddOrdinaryOrderController extends GetxController {
             ? 'تم إرسال الطلب بنجاح'
             : 'تم إرسال ${orders.length} طلبات بنجاح',
         onConfirm: () => Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage),
+        showCancel: false,
       );
       // TODO: Get.offAllNamed('/HomePage') بعد الإرسال الناجح
     } catch (e) {

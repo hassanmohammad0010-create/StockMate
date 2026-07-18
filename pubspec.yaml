@@ -42,11 +42,20 @@ dependencies:
   shared_preferences: ^2.5.5
   http: ^1.6.0
   flutter_spinkit: ^5.2.2
+  google_generative_ai: ^0.4.7
+  flutter_markdown: ^0.7.7+1
+  uuid: ^4.4.0
+  connectivity_plus: ^6.0.3
+  flutter_animate: ^4.5.0
+  flutter_dotenv: ^6.0.1
   # shared_preferences: ^2.3.3
 
 
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.14.4"
+  flutter_native_splash: ^2.4.7
+
   flutter_test:
     sdk: flutter
 
@@ -56,6 +65,21 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/Image/Logo/Full_Logo.png"
+  min_sdk_android: 21
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/Image/Logo/Semi_Logo.png
+  android_12:
+    image: assets/Image/Logo/Semi_Logo.png
+    color: "#ffffff"
+  web: false
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +96,7 @@ flutter:
   assets:
     - assets/Image/
     - assets/Image/Logo/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -88,6 +113,7 @@ flutter:
     - family: Cairo
       fonts:
         - asset: assets/Fonts/Cairo-VariableFont_slnt,wght.ttf
+        - asset: assets/prompts/system_prompt.txt
         # - asset: fonts/Schyler-Italic.ttf
         #   style: italic
     - family: Lateef

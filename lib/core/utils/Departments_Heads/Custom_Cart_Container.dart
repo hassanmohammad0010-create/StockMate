@@ -62,12 +62,11 @@ class CustomCartContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final h = context.screenHeight;
     final w = context.screenWidth;
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: h * 0.006, horizontal: w * 0.03),
+      margin: EdgeInsets.symmetric(vertical: h * 0.004, horizontal: w * 0.015),
       padding: EdgeInsets.symmetric(horizontal: w * 0.035, vertical: h * 0.014),
       decoration: BoxDecoration(
         color: Colors.white,
