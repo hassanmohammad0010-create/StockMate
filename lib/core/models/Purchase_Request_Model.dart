@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 enum PurchaseRequestStatus {
   pending,
   in_progress,
@@ -111,31 +113,31 @@ class Supplier {
 
 class PurchaseRequest {
   final int id;
-  final String departmentName;
   final PurchaseRequestStatus status;
+  final String requester = 'مدير المستودع';
   final PurchaseRequestPriority requestType;
   final PurchaseRequestFrequency requestFrequency;
   final DateTime date;
   final List<PurchaseRequestItemModel> items;
-  final double expectedBudget;
+  final String expectedBudget;
+  final Image? attechment;
   final String? reason;
   const PurchaseRequest({
     required this.id,
     required this.expectedBudget,
-    required this.departmentName,
     required this.status,
     required this.requestType,
     required this.date,
     required this.items,
     required this.requestFrequency,
-
+    this.attechment,
     this.reason,
   });
 
   factory PurchaseRequest.fromJson(Map<String, dynamic> json) {
     return PurchaseRequest(
       id: json['id'] as int,
-      departmentName: json['department_name'] ?? '',
+
       status: PurchaseRequestStatusX.fromApiValue(json['status']),
       requestType: RequestPriorityX.fromApiValue(json['request_type']),
       requestFrequency: RequestFrequencyX.fromApiValue(
@@ -159,24 +161,31 @@ class PurchaseRequestItemModel {
   final String? brand;
   final List<Supplier>? suppliers;
   final int quantity;
+  final String unit;
+  final int? receivedQuantity;
 
   PurchaseRequestItemModel({
     required this.productId,
     required this.productName,
+    this.receivedQuantity,
+
     this.brand,
     required this.suppliers,
     required this.quantity,
+    required this.unit,
   });
 
   factory PurchaseRequestItemModel.fromJson(Map<String, dynamic> json) {
     return PurchaseRequestItemModel(
       productId: json['product_id'] as int,
       productName: json['product_name'] ?? '',
-      brand: json['brand'],
+      brand: json['brand'] ?? '---',
       suppliers: (json['suppliers'] as List<dynamic>? ?? [])
           .map((e) => Supplier.fromJson(e as Map<String, dynamic>))
           .toList(),
       quantity: json['quantity'] as int,
+      unit: json['unit'],
+      receivedQuantity: json['received_quantity'],
     );
   }
 }

@@ -123,7 +123,7 @@ abstract class AppPages {
     ),
     GetPage(
       name: AppRoutes.NesseryPurchasingRequestPage,
-      page: () => const NesseryPurchasingRequestPage(),
+      page: () => NesseryPurchasingRequestPage(),
     ),
     GetPage(
       name: AppRoutes.NesseryDepartmentRequestPage,

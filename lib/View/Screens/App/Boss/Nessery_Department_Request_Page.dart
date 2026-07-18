@@ -5,6 +5,7 @@ import 'package:stock_mate_project/Controller/Service/Get_Urgent_Department_Requ
 import 'package:stock_mate_project/View/Screens/App/Boss/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Request_Container.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
+import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
@@ -42,7 +43,16 @@ class NesseryDepartmentRequestPage extends StatelessWidget {
                         itemCount: controller.requests!.length,
                         itemBuilder: (context, index) {
                           return CustomRequestContainer(
-                            requestModel: controller.requests![index],
+                            date:
+                                '${controller.requests![index].date.year}-${controller.requests![index].date.month}-${controller.requests![index].date.day}',
+                            necessity: controller
+                                .requests![index]
+                                .requestType
+                                .arabicLabel,
+                            requester:
+                                controller.requests![index].departmentName,
+                            state:
+                                controller.requests![index].status.arabicLabel,
                             onTap: () {
                               Get.to(
                                 () => DisOrderDetailsPage(

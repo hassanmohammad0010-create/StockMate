@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/Function/Find_Color.dart';
-import 'package:stock_mate_project/core/models/Request_Model.dart';
 
 // ignore: must_be_immutable
 class CustomRequestContainer extends StatelessWidget {
   CustomRequestContainer({
     super.key,
     required this.onTap,
-    required this.requestModel,
+    required this.date,
+    required this.necessity,
+    required this.requester,
+    required this.state,
   });
-  RequestModel requestModel;
+  String state, requester, date, necessity;
   VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
@@ -53,16 +55,12 @@ class CustomRequestContainer extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: FindColor().findBackgroundColor(
-                        word: requestModel.status.arabicLabel,
-                      ),
+                      color: FindColor().findBackgroundColor(word: state),
                     ),
                     child: Text(
-                      requestModel.status.arabicLabel,
+                      state,
                       style: TextStyle(
-                        color: FindColor().findFontColorFunction(
-                          word: requestModel.status.arabicLabel,
-                        ),
+                        color: FindColor().findFontColorFunction(word: state),
                         fontFamily: lateef,
                         fontSize: 20,
                       ),
@@ -71,7 +69,7 @@ class CustomRequestContainer extends StatelessWidget {
                 ],
               ),
               Text(
-                'صاحب الطلب : ${requestModel.departmentName}',
+                'صاحب الطلب : $requester',
                 style: TextStyle(
                   color: constGray,
                   fontFamily: lateef,
@@ -79,7 +77,7 @@ class CustomRequestContainer extends StatelessWidget {
                 ),
               ),
               Text(
-                'التاريخ :${requestModel.date.year}-${requestModel.date.month}-${requestModel.date.day}',
+                'التاريخ :$date',
                 style: TextStyle(
                   color: constGray,
                   fontFamily: lateef,
@@ -102,15 +100,13 @@ class CustomRequestContainer extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: FindColor().findBackgroundColor(
-                        word: requestModel.requestType.arabicLabel,
-                      ),
+                      color: FindColor().findBackgroundColor(word: necessity),
                     ),
                     child: Text(
-                      requestModel.requestType.arabicLabel,
+                      necessity,
                       style: TextStyle(
                         color: FindColor().findFontColorFunction(
-                          word: requestModel.requestType.arabicLabel,
+                          word: necessity,
                         ),
                         fontFamily: lateef,
                         fontSize: 20,

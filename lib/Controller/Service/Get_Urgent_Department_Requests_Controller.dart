@@ -12,4 +12,10 @@ class GetUrgentDepartmentRequestsController extends GetxController {
         .getUrgentDepartmentRequestsService();
     update();
   }
+
+  refresh() async {
+    requests = await GetUrgentDepartmentRequestsService()
+        .getUrgentDepartmentRequestsService();
+    update();
+  }
 }
