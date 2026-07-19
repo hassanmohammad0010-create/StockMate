@@ -1,7 +1,8 @@
 // ignore_for_file: deprecated_member_use, file_names
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/App/Setting_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
@@ -13,6 +14,7 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final h = context.screenHeight;
     final w = context.screenWidth;
+    final SettingController controller = Get.put(SettingController());
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -155,6 +157,27 @@ class SettingPage extends StatelessWidget {
               title: 'تواصل معنا',
             ),
 
+            Obx(() {
+              if (controller.isLoadingLockState.value) {
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              return CustomListTile(
+                backgroundColor: constLightBlue,
+                description: controller.isLockEnabled.value
+                    ? 'القفل مفعّل حالياً، اضغط لإلغائه'
+                    : 'انشاء قفل للتطبيق',
+                icon: controller.isLockEnabled.value
+                    ? Icons.lock
+                    : Icons.lock_open,
+                iconColor: constBlue,
+                onTap: controller.handleLockTap,
+                title: 'قفل التطبيق',
+              );
+            }),
+
             CustomListTile(
               backgroundColor: constLightBlue,
               description: 'طلب حذف الحساب الشخصي',
@@ -184,6 +207,7 @@ class SettingPage extends StatelessWidget {
               },
               title: 'تسجيل الخروج',
             ),
+
             SizedBox(height: h * 0.01),
           ],
         ),

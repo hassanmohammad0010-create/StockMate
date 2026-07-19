@@ -128,7 +128,6 @@ class CustomCartContainer extends StatelessWidget {
             ),
           ),
           SizedBox(width: w * 0.02),
-          // زر الإجراء (شكل كبسولة مع تأثير لمس واضح)
           Material(
             color: buttonColor,
             borderRadius: BorderRadius.circular(30),

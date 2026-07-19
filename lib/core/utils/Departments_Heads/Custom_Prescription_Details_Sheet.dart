@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/PrescriptionController.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/models/PrescriptionModel.dart';
 
 void showPrescriptionDetails(
@@ -170,19 +171,12 @@ class _PrescriptionDetailsSheet extends StatelessWidget {
                   height: h * 0.056,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      controller.markAsProcessed(prescription.id);
                       Get.back();
-                      Get.snackbar(
-                        'نجاح العملية',
-                        'تم صرف وصفة ${prescription.patientName}',
-                        snackPosition: SnackPosition.TOP,
-                        backgroundColor: constGreen,
-                        colorText: Colors.white,
-                        margin: EdgeInsets.symmetric(
-                          horizontal: w * 0.04,
-                          vertical: h * 0.02,
-                        ),
-                        borderRadius: 12,
+                      customSnackBar(
+                        title: 'نجاح العملية',
+                        message: 'تم صرف وصفة ${prescription.patientName}',
+                        messageColor: Colors.white,
+                        color: constGreen,
                       );
                     },
                     icon: const Icon(Icons.check_circle_outline),

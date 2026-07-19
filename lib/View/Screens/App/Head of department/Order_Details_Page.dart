@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
@@ -59,19 +60,19 @@ class OrderDetailsPage extends StatelessWidget {
         if (success) {
           final confirmedQty = receivedQty ?? order.quantity;
 
-          CustomDialog.show(
-            type: DialogType.success,
+          customSnackBar(
             title: 'تأكيد الاستلام',
             message: 'تم تأكيد استلام $confirmedQty بنجاح.',
-            showCancel: false,
+            color: constGreen,
+            messageColor: Colors.white,
           );
         } else {
-          CustomDialog.show(
-            type: DialogType.danger,
+          customSnackBar(
             title: 'تعذر تأكيد الاستلام',
             message:
                 'حدث خطأ أثناء تأكيد استلام الطلب، الرجاء المحاولة لاحقاً.',
-            showCancel: false,
+            color: constRed,
+            messageColor: Colors.white,
           );
         }
       },

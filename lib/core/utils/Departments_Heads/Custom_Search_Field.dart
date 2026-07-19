@@ -1,127 +1,3 @@
-// // ignore_for_file: file_names
-
-// import 'package:flutter/material.dart';
-// import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-// import 'package:get/instance_manager.dart';
-// import 'package:stock_mate_project/Constant/Const.dart';
-// import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
-// import 'package:stock_mate_project/core/router/app_routes.dart';
-
-// class CustomSearchField extends StatelessWidget {
-//   CustomSearchField({super.key});
-
-//   final FilterController filterController = Get.find(
-//     tag: AppRoutes.DepartmentHeadsInventoryPage,
-//   );
-
-//   final TextEditingController _searchController = TextEditingController();
-//   String normalizeArabic(String text) {
-//     return text
-//         .replaceAll('أ', 'ا')
-//         .replaceAll('إ', 'ا')
-//         .replaceAll('آ', 'ا')
-//         .replaceAll('ة', 'ه')
-//         .replaceAll('ى', 'ي');
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final h = context.screenHeight;
-//     final w = context.screenWidth;
-
-//     return Padding(
-//       padding: EdgeInsets.only(
-//         left: w * 0.03,
-//         right: w * 0.03,
-//         top: h * 0.005,
-//         bottom: h * 0.01,
-//       ),
-//       child: TextField(
-//         controller: _searchController,
-//         textDirection: TextDirection.rtl,
-//         onChanged: (value) => filterController.updateSearch(value),
-//         style: TextStyle(fontFamily: cairo, fontSize: 14),
-//         decoration: InputDecoration(
-//           hintText: 'ابحث بالاسم أو الرقم  .....',
-//           hintStyle: TextStyle(
-//             fontFamily: cairo,
-//             fontSize: 14,
-//             color: Colors.grey.shade400,
-//           ),
-//           hintTextDirection: TextDirection.rtl,
-//           prefixIcon: Icon(
-//             Icons.search_rounded,
-//             color: Colors.grey.shade400,
-//             size: 22,
-//           ),
-//           suffixIcon: Obx(
-//             () => filterController.searchQuery.value.isNotEmpty
-//                 ? GestureDetector(
-//                     onTap: () {
-//                       _searchController.clear();
-//                       filterController.updateSearch('');
-//                     },
-//                     child: Icon(
-//                       Icons.close_rounded,
-//                       color: Colors.grey.shade400,
-//                       size: 20,
-//                     ),
-//                   )
-//                 : const SizedBox.shrink(),
-//           ),
-//           filled: true,
-//           fillColor: Colors.grey.shade100,
-//           contentPadding: EdgeInsets.symmetric(
-//             horizontal: w * 0.04,
-//             vertical: h * 0.015,
-//           ),
-//           border: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(12),
-//             borderSide: BorderSide(color: Colors.grey.shade200),
-//           ),
-//           enabledBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(12),
-//             borderSide: BorderSide(color: Colors.grey.shade200),
-//           ),
-//           focusedBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(12),
-//             borderSide: BorderSide(color: constBlue, width: 1.5),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget buildEmptyState() {
-//     return Center(
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Icon(Icons.search_off_rounded, size: 64, color: Colors.grey.shade300),
-//           const SizedBox(height: 16),
-//           Text(
-//             'لا توجد نتائج',
-//             style: TextStyle(
-//               fontSize: 18,
-//               color: Colors.grey.shade500,
-//               fontFamily: cairo,
-//             ),
-//           ),
-//           const SizedBox(height: 8),
-//           Text(
-//             'جرّب كلمة بحث مختلفة',
-//             style: TextStyle(
-//               fontSize: 13,
-//               color: Colors.grey.shade400,
-//               fontFamily: cairo,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
@@ -231,7 +107,8 @@ class _CustomSearchFieldState extends State<CustomSearchField> {
     final hasText = widget.controller.text.isNotEmpty;
 
     return Padding(
-      padding: widget.padding ??
+      padding:
+          widget.padding ??
           EdgeInsets.only(
             left: w * 0.03,
             right: w * 0.03,
@@ -245,19 +122,18 @@ class _CustomSearchFieldState extends State<CustomSearchField> {
         textDirection: widget.textDirection,
         onChanged: widget.onChanged,
         onSubmitted: widget.onSubmitted,
-        style: widget.textStyle ??  TextStyle(fontFamily: cairo, fontSize: 14),
+        style: widget.textStyle ?? TextStyle(fontFamily: cairo, fontSize: 14),
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: widget.hintStyle ??
+          hintStyle:
+              widget.hintStyle ??
               TextStyle(
                 fontFamily: cairo,
                 fontSize: 14,
-                color: Colors.grey.shade400,
               ),
           hintTextDirection: widget.textDirection,
           prefixIcon: Icon(
             Icons.search_rounded,
-            color: Colors.grey.shade400,
             size: 22,
           ),
           suffixIcon: hasText
@@ -265,28 +141,34 @@ class _CustomSearchFieldState extends State<CustomSearchField> {
                   onTap: _handleClear,
                   child: Icon(
                     Icons.close_rounded,
-                    color: Colors.grey.shade400,
                     size: 20,
                   ),
                 )
               : const SizedBox.shrink(),
           filled: true,
-          fillColor: widget.fillColor ?? Colors.grey.shade100,
+          fillColor: widget.fillColor ?? Colors.grey[200],
           contentPadding: EdgeInsets.symmetric(
             horizontal: w * 0.04,
             vertical: h * 0.015,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
-            borderSide: BorderSide(color: widget.borderColor ?? Colors.grey.shade200),
+            borderSide: BorderSide(
+              color: widget.borderColor ?? Colors.grey.shade200,
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
-            borderSide: BorderSide(color: widget.borderColor ?? Colors.grey.shade200),
+            borderSide: BorderSide(
+              color: widget.borderColor ?? Colors.grey.shade200,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
-            borderSide: BorderSide(color: widget.focusedBorderColor ?? constBlue, width: 1.5),
+            borderSide: BorderSide(
+              color: widget.focusedBorderColor ?? constBlue,
+              width: 1.5,
+            ),
           ),
         ),
       ),

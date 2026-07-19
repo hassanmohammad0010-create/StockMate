@@ -33,6 +33,9 @@ import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Notification_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
+import 'package:stock_mate_project/View/Screens/Auth/ConfirmDisableLockScreen.dart';
+import 'package:stock_mate_project/View/Screens/Auth/LockScreen.dart';
+import 'package:stock_mate_project/View/Screens/Auth/LockSetup_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
@@ -42,10 +45,7 @@ import 'package:stock_mate_project/main.dart';
 
 abstract class AppPages {
   static final routes = [
-    GetPage(
-      name: AppRoutes.ChatPage,
-      page: () => ChatPage(),
-    ),
+    GetPage(name: AppRoutes.ChatPage, page: () => ChatPage()),
     GetPage(
       name: AppRoutes.DepartmentHeadsMainPage,
       page: () => const DepartmentHeadsMainPage(),
@@ -159,6 +159,15 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.MainPageHeadOfPurchasingPage,
       page: () => const MainPageHeadOfPurchasingPage(),
+    ),
+    GetPage(name: AppRoutes.LockScreen, page: () => const LockScreen()),
+    GetPage(
+      name: AppRoutes.LockSetupScreen,
+      page: () => const LockSetupScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.ConfirmDisableLockScreen,
+      page: () => const ConfirmDisableLockScreen(),
     ),
   ];
 }

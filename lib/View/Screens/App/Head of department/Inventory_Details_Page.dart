@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Material_Info_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
@@ -111,12 +112,13 @@ class _AddToCartButton extends StatelessWidget {
             final int quantity = raw.isEmpty ? 1 : int.parse(raw);
             final error = CartController.to.addToCart(item, quantity);
             Get.back();
-            CustomDialog.show(
-              type: error == null ? DialogType.success : DialogType.danger,
+
+            customSnackBar(
               title: error == null ? 'تمت الإضافة' : 'تنبيه',
               message:
                   error ?? 'تمت إضافة $quantity من ${item.name} الى السلة.',
-              showCancel: false,
+              color: error == null ? constGreen : constRed,
+              messageColor: Colors.white,
             );
           },
         );

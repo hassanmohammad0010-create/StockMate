@@ -1,21 +1,14 @@
 // ignore_for_file: file_names
 
-import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/core/models/PrescriptionModel.dart';
-import 'package:stock_mate_project/main.dart';
 
 /// الكونترولر المسؤول عن إدارة كل الوصفات الطبية:
 /// - تخزين القائمة الكاملة (مصدر الحقيقة الوحيد)
 /// - فلترة الوصفات الجديدة / المعالجة بناءً على status
 /// - البحث باسم المريض لكل صفحة على حدة (حقلا بحث منفصلان)
 /// - تحويل حالة الوصفة من newRx إلى processed
-/// - حفظ/استرجاع القائمة محليًا عبر SharedPreferences (المتغير shareprefs
-///   المُعرّف في main.dart) حتى تبقى التغييرات بعد إغلاق التطبيق
 class PrescriptionController extends GetxController {
-  // المفتاح المستخدم لتخزين/قراءة قائمة الوصفات في SharedPreferences
-  static const String _storageKey = 'prescriptions_data';
-
   // القائمة الكاملة لكل الوصفات (مصدر الحقيقة)
   final RxList<PrescriptionModel> _allPrescriptions = <PrescriptionModel>[].obs;
 
@@ -26,43 +19,7 @@ class PrescriptionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadFromPrefs();
-  }
-
-  /// يحاول تحميل القائمة المحفوظة من SharedPreferences.
-  /// إن لم توجد بيانات محفوظة (أول تشغيل للتطبيق)، يتم تحميل
-  /// بيانات تجريبية ثم حفظها مباشرة لتكون نقطة بداية.
-  void _loadFromPrefs() {
-    final String? rawData = shareprefs?.getString(_storageKey);
-
-    if (rawData == null || rawData.isEmpty) {
-      _loadDummyData();
-      _saveToPrefs();
-      return;
-    }
-
-    try {
-      final List<dynamic> decoded = jsonDecode(rawData) as List<dynamic>;
-      final List<PrescriptionModel> loaded = decoded
-          .map(
-            (item) => PrescriptionModel.fromJson(item as Map<String, dynamic>),
-          )
-          .toList();
-      _allPrescriptions.assignAll(loaded);
-    } catch (_) {
-      // في حال تلف البيانات المحفوظة لأي سبب، نرجع لبيانات تجريبية آمنة
-      _loadDummyData();
-      _saveToPrefs();
-    }
-  }
-
-  /// يحوّل القائمة الحالية إلى JSON ويحفظها في SharedPreferences.
-  /// يُستدعى تلقائيًا بعد أي تعديل على حالة وصفة.
-  Future<void> _saveToPrefs() async {
-    final String encoded = jsonEncode(
-      _allPrescriptions.map((p) => p.toJson()).toList(),
-    );
-    await shareprefs?.setString(_storageKey, encoded);
+    _loadDummyData();
   }
 
   void _loadDummyData() {
@@ -190,21 +147,5 @@ class PrescriptionController extends GetxController {
     final index = _allPrescriptions.indexWhere((p) => p.id == id);
     if (index == -1) return null;
     return _allPrescriptions[index];
-  }
-
-  // ===== تحويل حالة الوصفة =====
-
-  /// يحوّل الوصفة من newRx إلى processed، ثم يحفظ القائمة كاملة في
-  /// SharedPreferences فورًا حتى يبقى التغيير محفوظًا بعد إغلاق
-  /// التطبيق أو الخروج من الصفحة والعودة إليها.
-  void markAsProcessed(String prescriptionId) {
-    final index = _allPrescriptions.indexWhere((p) => p.id == prescriptionId);
-    if (index == -1) return;
-
-    _allPrescriptions[index] = _allPrescriptions[index].copyWith(
-      status: PrescriptionStatus.processed,
-    );
-
-    _saveToPrefs();
   }
 }

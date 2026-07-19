@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Service/App/openrouter_service.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:uuid/uuid.dart';
 import 'package:stock_mate_project/Service/App/chat_storage_service.dart';
 import 'package:stock_mate_project/core/models/chat_message.dart';
@@ -154,15 +156,11 @@ class ChatController extends GetxController {
     // فحص الاتصال بالإنترنت
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult.contains(ConnectivityResult.none)) {
-      Get.snackbar(
-        "📶 لا يوجد اتصال",
-        "يرجى التحقق من اتصالك بالإنترنت",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange.shade50,
-        colorText: Colors.orange.shade900,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 12,
-        duration: const Duration(seconds: 3),
+      customSnackBar(
+        title: "📶 لا يوجد اتصال",
+        message: "يرجى التحقق من اتصالك بالإنترنت",
+        color: constOrange,
+        messageColor: Colors.white,
       );
       return;
     }

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/ArchiveController.dart'; // ← جديد
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
@@ -91,17 +92,12 @@ class CartPage extends StatelessWidget {
                           onConfirm: () {
                             Get.back();
                             ArchiveController.to.confirmCart();
-                            Get.snackbar(
-                              'تم التأكيد',
-                              'تم تأكيد السلة اليومية بنجاح.',
-                              snackPosition: SnackPosition.TOP,
-                              backgroundColor: constGreen,
-                              colorText: Colors.white,
-                              margin: EdgeInsets.symmetric(
-                                horizontal: w * 0.04,
-                                vertical: h * 0.02,
-                              ),
-                              borderRadius: 12,
+
+                            customSnackBar(
+                              title: 'تم التأكيد',
+                              message: 'تم تأكيد السلة اليومية بنجاح.',
+                              color: constGreen,
+                              messageColor: Colors.white,
                             );
                           },
                         );

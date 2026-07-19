@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/models/Order_Models.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
 class AddRecurringOrderController extends GetxController {
   // ─── Reactive state ───────────────────────────────────────────────────────
@@ -124,16 +124,11 @@ class AddRecurringOrderController extends GetxController {
 
     // ❌ حقول ناقصة — أظهر snackbar وابقَ في الصفحة
     if (!isFormValid || !dropsValid) {
-      Get.snackbar(
-        'بيانات ناقصة',
-        'يرجى تعبئة جميع الحقول المطلوبة',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade600,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 12,
-        titleText: const SizedBox.shrink(),
-        icon: const Icon(Icons.error_outline, color: Colors.white),
+      customSnackBar(
+        title: 'بيانات ناقصة',
+        message: 'يرجى تعبئة جميع الحقول المطلوبة',
+        color: constRed,
+        messageColor: Colors.white,
       );
       return;
     }
@@ -154,24 +149,21 @@ class AddRecurringOrderController extends GetxController {
       };
       debugPrint('Submitting: $payload');
 
-      CustomDialog.show(
-        type: DialogType.success,
+      customSnackBar(
         title: 'تم الإرسال',
         message: 'تم إرسال الطلب بنجاح',
-        onConfirm: () => Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage),
-        showCancel: false,
+        color: constGreen,
+        messageColor: Colors.white,
       );
+      Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage);
 
       // TODO: Get.offAllNamed('/HomePage') بعد الإرسال الناجح
     } catch (e) {
-      Get.snackbar(
-        'خطأ',
-        'حدث خطأ أثناء الإرسال، يرجى المحاولة مجدداً',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade700,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 12,
+      customSnackBar(
+        title: 'خطأ',
+        message: 'حدث خطأ أثناء الإرسال، يرجى المحاولة مجدداً',
+        color: constRed,
+        messageColor: Colors.white,
       );
     } finally {
       isLoading.value = false;

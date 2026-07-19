@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
@@ -72,12 +73,11 @@ class SendPrescriptionPage extends StatelessWidget {
                     controller.clearFields();
                     FocusScope.of(context).unfocus();
                   } else {
-                    Get.snackbar(
-                      'خطأ',
-                      'الرجاء ملء جميع الحقول المطلوبة',
-                      snackPosition: SnackPosition.TOP,
-                      backgroundColor: constRed,
-                      colorText: Colors.white,
+                    customSnackBar(
+                      title: 'خطأ',
+                      message: 'الرجاء ملء جميع الحقول المطلوبة',
+                      color: constRed,
+                      messageColor: Colors.white,
                     );
                   }
                 },

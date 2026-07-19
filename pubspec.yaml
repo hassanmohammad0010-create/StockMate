@@ -48,6 +48,8 @@ dependencies:
   connectivity_plus: ^6.0.3
   flutter_animate: ^4.5.0
   flutter_dotenv: ^6.0.1
+  local_auth: ^2.3.0
+  flutter_secure_storage: ^9.2.2
   # shared_preferences: ^2.3.3
 
 

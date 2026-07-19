@@ -40,4 +40,7 @@ abstract class AppRoutes {
   static const DisplayPurchasingOrderPage = '/DisplayPurchasingOrderPage';
   static const HasanServiceTester = '/HasanServiceTester';
   static const MainPageHeadOfPurchasingPage = '/MainPageHeadOfPurchasingPage';
+  static const LockScreen = '/LockScreen';
+  static const LockSetupScreen = '/LockSetupScreen';
+  static const ConfirmDisableLockScreen = '/ConfirmDisableLockScreen';
 }
