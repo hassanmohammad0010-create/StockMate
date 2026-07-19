@@ -213,7 +213,19 @@ class RequestPage extends StatelessWidget {
                                     itemCount: requests.length,
                                     itemBuilder: (context, index) {
                                       return CustomRequestContainer(
-                                        requestModel: requests[index],
+                                        date:
+                                            '${controller.allRequests[index].date.year}-${controller.allRequests[index].date.month}-${controller.allRequests[index].date.day}',
+                                        necessity: controller
+                                            .allRequests[index]
+                                            .requestType
+                                            .arabicLabel,
+                                        requester: controller
+                                            .allRequests[index]
+                                            .departmentName,
+                                        state: controller
+                                            .allRequests[index]
+                                            .status
+                                            .arabicLabel,
                                         onTap: () {
                                           Get.to(
                                             () => DisOrderDetailsPage(

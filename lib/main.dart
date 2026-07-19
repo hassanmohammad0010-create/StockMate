@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_mate_project/Service/App/lock_service.dart';
 import 'package:stock_mate_project/Service/Boss/Get_All_Department_Requests_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_urgent_Purchase_Requests_Service.dart';
 import 'package:stock_mate_project/core/Function/prompt_manager.dart';
+import 'package:stock_mate_project/core/models/Purchase_Request_Model.dart';
 import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
@@ -73,9 +75,10 @@ class HasanServiceTester extends StatelessWidget {
             child: FloatingActionButton(
               onPressed: () async {
                 // ignore: avoid_print
-                List<RequestModel> datad = await GetAllRequestService()
-                    .getAllDepartmentRequests();
-                print(datad[0].requestFrequency.arabicLabel);
+                List<PurchaseRequest> datad =
+                    await GetUrgentPurchaseRequestsService()
+                        .getUrgentPurchaseRequestsService();
+                print(datad[0].requester);
               },
               child: Text('data'),
             ),
