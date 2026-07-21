@@ -139,27 +139,27 @@ class AddOrdinaryOrderController extends GetxController {
     orders.refresh();
   }
 
-  void updateUnit(int index, String? value) {
-    if (index >= orders.length) return;
-    orders[index] = orders[index].copyWith(unit: value);
-    if (value != null && value.isNotEmpty) {
-      _clearInvalid(index, 'unit');
-    } else {
-      _markInvalid(index, 'unit');
-    }
-    orders.refresh();
-  }
+  // void updateUnit(int index, String? value) {
+  //   if (index >= orders.length) return;
+  //   orders[index] = orders[index].copyWith(unit: value);
+  //   if (value != null && value.isNotEmpty) {
+  //     _clearInvalid(index, 'unit');
+  //   } else {
+  //     _markInvalid(index, 'unit');
+  //   }
+  //   orders.refresh();
+  // }
 
-  void updateBrand(int index, String? value) {
-    if (index >= orders.length) return;
-    orders[index] = orders[index].copyWith(brand: value);
-    if (value != null && value.isNotEmpty) {
-      _clearInvalid(index, 'brand');
-    } else {
-      _markInvalid(index, 'brand');
-    }
-    orders.refresh();
-  }
+  // void updateBrand(int index, String? value) {
+  //   if (index >= orders.length) return;
+  //   orders[index] = orders[index].copyWith(brand: value);
+  //   if (value != null && value.isNotEmpty) {
+  //     _clearInvalid(index, 'brand');
+  //   } else {
+  //     _markInvalid(index, 'brand');
+  //   }
+  //   orders.refresh();
+  // }
 
   void updatePriority(int index, String priority) {
     if (index >= orders.length) return;
@@ -185,14 +185,14 @@ class AddOrdinaryOrderController extends GetxController {
         _markInvalid(i, 'quantity');
         orderOk = false;
       }
-      if (o.unit == null || o.unit!.trim().isEmpty) {
-        _markInvalid(i, 'unit');
-        orderOk = false;
-      }
-      if (o.brand == null || o.brand!.trim().isEmpty) {
-        _markInvalid(i, 'brand');
-        orderOk = false;
-      }
+      // if (o.unit == null || o.unit!.trim().isEmpty) {
+      //   _markInvalid(i, 'unit');
+      //   orderOk = false;
+      // }
+      // if (o.brand == null || o.brand!.trim().isEmpty) {
+      //   _markInvalid(i, 'brand');
+      //   orderOk = false;
+      // }
 
       if (!orderOk) {
         allValid = false;

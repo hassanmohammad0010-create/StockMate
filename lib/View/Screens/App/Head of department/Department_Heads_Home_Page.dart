@@ -146,13 +146,13 @@ class DepartmentHeadsHomePage extends StatelessWidget {
             SizedBox(height: h * 0.01),
             CustomListTile(
               backgroundColor: constLightBlue,
-              description: 'طلب رفع روشيتة لمريض',
-              icon: Icons.bar_chart_rounded,
+              description: 'معاينة المرضى',
+              icon: Icons.person_outline,
               iconColor: constBlue,
               onTap: () {
-                Get.toNamed(AppRoutes.SendPrescriptionPage);
+                Get.toNamed(AppRoutes.PatientsPage);
               },
-              title: 'رفع روشيتة جديدة',
+              title: 'المرضى',
             ),
             SizedBox(height: h * 0.01),
             CustomListTile(

@@ -17,11 +17,11 @@ class Order {
   final String rejectionReason;
   final OrderPriority priority;
   final String type;
-  final String vendor;
   final bool isRecurring;
   final RecurringInterval? recurringInterval;
   final bool receivedConfirmed;
   final int? receivedQuantity;
+  final String? duration;
 
   const Order({
     this.id,
@@ -32,11 +32,11 @@ class Order {
     this.rejectionReason = '',
     this.priority = OrderPriority.normal,
     this.type = 'اعتيادي',
-    this.vendor = '---',
     this.isRecurring = false,
     this.recurringInterval,
     this.receivedConfirmed = false,
     this.receivedQuantity,
+    this.duration,
   });
 
   Order copyWith({
@@ -47,11 +47,11 @@ class Order {
     Object? rejectionReason = _clearOrder,
     Object? priority = _clearOrder,
     Object? type = _clearOrder,
-    Object? vendor = _clearOrder,
     Object? isRecurring = _clearOrder,
     Object? recurringInterval = _clearOrder,
     Object? receivedConfirmed = _clearOrder,
     Object? receivedQuantity = _clearOrder,
+    Object? duration = _clearOrder,
   }) {
     return Order(
       id: id,
@@ -72,7 +72,6 @@ class Order {
           ? this.priority
           : priority as OrderPriority,
       type: identical(type, _clearOrder) ? this.type : type as String,
-      vendor: identical(vendor, _clearOrder) ? this.vendor : vendor as String,
       isRecurring: identical(isRecurring, _clearOrder)
           ? this.isRecurring
           : isRecurring as bool,
@@ -85,6 +84,9 @@ class Order {
       receivedQuantity: identical(receivedQuantity, _clearOrder)
           ? this.receivedQuantity
           : receivedQuantity as int?,
+      duration: identical(duration, _clearOrder)
+          ? this.duration
+          : duration as String?,
     );
   }
 }
@@ -102,7 +104,6 @@ final List<Order> allOrders = [
     quantity: 300,
     status: OrderStatus.completed,
     priority: OrderPriority.normal,
-    vendor: 'فارما',
     type: 'اعتيادي',
   ),
 
@@ -113,7 +114,6 @@ final List<Order> allOrders = [
     quantity: 300,
     status: OrderStatus.completed,
     priority: OrderPriority.normal,
-    vendor: 'فارما',
     type: 'اعتيادي',
   ),
   Order(
@@ -123,7 +123,6 @@ final List<Order> allOrders = [
     quantity: 300,
     status: OrderStatus.suspended,
     priority: OrderPriority.normal,
-    vendor: 'فارما',
     type: 'اعتيادي',
   ),
 
@@ -170,8 +169,8 @@ final List<Order> allOrders = [
     status: OrderStatus.inProgress,
     isRecurring: true,
     recurringInterval: RecurringInterval.daily,
-    vendor: 'فارما',
     type: 'دوري',
+    duration: 'يومين',
   ),
 
   // طلب دوري – أسبوعي – منجز
@@ -183,13 +182,12 @@ final List<Order> allOrders = [
     status: OrderStatus.rejected,
     isRecurring: true,
     recurringInterval: RecurringInterval.weekly,
-    vendor: 'فارما',
     type: 'دوري',
     rejectionReason:
         'الكمية المطلوبة تتجاوز الحد الأقصى المتاح في المستودع حالياً. الرجاء تقليل الكمية أو إعادة الطلب لاحقاً.',
+        duration: 'أسبوعين',
   ),
 
-  // طلب دوري – شهري – منجز
   Order(
     id: 'o9',
     medicineName: 'أقنعة وجه',
@@ -198,8 +196,8 @@ final List<Order> allOrders = [
     status: OrderStatus.completed,
     isRecurring: true,
     recurringInterval: RecurringInterval.monthly,
-    vendor: 'فارما',
-    type: 'اعتيادي',
+    type: 'دوري',
+    duration: 'شهرين',
   ),
   Order(
     id: 'o10',
@@ -208,7 +206,6 @@ final List<Order> allOrders = [
     quantity: 1000,
     status: OrderStatus.completed,
     priority: OrderPriority.normal,
-    vendor: 'فارما',
     type: 'اعتيادي',
   ),
   Order(
@@ -218,7 +215,6 @@ final List<Order> allOrders = [
     quantity: 600,
     status: OrderStatus.completed,
     priority: OrderPriority.normal,
-    vendor: 'فارما',
     type: 'اعتيادي',
   ),
   Order(
@@ -228,7 +224,6 @@ final List<Order> allOrders = [
     quantity: 500,
     status: OrderStatus.completed,
     priority: OrderPriority.normal,
-    vendor: 'فارما',
     type: 'اعتيادي',
   ),
 ];
@@ -249,24 +244,21 @@ const _clear = Object();
 class OrderModel {
   String? medicineName;
   String quantity;
-  String? unit;
-  String? brand;
   String priority;
+  final String duration;
 
   OrderModel({
     this.medicineName,
     this.quantity = '',
-    this.unit,
-    this.brand,
     this.priority = 'عادي',
+    this.duration = '',
   });
 
   OrderModel copyWith({
     Object? medicineName = _clear,
     Object? quantity = _clear,
-    Object? unit = _clear,
-    Object? brand = _clear,
     Object? priority = _clear,
+    Object? duration = _clear,
   }) {
     return OrderModel(
       medicineName: identical(medicineName, _clear)
@@ -275,29 +267,27 @@ class OrderModel {
       quantity: identical(quantity, _clear)
           ? this.quantity
           : (quantity as String? ?? ''),
-      unit: identical(unit, _clear) ? this.unit : unit as String?,
-      brand: identical(brand, _clear) ? this.brand : brand as String?,
       priority: identical(priority, _clear)
           ? this.priority
           : (priority as String? ?? 'عادي'),
+      duration: identical(duration, _clear)
+          ? this.duration
+          : (duration as String? ?? ''),
     );
   }
 
   bool get isValid =>
       (medicineName?.trim().isNotEmpty ?? false) &&
-      quantity.trim().isNotEmpty &&
-      (unit?.trim().isNotEmpty ?? false) &&
-      (brand?.trim().isNotEmpty ?? false);
+      quantity.trim().isNotEmpty ;
 
   Map<String, dynamic> toJson() => {
     'medicineName': medicineName,
     'quantity': quantity,
-    'unit': unit,
-    'brand': brand,
     'priority': priority,
+    'duration': duration,
   };
 
   @override
   String toString() =>
-      'OrderModel(medicine: $medicineName, qty: $quantity, unit: $unit, priority: $priority)';
+      'OrderModel(medicine: $medicineName, qty: $quantity, priority: $priority)';
 }

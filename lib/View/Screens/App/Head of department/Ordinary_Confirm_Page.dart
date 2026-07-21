@@ -80,8 +80,6 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
                             label: 'الكمية',
                             value: qtyCtrl.text.isEmpty ? '—' : qtyCtrl.text,
                           ),
-                          BuildRow(label: 'الوحدة', value: o.unit ?? '—'),
-                          BuildRow(label: 'الماركة', value: o.brand ?? '—'),
                           BuildRow(label: 'الأولوية', value: priority),
                         ],
                       ),

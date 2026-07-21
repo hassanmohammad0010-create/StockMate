@@ -11,8 +11,6 @@ class CustomDetailsCard extends StatelessWidget {
   const CustomDetailsCard({super.key, required this.order});
 
   final Order order;
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +60,18 @@ class CustomDetailsCard extends StatelessWidget {
                   ) // عرض نص التكرار داخل بادج
                 : PriorityBadge(priority: order.priority),
           ),
-          _buildDivider(),
-          _buildDetailRow(
-            icon: Icons.badge_outlined,
-            label: 'الوكيل / الماركة',
-            value: order.vendor,
-          ),
+          order.recurringInterval != null
+              ? Column(
+                  children: [
+                    _buildDivider(),
+                    _buildDetailRow(
+                      icon: Icons.access_time_outlined,
+                      label: 'المدة',
+                      value: order.duration ?? '',
+                    ),
+                  ],
+                )
+              : const SizedBox.shrink(),
           _buildDivider(),
           _buildDetailRow(
             icon: Icons.calendar_month_outlined,
@@ -86,7 +90,7 @@ class CustomDetailsCard extends StatelessWidget {
   }
 
   // ==================== صف تفصيلة ====================
-   Widget _buildDetailRow({
+  Widget _buildDetailRow({
     required IconData icon,
     required String label,
     String? value,

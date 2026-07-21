@@ -24,14 +24,6 @@ class OrdinaryOrderCard extends StatelessWidget {
     'فلام-ك',
   ];
 
-  static const List<String> _units = ['قطعة', 'لتر', 'كيلوغرام', 'كيت (دزينة)'];
-
-  static const List<String> _brands = [
-    'شركة تاميكو',
-    'شركة فارما',
-    'الشركة الطبية السورية',
-  ];
-
   @override
   Widget build(BuildContext context) {
     final h = context.screenHeight;
@@ -149,99 +141,6 @@ class OrdinaryOrderCard extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: h * 0.015),
-                            Obx(() {
-                              if (orderIndex >= _c.orders.length) {
-                                return const SizedBox.shrink();
-                              }
-                              final isInvalid = _c.isFieldInvalid(
-                                orderIndex,
-                                'unit',
-                              );
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: w * 0.03,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomDropdown<String>(
-                                      items: _units,
-                                      labelBuilder: (v) => v,
-                                      label: 'الوحدة *',
-                                      hint: 'اختر الوحدة',
-                                      icon: Icons.category_outlined,
-                                      searchable: false,
-                                      value: _c.orders[orderIndex].unit,
-                                      errorBorder: isInvalid,
-                                      onChanged: (v) =>
-                                          _c.updateUnit(orderIndex, v),
-                                    ),
-                                    if (isInvalid)
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 12,
-                                          top: 4,
-                                        ),
-                                        child: Text(
-                                          'الرجاء اختيار الوحدة',
-                                          style: TextStyle(
-                                            color: constRed,
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              );
-                            }),
-                            SizedBox(height: h * 0.015),
-                            Obx(() {
-                              if (orderIndex >= _c.orders.length) {
-                                return const SizedBox.shrink();
-                              }
-                              final isInvalid = _c.isFieldInvalid(
-                                orderIndex,
-                                'brand',
-                              );
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: w * 0.03,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomDropdown<String>(
-                                      items: _brands,
-                                      labelBuilder: (v) => v,
-                                      label: 'الوكيل / الماركة *',
-                                      hint: 'اختر الوكيل / الماركة',
-                                      icon: Icons.store_mall_directory_outlined,
-                                      searchable: true,
-                                      value: _c.orders[orderIndex].brand,
-                                      errorBorder: isInvalid,
-                                      onChanged: (v) =>
-                                          _c.updateBrand(orderIndex, v),
-                                    ),
-                                    if (isInvalid)
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 12,
-                                          top: 4,
-                                        ),
-                                        child: Text(
-                                          'الرجاء اختيار الوكيل / الماركة',
-                                          style: TextStyle(
-                                            color: constRed,
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              );
-                            }),
-
                             SizedBox(height: h * 0.015),
                           ],
                         ),

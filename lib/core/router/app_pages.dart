@@ -24,6 +24,7 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Depar
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/New_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Patients_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriotion_Archive_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriptions_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Processed_Prescriptions_Page.dart';
@@ -168,6 +169,10 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.ConfirmDisableLockScreen,
       page: () => const ConfirmDisableLockScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.PatientsPage,
+      page: () => const PatientsPage(),
     ),
   ];
 }

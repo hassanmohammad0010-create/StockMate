@@ -124,8 +124,6 @@ class _NumPad extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(width: w * 0.16, height: h * 0.08),
-              _digitButton('0'),
               SizedBox(
                 width: w * 0.16,
                 height: h * 0.08,
@@ -134,6 +132,8 @@ class _NumPad extends StatelessWidget {
                   onPressed: controller.removeDigit,
                 ),
               ),
+              _digitButton('0'),
+              SizedBox(width: w * 0.16, height: h * 0.08),
             ],
           ),
         ),

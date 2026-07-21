@@ -13,7 +13,6 @@ import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Confirm_R
 class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
   const RecurringConfirmPage({super.key});
 
-
   static const String _doctorName = 'د. محمد علي';
   static const String _departmentName = 'قسم الداخلية';
 
@@ -76,12 +75,8 @@ class RecurringConfirmPage extends GetView<AddRecurringOrderController> {
                             ? '—'
                             : controller.quantityController.text,
                       ),
-                      BuildRow(label: 'الوحدة', value: order.unit ?? '—'),
-                      BuildRow(
-                        label: 'الوكيل / الماركة',
-                        value: order.brand ?? '—',
-                      ),
                       BuildRow(label: 'التكرار', value: recurringLabel),
+                      BuildRow(label: 'المدة', value: order.duration),
                     ],
                   ),
                 ],
