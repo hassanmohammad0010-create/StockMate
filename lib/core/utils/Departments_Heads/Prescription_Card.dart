@@ -19,7 +19,6 @@ class PrescriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final h = context.screenHeight;
     final w = context.screenWidth;
 
@@ -57,7 +56,7 @@ class PrescriptionCard extends StatelessWidget {
             children: [
               Container(
                 width: w * 0.01,
-                height: h * 0.08,
+                height: h * 0.065,
                 decoration: BoxDecoration(
                   color: accentColor,
                   borderRadius: BorderRadius.circular(4),
@@ -101,28 +100,7 @@ class PrescriptionCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: h * 0.005),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.healing,
-                          size: 15,
-                          color: Color(0xFF6B7280),
-                        ),
-                        SizedBox(width: w * 0.01),
-                        Expanded(
-                          child: Text(
-                            prescription.condition,
-                            style: const TextStyle(
-                              fontSize: 13.5,
-                              color: Color(0xFF4B5563),
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: h * 0.005),
+                    SizedBox(height: h * 0.015),
                     Row(
                       children: [
                         const Icon(
@@ -133,7 +111,7 @@ class PrescriptionCard extends StatelessWidget {
                         SizedBox(width: w * 0.01),
                         Expanded(
                           child: Text(
-                            prescription.doctorName,
+                            prescription.doctorName!,
                             style: const TextStyle(
                               fontSize: 13.5,
                               color: Color(0xFF4B5563),

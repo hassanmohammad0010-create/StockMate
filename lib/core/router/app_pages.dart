@@ -29,7 +29,6 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Presc
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriptions_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Processed_Prescriptions_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Notification_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
@@ -95,10 +94,6 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.PrescriptionArchivePage,
       page: () => PrescriptionArchivePage(),
-    ),
-    GetPage(
-      name: AppRoutes.SendPrescriptionPage,
-      page: () => const SendPrescriptionPage(),
     ),
     GetPage(name: AppRoutes.PrescriptionsPage, page: () => PrescriptionsPage()),
     GetPage(

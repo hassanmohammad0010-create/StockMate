@@ -5,8 +5,8 @@ enum PrescriptionStatus { newRx, processed }
 class PrescriptionModel {
   final String id;
   final String patientName;
-  final String doctorName;
-  final String condition;
+  final String? doctorName;
+  // final String? condition;
   final String medications;
   final String? notes;
   final DateTime date;
@@ -15,8 +15,8 @@ class PrescriptionModel {
   PrescriptionModel({
     required this.id,
     required this.patientName,
-    required this.doctorName,
-    required this.condition,
+    this.doctorName,
+    // this.condition,
     required this.medications,
     this.notes,
     required this.date,
@@ -27,7 +27,7 @@ class PrescriptionModel {
         'id': id,
         'patientName': patientName,
         'doctorName': doctorName,
-        'condition': condition,
+        // 'condition': condition,
         'medications': medications,
         'date': date.toIso8601String(),
         'notes': notes,
@@ -38,8 +38,8 @@ class PrescriptionModel {
     return PrescriptionModel(
       id: json['id'] as String,
       patientName: json['patientName'] as String,
-      doctorName: json['doctorName'] as String,
-      condition: json['condition'] as String,
+      doctorName: json['doctorName'] as String?,
+      // condition: json['condition'] as String?,
       medications: json['medications'] as String,
       date: DateTime.parse(json['date'] as String),
       notes: json['notes'] as String?,
@@ -55,7 +55,7 @@ class PrescriptionModel {
     String? id,
     String? patientName,
     String? doctorName,
-    String? condition,
+    // String? condition,
     String? medications,
     String? notes,
     DateTime? date,
@@ -65,7 +65,7 @@ class PrescriptionModel {
       id: id ?? this.id,
       patientName: patientName ?? this.patientName,
       doctorName: doctorName ?? this.doctorName,
-      condition: condition ?? this.condition,
+      // condition: condition ?? this.condition,
       medications: medications ?? this.medications,
       notes: notes ?? this.notes,
       date: date ?? this.date,
