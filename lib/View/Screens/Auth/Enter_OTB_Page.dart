@@ -7,14 +7,9 @@ import 'package:stock_mate_project/View/Widget/Auth/Custom_OTB.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class EnterOTBPage extends StatelessWidget {
-  const EnterOTBPage({
-    super.key,
-    required this.email,
-    required this.operationName,
-  });
+  const EnterOTBPage({super.key, required this.email});
   final String pageName = '/EnterOTBPage';
   final String email;
-  final String operationName;
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +73,7 @@ class EnterOTBPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: context.screenHeight * 0.04),
-                      CustomOtb(
-                        onSubmit: (data) {
-                          operationName == 'confirm'
-                              ? Get.offAllNamed(AppRoutes.MainPage)
-                              : Get.toNamed(AppRoutes.ResetPasswordPage);
-                        },
-                      ),
+                      CustomOtb(onSubmit: (data) {}),
                       SizedBox(height: context.screenHeight * 0.03),
                       Obx(() {
                         final seconds = controller.secondsRemaining.value;

@@ -9,11 +9,10 @@ import 'package:stock_mate_project/main.dart';
 class LoginService {
   Future<String?> loginService({
     required String email,
-    required String password,
   }) async {
     http.Response response = await http.post(
       Uri.parse('https://grud-2y91.onrender.com/api/login'),
-      body: {'email': email, 'password': password},
+      body: {'email': email, },
       headers: {'Accept': 'application/json'},
     );
     Map<String, dynamic> data = jsonDecode(response.body);

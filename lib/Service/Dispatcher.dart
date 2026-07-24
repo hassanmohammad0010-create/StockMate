@@ -1,97 +1,153 @@
-// import 'dart:async';
-// import 'package:http/http.dart' as http;
-// import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
-// import 'package:stock_mate_project/Service/Token_Storage.dart'; // مكان تخزين التوكنات عندك
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
+import 'package:stock_mate_project/Service/Token_Storage.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
-// class Dispatcher {
-//   Dispatcher._internal();
-//   static final Dispatcher _instance = Dispatcher._internal();
-//   factory Dispatcher() => _instance;
+enum RefreshResult { success, sessionExpired, connectionError }
 
-//   bool _isRefreshing = false;
-//   Completer<bool>? _refreshCompleter;
+class Dispatcher {
+  Dispatcher._internal();
+  static final Dispatcher _instance = Dispatcher._internal();
+  factory Dispatcher() => _instance;
 
-//   /// [request] هي الدالة التي تنفذ الطلب الفعلي، وتستقبل الـ token الحالي
-//   /// [onSuccess] تحوّل الـ body الناجح إلى النوع المطلوب T
-//   /// [fallback] القيمة التي تُرجع عند الفشل (مثلاً [] أو false)
-//   Future<T> send<T>({
-//     required Future<http.Response> Function(String token) request,
-//     required T Function(String body) onSuccess,
-//     required T fallback,
-//     Duration timeout = const Duration(seconds: 15),
-//   }) async {
-//     try {
-//       final token = await TokenStorage.getAccessToken();
-//       if (token == null) {
-//         ApiErrorHandler.handleException('لا يوجد توكن، الرجاء تسجيل الدخول');
-//         return fallback;
-//       }
+  bool _isRefreshing = false;
+  Completer<RefreshResult>? _refreshCompleter;
 
-//       var response = await request(token).timeout(timeout);
+  /// [request] هي الدالة التي تنفذ الطلب الفعلي، وتستقبل الـ token الحالي
+  /// [onSuccess] تحوّل الـ body الناجح إلى النوع المطلوب T
+  /// [fallback] القيمة التي تُرجع عند الفشل (مثلاً [] أو false)
+  Future<T> send<T>({
+    required Future<http.Response> Function(String token) request,
+    required T Function(String body) onSuccess,
+    required T fallback,
+    Duration timeout = const Duration(seconds: 15),
+  }) async {
+    try {
+      final token = await TokenStorage.getAccessToken();
+      if (token == null) {
+        ApiErrorHandler.handleException('لا يوجد جلسة. الرجاء تسجيل الدخول');
+        return fallback;
+      }
 
-//       if (response.statusCode == 200) {
-//         return onSuccess(response.body);
-//       }
+      var response = await request(token).timeout(timeout);
 
-//       if (response.statusCode == 401) {
-//         final refreshed = await _refreshToken();
-//         if (refreshed) {
-//           final newToken = await TokenStorage.getAccessToken();
-//           response = await request(newToken!).timeout(timeout);
-//           if (response.statusCode == 200) {
-//             return onSuccess(response.body);
-//           }
-//         }
-//         ApiErrorHandler.handleStatusCode(response.statusCode);
-//         return fallback;
-//       }
+      if (response.statusCode == 200) {
+        return onSuccess(response.body);
+      }
+      if (response.statusCode == 401) {
+        final result = await _refreshToken();
 
-//       ApiErrorHandler.handleStatusCode(response.statusCode);
-//       return fallback;
-//     } catch (e) {
-//       ApiErrorHandler.handleException(e);
-//       return fallback;
-//     }
-//   }
+        if (result == RefreshResult.success) {
+          final newToken = await TokenStorage.getAccessToken();
+          response = await request(newToken!).timeout(timeout);
+          if (response.statusCode == 200) {
+            return onSuccess(response.body);
+          }
+          ApiErrorHandler.handleStatusCode(response.statusCode);
+          return fallback;
+        }
 
-//   /// يمنع تعدد نداءات refresh في نفس اللحظة (مثلاً لو عدة requests فشلت بنفس الوقت)
-//   Future<bool> _refreshToken() async {
-//     if (_isRefreshing) {
-//       return _refreshCompleter!.future;
-//     }
+        if (result == RefreshResult.connectionError) {
+          ApiErrorHandler.handleException(
+            const SocketException('No connection'),
+          );
+          return fallback;
+        }
 
-//     _isRefreshing = true;
-//     _refreshCompleter = Completer<bool>();
+        // result == RefreshResult.sessionExpired -> الرسالة والتوجيه صارو جوا _forceLogout مسبقاً
+        return fallback;
+      }
 
-//     try {
-//       final refreshToken = await TokenStorage.getRefreshToken();
-//       if (refreshToken == null) {
-//         _refreshCompleter!.complete(false);
-//         return false;
-//       }
+      ApiErrorHandler.handleStatusCode(response.statusCode);
+      return fallback;
+    } catch (e) {
+      ApiErrorHandler.handleException(e);
+      return fallback;
+    }
+  }
 
-//       final response = await http.post(
-//         Uri.parse('https://grud-2y91.onrender.com/api/auth/refresh'),
-//         headers: {'Accept': 'application/json'},
-//         body: {'refresh_token': refreshToken},
-//       ).timeout(const Duration(seconds: 15));
+  Future<RefreshResult> _refreshToken() async {
+    if (_isRefreshing) {
+      return _refreshCompleter!.future;
+    }
 
-//       if (response.statusCode == 200) {
-//         // فك التشفير وتخزين التوكن الجديد بحسب شكل استجابة الـ API عندك
-//         final newAccessToken = /* jsonDecode(response.body)['access_token'] */ '';
-//         await TokenStorage.saveAccessToken(newAccessToken);
-//         _refreshCompleter!.complete(true);
-//         return true;
-//       }
+    _isRefreshing = true;
+    _refreshCompleter = Completer<RefreshResult>();
 
-//       _refreshCompleter!.complete(false);
-//       return false;
-//     } catch (e) {
-//       ApiErrorHandler.handleException(e);
-//       _refreshCompleter!.complete(false);
-//       return false;
-//     } finally {
-//       _isRefreshing = false;
-//     }
-//   }
-// }
+    try {
+      final refreshToken = await TokenStorage.getRefreshToken();
+      if (refreshToken == null) {
+        await _forceLogout();
+        _refreshCompleter!.complete(RefreshResult.sessionExpired);
+        return RefreshResult.sessionExpired;
+      }
+
+      final response = await http
+          .post(
+            Uri.parse('https://stock-mate-qb40.onrender.com/api/auth/refresh'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode({'refreshToken': refreshToken}),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonBody = jsonDecode(response.body);
+
+        if (jsonBody['success'] != true || jsonBody['data'] is! Map) {
+          await _forceLogout();
+          _refreshCompleter!.complete(RefreshResult.sessionExpired);
+          return RefreshResult.sessionExpired;
+        }
+
+        final Map<String, dynamic> data = jsonBody['data'];
+        final String? newAccessToken = data['accessToken'] as String?;
+        final String? newRefreshToken = data['refreshToken'] as String?;
+
+        if (newAccessToken == null || newRefreshToken == null) {
+          await _forceLogout();
+          _refreshCompleter!.complete(RefreshResult.sessionExpired);
+          return RefreshResult.sessionExpired;
+        }
+
+        await TokenStorage.saveAccessToken(newAccessToken);
+        await TokenStorage.saveRefreshToken(newRefreshToken);
+
+        _refreshCompleter!.complete(RefreshResult.success);
+        return RefreshResult.success;
+      }
+
+      // السيرفر رد فعلياً برفض التوكين
+      await _forceLogout();
+      _refreshCompleter!.complete(RefreshResult.sessionExpired);
+      return RefreshResult.sessionExpired;
+    } on TimeoutException {
+      _refreshCompleter!.complete(RefreshResult.connectionError);
+      return RefreshResult.connectionError;
+    } catch (e) {
+      _refreshCompleter!.complete(RefreshResult.connectionError);
+      return RefreshResult.connectionError;
+    } finally {
+      _isRefreshing = false;
+    }
+  }
+
+  Future<void> _forceLogout() async {
+    await TokenStorage.clearTokens();
+    customSnackBar(
+      title: 'انتهت الجلسة',
+      message: 'الرجاء تسجيل الدخول مرة أخرى',
+      color: constRed,
+      messageColor: constLightRed,
+    );
+    Get.offAllNamed(AppRoutes.LoginPage);
+  }
+}

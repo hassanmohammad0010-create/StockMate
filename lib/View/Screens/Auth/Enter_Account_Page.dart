@@ -99,12 +99,7 @@ class EnterAccountPage extends StatelessWidget {
                             tital: 'تأكيد',
                             onTap: () {
                               if (confirmAccountKey.currentState!.validate()) {
-                                Get.to(
-                                  () => EnterOTBPage(
-                                    email: email!,
-                                    operationName: operationName,
-                                  ),
-                                );
+                                Get.to(() => EnterOTBPage(email: email!));
                               }
                             },
                           ),

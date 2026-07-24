@@ -185,12 +185,12 @@ class CustomDropDown extends StatelessWidget {
         hint: Text(
           hintText,
           textAlign: TextAlign.right,
-          style: TextStyle(fontFamily: lateef, fontSize: 28, color: constGray),
+          style: TextStyle(fontSize: 28, fontFamily: lateef, color: constGray),
         ),
         items: itemList
             .map(
               (item) => DropdownMenuItem(
-                alignment: Alignment.center,
+                alignment: Alignment.centerRight,
                 enabled: enabled ?? true,
 
                 value: item,
@@ -198,8 +198,9 @@ class CustomDropDown extends StatelessWidget {
                   item,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: lateef,
-                    fontSize: 20,
+                    fontFamily: cairo,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                     color: Colors.black,
                   ),
                 ),
