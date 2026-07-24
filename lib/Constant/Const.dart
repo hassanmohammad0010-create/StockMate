@@ -30,7 +30,13 @@ String fullLogo = 'assets/Image/Logo/Full_Logo.png';
 String semiLogo = 'assets/Image/Logo/Semi_Logo.png';
 String textLogo = 'assets/Image/Logo/Text_Logo.png';
 
-List<String> identities = ['مدير المستشفى', 'رئيس قسم', 'رئيس لجنة الشراء'];
+List<String> identities = [
+  'مدير المستشفى',
+  'مدير القسم',
+  'مدير لجنة المشتريات',
+  'موظف صيدلية',
+  'طبيب',
+];
 List<String> specialties = [
   'اذنية',
   'مفاصل',

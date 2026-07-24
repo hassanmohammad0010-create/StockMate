@@ -39,7 +39,7 @@ void main() async {
     StockMate(
       initialRoute: isLockEnabled
           ? AppRoutes.LockScreen
-          : AppRoutes.DepartmentHeadsMainPage,
+          : AppRoutes.SplashViewPage,
     ),
   );
 }

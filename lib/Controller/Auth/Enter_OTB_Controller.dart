@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Service/Auth/Login_Service.dart';
 import 'package:stock_mate_project/Service/Auth/Resent_OTB_Service.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 
@@ -38,14 +38,27 @@ class EnterOTBController extends GetxController {
     try {
       final service = ResentOtbService();
       final result = await service.resentOTBService(email: email);
+
       if (result == success) {
-        customSnackBar(
-          color: constColor,
-          messageColor: constLightBlue,
-          title: 'نجاح',
-          message: 'تم إعادة إرسال رمز التحقق بنجاح',
-        );
-        startTimer();
+        // استدعاء loginService والانتظار لحد ما يخلص
+        bool response = await LoginService.loginService(email: email);
+
+        if (response) {
+          customSnackBar(
+            color: constColor,
+            messageColor: constLightBlue,
+            title: 'نجاح',
+            message: 'تم إعادة إرسال رمز التحقق بنجاح',
+          );
+          startTimer();
+        } else {
+          customSnackBar(
+            color: constRed,
+            messageColor: constLightRed,
+            title: 'خطأ',
+            message: 'فشل تسجيل الدخول. الرجاء المحاولة مرة أخرى',
+          );
+        }
       } else {
         customSnackBar(
           color: constRed,
@@ -62,7 +75,7 @@ class EnterOTBController extends GetxController {
         message: 'حدث خطأ ما. الرجاء المحاولة لاحقاً',
       );
     } finally {
-      isLoading.value = false;
+      isLoading.value = false; // يتنفذ بعد ما تخلص كل الاستدعاءات
     }
   }
 

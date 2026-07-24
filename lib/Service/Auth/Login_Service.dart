@@ -1,40 +1,69 @@
-// ignore_for_file: file_names
-
+// lib/Service/Auth/Otp_Service.dart
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Service/Api_Error_Handler.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
-import 'package:stock_mate_project/main.dart';
 
 class LoginService {
-  Future<String?> loginService({
+  /// يطلب إرسال OTP للإيميل المحدد
+  /// [email] البريد الإلكتروني للمستخدم
+  /// [channel] قناة الإرسال، افتراضياً 'email'
+  /// بيرجع true إذا نجح الطلب، false إذا فشل
+  static Future<bool> loginService({
     required String email,
-    required String password,
+    String channel = 'email',
   }) async {
-    http.Response response = await http.post(
-      Uri.parse('https://grud-2y91.onrender.com/api/login'),
-      body: {'email': email, 'password': password},
-      headers: {'Accept': 'application/json'},
-    );
-    Map<String, dynamic> data = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      customSnackBar(
-        color: constColor,
-        messageColor: constLightBlue,
-        title: 'Welcome back',
-        message: 'We are happy you are back',
-      );
+    try {
+      final response = await http
+          .post(
+            Uri.parse(
+              'https://stock-mate-qb40.onrender.com/api/auth/otp/request',
+            ),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode({'email': email, 'channel': channel}),
+          )
+          .timeout(const Duration(seconds: 30));
 
-      tokenSharedPreferences!.setString('Token', data['token']);
-      return data['user']['name'];
-    } else {
-      customSnackBar(
-        color: constRed,
-        messageColor: constLightRed,
-        title: 'Warning',
-        message: data['message'],
-      );
-      return null;
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonBody = jsonDecode(response.body);
+        final bool success = jsonBody['success'] == true;
+
+        if (success) {
+          final Map<String, dynamic>? data = jsonBody['data'] is Map
+              ? jsonBody['data']
+              : null;
+          final String? otpCode = data?['code'] as String?;
+
+          customSnackBar(
+            title: 'تم إرسال الرمز',
+            message: otpCode != null
+                ? 'رمز التحقق (تجريبي): $otpCode'
+                : (jsonBody['message'] as String? ?? 'تم إرسال الرمز بنجاح'),
+            color: constRed, // بدّلها للون النجاح المناسب عندك إذا في واحد
+            messageColor: constLightRed,
+          );
+        }
+
+        return success;
+      }
+
+      ApiErrorHandler.handleStatusCode(response.statusCode);
+      return false;
+    } on SocketException {
+      ApiErrorHandler.handleException(const SocketException('No connection'));
+      return false;
+    } on TimeoutException {
+      ApiErrorHandler.handleException(TimeoutException('Request timeout'));
+      return false;
+    } catch (e) {
+      ApiErrorHandler.handleException(e);
+      return false;
     }
   }
 }

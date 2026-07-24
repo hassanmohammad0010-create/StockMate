@@ -53,6 +53,13 @@ class _CustomTextFormFaildState extends State<CustomTextFormFaild> {
         initialValue: widget.initialValue,
         obscureText: widget.obscureText ?? false,
         validator: widget.validator,
+        // النمط الخاص بالنص الذي يكتبه المستخدم
+        style: TextStyle(
+          fontFamily: cairo,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          color: Colors.black,
+        ),
 
         onChanged: widget.onChange,
         decoration: InputDecoration(
@@ -60,18 +67,18 @@ class _CustomTextFormFaildState extends State<CustomTextFormFaild> {
           filled: true,
           hintText: widget.hintText,
           suffixIcon: widget.suffixIcon,
-          prefixIcon: widget.icon,
+          prefixIcon: Padding(
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+            child: widget.icon,
+          ),
 
           prefixIconColor: constColor,
-          label: Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Text(
-              widget.labelText,
-              style: TextStyle(
-                fontSize: 28,
-                fontFamily: lateef,
-                color: constGray,
-              ),
+          label: Text(
+            widget.labelText,
+            style: TextStyle(
+              fontSize: 28,
+              fontFamily: lateef,
+              color: constGray,
             ),
           ),
           errorBorder: OutlineInputBorder(

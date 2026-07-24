@@ -56,6 +56,14 @@ class ApiErrorHandler {
         color: constRed,
         messageColor: constLightRed,
       );
+    } else if (statusCode == 429) {
+      customSnackBar(
+        title: 'طلبات كثيرة',
+        message:
+            'تم إرسال عدد كبير من الطلبات، الرجاء الانتظار قليلاً والمحاولة مرة أخرى',
+        color: constRed,
+        messageColor: constLightRed,
+      );
     } else if (statusCode >= 500) {
       customSnackBar(
         title: 'خطأ في الخادم',
