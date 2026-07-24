@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Service/Auth/Login_Service.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Enter_OTB_Page.dart';
 import 'package:stock_mate_project/core/Function/Validation.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
@@ -126,12 +127,17 @@ class LoginPage extends StatelessWidget {
                       validator: (data) => Validation().emailValidate(data!),
                     ),
 
-                    SizedBox(height: context.screenHeight * 0.04),
+                    SizedBox(height: context.screenHeight * 0.03),
                     CustomButtom(
                       tital: 'تسجيل الدخول',
-                      onTap: () {
+                      onTap: () async {
                         if (loginPageKey.currentState!.validate()) {
-                          Get.to(() => EnterOTBPage(email: email!));
+                          bool response = await LoginService.loginService(
+                            email: email!,
+                          );
+                          if (response) {
+                            Get.to(() => EnterOTBPage(email: email!));
+                          }
                         }
                         // Get.offNamed(AppRoutes.MainPage);
                         // Get.offNamed(AppRoutes.DepartmentHeadsMainPage);

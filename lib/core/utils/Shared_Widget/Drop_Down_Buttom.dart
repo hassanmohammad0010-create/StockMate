@@ -180,7 +180,7 @@ class CustomDropDown extends StatelessWidget {
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
-          contentPadding: const EdgeInsets.all(20),
+          contentPadding: const EdgeInsets.all(19),
         ),
         hint: Text(
           hintText,
