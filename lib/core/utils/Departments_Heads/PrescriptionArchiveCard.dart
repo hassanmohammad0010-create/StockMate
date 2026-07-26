@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +22,8 @@ class PrescriptionArchiveCard extends StatelessWidget {
 
     final Color accentColor = constBlue;
     final Color backgroundTint = constLightBlue;
+
+    const String DoctorName = 'د.محمد علي';
 
     return Material(
       color: Colors.transparent,
@@ -54,7 +56,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
             children: [
               Container(
                 width: w * 0.01,
-                height: h * 0.08,
+                height: h * 0.065,
                 decoration: BoxDecoration(
                   color: accentColor,
                   borderRadius: BorderRadius.circular(4),
@@ -98,28 +100,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: h * 0.005),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.healing,
-                          size: 15,
-                          color: Color(0xFF6B7280),
-                        ),
-                        SizedBox(width: w * 0.01),
-                        Expanded(
-                          child: Text(
-                            prescription.condition,
-                            style: const TextStyle(
-                              fontSize: 13.5,
-                              color: Color(0xFF4B5563),
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: h * 0.005),
+                    SizedBox(height: h * 0.015),
                     Row(
                       children: [
                         const Icon(
@@ -130,7 +111,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                         SizedBox(width: w * 0.01),
                         Expanded(
                           child: Text(
-                            prescription.doctorName,
+                            DoctorName,
                             style: const TextStyle(
                               fontSize: 13.5,
                               color: Color(0xFF4B5563),
@@ -138,6 +119,7 @@ class PrescriptionArchiveCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
+
                         Text(
                           DateFormat('yyyy/MM/dd').format(prescription.date),
                           style: const TextStyle(

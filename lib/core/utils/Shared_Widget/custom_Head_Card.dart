@@ -15,7 +15,7 @@ class CustomHeadContainer extends StatelessWidget {
     final w = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: h * 0.008),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.025, vertical: h * 0.008),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(

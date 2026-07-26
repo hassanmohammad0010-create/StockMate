@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Patients_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/models/Patient_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
@@ -181,7 +182,9 @@ class PatientsDetailsPage extends StatelessWidget {
                         // زر إرسال وصفة طبية
                         Expanded(
                           child: ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => SendPrescriptionPage(patient: currentPatient));
+                            },
                             icon: const Icon(
                               Icons.receipt_long,
                               color: Colors.white,

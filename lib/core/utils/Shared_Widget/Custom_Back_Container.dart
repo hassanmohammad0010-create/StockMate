@@ -46,10 +46,11 @@ class CustomBackContainer extends StatelessWidget {
     final w = context.screenWidth;
 
     return Container(
+      color: constBlue,
       alignment: Alignment.centerRight,
       padding: EdgeInsets.only(right: w * 0.04, top: h * 0.04),
       width: w,
-      height: h * 0.1,
+      height: h * 0.15,
       child: GestureDetector(
         onTap: () {
           Get.back();

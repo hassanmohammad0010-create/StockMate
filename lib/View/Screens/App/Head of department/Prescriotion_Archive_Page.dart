@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/SendPrescriptionController.dart';
+import 'package:stock_mate_project/Controller/Logic/ArchiveController.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Patient_Search_Field.dart';
@@ -20,10 +20,10 @@ class PrescriptionArchivePage extends StatelessWidget {
     final h = context.screenHeight;
     final w = context.screenWidth;
 
-    final SendPrescriptionController controller =
-        Get.isRegistered<SendPrescriptionController>()
-        ? Get.find<SendPrescriptionController>()
-        : Get.put(SendPrescriptionController(), permanent: true);
+    final ArchiveController controller =
+        Get.isRegistered<ArchiveController>()
+        ? Get.find<ArchiveController>()
+        : Get.put(ArchiveController(), permanent: true);
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -72,7 +72,10 @@ class PrescriptionArchivePage extends StatelessWidget {
 
                 return SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: w * 0.02),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: w * 0.02,
+                      vertical: h * 0.01,
+                    ),
                     child: Column(
                       children: list
                           .map(

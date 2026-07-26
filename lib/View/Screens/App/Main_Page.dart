@@ -10,7 +10,7 @@ import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
-  
+
   final String pageName = '/HomePage';
 
   @override
@@ -22,29 +22,43 @@ class MainPage extends StatelessWidget {
         appBar: AppBar(
           toolbarHeight: context.screenHeight * 0.1,
           actions: [
-            Stack(
+            Row(
               children: [
                 IconButton(
-                  icon: Icon(
-                    Icons.notifications,
+                  icon: const Icon(
+                    Icons.smart_toy,
                     color: Colors.white,
-                    size: context.screenHeight * 0.033,
+                    size: 28,
                   ),
                   onPressed: () {
-                    Get.toNamed(AppRoutes.NotificationPage);
+                    Get.toNamed(AppRoutes.ChatPage);
                   },
                 ),
-                Positioned(
-                  right: 10,
-                  top: 10,
-                  child: Container(
-                    width: context.screenHeight * 0.012,
-                    height: context.screenHeight * 0.012,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+                Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.notifications,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        Get.toNamed(AppRoutes.NotificationPage);
+                      },
                     ),
-                  ),
+                    Positioned(
+                      right: context.screenWidth * 0.02,
+                      top: context.screenHeight * 0.01,
+                      child: Container(
+                        width: context.screenWidth * 0.02,
+                        height: context.screenHeight * 0.015,
+                        decoration: const BoxDecoration(
+                          color: constRed,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

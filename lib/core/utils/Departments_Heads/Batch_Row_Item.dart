@@ -3,10 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/BatchDeletionPage.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
 class BatchRowItem extends StatelessWidget {
   const BatchRowItem({super.key, required this.batch, required this.material});
@@ -77,10 +75,9 @@ class BatchRowItem extends StatelessWidget {
                 dateStr,
                 style: TextStyle(fontSize: h * 0.014, color: Colors.grey),
               ),
-              if (batch.status == BatchStatus.expired) ...[
-                SizedBox(width: w * 0.025),
-                _DeleteBatchButton(batch: batch, material: material),
-              ],
+              // زر الحذف يظهر الآن لجميع الدفعات بغض النظر عن حالتها
+              SizedBox(width: w * 0.025),
+              _DeleteBatchButton(batch: batch, material: material),
             ],
           ),
         ],
@@ -101,15 +98,8 @@ class _DeleteBatchButton extends StatelessWidget {
     final w = context.screenWidth;
 
     return GestureDetector(
-      onTap: () => CustomDialog.show(
-        type: DialogType.danger,
-        title: 'حذف الدفعة',
-        message: 'سيتم حذف هذه الدفعة المنتهية نهائياً من المخزون.',
-        confirmText: 'حذف',
-        onConfirm: () {
-          CartController.to.deleteExpiredBatch(material, batch);
-          Get.back();
-        },
+      onTap: () => Get.to(
+        () => BatchDeletionPage(material: material, batch: batch),
       ),
       child: Container(
         padding: EdgeInsets.symmetric(
