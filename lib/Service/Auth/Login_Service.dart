@@ -45,8 +45,8 @@ class LoginService {
             message: otpCode != null
                 ? 'رمز التحقق (تجريبي): $otpCode'
                 : (jsonBody['message'] as String? ?? 'تم إرسال الرمز بنجاح'),
-            color: constRed, // بدّلها للون النجاح المناسب عندك إذا في واحد
-            messageColor: constLightRed,
+            color: constBlue, // بدّلها للون النجاح المناسب عندك إذا في واحد
+            messageColor: constLightBlue,
           );
         }
 

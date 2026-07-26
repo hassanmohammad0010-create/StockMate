@@ -45,29 +45,29 @@ class BossHomePage extends StatelessWidget {
                   },
                 ),
 
-                CustomMainPageCard(
-                  requestNum: 9,
-                  description: 'طلبات قيد التنفيذ',
-                  buttomtital: 'عرض التفاصيل',
+                // CustomMainPageCard(
+                //   requestNum: 9,
+                //   description: 'طلبات قيد التنفيذ',
+                //   buttomtital: 'عرض التفاصيل',
 
-                  icons: Icons.timelapse,
-                  iconBackgroundColor: constLightBlue,
-                  iconColor: constBlue,
-                  onTap: () {
-                    Get.toNamed(AppRoutes.UnderImplementationRequestPage);
-                  },
-                ),
-                CustomMainPageCard(
-                  requestNum: 13,
-                  description: 'طلبات مرفوضة',
-                  buttomtital: 'عرض التفاصيل',
-                  icons: Icons.check,
-                  iconBackgroundColor: constLightRed,
-                  iconColor: constRed,
-                  onTap: () {
-                    Get.toNamed(AppRoutes.CompletedRequestPage);
-                  },
-                ),
+                //   icons: Icons.timelapse,
+                //   iconBackgroundColor: constLightBlue,
+                //   iconColor: constBlue,
+                //   onTap: () {
+                //     Get.toNamed(AppRoutes.UnderImplementationRequestPage);
+                //   },
+                // ),
+                // CustomMainPageCard(
+                //   requestNum: 13,
+                //   description: 'طلبات مرفوضة',
+                //   buttomtital: 'عرض التفاصيل',
+                //   icons: Icons.check,
+                //   iconBackgroundColor: constLightRed,
+                //   iconColor: constRed,
+                //   onTap: () {
+                //     Get.toNamed(AppRoutes.CompletedRequestPage);
+                //   },
+                // ),
               ],
             ),
             SizedBox(height: context.screenHeight * 0.01),
@@ -89,6 +89,26 @@ class BossHomePage extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+            CustomListTile(
+              backgroundColor: constLightBlue,
+              description: 'فتح قسم جديد من اقسام المشفى ',
+              icon: Icons.business_outlined,
+              iconColor: constBlue,
+              onTap: () {
+                Get.toNamed(AppRoutes.ElectronicInventoryPage);
+              },
+              title: 'انشاء قسم جديد ',
+            ),
+            CustomListTile(
+              backgroundColor: constLightBlue,
+              description: 'اضافة موظف للنظام ',
+              icon: Icons.emoji_people_outlined,
+              iconColor: constBlue,
+              onTap: () {
+                Get.toNamed(AppRoutes.ElectronicInventoryPage);
+              },
+              title: 'انشاء موظف جديد ',
             ),
             CustomListTile(
               backgroundColor: constLightBlue,

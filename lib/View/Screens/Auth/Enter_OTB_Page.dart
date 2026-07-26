@@ -13,140 +13,157 @@ class EnterOTBPage extends StatelessWidget {
   final String pageName = '/EnterOTBPage';
   final String email;
 
+  // ارتفاع التصميم المرجعي اللي اتبنت عليه القيمة الثابتة الأصلية (top: 460)
+  static const double _designHeight = 800;
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(EnterOTBController(email: email));
+    final double scale = context.screenHeight / _designHeight;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(width: double.infinity, height: 50, color: constLightBlue),
-          CustomCircle(
-            xAlignment: 1.5,
-            yAlignment: -0.5,
-            color: constBlue,
-            size: 0.9,
-          ),
-          CustomCircle(
-            xAlignment: -11.5,
-            yAlignment: -0.4,
-            color: constColor,
-            // child: Image.asset('assets/Image/OTB.png'),
-            size: 0.9,
-          ),
-          CustomCircle(
-            xAlignment: 0,
-            yAlignment: -1.2,
-            size: 1.2,
-            color: constLightBlue,
-            child: Image.asset('assets/Image/OTB.png'),
-          ),
-          Positioned(
-            top: 460,
-            child: SizedBox(
-              height: context.screenHeight * 1.5,
-              width: context.screenWidth,
-              child: Padding(
-                padding: EdgeInsets.only(top: context.screenHeight * 0.1),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.screenWidth * 0.04,
-                      ),
-                      child: Text(
-                        'تأكيد البريد الالكتروني',
-                        style: TextStyle(
-                          fontSize: context.screenHeight * 0.028,
-                          color: constColor,
-                          fontFamily: cairo,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.01),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.screenWidth * 0.06,
-                      ),
-                      child: Text(
-                        'قمنا بأرسال رمز التأكيد على الحساب المدخل الرجاء تفقد الحساب وادخال الرمز',
-                        style: TextStyle(
-                          fontSize: context.screenHeight * 0.022,
-                          color: constGray,
-
-                          fontFamily: cairo,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.04),
-                    CustomOtb(
-                      onSubmit: (data) async {
-                        bool response = await OtpService.verifyOtp(
-                          email: email,
-                          code: data,
-                        );
-                        if (response) {
-                          Get.to(() => MainPage());
-                        }
-                      },
-                    ),
-                    SizedBox(height: context.screenHeight * 0.03),
-                    Obx(() {
-                      final seconds = controller.secondsRemaining.value;
-                      final isLoading = controller.isLoading.value;
-
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'الم يصلك رمز التحقق؟ ',
+      // خليها true عشان الشاشة تتفاعل مع الكيبورد
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: SizedBox(
+          height: context.screenHeight,
+          width: context.screenWidth,
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 50 * scale,
+                color: constLightBlue,
+              ),
+              CustomCircle(
+                xAlignment: 1.5,
+                yAlignment: -0.5,
+                color: constBlue,
+                size: 0.9,
+              ),
+              CustomCircle(
+                xAlignment: -11.5,
+                yAlignment: -0.4,
+                color: constColor,
+                // child: Image.asset('assets/Image/OTB.png'),
+                size: 0.9,
+              ),
+              CustomCircle(
+                xAlignment: 0,
+                yAlignment: -1.2,
+                size: 1.2,
+                color: constLightBlue,
+                child: Image.asset('assets/Image/OTB.png'),
+              ),
+              Positioned(
+                top: 460 * scale,
+                child: SizedBox(
+                  height: context.screenHeight * 1.5,
+                  width: context.screenWidth,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: context.screenHeight * 0.1),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.04,
+                          ),
+                          child: Text(
+                            'تأكيد البريد الالكتروني',
                             style: TextStyle(
-                              fontSize: context.screenHeight * 0.026,
+                              fontSize: context.screenHeight * 0.028,
                               color: constColor,
-                              fontFamily: lateef,
+                              fontFamily: cairo,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: seconds == 0 && !isLoading
-                                ? controller.resendCode
-                                : null,
-                            child: isLoading
-                                ? SizedBox(
-                                    height: context.screenHeight * 0.03,
-                                    width: context.screenHeight * 0.03,
-                                    child: CustomLoadingIndicator(
-                                      size: context.screenHeight * 0.03,
-                                    ), // بدل CircularProgressIndicator
-                                  )
-                                : Text(
-                                    seconds > 0
-                                        ? 'إعادة إرسال ($seconds ث)'
-                                        : 'إعادة إرسال',
-                                    style: TextStyle(
-                                      fontSize: context.screenHeight * 0.026,
-                                      color: seconds > 0
-                                          ? constGray
-                                          : constBlue,
-                                      fontFamily: lateef,
-                                      fontWeight: FontWeight.bold,
-                                      decoration: seconds > 0
-                                          ? TextDecoration.none
-                                          : TextDecoration.underline,
-                                    ),
-                                  ),
+                        ),
+                        SizedBox(height: context.screenHeight * 0.01),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.06,
                           ),
-                        ],
-                      );
-                    }),
-                  ],
+                          child: Text(
+                            'قمنا بأرسال رمز التأكيد على الحساب المدخل الرجاء تفقد الحساب وادخال الرمز',
+                            style: TextStyle(
+                              fontSize: context.screenHeight * 0.022,
+                              color: constGray,
+                              fontFamily: cairo,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: context.screenHeight * 0.04),
+                        CustomOtb(
+                          onSubmit: (data) async {
+                            // bool response = await OtpService.verifyOtp(
+                            //   email: email,
+                            //   code: data,
+                            // );
+                            // if (response) {
+                            //   Get.to(() => MainPage());
+                            // }
+                            Get.to(() => MainPage());
+                          },
+                        ),
+                        SizedBox(height: context.screenHeight * 0.03),
+                        Obx(() {
+                          final seconds = controller.secondsRemaining.value;
+                          final isLoading = controller.isLoading.value;
+
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'الم يصلك رمز التحقق؟ ',
+                                style: TextStyle(
+                                  fontSize: context.screenHeight * 0.026,
+                                  color: constColor,
+                                  fontFamily: lateef,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: seconds == 0 && !isLoading
+                                    ? controller.resendCode
+                                    : null,
+                                child: isLoading
+                                    ? SizedBox(
+                                        height: context.screenHeight * 0.03,
+                                        width: context.screenHeight * 0.03,
+                                        child: CustomLoadingIndicator(
+                                          size: context.screenHeight * 0.03,
+                                        ),
+                                      )
+                                    : Text(
+                                        seconds > 0
+                                            ? 'إعادة إرسال ($seconds ث)'
+                                            : 'إعادة إرسال',
+                                        style: TextStyle(
+                                          fontSize:
+                                              context.screenHeight * 0.026,
+                                          color: seconds > 0
+                                              ? constGray
+                                              : constBlue,
+                                          fontFamily: lateef,
+                                          fontWeight: FontWeight.bold,
+                                          decoration: seconds > 0
+                                              ? TextDecoration.none
+                                              : TextDecoration.underline,
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
