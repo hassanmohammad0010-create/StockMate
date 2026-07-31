@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Screens/OnBording/Custom_App_Page_View.dart';
 import 'package:stock_mate_project/View/Screens/OnBording/Widgets/Custom_Dots_Indicator.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';
 
 extension AppSize on BuildContext {
   double get screenHeight => MediaQuery.of(this).size.height;
@@ -14,7 +12,7 @@ extension AppSize on BuildContext {
 // ignore: must_be_immutable
 class OnBordingAppViewPage extends StatefulWidget {
   OnBordingAppViewPage({super.key});
-  String pageName = '/OnBordingDoctorView';
+  String pageName = '/OnBordingAppViewPage';
   @override
   State<OnBordingAppViewPage> createState() => _OnBordingDoctorViewPageState();
 }
@@ -46,7 +44,7 @@ class _OnBordingDoctorViewPageState extends State<OnBordingAppViewPage> {
 
           // مؤشر النقاط (Dots Indicator) - نسبة من ارتفاع الشاشة بدل 750 ثابتة
           Padding(
-            padding: EdgeInsets.only(top: AppSize(context).screenHeight * 0.85),
+            padding: EdgeInsets.only(top: AppSize(context).screenHeight * 0.83),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: CustomDotsIndicator(
@@ -65,17 +63,27 @@ class _OnBordingDoctorViewPageState extends State<OnBordingAppViewPage> {
             ),
             child: Align(
               alignment: Alignment.bottomLeft,
-              child: Container(
-                width: AppSize(context).screenWidth * 0.18,
-                height: AppSize(context).screenWidth * 0.18,
-                decoration: BoxDecoration(
-                  color: constLightBlue,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.keyboard_double_arrow_left_outlined,
-                  color: constBlue,
-                  size: AppSize(context).screenWidth * 0.08,
+              child: GestureDetector(
+                onTap: () {
+                  pageController!.page != 3
+                      ? pageController!.nextPage(
+                          duration: const Duration(microseconds: 500),
+                          curve: Curves.linear,
+                        )
+                      : {};
+                },
+                child: Container(
+                  width: AppSize(context).screenWidth * 0.18,
+                  height: AppSize(context).screenWidth * 0.18,
+                  decoration: BoxDecoration(
+                    color: constLightBlue,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.keyboard_double_arrow_left_outlined,
+                    color: constBlue,
+                    size: AppSize(context).screenWidth * 0.08,
+                  ),
                 ),
               ),
             ),

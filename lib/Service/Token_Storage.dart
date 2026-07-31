@@ -8,6 +8,7 @@ class TokenStorage {
   static const _refreshTokenKey = 'refresh_token';
   static const _userRoleKey = 'user_role';
   static const _userNameKey = 'user_name';
+  static const _userIdKey = 'user_id';
 
   static Future<String?> getAccessToken() async {
     return await _storage.read(key: _accessTokenKey);
@@ -41,6 +42,15 @@ class TokenStorage {
   /// جلب اسم الرول المخزّن
   static Future<String?> getUserRole() async {
     return await _storage.read(key: _userRoleKey);
+  }
+
+  static Future<void> saveUserID(String id) async {
+    await _storage.write(key: _userIdKey, value: id);
+  }
+
+  /// جلب اسم الرول المخزّن
+  static Future<String?> getUserID() async {
+    return await _storage.read(key: _userIdKey);
   }
 
   /// تخزين اسم المستخدم

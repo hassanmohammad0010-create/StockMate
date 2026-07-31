@@ -4,6 +4,8 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Auth/Enter_OTB_Controller.dart';
 import 'package:stock_mate_project/Controller/Loading%20Indecator%20Controller/Loading_Indicator_Controller.dart';
 import 'package:stock_mate_project/Service/Auth/OTB_Service.dart';
+import 'package:stock_mate_project/Service/Token_Storage.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_OTB.dart';
@@ -111,7 +113,12 @@ class EnterOTBPage extends StatelessWidget {
                                     );
                                     loadingIndicatorController.isntLoad();
                                     if (response) {
-                                      Get.offAll(() => MainPage());
+                                      await TokenStorage.getUserRole() ==
+                                              'department_manager'
+                                          ? Get.offAll(
+                                              DepartmentHeadsMainPage(),
+                                            )
+                                          : Get.offAll(() => MainPage());
                                     }
                                   },
                                 ),

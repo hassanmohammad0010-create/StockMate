@@ -20,7 +20,7 @@ class CustomAppPageView extends StatelessWidget {
           imagePath: 'assets/Image/Analysis-bro.png',
           title: 'بيانات تتحدث   وقرارات أدق',
           text:
-              'تحليل أنماط الاستهلاك عبر الزمن لمساعدتك على التنبؤ بالاحتياجات المستقبلية وتجنب النقص أو الفائض في المخزون',
+              'تحليل أنماط الاستهلاك لمساعدتك على التنبؤ بالاحتياجات المستقبلية وتجنب النقص أو الفائض',
         ),
         CustomViewComponent(
           imagePath: 'assets/Image/dataanalysis.png',

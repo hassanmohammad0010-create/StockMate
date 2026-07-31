@@ -1,7 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:stock_mate_project/Routes/Bindings/App/DepartmentHeadsInventoryBinding.dart';
-import 'package:stock_mate_project/Routes/Bindings/App/Department_Orders_Binding.dart';
-import 'package:stock_mate_project/Routes/Bindings/Auth/Login_Page_Bending.dart';
+import 'package:stock_mate_project/core/Bindings/App/DepartmentHeadsInventoryBinding.dart';
+import 'package:stock_mate_project/core/Bindings/App/Department_Orders_Binding.dart';
+import 'package:stock_mate_project/core/Bindings/Auth/Login_Page_Bending.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_Page.dart';

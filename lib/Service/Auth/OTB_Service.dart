@@ -59,6 +59,8 @@ class OtpService {
             : null;
 
         final String? fullName = user?['fullName'] as String?;
+        final String? id = user?['id'] as String?;
+
         final Map<String, dynamic>? role = user?['role'] is Map
             ? user!['role'] as Map<String, dynamic>
             : null;
@@ -70,6 +72,9 @@ class OtpService {
 
         if (fullName != null) {
           await TokenStorage.saveUserName(fullName);
+        }
+        if (id != null) {
+          await TokenStorage.saveUserID(id);
         }
 
         customSnackBar(

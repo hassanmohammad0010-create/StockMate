@@ -21,7 +21,7 @@ class CustomViewComponent extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(height: AppSize(context).screenHeight * 0.16),
+          SizedBox(height: AppSize(context).screenHeight * 0.12),
 
           // حجم ثابت لكل الصور بنفس الطول والعرض
           SizedBox(

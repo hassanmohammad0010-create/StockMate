@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
-import 'package:stock_mate_project/Routes/Bindings/App/Inventory_Details_Binding.dart';
+import 'package:stock_mate_project/core/Bindings/App/Inventory_Details_Binding.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
 import 'package:stock_mate_project/core/models/Material_Model.dart';
