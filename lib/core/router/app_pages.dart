@@ -1,6 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:stock_mate_project/Routes/Bindings/App/DepartmentHeadsInventoryBinding.dart';
 import 'package:stock_mate_project/Routes/Bindings/App/Department_Orders_Binding.dart';
+import 'package:stock_mate_project/Routes/Bindings/Auth/Login_Page_Bending.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_Page.dart';
@@ -112,7 +113,11 @@ abstract class AppPages {
     GetPage(name: AppRoutes.SettingPage, page: () => const SettingPage()),
     GetPage(name: AppRoutes.MainPage, page: () => const MainPage()),
     GetPage(name: AppRoutes.SplashViewPage, page: () => SplashViewPage()),
-    GetPage(name: AppRoutes.LoginPage, page: () => LoginPage()),
+    GetPage(
+      name: AppRoutes.LoginPage,
+      page: () => LoginPage(),
+      binding: LoginBinding(),
+    ),
     GetPage(name: AppRoutes.ResetPasswordPage, page: () => ResetPasswordPage()),
     GetPage(
       name: AppRoutes.CompletedRequestPage,
@@ -165,9 +170,6 @@ abstract class AppPages {
       name: AppRoutes.ConfirmDisableLockScreen,
       page: () => const ConfirmDisableLockScreen(),
     ),
-    GetPage(
-      name: AppRoutes.PatientsPage,
-      page: () => const PatientsPage(),
-    ),
+    GetPage(name: AppRoutes.PatientsPage, page: () => const PatientsPage()),
   ];
 }

@@ -3,8 +3,14 @@ import 'package:stock_mate_project/Constant/Const.dart';
 
 // ignore: must_be_immutable
 class CustomButtom extends StatelessWidget {
-  CustomButtom({super.key, required this.tital, required this.onTap});
+  CustomButtom({
+    super.key,
+    required this.tital,
+    required this.onTap,
+    this.widget,
+  });
   String tital;
+  Widget? widget;
   VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
@@ -18,14 +24,16 @@ class CustomButtom extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,
-        child: Text(
-          tital,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 32,
-            fontFamily: lateef,
-          ),
-        ),
+        child:
+            widget ??
+            Text(
+              tital,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 32,
+                fontFamily: lateef,
+              ),
+            ),
       ),
     );
   }

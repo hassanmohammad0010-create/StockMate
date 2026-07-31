@@ -32,20 +32,8 @@ class OtpService {
             }),
           )
           .timeout(const Duration(seconds: 30));
-
+      final Map<String, dynamic> jsonBody = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonBody = jsonDecode(response.body);
-
-        if (jsonBody['success'] != true || jsonBody['data'] is! Map) {
-          customSnackBar(
-            title: 'رمز غير صحيح',
-            message: 'الرمز الذي أدخلته غير صحيح أو منتهي الصلاحية',
-            color: constRed,
-            messageColor: constLightRed,
-          );
-          return false;
-        }
-
         final Map<String, dynamic> data = jsonBody['data'];
         final String? accessToken = data['accessToken'] as String?;
         final String? refreshToken = data['refreshToken'] as String?;
@@ -93,7 +81,15 @@ class OtpService {
 
         return true;
       }
-
+      if (jsonBody['success'] != true || jsonBody['data'] is! Map) {
+        customSnackBar(
+          title: 'رمز غير صحيح',
+          message: 'الرمز الذي أدخلته غير صحيح أو منتهي الصلاحية',
+          color: constRed,
+          messageColor: constLightRed,
+        );
+        return false;
+      }
       ApiErrorHandler.handleStatusCode(response.statusCode);
       return false;
     } on SocketException {

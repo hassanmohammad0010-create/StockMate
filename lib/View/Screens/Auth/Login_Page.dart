@@ -3,11 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Loading%20Indecator%20Controller/Loading_Indicator_Controller.dart';
 import 'package:stock_mate_project/Service/Auth/Login_Service.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Enter_OTB_Page.dart';
 import 'package:stock_mate_project/core/Function/Validation.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Text_Failed.dart';
 
 class LoginPage extends StatelessWidget {
@@ -15,13 +17,11 @@ class LoginPage extends StatelessWidget {
   final String pageName = '/LoginPage';
   final GlobalKey<FormState> loginPageKey = GlobalKey();
   String? email;
-  static const Color darkNavy = Color(0xFF161B2E);
-  static const Color skyBlue = Color(0xFF7FCBEE);
-  static const Color primaryBlue = Color(0xFF1C6EA4);
 
   // ارتفاع التصميم المرجعي اللي اتبنت عليه القيم الثابتة الأصلية (520, 600, 50, ...)
   static const double _designHeight = 800;
-
+  final LoadingIndicatorController loadingIndicatorController =
+      Get.find<LoadingIndicatorController>();
   @override
   Widget build(context) {
     final double scale = context.screenHeight / _designHeight;
@@ -128,18 +128,30 @@ class LoginPage extends StatelessWidget {
                         validator: (data) => Validation().emailValidate(data!),
                       ),
                       SizedBox(height: context.screenHeight * 0.02),
-                      CustomButtom(
-                        tital: 'تسجيل الدخول',
-                        onTap: () async {
-                          // if (loginPageKey.currentState!.validate()) {
-                          //   bool response = await LoginService.loginService(
-                          //     email: email!,
-                          //   );
-                          //   if (response) {
-                          //     Get.to(() => EnterOTBPage(email: email!));
-                          //   }
-                          // }
-                          Get.to(() => EnterOTBPage(email: email!));
+                      GetBuilder<LoadingIndicatorController>(
+                        builder: (controller) {
+                          return CustomButtom(
+                            widget: loadingIndicatorController.load
+                                ? CustomLoadingIndicator(color: constLightBlue)
+                                : null,
+                            tital: 'تسجيل الدخول',
+                            onTap: () async {
+                              if (loginPageKey.currentState!.validate()) {
+                                loadingIndicatorController.isLoad();
+                                bool response = await LoginService.loginService(
+                                  email: email!,
+                                );
+                                if (response) {
+                                  loadingIndicatorController.isntLoad();
+
+                                  Get.to(() => EnterOTBPage(email: email!));
+                                } else {
+                                  loadingIndicatorController.isntLoad();
+                                }
+                              }
+                              // Get.to(() => EnterOTBPage(email: email!));
+                            },
+                          );
                         },
                       ),
                       SizedBox(height: context.screenHeight * 0.01),

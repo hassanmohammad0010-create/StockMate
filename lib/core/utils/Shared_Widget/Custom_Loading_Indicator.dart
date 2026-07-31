@@ -22,7 +22,7 @@ class CustomLoadingIndicator extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SpinKitSpinningLines(color: loadingColor, size: size),
+          SpinKitSpinningLines(color: color ?? loadingColor, size: size),
           if (message != null) ...[
             const SizedBox(height: 16),
             Text(

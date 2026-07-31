@@ -35,48 +35,9 @@ class EnterOTBController extends GetxController {
     if (secondsRemaining.value > 0 || isLoading.value) return;
 
     isLoading.value = true;
-    try {
-      final service = ResentOtbService();
-      final result = await service.resentOTBService(email: email);
 
-      if (result == success) {
-        // استدعاء loginService والانتظار لحد ما يخلص
-        bool response = await LoginService.loginService(email: email);
-
-        if (response) {
-          customSnackBar(
-            color: constColor,
-            messageColor: constLightBlue,
-            title: 'نجاح',
-            message: 'تم إعادة إرسال رمز التحقق بنجاح',
-          );
-          startTimer();
-        } else {
-          customSnackBar(
-            color: constRed,
-            messageColor: constLightRed,
-            title: 'خطأ',
-            message: 'فشل تسجيل الدخول. الرجاء المحاولة مرة أخرى',
-          );
-        }
-      } else {
-        customSnackBar(
-          color: constRed,
-          messageColor: constLightRed,
-          title: 'خطأ',
-          message: 'فشل إعادة إرسال رمز التحقق. الرجاء المحاولة مرة أخرى',
-        );
-      }
-    } catch (e) {
-      customSnackBar(
-        color: constRed,
-        messageColor: constLightRed,
-        title: 'خطأ',
-        message: 'حدث خطأ ما. الرجاء المحاولة لاحقاً',
-      );
-    } finally {
-      isLoading.value = false; // يتنفذ بعد ما تخلص كل الاستدعاءات
-    }
+    await LoginService.loginService(email: email);
+    isLoading.value = false; // يتنفذ بعد ما تخلص كل الاستدعاءات
   }
 
   @override

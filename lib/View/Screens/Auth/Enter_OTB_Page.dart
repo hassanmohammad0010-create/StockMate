@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Auth/Enter_OTB_Controller.dart';
+import 'package:stock_mate_project/Controller/Loading%20Indecator%20Controller/Loading_Indicator_Controller.dart';
 import 'package:stock_mate_project/Service/Auth/OTB_Service.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
@@ -9,13 +10,15 @@ import 'package:stock_mate_project/View/Widget/Auth/Custom_OTB.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class EnterOTBPage extends StatelessWidget {
-  const EnterOTBPage({super.key, required this.email});
+  EnterOTBPage({super.key, required this.email});
   final String pageName = '/EnterOTBPage';
   final String email;
 
   // ارتفاع التصميم المرجعي اللي اتبنت عليه القيمة الثابتة الأصلية (top: 460)
   static const double _designHeight = 800;
-
+  LoadingIndicatorController loadingIndicatorController = Get.put(
+    LoadingIndicatorController(),
+  );
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(EnterOTBController(email: email));
@@ -57,7 +60,7 @@ class EnterOTBPage extends StatelessWidget {
                 child: Image.asset('assets/Image/OTB.png'),
               ),
               Positioned(
-                top: 460 * scale,
+                top: 420 * scale,
                 child: SizedBox(
                   height: context.screenHeight * 1.5,
                   width: context.screenWidth,
@@ -95,67 +98,94 @@ class EnterOTBPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: context.screenHeight * 0.04),
-                        CustomOtb(
-                          onSubmit: (data) async {
-                            // bool response = await OtpService.verifyOtp(
-                            //   email: email,
-                            //   code: data,
-                            // );
-                            // if (response) {
-                            //   Get.to(() => MainPage());
-                            // }
-                            Get.to(() => MainPage());
+                        GetBuilder<LoadingIndicatorController>(
+                          builder: (loadingIndicatorController) {
+                            return Column(
+                              children: [
+                                CustomOtb(
+                                  onSubmit: (data) async {
+                                    loadingIndicatorController.isLoad();
+                                    bool response = await OtpService.verifyOtp(
+                                      email: email,
+                                      code: data,
+                                    );
+                                    loadingIndicatorController.isntLoad();
+                                    if (response) {
+                                      Get.offAll(() => MainPage());
+                                    }
+                                  },
+                                ),
+                                SizedBox(height: context.screenHeight * 0.03),
+                                Obx(() {
+                                  final seconds =
+                                      controller.secondsRemaining.value;
+                                  final isLoading = controller.isLoading.value;
+
+                                  return loadingIndicatorController.load
+                                      ? CustomLoadingIndicator()
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'الم يصلك رمز التحقق؟ ',
+                                              style: TextStyle(
+                                                fontSize:
+                                                    context.screenHeight *
+                                                    0.026,
+                                                color: constColor,
+                                                fontFamily: lateef,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: seconds == 0 && !isLoading
+                                                  ? controller.resendCode
+                                                  : null,
+                                              child: isLoading
+                                                  ? SizedBox(
+                                                      height:
+                                                          context.screenHeight *
+                                                          0.03,
+                                                      width:
+                                                          context.screenHeight *
+                                                          0.03,
+                                                      child: CustomLoadingIndicator(
+                                                        size:
+                                                            context
+                                                                .screenHeight *
+                                                            0.03,
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      seconds > 0
+                                                          ? 'إعادة إرسال ($seconds ث)'
+                                                          : 'إعادة إرسال',
+                                                      style: TextStyle(
+                                                        fontSize:
+                                                            context
+                                                                .screenHeight *
+                                                            0.026,
+                                                        color: seconds > 0
+                                                            ? constGray
+                                                            : constBlue,
+                                                        fontFamily: lateef,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        decoration: seconds > 0
+                                                            ? TextDecoration
+                                                                  .none
+                                                            : TextDecoration
+                                                                  .underline,
+                                                      ),
+                                                    ),
+                                            ),
+                                          ],
+                                        );
+                                }),
+                              ],
+                            );
                           },
                         ),
-                        SizedBox(height: context.screenHeight * 0.03),
-                        Obx(() {
-                          final seconds = controller.secondsRemaining.value;
-                          final isLoading = controller.isLoading.value;
-
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'الم يصلك رمز التحقق؟ ',
-                                style: TextStyle(
-                                  fontSize: context.screenHeight * 0.026,
-                                  color: constColor,
-                                  fontFamily: lateef,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: seconds == 0 && !isLoading
-                                    ? controller.resendCode
-                                    : null,
-                                child: isLoading
-                                    ? SizedBox(
-                                        height: context.screenHeight * 0.03,
-                                        width: context.screenHeight * 0.03,
-                                        child: CustomLoadingIndicator(
-                                          size: context.screenHeight * 0.03,
-                                        ),
-                                      )
-                                    : Text(
-                                        seconds > 0
-                                            ? 'إعادة إرسال ($seconds ث)'
-                                            : 'إعادة إرسال',
-                                        style: TextStyle(
-                                          fontSize:
-                                              context.screenHeight * 0.026,
-                                          color: seconds > 0
-                                              ? constGray
-                                              : constBlue,
-                                          fontFamily: lateef,
-                                          fontWeight: FontWeight.bold,
-                                          decoration: seconds > 0
-                                              ? TextDecoration.none
-                                              : TextDecoration.underline,
-                                        ),
-                                      ),
-                              ),
-                            ],
-                          );
-                        }),
                       ],
                     ),
                   ),
