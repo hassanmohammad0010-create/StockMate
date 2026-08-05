@@ -78,14 +78,7 @@ class RequestPage extends StatelessWidget {
                   Column(
                     children: [
                       CustomFilterBar(
-                        tag: 'RequestPage',
-                        filters: const [
-                          'الكل',
-                          'معلق',
-                          'قيد التنفيذ',
-                          'منجز',
-                          'مرفوضة',
-                        ],
+                    controller: filterController,
                       ),
                       Expanded(
                         child: Obx(() {
@@ -148,14 +141,7 @@ class RequestPage extends StatelessWidget {
                   Column(
                     children: [
                       CustomFilterBar(
-                        tag: 'RequestPage',
-                        filters: const [
-                          'الكل',
-                          'بأنتظار موافقتك',
-                          'قيد التنفيذ',
-                          'منجز',
-                          'مرفوضة',
-                        ],
+                      controller: filterController,
                       ),
                       Expanded(
                         child: Obx(() {

@@ -25,7 +25,7 @@ void main() async {
   identitySharedPreferences = prefs;
 
   const storage = FlutterSecureStorage();
-  await storage.deleteAll();
+  // await storage.deleteAll();
 
   await dotenv.load(fileName: ".env");
 
@@ -38,7 +38,7 @@ void main() async {
     StockMate(
       initialRoute: isLockEnabled
           ? AppRoutes.LockScreen
-          : AppRoutes.SplashViewPage,
+          : AppRoutes.DepartmentHeadsMainPage,
     ),
   );
 }
@@ -55,7 +55,7 @@ class StockMate extends StatelessWidget {
       locale: Get.deviceLocale,
       debugShowCheckedModeBanner: false,
       getPages: AppPages.routes,
-      initialRoute: AppRoutes.SplashViewPage,
+      initialRoute: initialRoute,
     );
   }
 }

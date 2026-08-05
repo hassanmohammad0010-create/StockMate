@@ -41,8 +41,7 @@ class HeadOfPurchasingRequestPage extends StatelessWidget {
       child: Column(
         children: [
           CustomFilterBar(
-            tag: 'HeadOfPurchasingRequestPage',
-            filters: const ['الكل', 'معلق', 'قيد التنفيذ', 'منجز', 'مرفوضة'],
+            controller: filterController,
           ),
           Expanded(
             child: Obx(() {

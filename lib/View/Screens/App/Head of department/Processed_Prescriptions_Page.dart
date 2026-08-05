@@ -39,7 +39,7 @@ class ProcessedPrescriptionsPage extends StatelessWidget {
 
               return ListView.builder(
                 padding: EdgeInsets.symmetric(
-                  vertical: h * 0.01,
+                  vertical: h * 0.005,
                 ),
                 itemCount: prescriptions.length,
                 itemBuilder: (context, index) {

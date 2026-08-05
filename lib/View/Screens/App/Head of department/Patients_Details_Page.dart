@@ -21,24 +21,25 @@ class PatientsDetailsPage extends StatelessWidget {
     final h = context.screenHeight;
     final w = context.screenWidth;
 
-    // نستخدم Obx لمراقبة القائمة وجلب أحدث بيانات للمريض لحظياً
     return Obx(() {
-      // البحث عن المريض المحدث في القائمة، أو استخدام البيانات القديمة كملاذ أخير
       final currentPatient = controller.patients.firstWhere(
         (p) => p.id == patient.id,
         orElse: () => patient,
       );
 
+      // تحديد الحالة
+      final isWaiting = currentPatient.status == 'في الانتظار';
       final isUnderExamination = currentPatient.status == 'قيد الفحص';
+      final isCompleted = currentPatient.status == 'تمت المعاينة';
 
-      // تحديد خصائص الزر بناءً على الحالة الحالية
+      // أزرار الإجراءات تظهر فقط عندما يكون المريض "قيد الفحص"
+      final showActionButtons = isUnderExamination;
+
+      // زر تغيير الحالة يكون متاحاً فقط عندما يكون المريض "في الانتظار"
+      final canChangeStatus = isWaiting;
+
+      // تحديد خصائص زر تغيير الحالة
       final statusButtonColor = isUnderExamination ? constGreen : constOrange;
-      final statusButtonText = isUnderExamination
-          ? 'إرجاع الحالة إلى: في الانتظار'
-          : 'تغيير الحالة إلى: قيد الفحص';
-      final statusButtonIcon = isUnderExamination
-          ? Icons.restore
-          : Icons.check_circle_outline;
 
       return Scaffold(
         backgroundColor: constBackgroundColor,
@@ -57,67 +58,108 @@ class PatientsDetailsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // 1. زر تغيير الحالة (تفاعلي وذكي)
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: h * 0.02),
-                      decoration: BoxDecoration(
-                        color: statusButtonColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: statusButtonColor.withOpacity(0.3),
+                    if (!isCompleted)
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: h * 0.02),
+                        decoration: BoxDecoration(
+                          color: statusButtonColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: statusButtonColor.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'الحالة الحالية: ${currentPatient.status}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: statusButtonColor,
+                              ),
+                            ),
+                            SizedBox(height: h * 0.015),
+                            Container(
+                              width: w * 0.6,
+                              child: ElevatedButton.icon(
+                                onPressed: canChangeStatus
+                                    ? () {
+                                        controller.updatePatientStatus(
+                                          currentPatient.id,
+                                          'قيد الفحص',
+                                        );
+                                        customSnackBar(
+                                          title: 'تم التحديث',
+                                          message:
+                                              'تم تغيير حالة المريض إلى: قيد الفحص',
+                                          color: constGreen,
+                                          messageColor: Colors.white,
+                                        );
+                                      }
+                                    : null, // تعطيل الزر إذا كان المريض قيد الفحص
+                                icon: Icon(
+                                  canChangeStatus
+                                      ? Icons.check_circle_outline
+                                      : Icons.timer_outlined,
+                                  color: Colors.white,
+                                ),
+                                label: Text(
+                                  canChangeStatus
+                                      ? 'تغيير الحالة إلى: قيد الفحص'
+                                      : 'قيد الفحص ...',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: canChangeStatus
+                                      ? constOrange
+                                      : Colors.grey,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: h * 0.015,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'الحالة الحالية: ${currentPatient.status}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: statusButtonColor,
-                            ),
+
+                    // رسالة عندما تكون المعاينة قد انتهت
+                    if (isCompleted)
+                      Container(
+                        padding: EdgeInsets.all(w * 0.04),
+                        decoration: BoxDecoration(
+                          color: constGreen.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: constGreen.withOpacity(0.3),
                           ),
-                          SizedBox(height: h * 0.015),
-                          Container(
-                            width: w * 0.6,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                final newStatus = isUnderExamination
-                                    ? 'في الانتظار'
-                                    : 'قيد الفحص';
-                                controller.updatePatientStatus(
-                                  currentPatient.id,
-                                  newStatus,
-                                );
-                                customSnackBar(
-                                  title: 'تم التحديث',
-                                  message:
-                                      'تم تغيير حالة المريض إلى: $newStatus',
-                                  color: constGreen,
-                                  messageColor: Colors.white,
-                                );
-                              },
-                              icon: Icon(statusButtonIcon, color: Colors.white),
-                              label: Text(
-                                statusButtonText,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: statusButtonColor,
-                                padding: EdgeInsets.symmetric(
-                                  vertical: h * 0.015,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.check_circle,
+                              color: constGreen,
+                              size: 32,
+                            ),
+                            SizedBox(width: w * 0.03),
+                            Text(
+                              'تمت معاينة المريض بنجاح',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: constGreen,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
                     SizedBox(height: h * 0.03),
 
@@ -165,89 +207,93 @@ class PatientsDetailsPage extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: h * 0.04),
-
-                    // 3. أزرار الإجراءات في نهاية الصفحة
-                    const Text(
-                      'إجراءات نهاية المعاينة',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                    // 3. أزرار الإجراءات - تظهر فقط عندما يكون المريض "قيد الفحص"
+                    if (showActionButtons) ...[
+                      SizedBox(height: h * 0.04),
+                      const Text(
+                        'إجراءات نهاية المعاينة',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: h * 0.015),
-                    Row(
-                      children: [
-                        // زر إرسال وصفة طبية
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Get.to(() => SendPrescriptionPage(patient: currentPatient));
-                            },
-                            icon: const Icon(
-                              Icons.receipt_long,
-                              color: Colors.white,
-                            ),
-                            label: const Text(
-                              'إرسال وصفة',
-                              style: TextStyle(
+                      SizedBox(height: h * 0.015),
+                      Row(
+                        children: [
+                          // زر إرسال وصفة طبية
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Get.to(
+                                  () => SendPrescriptionPage(
+                                    patient: currentPatient,
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.receipt_long,
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: constBlue,
-                              padding: EdgeInsets.symmetric(
-                                vertical: h * 0.018,
+                              label: const Text(
+                                'إرسال وصفة',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: w * 0.03),
-                        // زر انتهت المعاينة
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              Get.back();
-                              // تغيير الحالة إلى "تمت المعاينة" بدلاً من الحذف
-                              controller.completeConsultation(
-                                currentPatient.id,
-                              );
-                              customSnackBar(
-                                title: 'تم بنجاح',
-                                message: 'انتهت معاينة المريض',
-                                color: constGreen,
-                                messageColor: Colors.white,
-                              );
-                            },
-                            icon: const Icon(Icons.done_all, color: constRed),
-                            label: const Text(
-                              'انتهت المعاينة',
-                              style: TextStyle(
-                                color: constRed,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                color: constRed,
-                                width: 1.5,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                vertical: h * 0.018,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: constBlue,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: h * 0.018,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                          SizedBox(width: w * 0.03),
+                          // زر انتهت المعاينة
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () {
+                                Get.back();
+                                controller.completeConsultation(
+                                  currentPatient.id,
+                                );
+                                customSnackBar(
+                                  title: 'تم بنجاح',
+                                  message: 'انتهت معاينة المريض',
+                                  color: constGreen,
+                                  messageColor: Colors.white,
+                                );
+                              },
+                              icon: const Icon(Icons.done_all, color: constRed),
+                              label: const Text(
+                                'انتهت المعاينة',
+                                style: TextStyle(
+                                  color: constRed,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                  color: constRed,
+                                  width: 1.5,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: h * 0.018,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -258,7 +304,6 @@ class PatientsDetailsPage extends StatelessWidget {
     });
   }
 
-  // دالة مساعدة لبناء صفوف المعلومات
   Widget _buildInfoRow(String label, String value, IconData icon) {
     return Row(
       children: [

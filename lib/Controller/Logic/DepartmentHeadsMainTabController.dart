@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Controller/Logic/DepartmentOrdersFilterController.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 
@@ -42,9 +41,11 @@ class DepartmentHeadsMainTabController extends GetxController
           );
         }
         case orderTabIndex:
-        if (Get.isRegistered<DepartmentOrdersFilterController>(
+        if (Get.isRegistered<FilterController>(
+          tag: AppRoutes.DepartmentOrdersPage,
         )) {
-          Get.delete<DepartmentOrdersFilterController>(
+          Get.delete<FilterController>(
+            tag: AppRoutes.DepartmentOrdersPage,
           );
         }
         break;

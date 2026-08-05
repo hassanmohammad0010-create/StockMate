@@ -4,12 +4,13 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Service/Token_Storage.dart';
 
 class GetNameRollOfUserController extends GetxController {
-  String? name, role;
+  String? name, role, id;
   @override
   void onInit() async {
     super.onInit();
-    role = await TokenStorage.getUserID();
+    id = await TokenStorage.getUserID();
     name = await TokenStorage.getUserName();
+    role = await TokenStorage.getUserRole();
     update();
   }
 }

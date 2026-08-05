@@ -46,7 +46,7 @@ class CustomBackContainer extends StatelessWidget {
     final w = context.screenWidth;
 
     return Container(
-      color: constBlue,
+      color: constColor,
       alignment: Alignment.centerRight,
       padding: EdgeInsets.only(right: w * 0.04, top: h * 0.04),
       width: w,

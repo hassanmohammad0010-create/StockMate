@@ -3,33 +3,84 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/DepartmentOrdersFilterController.dart';
+import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
+import 'package:stock_mate_project/Controller/Logic/Orders_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Order_Details_Page.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Card.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Order_Filter.dart';
+import 'package:stock_mate_project/core/models/Order_Models.dart';
 
-class DepartmentOrdersPage extends GetView<DepartmentOrdersFilterController> {
+class DepartmentOrdersPage extends GetView<FilterController> {
   const DepartmentOrdersPage({super.key, this.initialFilter = 'الكل'});
 
   final String initialFilter;
+  static const String _filterTag = AppRoutes.DepartmentOrdersPage;
+
+  @override
+  String? get tag => _filterTag;
 
   @override
   Widget build(BuildContext context) {
     final h = context.screenHeight;
     final w = context.screenWidth;
+    
+    final ordersController = Get.find<OrdersController>();
 
-    if (!Get.isRegistered<DepartmentOrdersFilterController>()) {
-      Get.put(DepartmentOrdersFilterController());
+    if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
+      Get.put<FilterController>(
+        FilterController()
+          ..initFilters([
+            'الكل',
+            'منجز',
+            'طلبات مستلمة',
+            'معلق',
+            'قيد التنفيذ',
+            'الطلبات الدورية',
+            'مرفوض',
+          ])
+          ..setFilter(initialFilter),
+        tag: _filterTag,
+      );
     }
+
+    // Worker للاستماع لـ initialFilter
+    ever(ordersController.initialFilter, (filter) {
+      controller.setFilter(filter);
+    });
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: Column(
         children: [
-          const DepartmentOrdersFilterBar(),
+          Align(
+            alignment: AlignmentGeometry.centerRight,
+            child: CustomFilterBar(controller: controller),
+          ),
           Expanded(
             child: Obx(() {
-              final filteredOrders = controller.filteredOrders;
+              final orders = ordersController.orders;
+              final selected = controller.selectedFilter.value;
+              final query = controller.searchQuery.value.trim().toLowerCase();
+
+              // منطق الفلترة هنا
+              List<Order> filteredOrders = switch (selected) {
+                'منجز' => orders.where((o) => o.status == OrderStatus.completed).toList(),
+                'طلبات مستلمة' => orders.where((o) => o.status == OrderStatus.reserved).toList(),
+                'معلق' => orders.where((o) => o.status == OrderStatus.suspended).toList(),
+                'قيد التنفيذ' => orders.where((o) => o.status == OrderStatus.inProgress).toList(),
+                'الطلبات الدورية' => orders.where((o) => o.isRecurring).toList(),
+                'مرفوض' => orders.where((o) => o.status == OrderStatus.rejected).toList(),
+                _ => orders.toList(),
+              };
+
+              // منطق البحث
+              if (query.isNotEmpty) {
+                filteredOrders = filteredOrders.where((o) {
+                  // قم بتخصيص الحقول هنا
+                  return true;
+                }).toList();
+              }
 
               return filteredOrders.isEmpty
                   ? _buildEmptyState()
@@ -43,8 +94,7 @@ class DepartmentOrdersPage extends GetView<DepartmentOrdersFilterController> {
                         final order = filteredOrders[index];
                         return OrderCard(
                           order: order,
-                          onTap: () =>
-                              Get.to(() => OrderDetailsPage(order: order)),
+                          onTap: () => Get.to(() => OrderDetailsPage(order: order)),
                         );
                       },
                     );

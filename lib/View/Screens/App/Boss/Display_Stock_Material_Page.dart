@@ -28,8 +28,7 @@ class DisplayStockMaterialPage extends StatelessWidget {
           Align(
             alignment: AlignmentGeometry.centerRight,
             child: CustomFilterBar(
-              tag: 'DisplayStockPage',
-              filters: const ['الكل', 'ثابتة', 'مستهلكة', 'ادوية'],
+              controller: filterController,
             ),
           ),
           Expanded(

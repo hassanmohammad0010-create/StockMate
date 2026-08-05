@@ -33,7 +33,7 @@ class PrescriptionCard extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.symmetric(
             horizontal: w * 0.04,
-            vertical: h * 0.01,
+            vertical: h * 0.005,
           ),
           padding: EdgeInsets.symmetric(
             horizontal: w * 0.04,
@@ -45,7 +45,7 @@ class PrescriptionCard extends StatelessWidget {
             border: Border.all(color: const Color(0xFFE5E7EB)),
             boxShadow: const [
               BoxShadow(
-                color: constColor,
+                color: Color(0x1A000000),
                 blurRadius: 12,
                 offset: Offset(0, 4),
               ),

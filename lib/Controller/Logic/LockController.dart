@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Service/App/lock_service.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 /// يدير حالة شاشة القفل: إدخال PIN، محاولة البصمة، الأخطاء
 ///
@@ -102,7 +103,7 @@ class LockController extends GetxController {
       onSuccess!.call();
     } else {
       // غيّر هذا المسار إلى الصفحة الرئيسية الفعلية لمشروعك
-      Get.offAllNamed('/DepartmentHeadsMainPage');
+      Get.offAllNamed(AppRoutes.SplashViewPage);
     }
   }
 }

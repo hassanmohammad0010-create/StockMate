@@ -36,7 +36,7 @@ class NewPrescriptionPage extends StatelessWidget {
                 );
               }
               return ListView.builder(
-                padding: EdgeInsets.symmetric(vertical: h * 0.01),
+                padding: EdgeInsets.symmetric(vertical: h * 0.005),
                 itemCount: prescriptions.length,
                 itemBuilder: (context, index) {
                   final prescription = prescriptions[index];
