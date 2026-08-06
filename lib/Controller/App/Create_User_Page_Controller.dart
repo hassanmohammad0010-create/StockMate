@@ -7,7 +7,7 @@ import 'package:stock_mate_project/core/models/Role_Model.dart';
 class Createuserpagecontroller extends GetxController {
   List<RoleModel> rolesModel = [];
   List<String> roleNames = [];
-
+  var selectedRole = Rxn<String>();
   @override
   void onInit() async {
     super.onInit();

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/utils.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/View/Screens/OnBording/Custom_App_Page_View.dart';
 import 'package:stock_mate_project/View/Screens/OnBording/Widgets/Custom_Dots_Indicator.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/main.dart';
 
 extension AppSize on BuildContext {
   double get screenHeight => MediaQuery.of(this).size.height;
@@ -70,7 +74,13 @@ class _OnBordingDoctorViewPageState extends State<OnBordingAppViewPage> {
                           duration: const Duration(microseconds: 500),
                           curve: Curves.linear,
                         )
-                      : {};
+                      : {
+                          onBordingSharedPreferences!.setBool(
+                            'onBording',
+                            true,
+                          ),
+                          Get.offNamed(AppRoutes.LoginPage),
+                        };
                 },
                 child: Container(
                   width: AppSize(context).screenWidth * 0.18,
@@ -103,7 +113,8 @@ class _OnBordingDoctorViewPageState extends State<OnBordingAppViewPage> {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    // onBordingPreferences!.setBool('1', true);
+                    onBordingSharedPreferences!.setBool('onBording', true);
+                    Get.offNamed(AppRoutes.LoginPage);
                   },
                   child: Text(
                     'التخطي',

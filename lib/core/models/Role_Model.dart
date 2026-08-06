@@ -1,12 +1,12 @@
 enum RoleName {
   hospital_manager,
   warehouse_manager,
-  purchasing_committee_manager,
+  purchasing_manager,
   department_manager,
   doctor,
   pharmacy_staff,
   reception_staff,
-  unknown,
+  // ملاحظة: شلت unknown لأنه ما عاد إلها داعي كـ enum يتخزن
 }
 
 extension RoleNameX on RoleName {
@@ -16,7 +16,7 @@ extension RoleNameX on RoleName {
         return 'مدير المستشفى';
       case RoleName.warehouse_manager:
         return 'مدير المستودع';
-      case RoleName.purchasing_committee_manager:
+      case RoleName.purchasing_manager:
         return 'مدير لجنة المشتريات';
       case RoleName.department_manager:
         return 'مدير القسم';
@@ -26,19 +26,18 @@ extension RoleNameX on RoleName {
         return 'موظف صيدلية';
       case RoleName.reception_staff:
         return 'موظف استقبال';
-      case RoleName.unknown:
-        return 'غير معروف';
     }
   }
 
-  static RoleName fromApiValue(String? value) {
+  /// يرجع null إذا القيمة مش موجودة بالـ enum (بما فيها super_admin)
+  static RoleName? fromApiValue(String? value) {
     switch (value) {
       case 'hospital_manager':
         return RoleName.hospital_manager;
       case 'warehouse_manager':
         return RoleName.warehouse_manager;
       case 'purchasing_committee_manager':
-        return RoleName.purchasing_committee_manager;
+        return RoleName.purchasing_manager;
       case 'department_manager':
         return RoleName.department_manager;
       case 'doctor':
@@ -48,7 +47,7 @@ extension RoleNameX on RoleName {
       case 'reception_staff':
         return RoleName.reception_staff;
       default:
-        return RoleName.unknown; // fallback آمن بدل ما يرمي exception
+        return null; // أي قيمة غير معروفة (super_admin وغيرها) بترجع null
     }
   }
 }
@@ -59,10 +58,18 @@ class RoleModel {
 
   RoleModel({required this.id, required this.name});
 
-  factory RoleModel.fromJson(Map<String, dynamic> json) {
-    return RoleModel(
-      id: json['id']?.toString() ?? '',
-      name: RoleNameX.fromApiValue(json['name']),
-    );
+  /// يرجع null إذا الـ role مش موجود بالـ enum، حتى نقدر نستبعده لاحقاً
+  static RoleModel? fromJson(Map<String, dynamic> json) {
+    final role = RoleNameX.fromApiValue(json['name']);
+    if (role == null) return null; // استبعاد فوري
+
+    return RoleModel(id: json['id']?.toString() ?? '', name: role);
+  }
+
+  static List<RoleModel> listFromJson(List<dynamic> jsonList) {
+    return jsonList
+        .map((e) => RoleModel.fromJson(e as Map<String, dynamic>))
+        .whereType<RoleModel>() // بتشيل الـ null تلقائياً
+        .toList();
   }
 }

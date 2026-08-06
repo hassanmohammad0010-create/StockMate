@@ -26,9 +26,7 @@ class RoleService {
         }
 
         final List<dynamic> data = jsonBody['data'];
-        return data
-            .map((e) => RoleModel.fromJson(e as Map<String, dynamic>))
-            .toList();
+        return RoleModel.listFromJson(data);
       },
       fallback: <RoleModel>[],
     );

@@ -34,10 +34,11 @@ class Dispatcher {
         ApiErrorHandler.handleException('لا يوجد جلسة. الرجاء تسجيل الدخول');
         return fallback;
       }
-
       var response = await request(token).timeout(timeout);
+      print('STATUS: ${response.statusCode}');
+      print('BODY: ${response.body}'); // ⬅️
 
-      if (response.statusCode == 200) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         return onSuccess(response.body);
       }
       if (response.statusCode == 401) {
@@ -46,7 +47,7 @@ class Dispatcher {
         if (result == RefreshResult.success) {
           final newToken = await TokenStorage.getAccessToken();
           response = await request(newToken!).timeout(timeout);
-          if (response.statusCode == 200) {
+          if (response.statusCode >= 200 && response.statusCode < 300) {
             return onSuccess(response.body);
           }
           ApiErrorHandler.handleStatusCode(response.statusCode);

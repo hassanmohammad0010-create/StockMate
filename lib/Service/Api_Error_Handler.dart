@@ -56,6 +56,13 @@ class ApiErrorHandler {
         color: constRed,
         messageColor: constLightRed,
       );
+    } else if (statusCode == 409) {
+      customSnackBar(
+        title: 'خطأ ادخال',
+        message: 'البيانات المدخلة موجودة بالفعل',
+        color: constRed,
+        messageColor: constLightRed,
+      );
     } else if (statusCode == 429) {
       customSnackBar(
         title: 'طلبات كثيرة',

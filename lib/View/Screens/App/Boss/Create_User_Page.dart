@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/App/CreateUserPageController.dart';
+import 'package:stock_mate_project/Controller/App/Create_User_Page_Controller.dart';
 import 'package:stock_mate_project/Controller/Loading%20Indecator%20Controller/Loading_Indicator_Controller.dart';
+import 'package:stock_mate_project/Service/App/Create_User_Service.dart';
 import 'package:stock_mate_project/core/Function/Validation.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Custom_My_Drop_Down.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
@@ -18,14 +19,15 @@ class CreateUserPage extends StatelessWidget {
   final LoadingIndicatorController loadingIndicatorController = Get.put(
     LoadingIndicatorController(),
   );
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController specialtyController = TextEditingController();
   Createuserpagecontroller createuserpagecontroller = Get.put(
     Createuserpagecontroller(),
   );
+  String? name, email, specialty, role;
   @override
   Widget build(BuildContext context) {
-    print(createuserpagecontroller.roleNames.isEmpty);
-    print(createuserpagecontroller.rolesModel.isEmpty);
-
     return Scaffold(
       body: Form(
         key: createUserPageKey,
@@ -77,14 +79,14 @@ class CreateUserPage extends StatelessWidget {
                                 ),
                                 child: Container(
                                   alignment: Alignment.center,
-                                  width: context.screenWidth * 0.25,
+                                  width: context.screenWidth * 0.32,
                                   height: context.screenHeight * 0.05,
                                   decoration: BoxDecoration(
                                     color: constLightBlue,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    'المستودع',
+                                    'ادخل المعلومات',
                                     style: TextStyle(
                                       color: constBlue,
                                       fontFamily: lateef,
@@ -97,19 +99,33 @@ class CreateUserPage extends StatelessWidget {
                               ),
                               SizedBox(height: context.screenHeight * 0.01),
 
-                              CustomDropdown(
-                                items: createuserpagecontroller.roleNames,
-                                labelBuilder: (v) => v,
-                                label: 'الدور الخاص بالمستخدم',
-                                hint: '',
-                                icon: Icons.rule_outlined,
-                                onChanged: (data) {},
+                              Obx(
+                                () => CustomDropdown<String>(
+                                  items: createuserpagecontroller.roleNames,
+                                  labelBuilder: (v) => v,
+                                  label: 'الدور الخاص بالمستخدم',
+                                  hint: '',
+                                  icon: Icons.rule_outlined,
+                                  value: createuserpagecontroller
+                                      .selectedRole
+                                      .value,
+                                  onChanged: (data) {
+                                    createuserpagecontroller
+                                            .selectedRole
+                                            .value =
+                                        data;
+                                  },
+                                ),
                               ),
                               SizedBox(height: context.screenHeight * 0.01),
                               CustomMyTextFormField(
+                                controller: nameController,
                                 label: 'الاسم',
                                 hint: '',
                                 prefixIcon: Icons.person,
+                                onChanged: (data) {
+                                  name = data;
+                                },
                                 validator: (data) =>
                                     Validation().generalValidation(data!),
                               ),
@@ -117,14 +133,22 @@ class CreateUserPage extends StatelessWidget {
                               CustomMyTextFormField(
                                 label: 'لبريد الالكتروني',
                                 hint: '',
+                                controller: emailController,
                                 prefixIcon: Icons.email,
+                                onChanged: (data) {
+                                  email = data;
+                                },
                                 validator: (data) =>
                                     Validation().emailValidate(data!),
                               ),
                               SizedBox(height: context.screenHeight * 0.01),
                               CustomMyTextFormField(
                                 label: 'الاختصاص',
+                                controller: specialtyController,
                                 hint: '',
+                                onChanged: (data) {
+                                  specialty = data;
+                                },
                                 prefixIcon: Icons.sports_cricket_sharp,
                                 validator: (data) =>
                                     Validation().generalValidation(data!),
@@ -147,16 +171,49 @@ class CreateUserPage extends StatelessWidget {
                                                 color: constLightBlue,
                                               )
                                             : null,
-                                        title: 'تسجيل الدخول',
+                                        title: 'تأكيد',
                                         color: constBlue,
                                         fontcolor: Colors.white,
                                         onPressed: () async {
                                           if (createUserPageKey.currentState!
                                               .validate()) {
-                                            loadingIndicatorController.isLoad();
-
-                                            loadingIndicatorController
-                                                .isntLoad();
+                                            if (createuserpagecontroller
+                                                    .selectedRole
+                                                    .value !=
+                                                null) {
+                                              role = createuserpagecontroller
+                                                  .getRoleId(
+                                                    roleName:
+                                                        createuserpagecontroller
+                                                            .selectedRole
+                                                            .value!,
+                                                  );
+                                              print(role);
+                                              loadingIndicatorController
+                                                  .isLoad();
+                                              bool response =
+                                                  await UserService.createUser(
+                                                    fullName: name!,
+                                                    email: email!,
+                                                    roleId: role!,
+                                                    specialty: specialty,
+                                                  );
+                                              if (response) {
+                                                nameController.clear();
+                                                emailController.clear();
+                                                specialtyController.clear();
+                                                createuserpagecontroller
+                                                        .selectedRole
+                                                        .value =
+                                                    null;
+                                                name = null;
+                                                email = null;
+                                                specialty = null;
+                                                role = null;
+                                              }
+                                              loadingIndicatorController
+                                                  .isntLoad();
+                                            }
                                           }
                                         },
                                       );
