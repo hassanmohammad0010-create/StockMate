@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:stock_mate_project/Test/MyRequestsPage.dart';
 import 'package:stock_mate_project/core/Bindings/App/DepartmentHeadsInventoryBinding.dart';
 import 'package:stock_mate_project/core/Bindings/Auth/Login_Page_Bending.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
@@ -169,5 +170,7 @@ abstract class AppPages {
       page: () => const ConfirmDisableLockScreen(),
     ),
     GetPage(name: AppRoutes.PatientsPage, page: () => const PatientsPage()),
+        GetPage(name: AppRoutes.MyRequestsPage, page: () => const MyRequestsPage()),
+
   ];
 }

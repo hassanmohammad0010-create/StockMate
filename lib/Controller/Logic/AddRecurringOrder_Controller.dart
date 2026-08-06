@@ -3,19 +3,44 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
+import 'package:stock_mate_project/Service/Head%20of%20department/Get_Medicine_Service.dart';
+import 'package:stock_mate_project/Service/Head%20of%20department/Post_Refill_Request_Service.dart';
+import 'package:stock_mate_project/core/models/Request_Item_Input.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
-import 'package:stock_mate_project/core/models/Order_Models.dart';
+import 'package:stock_mate_project/core/models/Medicine_Model.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class AddRecurringOrderController extends GetxController {
+  // ─── Services ───────────────────────────────────────────────────────────
+  final MedicineService _medicineService = MedicineService();
+  final RefillRequestService _refillRequestService = RefillRequestService();
+
+  late final GetNameRollOfUserController getNameRollOfUserController;
+  late final String _departmentId;
+
+  // ─── Reactive state: قائمة الأدوية من الـ API ─────────────────────────────
+  final RxList<MedicineModel> medicines = <MedicineModel>[].obs;
+  final RxBool isMedicinesLoading = false.obs;
+  final RxString medicinesError = ''.obs;
+
+  List<String> get medicineNames =>
+      medicines.map((m) => m.name).where((n) => n.isNotEmpty).toList();
+
   // ─── Reactive state ───────────────────────────────────────────────────────
-  final Rx<OrderModel> order = OrderModel().obs;
   final RxBool isLoading = false.obs;
 
-  // ─── TextEditingController للكمية + GlobalKey للـ Form ───────────────────
+  // ✅ تخزين الطلب المُنشأ من الـ API
+  final Rx<RefillRequest?> createdRequest = Rx<RefillRequest?>(null);
+
+  // ─── Form + Controllers ─────────────────────────────────────────────────
   final TextEditingController quantityController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  // ─── ✅ الحقول المستقلة (بدل OrderModel) ─────────────────────────────────
+  final Rxn<String> selectedMedicineName = Rxn<String>();
   // ─── التكرار — القيمة الافتراضية: أسبوعي ─────────────────────────────────
   final RxString selectedRecurring = 'weekly'.obs;
 
@@ -25,165 +50,78 @@ class AddRecurringOrderController extends GetxController {
     'monthly': 'شهري',
   };
 
-  // ─── المدة (عدد التكرارات) — إجبارية ولا يمكن أن تكون null ──────────────
-  // تُهيَّأ في onInit() بأول خيار مطابق لقيمة selectedRecurring الافتراضية
-  late final RxString selectedDuration;
-
-  // ─── Reactive بالحقول الفارغة ─────────────────────────────────────────────
-  final RxSet<String> invalidFields = <String>{}.obs;
+  // ─── المدة (عدد التكرارات) ──────────────────────────────────────────────
+  late final RxInt selectedDuration;
 
   @override
   void onInit() {
     super.onInit();
-    // تهيئة المدة بأول خيار من القائمة المطابقة للتكرار الافتراضي (weekly → اسبوعين)
+    getNameRollOfUserController = Get.find<GetNameRollOfUserController>();
+    _departmentId = getNameRollOfUserController.id ?? '';
     selectedDuration = durationOptions.first.obs;
-    order.value = order.value.copyWith(duration: selectedDuration.value);
+    fetchMedicines();
   }
 
   @override
   void onClose() {
     quantityController.dispose();
+    notesController.dispose();
     super.onClose();
   }
 
-  // ─── Helpers ──────────────────────────────────────────────────────────────
+  // ─── جلب الأدوية من الـ API ────────────────────────────────────────────────
+  Future<void> fetchMedicines() async {
+    isMedicinesLoading.value = true;
+    medicinesError.value = '';
 
-  bool isFieldInvalid(String field) => invalidFields.contains(field);
+    final result = await _medicineService.getMedicines(
+      departmentId: _departmentId,
+    );
 
-  void _markInvalid(String field) {
-    invalidFields.add(field);
-    invalidFields.refresh();
-  }
+    if (result.isEmpty) {
+      medicinesError.value = 'تعذر تحميل قائمة الأدوية';
+    }
 
-  void _clearInvalid(String field) {
-    invalidFields.remove(field);
-    invalidFields.refresh();
-  }
-
-  void markInvalidPublic(String field) {
-    invalidFields.add(field);
-    invalidFields.refresh();
+    medicines.value = result;
+    isMedicinesLoading.value = false;
   }
 
   // ─── التكرار ──────────────────────────────────────────────────────────────
-
   void selectRecurring(String value) {
     selectedRecurring.value = value;
-    // إعادة ضبط المدة تلقائياً لأول خيار في القائمة الجديدة (لا تصبح أبداً null)
+    // عند تغيير نوع التكرار، نعيد ضبط المدة لأول قيمة
     final firstOption = durationOptions.first;
     selectedDuration.value = firstOption;
-    order.value = order.value.copyWith(duration: firstOption);
-    _clearInvalid('duration');
   }
 
-  // ─── المدة ────────────────────────────────────────────────────────────────
-
-  /// يولّد قائمة نصوص المدة بالعربية بناءً على نوع التكرار الحالي.
-  /// daily   → من يومين إلى 365 يوم
-  /// weekly  → من اسبوعين إلى 52 اسبوع
-  /// monthly → من شهرين إلى 12 شهر
-  List<String> get durationOptions {
+  // ─── المدة (عدد التكرارات) ────────────────────────────────────────────────
+  List<int> get durationOptions {
     switch (selectedRecurring.value) {
       case 'daily':
-        return List.generate(364, (i) => _dayLabel(i + 2));
+        return List.generate(364, (i) => i + 2);
       case 'monthly':
-        return List.generate(11, (i) => _monthLabel(i + 2));
+        return List.generate(11, (i) => i + 2);
       case 'weekly':
       default:
-        return List.generate(51, (i) => _weekLabel(i + 2));
+        return List.generate(51, (i) => i + 2);
     }
   }
 
-  String _dayLabel(int n) {
-    if (n == 2) return 'يومين';
-    if (n >= 3 && n <= 10) return '$n أيام';
-    return '$n يوم';
-  }
-
-  String _weekLabel(int n) {
-    if (n == 2) return 'اسبوعين';
-    if (n >= 3 && n <= 10) return '$n اسابيع';
-    return '$n اسبوع';
-  }
-
-  String _monthLabel(int n) {
-    if (n == 2) return 'شهرين';
-    if (n >= 3 && n <= 10) return '$n اشهر';
-    return '$n شهر';
-  }
-
-  void updateDuration(String value) {
+  void updateDuration(int value) {
     selectedDuration.value = value;
-    order.value = order.value.copyWith(duration: value);
-    _clearInvalid('duration');
   }
 
-  // ─── Dropdown updates ─────────────────────────────────────────────────────
-
+  // ─── ✅ تحديث اسم الدواء مباشرة ─────────────────────────────────────────
   void updateMedicineName(String? value) {
-    order.value = order.value.copyWith(medicineName: value);
-    if (value != null && value.isNotEmpty) {
-      _clearInvalid('medicineName');
-    } else {
-      _markInvalid('medicineName');
-    }
-    order.refresh();
+    selectedMedicineName.value = value;
   }
 
-  // void updateUnit(String? value) {
-  //   order.value = order.value.copyWith(unit: value);
-  //   if (value != null && value.isNotEmpty) {
-  //     _clearInvalid('unit');
-  //   } else {
-  //     _markInvalid('unit');
-  //   }
-  //   order.refresh();
-  // }
-
-  // void updateBrand(String? value) {
-  //   order.value = order.value.copyWith(brand: value);
-  //   if (value != null && value.isNotEmpty) {
-  //     _clearInvalid('brand');
-  //   } else {
-  //     _markInvalid('brand');
-  //   }
-  //   order.refresh();
-  // }
-
-  void _saveQuantity() {
-    final qty = quantityController.text;
-    order.value = order.value.copyWith(quantity: qty);
-    if (qty.trim().isNotEmpty) {
-      _clearInvalid('quantity');
-    } else {
-      _markInvalid('quantity');
-    }
-  }
-
-  // ─── STEP 1 : التحقق فقط ثم الانتقال لصفحة التأكيد ──────────────────────
-  void validateAndGoToConfirm() {
-    _saveQuantity();
-
+  // ─── STEP 1: إنشاء الطلب (POST /requests) → draft → انتقال للتأكيد ───────
+  Future<void> validateAndGoToConfirm() async {
+    // ✅ formKey.validate() يتحقق من كل شيء
     final isFormValid = formKey.currentState?.validate() ?? false;
-    final o = order.value;
-    bool dropsValid = true;
 
-    if (o.medicineName == null || o.medicineName!.trim().isEmpty) {
-      _markInvalid('medicineName');
-      dropsValid = false;
-    }
-    // if (o.unit == null || o.unit!.trim().isEmpty) {
-    //   _markInvalid('unit');
-    //   dropsValid = false;
-    // }
-    // if (o.brand == null || o.brand!.trim().isEmpty) {
-    //   _markInvalid('brand');
-    //   dropsValid = false;
-    // }
-    // لا حاجة للتحقق من duration هنا — مضمون دائماً أن يحمل قيمة منذ onInit()
-
-    // ❌ حقول ناقصة — أظهر snackbar وابقَ في الصفحة
-    if (!isFormValid || !dropsValid) {
+    if (!isFormValid) {
       customSnackBar(
         title: 'بيانات ناقصة',
         message: 'يرجى تعبئة جميع الحقول المطلوبة',
@@ -193,38 +131,115 @@ class AddRecurringOrderController extends GetxController {
       return;
     }
 
-    // ✅ كل شيء صحيح — انتقل لصفحة التأكيد فقط بدون إرسال
-    Get.toNamed('/RecurringConfirmPage');
-  }
-
-  // ─── STEP 2 : الإرسال الفعلي من صفحة التأكيد فقط ────────────────────────
-  Future<void> submitOrder() async {
+    // ✅ بناء CreateRefillRequestModel مباشرة من الحقول المستقلة
     isLoading.value = true;
     try {
-      await Future.delayed(const Duration(seconds: 2)); // TODO: API call
+      final medicineName = selectedMedicineName.value;
 
-      final payload = {
-        ...order.value.toJson(),
-        'recurring': selectedRecurring.value,
-      };
-      debugPrint('Submitting: $payload');
+      // البحث عن variantId من الاسم
+      final matched = medicines.firstWhereOrNull((m) => m.name == medicineName);
 
-      customSnackBar(
-        title: 'تم الإرسال',
-        message: 'تم إرسال الطلب بنجاح',
-        color: constGreen,
-        messageColor: Colors.white,
+      if (matched == null) {
+        customSnackBar(
+          title: 'خطأ',
+          message: 'لم يتم العثور على الدواء المختار',
+          color: constRed,
+          messageColor: Colors.white,
+        );
+        return;
+      }
+
+      final items = [
+        RequestItemInput(
+          variantId: matched.variantId,
+          requestedQuantity: int.tryParse(quantityController.text.trim()) ?? 0,
+        ),
+      ];
+
+      // ✅ بناء الـ Request Body مباشرة
+      final requestBody = CreateRefillRequestModel(
+        priority: 'normal',
+        requestType: selectedRecurring.value,
+        frequencyInterval: selectedDuration.value,
+        notes: notesController.text.trim().isEmpty
+            ? null
+            : notesController.text.trim(),
+        items: items,
       );
-      Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage);
 
-      // TODO: Get.offAllNamed('/HomePage') بعد الإرسال الناجح
-    } catch (e) {
+      print('📤 Body المرسل: ${requestBody.toJson()}');
+      print('🔁 نوع التكرار: ${selectedRecurring.value}');
+      print('🔢 الـ frequencyInterval: ${selectedDuration.value}');
+
+      final result = await _refillRequestService.createRequest(requestBody);
+
+      if (result == null) return;
+
+      createdRequest.value = result;
+
+      if (result.status == RequestStatus.draft) {
+        print('✅ تم الإنشاء بنجاح | ID: ${result.id}');
+        print('📊 الحالة: ${result.status.displayName}');
+        print('📋 الرقم: ${result.requestNumber}');
+
+        Get.to(
+          () => const RecurringConfirmPage(),
+          transition: Transition.rightToLeft,
+        );
+      } else {
+        customSnackBar(
+          messageColor: Colors.white,
+          title: 'تنبيه',
+          message: 'حالة غير متوقعة: ${result.status.displayName}',
+          color: constOrange,
+        );
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // ─── STEP 2: تأكيد الإرسال (POST /{id}/submit) → pending_hospital_approval
+  Future<void> confirmRequest() async {
+    final requestId = createdRequest.value?.id;
+    if (requestId == null) {
       customSnackBar(
         title: 'خطأ',
-        message: 'حدث خطأ أثناء الإرسال، يرجى المحاولة مجدداً',
+        message: 'لم يتم العثور على الطلب',
         color: constRed,
         messageColor: Colors.white,
       );
+      return;
+    }
+
+    isLoading.value = true;
+    try {
+      final result = await _refillRequestService.submitRequest(requestId);
+
+      if (result == null) return;
+
+      createdRequest.value = result;
+
+      print('✅ تم التأكيد بنجاح | ID: ${result.id}');
+      print('📊 الحالة الجديدة: ${result.status.displayName}');
+
+      if (result.status == RequestStatus.pendingHospitalApproval) {
+        customSnackBar(
+          title: 'تم الإرسال',
+          message:
+              'تم إرسال الطلب الدوري للمشفى بنجاح (${result.requestNumber})',
+          color: constGreen,
+          messageColor: Colors.white,
+        );
+        Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage);
+      } else {
+        customSnackBar(
+          messageColor: Colors.white,
+          title: 'تنبيه',
+          message: 'حالة غير متوقعة: ${result.status.displayName}',
+          color: constOrange,
+        );
+      }
     } finally {
       isLoading.value = false;
     }

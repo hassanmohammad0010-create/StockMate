@@ -38,7 +38,7 @@ void main() async {
     StockMate(
       initialRoute: isLockEnabled
           ? AppRoutes.LockScreen
-          : AppRoutes.DepartmentHeadsMainPage,
+          : AppRoutes.SplashViewPage, // أو أي صفحة أخرى تريدها كصفحة البداية
     ),
   );
 }

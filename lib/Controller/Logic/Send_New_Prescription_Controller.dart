@@ -27,11 +27,11 @@ class PrescriptionMedicineEntry {
   PrescriptionMedicineEntry({String? medicineName})
       : id = UniqueKey().toString(),
         medicineName = Rxn<String>(medicineName),
-        quantity = 1.obs;  // ← إضافة حقل الكمية
+        quantity = 1.obs;
 
   final String id;
   final Rxn<String> medicineName;
-  final RxInt quantity;  // ← حقل الكمية
+  final RxInt quantity;
 }
 
 class SendNewPrescriptionController extends GetxController {
@@ -46,8 +46,6 @@ class SendNewPrescriptionController extends GetxController {
 
   final RxList<PrescriptionMedicineEntry> medicineEntries =
       <PrescriptionMedicineEntry>[].obs;
-
-  final RxSet<String> invalidEntryIds = <String>{}.obs;
 
   final TextEditingController notesController = TextEditingController();
 
@@ -76,23 +74,21 @@ class SendNewPrescriptionController extends GetxController {
   void removeMedicineEntry(String entryId) {
     if (medicineEntries.length <= 1) return;
     medicineEntries.removeWhere((e) => e.id == entryId);
-    invalidEntryIds.remove(entryId);
   }
 
+  // ✅ صار فقط يحدّث القيمة؛ التحقق من الصحة أصبح مسؤولية الـ validator بالـ Form
   void selectMedicine(String entryId, String? value) {
     final entry = medicineEntries.firstWhereOrNull((e) => e.id == entryId);
     if (entry == null) return;
     entry.medicineName.value = value;
-    if (value != null) invalidEntryIds.remove(entryId);
     medicineEntries.refresh();
   }
 
-  /// ← دالة جديدة لتحديث الكمية
+  /// دالة لتحديث الكمية
   void updateQuantity(String entryId, int newQuantity) {
     final entry = medicineEntries.firstWhereOrNull((e) => e.id == entryId);
     if (entry == null) return;
     
-    // التأكد من أن الكمية ضمن الحدود (1 إلى 99)
     if (newQuantity < 1) {
       entry.quantity.value = 1;
     } else if (newQuantity > 99) {
@@ -103,29 +99,20 @@ class SendNewPrescriptionController extends GetxController {
     medicineEntries.refresh();
   }
 
-  bool get isFormValid {
-    invalidEntryIds.clear();
-    for (final entry in medicineEntries) {
-      if (entry.medicineName.value == null) {
-        invalidEntryIds.add(entry.id);
-      }
-    }
-    return invalidEntryIds.isEmpty;
-  }
+  // ✅ إرجاع bool لمعرفة ما إذا نجح الإرسال أم لا للتحكم في التنقل
+  Future<bool> sendPrescription() async {
+    final isFormValid = formKey.currentState?.validate() ?? false;
 
-  Future<void> sendPrescription() async {
     if (!isFormValid) {
-      invalidEntryIds.refresh();
       customSnackBar(
         title: 'تنبيه',
         message: 'يرجى اختيار جميع الأدوية قبل الإرسال',
         color: constRed,
         messageColor: Colors.white,
       );
-      return;
+      return false;
     }
 
-    // ← تعديل: تضمين الكمية في النص
     final medicines = medicineEntries
         .map((e) => '${e.medicineName.value!} (${e.quantity.value} قطعة)')
         .toList();
@@ -157,7 +144,7 @@ class SendNewPrescriptionController extends GetxController {
       messageColor: Colors.white,
     );
 
-    Get.back();
+    return true;
   }
 
   @override

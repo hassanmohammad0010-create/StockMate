@@ -160,9 +160,6 @@ class SendPrescriptionPage extends StatelessWidget {
                         child: Obx(
                           () => Column(
                             children: c.medicineEntries.map((entry) {
-                              final isInvalid = c.invalidEntryIds.contains(
-                                entry.id,
-                              );
                               final canRemove = c.medicineEntries.length > 1;
 
                               return Padding(
@@ -173,9 +170,7 @@ class SendPrescriptionPage extends StatelessWidget {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: isInvalid 
-                                          ? constRed.withOpacity(0.3)
-                                          : Colors.grey.shade200,
+                                      color: Colors.grey.shade200,
                                       width: 1,
                                     ),
                                   ),
@@ -183,7 +178,8 @@ class SendPrescriptionPage extends StatelessWidget {
                                     children: [
                                       // ── صف اختيار الدواء + زر الحذف ──
                                       Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: CustomDropdown<String>(
@@ -194,8 +190,8 @@ class SendPrescriptionPage extends StatelessWidget {
                                               icon: Icons.medication_outlined,
                                               searchable: true,
                                               value: entry.medicineName.value,
-                                              errorBorder: isInvalid,
-                                              errorText: isInvalid
+                                              // ✅ صار validator عادي مرتبط بالـ Form
+                                              validator: (v) => v == null
                                                   ? 'يرجى اختيار دواء'
                                                   : null,
                                               onChanged: (v) =>
@@ -210,7 +206,9 @@ class SendPrescriptionPage extends StatelessWidget {
                                               ),
                                               child: IconButton(
                                                 onPressed: () =>
-                                                    c.removeMedicineEntry(entry.id),
+                                                    c.removeMedicineEntry(
+                                                      entry.id,
+                                                    ),
                                                 icon: const Icon(
                                                   Icons.remove_circle_outline,
                                                   color: constRed,
@@ -220,9 +218,14 @@ class SendPrescriptionPage extends StatelessWidget {
                                           ],
                                         ],
                                       ),
-                                      
+
                                       // ── صف الكمية (يظهر فقط بعد اختيار الدواء) ──
-if (entry.medicineName.value?.isNotEmpty ?? false) ...[                                        SizedBox(height: h * 0.015),
+                                      if (entry
+                                              .medicineName
+                                              .value
+                                              ?.isNotEmpty ??
+                                          false) ...[
+                                        SizedBox(height: h * 0.015),
                                         Row(
                                           children: [
                                             Icon(
@@ -240,12 +243,13 @@ if (entry.medicineName.value?.isNotEmpty ?? false) ...[                         
                                               ),
                                             ),
                                             SizedBox(width: w * 0.03),
-                                            
+
                                             // ── عداد الكمية ──
                                             Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.grey.shade100,
-                                                borderRadius: BorderRadius.circular(8),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
                                                 border: Border.all(
                                                   color: Colors.grey.shade300,
                                                 ),
@@ -255,74 +259,99 @@ if (entry.medicineName.value?.isNotEmpty ?? false) ...[                         
                                                 children: [
                                                   // زر التقليل
                                                   IconButton(
-                                                    onPressed: entry.quantity.value > 1
+                                                    onPressed:
+                                                        entry.quantity.value > 1
                                                         ? () => c.updateQuantity(
                                                             entry.id,
-                                                            entry.quantity.value - 1,
+                                                            entry
+                                                                    .quantity
+                                                                    .value -
+                                                                1,
                                                           )
                                                         : null,
                                                     icon: Icon(
                                                       Icons.remove,
                                                       size: 20,
-                                                      color: entry.quantity.value > 1
+                                                      color:
+                                                          entry.quantity.value >
+                                                              1
                                                           ? constBlue
-                                                          : Colors.grey.shade400,
+                                                          : Colors
+                                                                .grey
+                                                                .shade400,
                                                     ),
                                                     padding: EdgeInsets.all(8),
-                                                    constraints: BoxConstraints(),
+                                                    constraints:
+                                                        BoxConstraints(),
                                                   ),
-                                                  
+
                                                   // عرض الكمية الحالية
                                                   Container(
-                                                    padding: EdgeInsets.symmetric(
-                                                      horizontal: w * 0.03,
-                                                      vertical: h * 0.008,
-                                                    ),
-                                                    child: Obx(() => Text(
-                                                      '${entry.quantity.value}',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: constBlue,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          horizontal: w * 0.03,
+                                                          vertical: h * 0.008,
+                                                        ),
+                                                    child: Obx(
+                                                      () => Text(
+                                                        '${entry.quantity.value}',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: constBlue,
+                                                        ),
                                                       ),
-                                                    )),
+                                                    ),
                                                   ),
-                                                  
+
                                                   // زر الزيادة
                                                   IconButton(
-                                                    onPressed: entry.quantity.value < 99
+                                                    onPressed:
+                                                        entry.quantity.value <
+                                                            99
                                                         ? () => c.updateQuantity(
                                                             entry.id,
-                                                            entry.quantity.value + 1,
+                                                            entry
+                                                                    .quantity
+                                                                    .value +
+                                                                1,
                                                           )
                                                         : null,
                                                     icon: Icon(
                                                       Icons.add,
                                                       size: 20,
-                                                      color: entry.quantity.value < 99
+                                                      color:
+                                                          entry.quantity.value <
+                                                              99
                                                           ? constBlue
-                                                          : Colors.grey.shade400,
+                                                          : Colors
+                                                                .grey
+                                                                .shade400,
                                                     ),
                                                     padding: EdgeInsets.all(8),
-                                                    constraints: BoxConstraints(),
+                                                    constraints:
+                                                        BoxConstraints(),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            
+
                                             SizedBox(width: w * 0.02),
-                                            
+
                                             // ── نص توضيحي ──
-                                            Obx(() => Text(
-                                              entry.quantity.value == 1
-                                                  ? 'قطعة واحدة'
-                                                  : '${entry.quantity.value} قطع',
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.grey.shade500,
-                                                fontStyle: FontStyle.italic,
+                                            Obx(
+                                              () => Text(
+                                                entry.quantity.value == 1
+                                                    ? 'قطعة واحدة'
+                                                    : '${entry.quantity.value} قطع',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.grey.shade500,
+                                                  fontStyle: FontStyle.italic,
+                                                ),
                                               ),
-                                            )),
+                                            ),
                                           ],
                                         ),
                                       ],
@@ -363,9 +392,12 @@ if (entry.medicineName.value?.isNotEmpty ?? false) ...[                         
                 title: 'إرسال الوصفة',
                 color: constBlue,
                 fontcolor: Colors.white,
-                onPressed: () {
-                  c.sendPrescription();
-                  Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage);
+                onPressed: () async {
+                  // ✅ انتظار نتيجة الفاليديشن قبل الانتقال
+                  final success = await c.sendPrescription();
+                  if (success) {
+                    Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage);
+                  }
                 },
               ),
             ),

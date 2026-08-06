@@ -130,40 +130,40 @@ class CreateUserPage extends StatelessWidget {
                                     Validation().generalValidation(data!),
                               ),
                               SizedBox(height: context.screenHeight * 0.01),
-                              Align(
-                                alignment: AlignmentGeometry.center,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        context.screenWidth * 0.04, // ← بدل 16
-                                    vertical:
-                                        context.screenHeight * 0.02, // ← بدل 16
-                                  ),
-                                  child: GetBuilder<LoadingIndicatorController>(
-                                    builder: (controller) {
-                                      return CustomMainButtom(
-                                        widget: loadingIndicatorController.load
-                                            ? CustomLoadingIndicator(
-                                                color: constLightBlue,
-                                              )
-                                            : null,
-                                        title: 'تسجيل الدخول',
-                                        color: constBlue,
-                                        fontcolor: Colors.white,
-                                        onPressed: () async {
-                                          if (createUserPageKey.currentState!
-                                              .validate()) {
-                                            loadingIndicatorController.isLoad();
+                              // Align(
+                              //   alignment: AlignmentGeometry.center,
+                              //   child: Padding(
+                              //     padding: EdgeInsets.symmetric(
+                              //       horizontal:
+                              //           context.screenWidth * 0.04, // ← بدل 16
+                              //       vertical:
+                              //           context.screenHeight * 0.02, // ← بدل 16
+                              //     ),
+                              //     child: GetBuilder<LoadingIndicatorController>(
+                              //       builder: (controller) {
+                              //         return CustomMainButtom(
+                              //           widget: loadingIndicatorController.load
+                              //               ? CustomLoadingIndicator(
+                              //                   color: constLightBlue,
+                              //                 )
+                              //               : null,
+                              //           title: 'تسجيل الدخول',
+                              //           color: constBlue,
+                              //           fontcolor: Colors.white,
+                              //           onPressed: () async {
+                              //             if (createUserPageKey.currentState!
+                              //                 .validate()) {
+                              //               loadingIndicatorController.isLoad();
 
-                                            loadingIndicatorController
-                                                .isntLoad();
-                                          }
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
+                              //               loadingIndicatorController
+                              //                   .isntLoad();
+                              //             }
+                              //           },
+                              //         );
+                              //       },
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),

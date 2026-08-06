@@ -2,6 +2,16 @@
 
 enum OrderStatus { completed, rejected, inProgress, suspended, reserved }
 
+// enum OrderStatus {  draft,
+//   pending_hospital_approval,
+//   pending_manager_approval,
+//   hospital_rejected,
+//   manager_rejected,
+//   preparing,
+//   complete,
+//   partially_complete,
+//   cancelled, }
+
 enum OrderPriority { normal, urgent }
 
 enum RecurringInterval { daily, weekly, monthly }

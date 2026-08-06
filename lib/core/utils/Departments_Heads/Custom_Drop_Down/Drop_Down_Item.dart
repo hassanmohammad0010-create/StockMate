@@ -3,8 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 
-class DropdownItem extends StatefulWidget {
-  const DropdownItem({super.key, 
+class DropdownItem extends StatelessWidget {
+  const DropdownItem({
+    super.key,
     required this.label,
     required this.isSelected,
     required this.onTap,
@@ -15,47 +16,32 @@ class DropdownItem extends StatefulWidget {
   final VoidCallback onTap;
 
   @override
-  State<DropdownItem> createState() => _DropdownItemState();
-}
-
-class _DropdownItemState extends State<DropdownItem> {
-  bool _hovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: MouseRegion(
-        onEnter: (_) => setState(() => _hovered = true),
-        onExit: (_) => setState(() => _hovered = false),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
+    return Material(
+      color: isSelected ? constBlue.withOpacity(0.08) : Colors.white,
+      child: InkWell(
+        onTap: onTap,
+        hoverColor: Colors.grey.shade50,
+        splashColor: constBlue.withOpacity(0.08),
+        highlightColor: constBlue.withOpacity(0.05),
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-          color: widget.isSelected
-              ? constBlue.withOpacity(0.08)
-              : _hovered
-              ? Colors.grey.shade50
-              : Colors.white,
           child: Row(
             children: [
               AnimatedOpacity(
                 duration: const Duration(milliseconds: 150),
-                opacity: widget.isSelected ? 1.0 : 0.0,
+                opacity: isSelected ? 1.0 : 0.0,
                 child: Icon(Icons.check_rounded, size: 16, color: constBlue),
               ),
-              SizedBox(width: widget.isSelected ? 8 : 0),
+              SizedBox(width: isSelected ? 8 : 0),
               Expanded(
                 child: Text(
-                  widget.label,
+                  label,
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: widget.isSelected
-                        ? FontWeight.w600
-                        : FontWeight.w400,
-                    color: widget.isSelected
-                        ? constBlue
-                        : constColor,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                    color: isSelected ? constBlue : constColor,
                   ),
                 ),
               ),

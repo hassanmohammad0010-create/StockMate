@@ -43,4 +43,7 @@ abstract class AppRoutes {
   static const LockSetupScreen = '/LockSetupScreen';
   static const ConfirmDisableLockScreen = '/ConfirmDisableLockScreen';
   static const PatientsPage = '/PatientsPage';
+    static const MyRequestsPage = '/MyRequestsPage';
+
+
 }

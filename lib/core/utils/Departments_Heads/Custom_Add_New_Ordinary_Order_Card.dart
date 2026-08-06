@@ -7,7 +7,6 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Custom_My_Drop_Down.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Priority_Choose_Card.dart';
 
 class OrdinaryOrderCard extends StatelessWidget {
   const OrdinaryOrderCard({super.key, required this.orderIndex});
@@ -15,14 +14,6 @@ class OrdinaryOrderCard extends StatelessWidget {
   final int orderIndex;
 
   AddOrdinaryOrderController get _c => Get.find<AddOrdinaryOrderController>();
-
-  static const List<String> _medicines = [
-    'باراسيتامول',
-    'أموكسيسيلين',
-    'إيبوبروفين',
-    'أزيثروميسين',
-    'فلام-ك',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +56,7 @@ class OrdinaryOrderCard extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontFamily: 'Cairo',
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -75,54 +67,72 @@ class OrdinaryOrderCard extends StatelessWidget {
                               ),
                               child: const Divider(),
                             ),
-                            SizedBox(height: h * 0.01),
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: w * 0.04,
+                                vertical: h * 0.006,
+                              ),
+                              child: Text(
+                                'اختر المادة المطلوية:',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                            ),
+                            // ─── Dropdown الأدوية ─────────
                             Obx(() {
                               if (orderIndex >= _c.orders.length) {
                                 return const SizedBox.shrink();
                               }
-                              final isInvalid = _c.isFieldInvalid(
-                                orderIndex,
-                                'medicineName',
-                              );
+
+                              // ✅ حالات الخطأ والتحميل
+                              final hasError =
+                                  _c.medicinesError.value.isNotEmpty;
+                              final errorMsg = _c.medicinesError.value;
+
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: w * 0.03,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomDropdown<String>(
-                                      items: _medicines,
-                                      labelBuilder: (v) => v,
-                                      label: 'اسم الدواء *',
-                                      hint: 'اختر الدواء المطلوب',
-                                      icon: Icons.medication_outlined,
-                                      searchable: true,
-                                      value: _c.orders[orderIndex].medicineName,
-                                      // نمرر errorBorder للـ dropdown إذا كان invalid
-                                      errorBorder: isInvalid,
-                                      onChanged: (v) =>
-                                          _c.updateMedicineName(orderIndex, v),
-                                    ),
-                                    if (isInvalid)
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          right: w * 0.03,
-                                          top: h * 0.005,
-                                        ),
-                                        child: Text(
-                                          'الرجاء اختيار اسم الدواء',
-                                          style: TextStyle(
-                                            color: constRed,
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
+                                child: CustomDropdown<String>(
+                                  items: _c.medicineNames,
+                                  isLoading: _c.isMedicinesLoading.value,
+                                  hasError: hasError,
+                                  errorMessage: errorMsg,
+                                  onRetry: () => _c.fetchMedicines(),
+                                  labelBuilder: (v) => v,
+                                  label: 'اسم الدواء *',
+                                  hint: 'اختر الدواء المطلوب',
+                                  icon: Icons.medication_outlined,
+                                  searchable: true,
+                                  value: _c
+                                      .orders[orderIndex]
+                                      .selectedMedicine
+                                      ?.name,
+                                  validator: (v) => v == null
+                                      ? 'الرجاء اختيار اسم الدواء'
+                                      : null,
+                                  onChanged: (v) =>
+                                      _c.updateMedicineName(orderIndex, v),
                                 ),
                               );
                             }),
-                            SizedBox(height: h * 0.015),
+                            SizedBox(height: h * 0.02),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: w * 0.04,
+                                vertical: h * 0.006,
+                              ),
+                              child: Text(
+                                'ادخل الكمية المطلوبة:',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: w * 0.03,
@@ -141,14 +151,13 @@ class OrdinaryOrderCard extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: h * 0.015),
+                            SizedBox(height: h * 0.03),
                           ],
                         ),
                       ),
                     ),
                   ),
                   SizedBox(height: h * 0.008),
-                  PriorityChooseCard(orderIndex: orderIndex),
                 ],
               ),
             ),

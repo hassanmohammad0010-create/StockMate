@@ -8,7 +8,8 @@ class TokenStorage {
   static const _refreshTokenKey = 'refresh_token';
   static const _userRoleKey = 'user_role';
   static const _userNameKey = 'user_name';
-  static const _userIdKey = 'user_id';
+  static const _departmentIdKey = 'department_id';
+  static const _departmentNameKey = 'department_name';
 
   static Future<String?> getAccessToken() async {
     return await _storage.read(key: _accessTokenKey);
@@ -44,13 +45,13 @@ class TokenStorage {
     return await _storage.read(key: _userRoleKey);
   }
 
-  static Future<void> saveUserID(String id) async {
-    await _storage.write(key: _userIdKey, value: id);
+  static Future<void> saveDepartmentID(String id) async {
+    await _storage.write(key: _departmentIdKey, value: id);
   }
 
   /// جلب اسم الرول المخزّن
-  static Future<String?> getUserID() async {
-    return await _storage.read(key: _userIdKey);
+  static Future<String?> getDepartmentID() async {
+    return await _storage.read(key: _departmentIdKey);
   }
 
   /// تخزين اسم المستخدم
@@ -58,8 +59,17 @@ class TokenStorage {
     await _storage.write(key: _userNameKey, value: name);
   }
 
+
+  static Future<void> saveDepartmentName(String name) async {
+    await _storage.write(key: _departmentNameKey, value: name);
+  }
+
   /// جلب اسم المستخدم المخزّن
-  static Future<String?> getUserName() async {
+  static Future<String?> getDepartmentName() async {
+    return await _storage.read(key: _departmentNameKey);
+  }
+
+   static Future<String?> getUserName() async {
     return await _storage.read(key: _userNameKey);
   }
 

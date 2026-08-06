@@ -1,31 +1,46 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, deprecated_member_use
+// ignore_for_file: file_names, library_private_types_in_public_api, deprecated_member_use, use_super_parameters
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Drop_Down_Overlay.dart';
 
-class CustomDropdown<T> extends StatefulWidget {
-  const CustomDropdown({
+class CustomDropdown<T> extends FormField<T> {
+  CustomDropdown({
     super.key,
     required this.items,
     required this.labelBuilder,
     required this.label,
     required this.hint,
     required this.onChanged,
-    this.value,
+    T? value,
     this.searchable = false,
     this.clearable = true,
     this.errorBorder = false,
     this.errorText,
     this.prefixIcon,
     this.icon,
-  });
+    this.isLoading = false,
+    this.hasError = false,
+    this.errorMessage,
+    this.onRetry,
+    FormFieldValidator<T>? validator,
+    AutovalidateMode? autovalidateMode,
+    FormFieldSetter<T>? onSaved,
+  }) : super(
+         initialValue: value,
+         validator: validator,
+         onSaved: onSaved,
+         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
+         builder: (field) {
+           final state = field as _CustomDropdownState<T>;
+           return state._build(context: field.context);
+         },
+       );
 
   final List<T> items;
   final String Function(T) labelBuilder;
   final String label;
   final String hint;
-  final T? value;
   final void Function(T?) onChanged;
   final bool searchable;
   final IconData? icon;
@@ -33,12 +48,16 @@ class CustomDropdown<T> extends StatefulWidget {
   final bool errorBorder;
   final String? errorText;
   final IconData? prefixIcon;
+  final bool isLoading;
+  final bool hasError;
+  final String? errorMessage;
+  final VoidCallback? onRetry;
 
   @override
-  State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
+  FormFieldState<T> createState() => _CustomDropdownState<T>();
 }
 
-class _CustomDropdownState<T> extends State<CustomDropdown<T>>
+class _CustomDropdownState<T> extends FormFieldState<T>
     with SingleTickerProviderStateMixin {
   final LayerLink _layerLink = LayerLink();
   final TextEditingController _searchCtrl = TextEditingController();
@@ -53,6 +72,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   late Animation<double> _scaleAnim;
 
   @override
+  CustomDropdown<T> get widget => super.widget as CustomDropdown<T>;
+
+  @override
   void initState() {
     super.initState();
     _filtered = widget.items;
@@ -65,6 +87,33 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       begin: 0.95,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut));
+  }
+
+  @override
+  void didUpdateWidget(CustomDropdown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_isOpen &&
+        (oldWidget.items != widget.items ||
+            oldWidget.isLoading != widget.isLoading ||
+            oldWidget.hasError != widget.hasError ||
+            oldWidget.errorMessage != widget.errorMessage)) {
+      _filtered = widget.items;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _overlay?.markNeedsBuild();
+      });
+    }
+  }
+
+  @override
+  void didChange(T? value) {
+    super.didChange(value);
+    widget.onChanged(value);
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    widget.onChanged(value);
   }
 
   @override
@@ -85,7 +134,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         .replaceAll('ى', 'ي');
   }
 
-  void _openOverlay() {
+  void _openOverlay(BuildContext context) {
     if (_isOpen) return;
     _filtered = widget.items;
     _searchCtrl.clear();
@@ -104,6 +153,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         searchFocus: _searchFocus,
         fadeAnim: _fadeAnim,
         scaleAnim: _scaleAnim,
+        isLoading: widget.isLoading,
+        hasError: widget.hasError,
+        errorMessage: widget.errorMessage,
+        onRetry: widget.onRetry,
         onFilter: (query) {
           _filtered = widget.items
               .where(
@@ -115,11 +168,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           _overlay?.markNeedsBuild();
         },
         onSelect: (item) {
-          widget.onChanged(item);
+          didChange(item); // ✅ يحدّث قيمة FormField ويشغّل onChanged + التحقق
           _closeOverlay();
         },
         onDismiss: _closeOverlay,
-        selectedItem: widget.value,
+        selectedItem: value,
       ),
     );
 
@@ -145,22 +198,17 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   void _clearValue() {
     if (_isOpen) _forceCloseOverlay();
-    widget.onChanged(null);
-    if (mounted) setState(() {});
+    didChange(null);
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _build({required BuildContext context}) {
     final h = context.screenHeight;
     final w = context.screenWidth;
 
-    final hasValue = widget.value != null;
-    final isError = widget.errorBorder;
+    final hasValue = value != null;
+    // ✅ إذا فيه errorBorder يدوي أو خطأ من الـ validator نفسه، نلوّن الحدود
+    final isError = widget.errorBorder || hasError;
     final showClear = hasValue && widget.clearable;
-
-    // final labelColor = isError
-    //     ? constRed
-    //     : (hasValue ? constBlue : Colors.grey.shade500);
 
     final borderColor = isError
         ? constRed
@@ -185,7 +233,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: _openOverlay,
+                    onTap: () => _openOverlay(context),
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(14, 0, 8, 0),
@@ -208,18 +256,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                                           CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        // Text(
-                                        //   widget.label,
-                                        //   style: TextStyle(
-                                        //     fontSize: 11,
-                                        //     color: labelColor,
-                                        //     fontWeight: FontWeight.w500,
-                                        //   ),
-                                        // ),
                                         Text(
-                                          widget.labelBuilder(
-                                            widget.value as T,
-                                          ),
+                                          widget.labelBuilder(value as T),
                                           style: const TextStyle(
                                             fontSize: 14,
                                             color: constColor,
@@ -253,16 +291,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       ),
                       child: Icon(
                         Icons.close_rounded,
-                        size: 18,
+                        size: 20,
                         color: Colors.grey.shade400,
                       ),
                     ),
                   ),
                 GestureDetector(
-                  onTap: _openOverlay,
+                  onTap: () => _openOverlay(context),
                   behavior: HitTestBehavior.opaque,
                   child: Padding(
-                    padding: EdgeInsetsGeometry.only(left: 8),
+                    padding: const EdgeInsetsDirectional.only(end: 12),
                     child: AnimatedRotation(
                       turns: _isOpen ? 0.5 : 0,
                       duration: const Duration(milliseconds: 180),
@@ -276,11 +314,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               ],
             ),
           ),
-          if (isError && widget.errorText != null)
+          // ✅ أولوية العرض: errorText يدوي (خارجي) ثم رسالة الـ validator
+          if (isError && (widget.errorText != null || errorText != null))
             Padding(
               padding: EdgeInsets.only(right: w * 0.05, top: h * 0.005),
               child: Text(
-                widget.errorText!,
+                widget.errorText ?? errorText ?? '',
                 style: TextStyle(color: constRed, fontSize: 11),
               ),
             ),

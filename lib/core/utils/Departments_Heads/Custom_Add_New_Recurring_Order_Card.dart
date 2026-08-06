@@ -13,14 +13,6 @@ class RecurringOrderCard extends StatelessWidget {
 
   const RecurringOrderCard({super.key, required this.controller});
 
-  static const List<String> _medicines = [
-    'باراسيتامول',
-    'أموكسيسيلين',
-    'إيبوبروفين',
-    'أزيثروميسين',
-    'فلام-ك',
-  ];
-
   @override
   Widget build(BuildContext context) {
     final h = context.screenHeight;
@@ -44,6 +36,7 @@ class RecurringOrderCard extends StatelessWidget {
                         color: Colors.white.withOpacity(0.9),
                         elevation: 3.0,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Align(
                               alignment: Alignment.centerRight,
@@ -57,6 +50,7 @@ class RecurringOrderCard extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontFamily: 'Cairo',
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -67,56 +61,68 @@ class RecurringOrderCard extends StatelessWidget {
                               ),
                               child: const Divider(),
                             ),
-                            SizedBox(height: h * 0.01),
-
-                            // ── اسم الدواء ────────────────────────────────
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: w * 0.04,
+                                vertical: h * 0.006,
+                              ),
+                              child: Text(
+                                'اختر المادة المطلوية:',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                            ),
+                            // ── اسم الدواء (مرتبط بالـ API) ────────────────
+                            // ✅ صار validator عادي مرتبط بالـ Form، بدل isFieldInvalid اليدوي
                             Obx(() {
-                              // ✅ قراءة المتغير مباشرة قبل أي شرط لضمان عدم حدوث خطأ GetX
                               final medicineName =
-                                  controller.order.value.medicineName;
-                              final isInvalid = controller.isFieldInvalid(
-                                'medicineName',
-                              );
+                                  controller.selectedMedicineName.value;
+
+                              final hasError =
+                                  controller.medicinesError.value.isNotEmpty;
+                              final errorMsg = controller.medicinesError.value;
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: w * 0.03,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomDropdown<String>(
-                                      items: _medicines,
-                                      labelBuilder: (v) => v,
-                                      label: 'اسم الدواء *',
-                                      hint: 'اختر الدواء المطلوب',
-                                      searchable: true,
-                                      icon: Icons.medication_outlined,
-                                      value: medicineName,
-                                      errorBorder: isInvalid,
-                                      onChanged: (v) =>
-                                          controller.updateMedicineName(v),
-                                    ),
-                                    if (isInvalid)
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          right: w * 0.03,
-                                          top: h * 0.005,
-                                        ),
-                                        child: Text(
-                                          'الرجاء اختيار اسم الدواء',
-                                          style: TextStyle(
-                                            color: constRed,
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
+                                child: CustomDropdown<String>(
+                                  items: controller.medicineNames,
+                                  isLoading:
+                                      controller.isMedicinesLoading.value,
+                                  hasError: hasError,
+                                  errorMessage: errorMsg,
+                                  onRetry: () => controller.fetchMedicines(),
+                                  labelBuilder: (v) => v,
+                                  label: 'اسم الدواء *',
+                                  hint: 'اختر الدواء المطلوب',
+                                  searchable: true,
+                                  icon: Icons.medication_outlined,
+                                  value: medicineName,
+                                  validator: (v) => v == null
+                                      ? 'الرجاء اختيار اسم الدواء'
+                                      : null,
+                                  onChanged: (v) =>
+                                      controller.updateMedicineName(v),
                                 ),
                               );
                             }),
                             SizedBox(height: h * 0.015),
-
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: w * 0.04,
+                                vertical: h * 0.006,
+                              ),
+                              child: Text(
+                                'ادخل الكمية المطلوية:',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                            ),
                             // ── الكمية ────────────────────────────────────
                             Padding(
                               padding: EdgeInsets.symmetric(
@@ -137,8 +143,20 @@ class RecurringOrderCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: h * 0.015),
-
-                            // ── المدة (عدد التكرارات) ──────────────────────
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: w * 0.04,
+                                vertical: h * 0.006,
+                              ),
+                              child: Text(
+                                'اختر المدة المطلوبة لاستمرار الطلب:',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                            ),
+                            // ── المدة (عدد التكرارات) — ✅ CustomDropdown<int> ────
                             Obx(() {
                               final duration =
                                   controller.selectedDuration.value;
@@ -148,15 +166,17 @@ class RecurringOrderCard extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                   horizontal: w * 0.03,
                                 ),
-                                child: CustomDropdown<String>(
+                                child: CustomDropdown<int>(
                                   items: options,
-                                  labelBuilder: (v) => v,
+                                  // ✅ عرض الأرقام فقط كـ String
+                                  labelBuilder: (v) => v.toString(),
                                   label: 'المدة *',
                                   hint: 'اختر عدد مرات التكرار',
                                   searchable: true,
                                   icon: Icons.event_repeat_outlined,
                                   value: duration,
-                                  errorBorder: false,
+                                  validator: (v) =>
+                                      v == null ? 'الرجاء اختيار المدة' : null,
                                   onChanged: (v) {
                                     if (v != null) {
                                       controller.updateDuration(v);
@@ -165,7 +185,7 @@ class RecurringOrderCard extends StatelessWidget {
                                 ),
                               );
                             }),
-                            SizedBox(height: h * 0.015),
+                            SizedBox(height: h * 0.03),
                           ],
                         ),
                       ),

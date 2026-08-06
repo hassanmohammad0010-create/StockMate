@@ -13,7 +13,6 @@ class RecurringChooseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final h = context.screenHeight;
     final w = context.screenWidth;
 
@@ -35,7 +34,11 @@ class RecurringChooseCard extends StatelessWidget {
                     padding: EdgeInsets.only(right: w * 0.05, top: h * 0.015),
                     child: Text(
                       'التكرار',
-                      style: const TextStyle(fontSize: 20, fontFamily: 'Cairo'),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),

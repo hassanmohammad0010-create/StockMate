@@ -5,18 +5,19 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Priority_Choose_Card.dart';
 
 class OrdinarySubmitSection extends GetView<AddOrdinaryOrderController> {
   const OrdinarySubmitSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    
     final h = context.screenHeight;
 
     return Container(
       padding: EdgeInsets.only(bottom: h * 0.02, top: h * 0.01),
       decoration: BoxDecoration(
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.06),
@@ -62,13 +63,22 @@ class OrdinarySubmitSection extends GetView<AddOrdinaryOrderController> {
             );
           }),
           SizedBox(height: h * 0.01),
+
+          // ✅ إضافة كارد الأولوية للطلب الكامل فوق زر الإرسال
+          const PriorityChooseCard(),
+          SizedBox(height: h * 0.01),
+
           Obx(() {
             final count = controller.orders.length;
             return CustomMainButtom(
-              title: 'إرسال الطلبات ($count)',
+              title: controller.isLoading.value
+                  ? 'جاري الإرسال...'
+                  : 'إرسال الطلبات ($count)',
               color: constBlue,
               fontcolor: Colors.white,
-              onPressed: controller.validateAndGoToConfirm, 
+              onPressed: controller.isLoading.value
+                  ? null
+                  : controller.validateAndGoToConfirm,
             );
           }),
         ],

@@ -8,9 +8,8 @@ import 'package:stock_mate_project/Controller/Logic/AddOrdinaryOrder_Controller.
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Priority_Button.dart';
 
 class PriorityChooseCard extends StatelessWidget {
-  const PriorityChooseCard({super.key, required this.orderIndex});
+  const PriorityChooseCard({super.key});
 
-  final int orderIndex;
   AddOrdinaryOrderController get _c => Get.find<AddOrdinaryOrderController>();
 
   @override
@@ -19,17 +18,13 @@ class PriorityChooseCard extends StatelessWidget {
     final w = context.screenWidth;
 
     return Obx(() {
-      if (orderIndex >= _c.orders.length) {
-        return const SizedBox.shrink();
-      }
-      final selected = _c.orders[orderIndex].priority;
+      final selected = _c.requestPriority.value;
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: w * 0.025),
         child: Container(
           width: w * 0.95,
-          child: Card(
-            color: Colors.white.withOpacity(0.9),
-            elevation: 3.0,
+          child: Container(
+            color: Colors.transparent,
             child: Column(
               children: [
                 Align(
@@ -37,8 +32,12 @@ class PriorityChooseCard extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(right: w * 0.05, top: h * 0.015),
                     child: Text(
-                      'الأولوية',
-                      style: const TextStyle(fontSize: 20, fontFamily: 'Cairo'),
+                      'أولوية الطلب',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -56,14 +55,14 @@ class PriorityChooseCard extends StatelessWidget {
                       color: constRed,
                       isSelected: selected == 'ضروري',
                       size: Size(w * 0.4, h * 0.05),
-                      onTap: () => _c.updatePriority(orderIndex, 'ضروري'),
+                      onTap: () => _c.updateRequestPriority('ضروري'),
                     ),
                     PriorityButton(
                       label: 'عادي',
                       color: constBlue,
                       isSelected: selected == 'عادي',
                       size: Size(w * 0.4, h * 0.05),
-                      onTap: () => _c.updatePriority(orderIndex, 'عادي'),
+                      onTap: () => _c.updateRequestPriority('عادي'),
                     ),
                   ],
                 ),

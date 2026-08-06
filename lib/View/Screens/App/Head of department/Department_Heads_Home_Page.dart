@@ -31,14 +31,15 @@ class DepartmentHeadsHomePage extends StatelessWidget {
       backgroundColor: constBackgroundColor,
       body: GetBuilder<GetNameRollOfUserController>(
         builder: (controller) {
-          return (controller.name == null || controller.role == null)
+          return (controller.name == null || controller.departmentName == null)
               ? CustomLoadingIndicator()
               : SingleChildScrollView(
                   child: Column(
                     children: [
                       CustomNameContainer(
                         empName: 'د. ${controller.name}',
-                        specializationName: '${controller.role}',
+                        specializationName:
+                            'رئيس قسم ${controller.departmentName}',
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: w * 0.02),
@@ -149,63 +150,99 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                         indent: w * 0.03,
                         color: constGray,
                       ),
-                      Align(
-                        alignment: AlignmentGeometry.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: w * 0.05),
-                          child: Text(
-                            'وصفة طبية جديدة / السلة',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: cairo,
-                              fontSize: 28,
+                      controller.role == 'department_manager'
+                          ? Column(
+                              children: [
+                                Align(
+                                  alignment: AlignmentGeometry.centerRight,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(right: w * 0.05),
+                                    child: Text(
+                                      'المرضى / السلة',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: cairo,
+                                        fontSize: 28,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: h * 0.01),
+                                CustomListTile(
+                                  backgroundColor: constLightBlue,
+                                  description: 'الطلبات',
+                                  icon: Icons.abc,
+                                  iconColor: constBlue,
+                                  onTap: () {
+                                    Get.toNamed(AppRoutes.MyRequestsPage);
+                                  },
+                                  title: 'طلاباتي',
+                                ),
+                                CustomListTile(
+                                  backgroundColor: constLightBlue,
+                                  description: 'معاينة المرضى',
+                                  icon: Icons.person_outline,
+                                  iconColor: constBlue,
+                                  onTap: () {
+                                    Get.toNamed(AppRoutes.PatientsPage);
+                                  },
+                                  title: 'المرضى',
+                                ),
+                                // SizedBox(height: h * 0.01),
+                                CustomListTile(
+                                  backgroundColor: constLightBlue,
+                                  description:
+                                      'عرض تفاصيل المواد اليومية المطلوبة',
+                                  icon: Icons.shopping_cart,
+                                  iconColor: constBlue,
+                                  onTap: () {
+                                    Get.toNamed(AppRoutes.CartPage);
+                                  },
+                                  title: 'السلة',
+                                ),
+                                CustomListTile(
+                                  backgroundColor: constLightBlue,
+                                  description:
+                                      'عرض الأرشيف للمصروفات اليومية السابقة',
+                                  icon: Icons.fact_check_rounded,
+                                  iconColor: constBlue,
+                                  onTap: () {
+                                    Get.toNamed(AppRoutes.ArchivePage);
+                                  },
+                                  title: 'الأرشيف',
+                                ),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                Align(
+                                  alignment: AlignmentGeometry.centerRight,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(right: w * 0.05),
+                                    child: Text(
+                                      'الوصفات الطبية',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: cairo,
+                                        fontSize: 28,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: h * 0.01),
+                                CustomListTile(
+                                  backgroundColor: constLightBlue,
+                                  description:
+                                      'الوصفات الطبية الجديدة المرسلة من الأطباء',
+                                  icon: Icons.description_outlined,
+                                  iconColor: constBlue,
+                                  onTap: () {
+                                    Get.toNamed(AppRoutes.PrescriptionsPage);
+                                  },
+                                  title: 'الوصفات الطبية الجديدة',
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: h * 0.01),
-                      CustomListTile(
-                        backgroundColor: constLightBlue,
-                        description:
-                            'الوصفات الطبية الجديدة المرسلة من الأطباء',
-                        icon: Icons.description_outlined,
-                        iconColor: constBlue,
-                        onTap: () {
-                          Get.toNamed(AppRoutes.PrescriptionsPage);
-                        },
-                        title: 'الوصفات الطبية الجديدة',
-                      ),
-                      CustomListTile(
-                        backgroundColor: constLightBlue,
-                        description: 'معاينة المرضى',
-                        icon: Icons.person_outline,
-                        iconColor: constBlue,
-                        onTap: () {
-                          Get.toNamed(AppRoutes.PatientsPage);
-                        },
-                        title: 'المرضى',
-                      ),
-                      // SizedBox(height: h * 0.01),
-                      CustomListTile(
-                        backgroundColor: constLightBlue,
-                        description: 'عرض تفاصيل المواد اليومية المطلوبة',
-                        icon: Icons.shopping_cart,
-                        iconColor: constBlue,
-                        onTap: () {
-                          Get.toNamed(AppRoutes.CartPage);
-                        },
-                        title: 'السلة',
-                      ),
-                      CustomListTile(
-                        backgroundColor: constLightBlue,
-                        description: 'عرض الأرشيف للمصروفات اليومية السابقة',
-                        icon: Icons.fact_check_rounded,
-                        iconColor: constBlue,
-                        onTap: () {
-                          Get.toNamed(AppRoutes.ArchivePage);
-                        },
-                        title: 'الأرشيف',
-                      ),
                       SizedBox(height: h * 0.01),
                     ],
                   ),

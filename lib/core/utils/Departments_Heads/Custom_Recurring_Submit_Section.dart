@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, deprecated_member_use
+ // ignore_for_file: file_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,14 +11,10 @@ class RecurringSubmitSection extends GetView<AddRecurringOrderController> {
 
   @override
   Widget build(BuildContext context) {
-
     final h = context.screenHeight;
 
     return Container(
-      padding: EdgeInsets.only(
-        bottom: h * 0.01,
-        top: h * 0.01,
-      ),
+      padding: EdgeInsets.only(bottom: h * 0.02, top: h * 0.01),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -28,21 +24,18 @@ class RecurringSubmitSection extends GetView<AddRecurringOrderController> {
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: h * 0.01),
-          CustomMainButtom(
-            title: 'إرسال الطلب',
-            color: constBlue,
-            fontcolor: Colors.white,
-            onPressed: () =>
-controller.validateAndGoToConfirm(),            
-          ),
-           SizedBox(height: h * 0.01),
-        ],
-      ),
+      child: Obx(() {
+        return CustomMainButtom(
+          title: controller.isLoading.value
+              ? 'جاري الإرسال...'
+              : 'إرسال الطلب الدوري',
+          color: constBlue,
+          fontcolor: Colors.white,
+          onPressed: controller.isLoading.value
+              ? null
+              : controller.validateAndGoToConfirm, // ✅
+        );
+      }),
     );
   }
 }
-  

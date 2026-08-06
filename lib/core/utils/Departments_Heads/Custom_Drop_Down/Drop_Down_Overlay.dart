@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Drop_Down_Item.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class DropdownOverlay<T> extends StatefulWidget {
-  const DropdownOverlay({super.key, 
+  const DropdownOverlay({
+    super.key,
     required this.layerLink,
     required this.anchorSize,
     required this.items,
@@ -19,6 +21,10 @@ class DropdownOverlay<T> extends StatefulWidget {
     required this.onSelect,
     required this.onDismiss,
     required this.selectedItem,
+    this.isLoading = false,
+    this.hasError = false,        // ✅ جديد
+    this.errorMessage,            // ✅ جديد
+    this.onRetry,                 // ✅ جديد
   });
 
   final LayerLink layerLink;
@@ -34,6 +40,10 @@ class DropdownOverlay<T> extends StatefulWidget {
   final void Function(T?) onSelect;
   final VoidCallback onDismiss;
   final T? selectedItem;
+  final bool isLoading;
+  final bool hasError;            // ✅ جديد
+  final String? errorMessage;     // ✅ جديد
+  final VoidCallback? onRetry;    // ✅ جديد
 
   @override
   State<DropdownOverlay<T>> createState() => _DropdownOverlayState<T>();
@@ -115,7 +125,8 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (widget.searchable) ...[
+                          // ✅ حقل البحث يظهر دائماً (إلا إذا كان هناك خطأ)
+                          if (widget.searchable && !widget.hasError) ...[
                             Padding(
                               padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
                               child: TextField(
@@ -124,6 +135,7 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                                 textDirection: TextDirection.rtl,
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 13),
+                                enabled: !widget.isLoading, // ✅ تعطيل البحث أثناء التحميل
                                 decoration: InputDecoration(
                                   hintText: 'بحث ...',
                                   hintStyle: TextStyle(
@@ -161,7 +173,60 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                             ),
                             Divider(height: 1, color: Colors.grey.shade100),
                           ],
-                          if (_displayItems.isEmpty)
+                          
+                          // ✅ حالة الخطأ: عرض زر إعادة المحاولة
+                          if (widget.hasError)
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.error_outline_rounded,
+                                    color: constRed,
+                                    size: 40,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    widget.errorMessage ?? 'تعذر تحميل البيانات',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton.icon(
+                                    onPressed: widget.onRetry,
+                                    icon: const Icon(Icons.refresh_rounded, size: 18),
+                                    label: const Text(
+                                      'إعادة المحاولة',
+                                      style: TextStyle(fontSize: 13),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: constRed,
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 10,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          // ✅ حالة التحميل
+                          else if (widget.isLoading)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 28),
+                              child: CustomLoadingIndicator(size: 32),
+                            )
+                          // ✅ لا توجد نتائج
+                          else if (_displayItems.isEmpty)
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 24,
@@ -176,6 +241,7 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                                 ),
                               ),
                             )
+                          // ✅ عرض القائمة
                           else
                             Flexible(
                               child: ListView.separated(
