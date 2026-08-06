@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Service/Auth/Login_Service.dart';
-import 'package:stock_mate_project/Service/Auth/Resent_OTB_Service.dart';
-import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 
 class EnterOTBController extends GetxController {
   final String email;

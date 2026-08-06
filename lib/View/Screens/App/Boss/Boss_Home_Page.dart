@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Create_Department_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Create_User_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Main_Page_Card.dart';
@@ -96,7 +98,7 @@ class BossHomePage extends StatelessWidget {
               icon: Icons.business_outlined,
               iconColor: constBlue,
               onTap: () {
-                Get.toNamed(AppRoutes.ElectronicInventoryPage);
+                Get.to(() => CreateDepartmentPage());
               },
               title: 'انشاء قسم جديد ',
             ),
@@ -106,7 +108,7 @@ class BossHomePage extends StatelessWidget {
               icon: Icons.emoji_people_outlined,
               iconColor: constBlue,
               onTap: () {
-                Get.toNamed(AppRoutes.ElectronicInventoryPage);
+                Get.to(() => CreateUserPage());
               },
               title: 'انشاء موظف جديد ',
             ),

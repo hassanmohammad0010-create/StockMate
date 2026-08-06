@@ -6,8 +6,7 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 
 class UserService {
-  static const String _baseUrl =
-      'https://stock-mate-qb40.onrender.com/api/users';
+  static const String _baseUrl = 'https://stock-mate-qb40.onrender.com/api';
 
   /// POST /users
   /// [specialty] اختياري - يستخدم عادة لرول doctor
@@ -48,8 +47,8 @@ class UserService {
           customSnackBar(
             title: 'تم بنجاح',
             message: 'تم إنشاء المستخدم بنجاح',
-            color: constGreen,
-            messageColor: constLightGreen,
+            color: constBlue,
+            messageColor: constLightBlue,
           );
         }
         return isSuccess;
