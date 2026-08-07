@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/App/Get_Departments_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Consunble_Inventory_Materials_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Fixed_Inventory_Materials_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Medicine_Inventory_Materials_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Stock_Material_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Toggle_Buttom.dart';
 
 class InventoryPage extends StatelessWidget {
@@ -16,7 +19,9 @@ class InventoryPage extends StatelessWidget {
     ToggleController(),
     tag: 'InventoryPage',
   );
-
+  GetDepartmentsController getDepartmentsController = Get.put(
+    GetDepartmentsController(),
+  );
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -86,23 +91,35 @@ class InventoryPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  ListView.builder(
-                    padding: EdgeInsets.only(
-                      top: 0,
-                      bottom: context.screenHeight * 0.01, // ← بدل 8
-                    ),
-                    itemCount: specialties.length,
-                    itemBuilder: (context, index) {
-                      return CustomListTile(
-                        backgroundColor: constLightBlue,
-                        description: 'عرض تفاصيل المخزون',
-                        icon: specialtiesIcons[index],
-                        iconColor: constBlue,
-                        onTap: () {
-                          Get.to(() => DisplayStockMaterialPage());
-                        },
-                        title: specialties[index],
-                      );
+                  GetBuilder<GetDepartmentsController>(
+                    builder: (controller) {
+                      return controller.department == null
+                          ? CustomLoadingIndicator()
+                          : controller.department!.isEmpty
+                          ? CustomEmptyState(tital: 'لا يوجد اقسام لعرضها')
+                          : ListView.builder(
+                              padding: EdgeInsets.only(
+                                top: 0,
+                                bottom: context.screenHeight * 0.01, // ← بدل 8
+                              ),
+                              itemCount: controller.department!.length,
+                              itemBuilder: (context, index) {
+                                return CustomListTile(
+                                  backgroundColor: constLightBlue,
+                                  description:
+                                      controller
+                                          .department![index]
+                                          .managerName ??
+                                      'لا يوجد رئيس للقسم',
+                                  icon: Icons.category,
+                                  iconColor: constBlue,
+                                  onTap: () {
+                                    Get.to(() => DisplayStockMaterialPage());
+                                  },
+                                  title: controller.department![index].name,
+                                );
+                              },
+                            );
                     },
                   ),
                 ],

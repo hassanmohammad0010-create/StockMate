@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Service/Boss/Get_Suppliers_Service.dart';
+import 'package:stock_mate_project/Service/App/Get_All_Suppliers_Service.dart';
 import 'package:stock_mate_project/core/models/Supplier_Model.dart';
 
 class GetAllSuppliersController extends GetxController {
@@ -7,7 +7,7 @@ class GetAllSuppliersController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    suppliers = await GetSuppliersService().getSuppliersService();
+    suppliers = await SupplierService.getSuppliers();
 
     update();
   }

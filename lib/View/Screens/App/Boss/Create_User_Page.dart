@@ -105,6 +105,8 @@ class CreateUserPage extends StatelessWidget {
                                   labelBuilder: (v) => v,
                                   label: 'الدور الخاص بالمستخدم',
                                   hint: '',
+                                  validator: (data) =>
+                                      data == null ? 'الحقل ضروري' : null,
                                   icon: Icons.rule_outlined,
                                   value: createuserpagecontroller
                                       .selectedRole

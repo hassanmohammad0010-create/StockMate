@@ -54,11 +54,11 @@ class NesseryDepartmentRequestPage extends StatelessWidget {
                             state:
                                 controller.requests![index].status.arabicLabel,
                             onTap: () {
-                              Get.to(
-                                () => DisOrderDetailsPage(
-                                  requestModel: controller.requests![index],
-                                ),
-                              );
+                              // Get.to(
+                              //   () => DisOrderDetailsPage(
+                              //     requestModel: controller.requests![index],
+                              //   ),
+                              // );
                             },
                           );
                         },

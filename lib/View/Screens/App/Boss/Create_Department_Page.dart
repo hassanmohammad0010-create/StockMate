@@ -110,6 +110,8 @@ class CreateDepartmentPage extends StatelessWidget {
                         labelBuilder: (v) => v,
                         label: 'النوع الخاص بالقسم',
                         hint: '',
+                        validator: (data) =>
+                            data == null ? 'الحقل ضروري' : null,
                         icon: Icons.rule_outlined,
                         value:
                             createDepartmentPageController.selectedType.value,

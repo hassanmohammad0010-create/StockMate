@@ -360,7 +360,8 @@ class OrdertItem {
       requestType: requestTypeStr,
       recurringInterval: RecurringInterval.fromString(requestTypeStr),
       periodicScheduleId: json['periodicScheduleId'] as String?,
-      createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(json['createdAt'] as String? ?? '') ??
           DateTime.now(),
     );
   }
@@ -371,7 +372,7 @@ class OrdertItem {
     switch (status) {
       case OrderStatus.draft:
       case OrderStatus.pending_hospital_approval:
-        return 'معلق';
+        return 'بأنتظار موافقتك';
       case OrderStatus.pending_manager_approval:
       case OrderStatus.preparing:
         return 'قيد التنفيذ';
