@@ -130,7 +130,7 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
                   fontcolor: Colors.white,
                   onPressed: controller.isLoading.value
                       ? null
-                      :  controller.confirmRequest,
+                      : controller.confirmRequest,
                 );
               }),
             ),

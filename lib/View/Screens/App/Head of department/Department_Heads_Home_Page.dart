@@ -167,17 +167,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: h * 0.01),
-                                CustomListTile(
-                                  backgroundColor: constLightBlue,
-                                  description: 'الطلبات',
-                                  icon: Icons.abc,
-                                  iconColor: constBlue,
-                                  onTap: () {
-                                    Get.toNamed(AppRoutes.MyRequestsPage);
-                                  },
-                                  title: 'طلاباتي',
-                                ),
+                                SizedBox(height: h * 0.01),                 
                                 CustomListTile(
                                   backgroundColor: constLightBlue,
                                   description: 'معاينة المرضى',

@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Test/PriorityBadge.dart';
-import 'package:stock_mate_project/Test/RecurringBadge.dart';
-import 'package:stock_mate_project/Test/RefillRequestsPageData.dart';
-import 'package:stock_mate_project/Test/StatusBadge.dart';
+import 'package:stock_mate_project/core/utils/New_Customs/PriorityBadge.dart';
+import 'package:stock_mate_project/core/utils/New_Customs/RecurringBadge.dart';
+import 'package:stock_mate_project/core/models/Order_Item.dart';
+import 'package:stock_mate_project/core/utils/New_Customs/StatusBadge.dart';
 
 class OrderCard2 extends StatelessWidget {
-  final RefillRequestItem2 request;
+  final OrdertItem request;
   final VoidCallback onTap;
 
   const OrderCard2({super.key, required this.request, required this.onTap});
