@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Department_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Create_User_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/User_Mangment_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Main_Page_Card.dart';
@@ -104,25 +104,16 @@ class BossHomePage extends StatelessWidget {
                           ),
                         ),
                       ),
+
                       CustomListTile(
                         backgroundColor: constLightBlue,
-                        description: 'فتح قسم جديد من اقسام المشفى ',
-                        icon: Icons.business_outlined,
-                        iconColor: constBlue,
-                        onTap: () {
-                          Get.to(() => CreateDepartmentPage());
-                        },
-                        title: 'انشاء قسم جديد ',
-                      ),
-                      CustomListTile(
-                        backgroundColor: constLightBlue,
-                        description: 'اضافة موظف للنظام ',
+                        description: 'اضافة -الغاء تنشيط -ربط الموظفين',
                         icon: Icons.emoji_people_outlined,
                         iconColor: constBlue,
                         onTap: () {
-                          Get.to(() => CreateUserPage());
+                          Get.to(() => UserMangmentPage());
                         },
-                        title: 'انشاء موظف جديد ',
+                        title: 'ادارة الموظفين ',
                       ),
                       CustomListTile(
                         backgroundColor: constLightBlue,
@@ -134,16 +125,16 @@ class BossHomePage extends StatelessWidget {
                         },
                         title: 'تقرير جرد الكتروني',
                       ),
-                      CustomListTile(
-                        backgroundColor: constLightBlue,
-                        description: 'سجل  لعمليات دخول وخروج المواد',
-                        icon: Icons.fact_check_rounded,
-                        iconColor: constBlue,
-                        onTap: () {
-                          Get.toNamed(AppRoutes.EntryAndExitReportPage);
-                        },
-                        title: 'تقرير عمليات الدخول والخروج',
-                      ),
+                      // CustomListTile(
+                      //   backgroundColor: constLightBlue,
+                      //   description: 'سجل  لعمليات دخول وخروج المواد',
+                      //   icon: Icons.fact_check_rounded,
+                      //   iconColor: constBlue,
+                      //   onTap: () {
+                      //     Get.toNamed(AppRoutes.EntryAndExitReportPage);
+                      //   },
+                      //   title: 'تقرير عمليات الدخول والخروج',
+                      // ),
                       CustomListTile(
                         backgroundColor: constLightBlue,
                         description: 'عرض كامل تفاصيل الموردين ',

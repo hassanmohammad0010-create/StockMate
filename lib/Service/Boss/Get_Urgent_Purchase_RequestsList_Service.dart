@@ -1,4 +1,4 @@
-// lib/Service/Purchasing/Get_Purchase_Request_Details_Service.dart
+// lib/Service/Purchasing/Get_Urgent_Purchase_Requests_List_Service.dart
 // ignore_for_file: file_names
 
 import 'dart:convert';
@@ -6,19 +6,26 @@ import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Service/Dispatcher.dart';
 import 'package:stock_mate_project/core/models/Purchase_Request_Model.dart';
 
-/// سيرفس جلب تفاصيل طلب شراء
-/// GET /purchasing/requests/{id}
-class GetPurchaseRequestDetailsService {
+/// سيرفس جلب طلبات الشراء المستعجلة وبانتظار موافقة المستشفى فقط
+/// GET /purchasing/requests?page=1&limit=20&status=pending_hospital_approval&priority=urgent
+class GetUrgentPurchaseRequestsListService {
   static const String baseUrl = 'https://stock-mate-qb40.onrender.com/api';
 
   final Dispatcher _dispatcher = Dispatcher();
 
-  Future<PurchaseRequestDetails?> getRequestDetails({
-    required String requestId,
+  Future<PurchaseRequestsPageData?> getUrgentRequests({
+    int page = 1,
+    int limit = 20,
   }) async {
-    return _dispatcher.send<PurchaseRequestDetails?>(
+    return _dispatcher.send<PurchaseRequestsPageData?>(
       request: (token) {
-        final uri = Uri.parse('$baseUrl/purchasing/requests/$requestId');
+        final uri = Uri.parse(
+          '$baseUrl/purchasing/requests'
+          '?page=$page'
+          '&limit=$limit'
+          '&status=pending_hospital_approval'
+          '&priority=urgent',
+        );
 
         return http.get(
           uri,
@@ -34,7 +41,7 @@ class GetPurchaseRequestDetailsService {
         final jsonData = jsonDecode(body);
 
         if (jsonData['success'] == true && jsonData['data'] != null) {
-          return PurchaseRequestDetails.fromJson(
+          return PurchaseRequestsPageData.fromJson(
             jsonData['data'] as Map<String, dynamic>,
           );
         }

@@ -1,24 +1,22 @@
-// lib/Service/Purchasing/Get_Purchase_Request_Details_Service.dart
+// lib/Service/Get_Users_List_Service.dart
 // ignore_for_file: file_names
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Service/Dispatcher.dart';
-import 'package:stock_mate_project/core/models/Purchase_Request_Model.dart';
+import 'package:stock_mate_project/core/models/User_Model.dart';
 
-/// سيرفس جلب تفاصيل طلب شراء
-/// GET /purchasing/requests/{id}
-class GetPurchaseRequestDetailsService {
+/// سيرفس جلب قائمة المستخدمين
+/// GET /users
+class GetUsersListService {
   static const String baseUrl = 'https://stock-mate-qb40.onrender.com/api';
 
   final Dispatcher _dispatcher = Dispatcher();
 
-  Future<PurchaseRequestDetails?> getRequestDetails({
-    required String requestId,
-  }) async {
-    return _dispatcher.send<PurchaseRequestDetails?>(
+  Future<UsersPageData?> getUsers({int page = 1, int limit = 20}) async {
+    return _dispatcher.send<UsersPageData?>(
       request: (token) {
-        final uri = Uri.parse('$baseUrl/purchasing/requests/$requestId');
+        final uri = Uri.parse('$baseUrl/users?page=$page&limit=$limit');
 
         return http.get(
           uri,
@@ -34,11 +32,12 @@ class GetPurchaseRequestDetailsService {
         final jsonData = jsonDecode(body);
 
         if (jsonData['success'] == true && jsonData['data'] != null) {
-          return PurchaseRequestDetails.fromJson(
+          return UsersPageData.fromJson(
             jsonData['data'] as Map<String, dynamic>,
           );
         }
 
+        print('❌ List Users | success = false: ${jsonData['message']}');
         return null;
       },
 
