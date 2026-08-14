@@ -148,10 +148,6 @@ abstract class AppPages {
     ),
 
     GetPage(
-      name: AppRoutes.DisplayPurchasingOrderPage,
-      page: () => const DisplayPurchasingOrderPage(),
-    ),
-    GetPage(
       name: AppRoutes.HasanServiceTester,
       page: () => HasanServiceTester(),
     ),

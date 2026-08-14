@@ -1,6 +1,6 @@
 // lib/Controller/App/Get_Supplier_Materials_Controller.dart
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Service/App/Get_All_Material_Reletedto_Supplier_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_All_Material_Reletedto_Supplier_Service.dart';
 import 'package:stock_mate_project/core/models/Supplier_Material_Model.dart';
 
 class GetSupplierMaterialsController extends GetxController {

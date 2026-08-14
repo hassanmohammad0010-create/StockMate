@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/Function/Custom_Dialog_With_Textfailed.dart';
 
 void showConfirmDialog({
   required VoidCallback onConfirm,
@@ -29,18 +28,14 @@ void showConfirmDialog({
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    // 'هل انت متأكد',
                     tital,
                     style: TextStyle(fontSize: 18, fontFamily: cairo),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-
-              // ===== Subtitle =====
               Text(
                 sub,
-                // 'انت على وشك تأكيد الطلب',
                 style: TextStyle(
                   fontSize: 24,
                   color: constGray,
@@ -53,16 +48,17 @@ void showConfirmDialog({
               const SizedBox(height: 4),
               Row(
                 children: [
+                  // ─── زرار تأكيد ───────────────────────────
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
                         color: constBlue,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2), // لون الظل
-                            blurRadius: 8, // ضبابية الظل
-                            spreadRadius: 1, // انتشار الظل
-                            offset: Offset(0, 0), // اتجاه الظل (x, y)
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 8,
+                            spreadRadius: 1,
+                            offset: Offset(0, 0),
                           ),
                         ],
                         borderRadius: BorderRadius.circular(12),
@@ -70,7 +66,7 @@ void showConfirmDialog({
                       child: OutlinedButton(
                         onPressed: () {
                           Get.back();
-                          onReject?.call();
+                          onConfirm();
                         },
                         style: OutlinedButton.styleFrom(
                           backgroundColor: constBlue,
@@ -89,16 +85,18 @@ void showConfirmDialog({
                   ),
 
                   const SizedBox(width: 12),
+
+                  // ─── زرار رفض ───────────────────────────
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2), // لون الظل
-                            blurRadius: 8, // ضبابية الظل
-                            spreadRadius: 1, // انتشار الظل
-                            offset: Offset(0, 0), // اتجاه الظل (x, y)
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 8,
+                            spreadRadius: 1,
+                            offset: Offset(0, 0),
                           ),
                         ],
                         borderRadius: BorderRadius.circular(12),
@@ -107,11 +105,10 @@ void showConfirmDialog({
                         onPressed: () {
                           Get.back();
                           onReject?.call();
-                          showDialogWithTextFailed(onConfirm: (data) {});
                         },
                         style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          side: BorderSide.none, // ← هذا يزيل الحواف
+                          side: BorderSide.none,
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -124,8 +121,6 @@ void showConfirmDialog({
                       ),
                     ),
                   ),
-
-                  // Confirm Button
                 ],
               ),
             ],

@@ -6,10 +6,10 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Get_Request_Items_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Request_Details_Controller.dart';
 import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/Function/Custom_Dialog_With_Textfailed.dart';
 import 'package:stock_mate_project/core/Function/Find_Color.dart';
 import 'package:stock_mate_project/core/models/Order_Item.dart';
-import 'package:stock_mate_project/core/models/Order_Models.dart'
-    hide OrderPriority, OrderStatus;
+
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
@@ -32,26 +32,60 @@ class DisOrderDetailsPage extends StatelessWidget {
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          Get.delete<RequestDetailsController>(tag: item.id);
+          Get.delete<RequestItemController>(tag: item.id);
         }
       },
       child: Scaffold(
-        floatingActionButton:
-            item.status == OrderStatus.pending_hospital_approval
-            ? SizedBox(
-                width: context.screenWidth * 0.15,
-                height: context.screenHeight * 0.1,
-                child: FloatingActionButton(
-                  backgroundColor: constBlue,
-                  elevation: 8,
-                  shape: const CircleBorder(),
-                  onPressed: () {
-                    showConfirmDialog(onConfirm: () {}, sub: '', tital: '');
-                  },
-                  child: Icon(Icons.check, color: Colors.white),
-                ),
-              )
-            : null,
+        floatingActionButton: Obx(() {
+          if (controller.isLoading.value) {
+            return const SizedBox.shrink();
+          }
+
+          final currentStatus = controller.details.value?.status;
+
+          if (controller.isApproved.value ||
+              controller.isRejected.value ||
+              currentStatus != OrderStatus.pending_hospital_approval) {
+            return const SizedBox.shrink();
+          }
+
+          return SizedBox(
+            width: context.screenWidth * 0.15,
+            height: context.screenHeight * 0.1,
+            child: FloatingActionButton(
+              backgroundColor: constBlue,
+              elevation: 8,
+              shape: const CircleBorder(),
+              onPressed:
+                  (controller.isApproving.value || controller.isRejecting.value)
+                  ? null
+                  : () {
+                      showConfirmDialog(
+                        onConfirm: () => controller.approveRequest(),
+                        onReject: () {
+                          showDialogWithTextFailed(
+                            onConfirm: (reason) {
+                              controller.rejectRequest(reason);
+                            },
+                          );
+                        },
+                        sub: 'هل أنت متأكد من الموافقة على هذا الطلب؟',
+                        tital: 'تأكيد الموافقة',
+                      );
+                    },
+              child: controller.isApproving.value
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.check, color: Colors.white),
+            ),
+          );
+        }),
         body: Column(
           children: [
             CustomBackContainer(),

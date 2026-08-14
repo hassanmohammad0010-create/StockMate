@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Service/App/Get_All_Suppliers_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_All_Suppliers_Service.dart';
 import 'package:stock_mate_project/core/models/Supplier_Model.dart';
 
 class GetAllSuppliersController extends GetxController {

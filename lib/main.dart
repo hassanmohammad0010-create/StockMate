@@ -19,14 +19,10 @@ void main() async {
 
   onBordingSharedPreferences = prefs;
 
-  // const storage = FlutterSecureStorage();
-  // await storage.deleteAll();
-
   await dotenv.load(fileName: ".env");
 
   await PromptManager.initialize();
 
-  // تحقق من حالة القفل قبل تحديد الصفحة الأولى للتطبيق
   final isLockEnabled = await LockService.instance.isLockEnabled();
 
   runApp(
