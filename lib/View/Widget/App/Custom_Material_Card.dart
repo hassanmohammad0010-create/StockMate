@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/core/models/New_MaterialItem.dart';
 
 class MaterialCard extends StatelessWidget {
   final MaterialItem materialItem;
@@ -14,8 +14,7 @@ class MaterialCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double progress =
-        materialItem.totalQuantity / materialItem.maxQuantity;
+    final double progress = materialItem.fillRatio; // ✅ آمن من القسمة على صفر
 
     return GestureDetector(
       onTap: onTap,
@@ -79,9 +78,11 @@ class MaterialCard extends StatelessWidget {
                 Row(
                   children: [
                     _InfoChip(
-                      label: materialItem.batches[0].expiryDate
-                          .toString()
-                          .substring(0, 10),
+                      label: materialItem.batches.isEmpty
+                          ? '---'
+                          : materialItem.batches[0].expiryDate
+                                .toString()
+                                .substring(0, 10),
                       icon: Icons.calendar_today_outlined,
                     ),
                     const SizedBox(width: 12),
@@ -124,13 +125,14 @@ class MaterialCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
-                    value: progress,
+                    value: progress.clamp(
+                      0.0,
+                      1.0,
+                    ), // ✅ حماية إضافية من تجاوز 100%
                     minHeight: 10,
                     backgroundColor: const Color(0xFFE2E8F0),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      progress < 0.20
-                          ? constRed // أحمر إذا أقل من 20%
-                          : constBlue, // أزرق إذا 20% أو أكثر
+                      progress < 0.20 ? constRed : constBlue,
                     ),
                   ),
                 ),

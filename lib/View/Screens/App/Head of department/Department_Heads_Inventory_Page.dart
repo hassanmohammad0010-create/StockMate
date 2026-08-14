@@ -100,15 +100,16 @@ class DepartmentHeadsInventoryPage extends GetView<FilterController> {
                       itemCount: filteredMaterial.length,
                       itemBuilder: (context, index) {
                         final item = filteredMaterial[index];
-                        return MaterialCard(
-                          onTap: () {
-                            Get.to(
-                              () => InventoryDetailsPage(item: item),
-                              binding: InventoryDetailsBinding(),
-                            );
-                          },
-                          materialItem: item,
-                        );
+                        return Container();
+                        // MaterialCard(
+                        //   onTap: () {
+                        //     Get.to(
+                        //       () => InventoryDetailsPage(item: item),
+                        //       binding: InventoryDetailsBinding(),
+                        //     );
+                        //   },
+                        //   materialItem: item,
+                        // );
                       },
                     );
             }),

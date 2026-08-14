@@ -11,7 +11,8 @@ String normalizeArabic(String text) {
       .replaceAll('إ', 'ا')
       .replaceAll('آ', 'ا')
       .replaceAll('ة', 'ه')
-      .replaceAll('ى', 'ي');
+      .replaceAll('ى', 'ي')
+      .toLowerCase(); //
 }
 
 /// حقل بحث عام وقابل لإعادة الاستخدام.

@@ -34,12 +34,18 @@ class CustomRow extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontFamily: cairo,
+              const SizedBox(width: 8), // ✅ فاصل أمان بين الجزئين
+              Flexible(
+                child: Text(
+                  label,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontFamily: cairo,
+                  ),
                 ),
               ),
             ],

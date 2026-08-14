@@ -237,7 +237,9 @@ class RequestPage extends StatelessWidget {
         return items.where((r) => r.statusLabel == 'قيد التنفيذ').toList();
 
       case 'منجز':
-        return items.where((r) => r.statusLabel == 'منجز').toList();
+        return items
+            .where((r) => r.statusLabel == 'منجز' || r.statusLabel == 'مستلم')
+            .toList();
       case 'مكتمل جزئي':
         return items.where((r) => r.statusLabel == 'مكتمل جزئي').toList();
       case 'مرفوضة':

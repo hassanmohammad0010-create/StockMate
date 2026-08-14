@@ -92,7 +92,6 @@ class PurchaseRequestListItem {
       case OrderStatus.cancelled:
         return 'مرفوض';
       case OrderStatus.partially_complete:
-        return 'مكتمل جزئي';
       case OrderStatus.complete:
         return 'مستلم';
     }

@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Purchase_Order_Details_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Purchasing_Item_Card.dart';
+import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/Function/Custom_Dialog_With_Textfailed.dart';
 import 'package:stock_mate_project/core/Function/Find_Color.dart';
 import 'package:stock_mate_project/core/models/Order_Item.dart'
     show OrderStatus, OrderPriority;
@@ -39,9 +41,9 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
       case OrderStatus.cancelled:
         return 'مرفوض';
       case OrderStatus.partially_complete:
-        return 'منجز';
+        return 'مكتمل جزئيا';
       case OrderStatus.complete:
-        return 'مستلم';
+        return 'منجز';
     }
   }
 
@@ -55,6 +57,57 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
         }
       },
       child: Scaffold(
+        // ← نفس منطق DisOrderDetailsPage بالضبط
+        floatingActionButton: Obx(() {
+          if (controller.isLoading.value) {
+            return const SizedBox.shrink();
+          }
+
+          final currentStatus = controller.details.value?.status;
+
+          if (controller.isApproved.value ||
+              controller.isRejected.value ||
+              currentStatus != OrderStatus.pending_hospital_approval) {
+            return const SizedBox.shrink();
+          }
+
+          return SizedBox(
+            width: context.screenWidth * 0.15,
+            height: context.screenHeight * 0.1,
+            child: FloatingActionButton(
+              backgroundColor: constBlue,
+              elevation: 8,
+              shape: const CircleBorder(),
+              onPressed:
+                  (controller.isApproving.value || controller.isRejecting.value)
+                  ? null
+                  : () {
+                      showConfirmDialog(
+                        onConfirm: () => controller.approveRequest(),
+                        onReject: () {
+                          showDialogWithTextFailed(
+                            onConfirm: (reason) {
+                              controller.rejectRequest(reason);
+                            },
+                          );
+                        },
+                        sub: 'هل أنت متأكد من الموافقة على هذا الطلب؟',
+                        tital: 'تأكيد الموافقة',
+                      );
+                    },
+              child: controller.isApproving.value
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.check, color: Colors.white),
+            ),
+          );
+        }),
         body: Column(
           children: [
             CustomBackContainer(),
@@ -344,44 +397,57 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                                 ),
                               ],
 
-                              // ─── اعتماد الطلب (لو معتمد) ────────────
-
                               // ─── سبب الرفض (لو موجود) ───────────────
-                              if (d.isRejected &&
-                                  d.activeRejectionReason != null) ...[
-                                SizedBox(height: context.screenHeight * 0.01),
-                                Divider(
-                                  indent: 16,
-                                  endIndent: 16,
-                                  thickness: 0.5,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                              // ← Obx مستقل عشان يتحدث فوراً بعد الرفض
+                              Obx(() {
+                                final currentDetails = controller.details.value;
+                                if (currentDetails == null ||
+                                    !currentDetails.isRejected ||
+                                    currentDetails.activeRejectionReason ==
+                                        null) {
+                                  return const SizedBox.shrink();
+                                }
+                                return Column(
                                   children: [
-                                    Text(
-                                      'سبب الرفض',
-                                      style: TextStyle(
-                                        color: constGray,
-                                        fontFamily: cairo,
-                                        fontSize: context.screenHeight * 0.019,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                    SizedBox(
+                                      height: context.screenHeight * 0.01,
                                     ),
-                                    Flexible(
-                                      child: Text(
-                                        d.activeRejectionReason!,
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontFamily: cairo,
-                                          fontSize:
-                                              context.screenHeight * 0.017,
+                                    Divider(
+                                      indent: 16,
+                                      endIndent: 16,
+                                      thickness: 0.5,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'سبب الرفض',
+                                          style: TextStyle(
+                                            color: constGray,
+                                            fontFamily: cairo,
+                                            fontSize:
+                                                context.screenHeight * 0.019,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
-                                      ),
+                                        Flexible(
+                                          child: Text(
+                                            currentDetails
+                                                .activeRejectionReason!,
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontFamily: cairo,
+                                              fontSize:
+                                                  context.screenHeight * 0.017,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
-                                ),
-                              ],
+                                );
+                              }),
                             ],
                           ),
                         ),

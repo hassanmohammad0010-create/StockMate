@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Material_Info_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Quantity_Container.dart';
-import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/core/models/New_MaterialItem.dart';
+
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Row.dart';
 
@@ -53,24 +54,30 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                             label: item.name,
                           ),
                           CustomRow(
-                            title: 'الماركة',
-                            iconData: Icons.badge_outlined,
-                            label: item.brand ?? '---',
+                            title: 'اسم الصنف',
+                            iconData: Icons.inventory_2_outlined,
+                            label: item.variantName,
                           ),
-                          // CustomRow(
-                          //   title: 'النوع',
-                          //   iconData: Icons.layers_outlined,
-                          //   label: item.type,
-                          // ),
+                          CustomRow(
+                            title: 'رمز الصنف (SKU)',
+                            iconData: Icons.qr_code_2_outlined,
+                            label: item.sku.isEmpty ? '---' : item.sku,
+                          ),
                           CustomRow(
                             title: 'الصنف',
                             iconData: Icons.dashboard_outlined,
                             label: item.categoryLabel,
                           ),
+                          if (item.subCategoryLabel != null)
+                            CustomRow(
+                              title: 'الفئة الفرعية',
+                              iconData: Icons.category_outlined,
+                              label: item.subCategoryLabel!,
+                            ),
                           CustomRow(
-                            title: 'موقع التخزين',
-                            iconData: Icons.place_outlined,
-                            label: item.storageLocation ?? '---',
+                            title: 'الوحدة',
+                            iconData: Icons.straighten_outlined,
+                            label: item.unit?.name ?? '---',
                           ),
                           CustomRow(
                             title: 'الحدود ',
@@ -119,7 +126,7 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                '${item.totalQuantity}\\${item.maxQuantity}',
+                                '${item.totalQuantity}\\${item.maxQuantity} ${item.unit?.abbreviation ?? ''}',
                                 style: TextStyle(
                                   fontSize: context.screenHeight * 0.019,
                                   fontFamily: cairo,
@@ -132,23 +139,32 @@ class DisplayMaterialInfoPage extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: LinearProgressIndicator(
-                              value: item.totalQuantity / item.maxQuantity,
+                              value: item.fillRatio,
                               minHeight: context.screenHeight * 0.012,
                               backgroundColor: const Color(0xFFE2E8F0),
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                item.totalQuantity / item.maxQuantity < 0.20
-                                    ? constRed
-                                    : constBlue,
+                                item.isBelowMinimum ? constRed : constBlue,
                               ),
                             ),
                           ),
                           SizedBox(height: context.screenHeight * 0.008),
                           Text(
-                            '${(item.totalQuantity / item.maxQuantity) * 100} %',
+                            '${(item.fillRatio * 100).toStringAsFixed(0)} %',
                             style: TextStyle(
                               fontSize: context.screenHeight * 0.016,
                             ),
                           ),
+                          if (item.isBelowMinimum) ...[
+                            SizedBox(height: context.screenHeight * 0.006),
+                            Text(
+                              'الكمية أقل من الحد الأدنى المسموح',
+                              style: TextStyle(
+                                fontSize: context.screenHeight * 0.015,
+                                color: constRed,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                           SizedBox(height: context.screenHeight * 0.008),
                         ],
                       ),
@@ -231,6 +247,15 @@ class DisplayMaterialInfoPage extends StatelessWidget {
           ),
           Obx(() {
             if (!controller.showBatches.value) return const SizedBox.shrink();
+            if (mat.batches.isEmpty) {
+              return Padding(
+                padding: EdgeInsets.only(top: context.screenHeight * 0.015),
+                child: Text(
+                  'لا توجد دفعات مسجلة',
+                  style: TextStyle(color: Colors.grey.shade500),
+                ),
+              );
+            }
             return Column(
               children: [
                 SizedBox(height: context.screenHeight * 0.015),
@@ -289,45 +314,60 @@ class DisplayMaterialInfoPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.shade200, width: 0.5),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                _fmt(batch.quantity),
-                style: TextStyle(
-                  fontSize: context.screenHeight * 0.017,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(width: context.screenWidth * 0.02),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.screenWidth * 0.025,
-                  vertical: context.screenHeight * 0.004,
-                ),
-                decoration: BoxDecoration(
-                  color: bg,
-                  borderRadius: BorderRadius.circular(99),
-                ),
-                child: Text(
-                  batch.statusLabel,
-                  style: TextStyle(
-                    fontSize: context.screenHeight * 0.013,
-                    color: textColor,
+              Row(
+                children: [
+                  Text(
+                    _fmt(batch.quantity),
+                    style: TextStyle(
+                      fontSize: context.screenHeight * 0.017,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
+                  SizedBox(width: context.screenWidth * 0.02),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.screenWidth * 0.025,
+                      vertical: context.screenHeight * 0.004,
+                    ),
+                    decoration: BoxDecoration(
+                      color: bg,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                    child: Text(
+                      batch.statusLabel,
+                      style: TextStyle(
+                        fontSize: context.screenHeight * 0.013,
+                        color: textColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                dateStr,
+                style: TextStyle(
+                  fontSize: context.screenHeight * 0.014,
+                  color: Colors.grey,
                 ),
               ),
             ],
           ),
-          Text(
-            dateStr,
-            style: TextStyle(
-              fontSize: context.screenHeight * 0.014,
-              color: Colors.grey,
+          if (batch.batchNumber.isNotEmpty) ...[
+            SizedBox(height: context.screenHeight * 0.004),
+            Text(
+              'رقم الدفعة: ${batch.batchNumber}',
+              style: TextStyle(
+                fontSize: context.screenHeight * 0.012,
+                color: Colors.grey.shade500,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
