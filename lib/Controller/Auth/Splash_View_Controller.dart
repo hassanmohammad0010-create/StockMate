@@ -12,7 +12,7 @@ class SplashViewController extends GetxController {
   void onInit() async {
     super.onInit();
     Future.delayed(const Duration(seconds: 3), () async {
-      await TokenStorage.getAccessToken() == 'access_token'
+      await TokenStorage.getAccessToken() == null
           ? {
               onBordingSharedPreferences!.getBool('onBording') == null
                   ? Get.off(() => OnBordingAppViewPage())

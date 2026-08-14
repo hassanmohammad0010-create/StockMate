@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Service/App/Get_Roles_Servvice.dart';
+import 'package:stock_mate_project/Service/Boss/Get_Roles_Servvice.dart';
 import 'package:stock_mate_project/core/models/Role_Model.dart';
 
 class Createuserpagecontroller extends GetxController {

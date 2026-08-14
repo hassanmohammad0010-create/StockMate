@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Create_Department_Page_Controller.dart';
 import 'package:stock_mate_project/Controller/Loading%20Indecator%20Controller/Loading_Indicator_Controller.dart';
-import 'package:stock_mate_project/Service/App/Create_Department_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Create_Department_Service.dart';
 import 'package:stock_mate_project/core/Function/Validation.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Custom_My_Drop_Down.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
@@ -110,6 +110,8 @@ class CreateDepartmentPage extends StatelessWidget {
                         labelBuilder: (v) => v,
                         label: 'النوع الخاص بالقسم',
                         hint: '',
+                        validator: (data) =>
+                            data == null ? 'الحقل ضروري' : null,
                         icon: Icons.rule_outlined,
                         value:
                             createDepartmentPageController.selectedType.value,

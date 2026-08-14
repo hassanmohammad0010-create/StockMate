@@ -1,4 +1,3 @@
-// lib/core/network/api_error_handler.dart
 import 'dart:async';
 import 'dart:io';
 
@@ -67,7 +66,7 @@ class ApiErrorHandler {
       customSnackBar(
         title: 'طلبات كثيرة',
         message:
-            'تم إرسال عدد كبير من الطلبات، الرجاء الانتظار قليلاً والمحاولة مرة أخرى',
+            'تم إرسال عدد كبير من الطلبات، الرجاء الانتظار دقيقة والمحاولة مرة أخرى',
         color: constRed,
         messageColor: constLightRed,
       );

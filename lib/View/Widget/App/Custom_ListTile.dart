@@ -17,8 +17,13 @@ class CustomListTile extends StatelessWidget {
   String title, description;
   VoidCallback onTap;
 
+  // ← النص اللي بيعني إنه ما في رئيس للقسم
+  static const String _noManagerText = 'لا يوجد رئيس للقسم';
+
   @override
   Widget build(BuildContext context) {
+    final bool isDisabled = description == _noManagerText;
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: context.screenWidth * 0.03, // ← بدل 12
@@ -44,12 +49,15 @@ class CustomListTile extends StatelessWidget {
           leading: Container(
             padding: EdgeInsets.all(context.screenWidth * 0.025), // ← بدل 10
             decoration: BoxDecoration(
-              color: backgroundColor,
+              // ← نخفف اللون شوي لو معطّلة
+              color: isDisabled
+                  ? backgroundColor.withOpacity(0.5)
+                  : backgroundColor,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
-              color: iconColor,
+              color: isDisabled ? iconColor.withOpacity(0.5) : iconColor,
               size: context.screenHeight * 0.038, // ← بدل 32
             ),
           ),
@@ -60,6 +68,7 @@ class CustomListTile extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontFamily: cairo,
               fontSize: context.screenHeight * 0.019, // ← بدل 16
+              color: isDisabled ? Colors.grey : null,
             ),
           ),
           subtitle: Text(
@@ -71,12 +80,16 @@ class CustomListTile extends StatelessWidget {
               fontSize: context.screenHeight * 0.024, // ← بدل 20
             ),
           ),
-          trailing: Icon(
-            Icons.chevron_right,
-            color: Colors.grey,
-            size: context.screenHeight * 0.028, // ← بدل default
-          ),
-          onTap: onTap,
+          // ← نخفي السهم لو التايل غير قابل للضغط
+          trailing: isDisabled
+              ? null
+              : Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey,
+                  size: context.screenHeight * 0.028, // ← بدل default
+                ),
+          // ← لو معطّلة، onTap بتصير null فيصير الـ ListTile فعلياً غير قابل للضغط
+          onTap: isDisabled ? null : onTap,
         ),
       ),
     );

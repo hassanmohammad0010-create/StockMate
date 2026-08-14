@@ -1,70 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Service/Get_Urgent_Department_Requests_Controller.dart';
+import 'package:stock_mate_project/Controller/App/Urgent_RefillRequests_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Request_Container.dart';
-import 'package:stock_mate_project/core/models/Order_Models.dart';
-import 'package:stock_mate_project/core/models/Request_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class NesseryDepartmentRequestPage extends StatelessWidget {
   NesseryDepartmentRequestPage({super.key});
   final String pageName = '/NesseryDepartmentRequestPage';
-  GetUrgentDepartmentRequestsController controller = Get.put(
-    GetUrgentDepartmentRequestsController(),
-  );
+
   @override
   Widget build(BuildContext context) {
+    final UrgentRefillRequestsController controller = Get.put(
+      UrgentRefillRequestsController(fetchAll: true),
+    );
+
     return Scaffold(
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           CustomBackContainer(),
-          CustomHeadContainer(title: 'طلبات الاقسام الضرورية'),
-          GetBuilder<GetUrgentDepartmentRequestsController>(
-            builder: (controller) {
-              return controller.requests == null
-                  ? Expanded(child: Center(child: CustomLoadingIndicator()))
-                  : controller.requests!.isEmpty
-                  ? Expanded(
-                      child: Center(
-                        child: Text(
-                          'لا يوجد موردين لعرضهم....',
-                          style: TextStyle(fontFamily: cairo, fontSize: 24),
-                        ),
-                      ),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(top: 0),
-                        itemCount: controller.requests!.length,
-                        itemBuilder: (context, index) {
-                          return CustomRequestContainer(
-                            date:
-                                '${controller.requests![index].date.year}-${controller.requests![index].date.month}-${controller.requests![index].date.day}',
-                            necessity: controller
-                                .requests![index]
-                                .requestType
-                                .arabicLabel,
-                            requester:
-                                controller.requests![index].departmentName,
-                            state:
-                                controller.requests![index].status.arabicLabel,
-                            onTap: () {
-                              Get.to(
-                                () => DisOrderDetailsPage(
-                                  requestModel: controller.requests![index],
-                                ),
-                              );
-                            },
-                          );
+          CustomHeadContainer(title: 'طلبات الاقسام المستعجلة '),
+          Expanded(
+            child: Obx(() {
+              if (controller.isLoading.value &&
+                  controller.allRequests.isEmpty) {
+                return const Center(child: CustomLoadingIndicator());
+              }
+
+              // ✅ حالة الخطأ مع إعادة المحاولة
+              if (controller.hasError.value || controller.allRequests.isEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomEmptyState(tital: 'تعذر تحميل الطلبات'),
+                    TextButton(
+                      onPressed: controller.refreshRequests,
+                      child: const Text('إعادة المحاولة'),
+                    ),
+                  ],
+                );
+              }
+
+              if (controller.allRequests.isEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomEmptyState(tital: 'لا يوجد طلبات مستعجلة'),
+                    TextButton(
+                      onPressed: controller.refreshRequests,
+                      child: const Text('إعادة المحاولة'),
+                    ),
+                  ],
+                );
+              }
+
+              return RefreshIndicator(
+                onRefresh: controller.refreshRequests,
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (scrollInfo) {
+                    if (scrollInfo.metrics.pixels ==
+                        scrollInfo.metrics.maxScrollExtent) {
+                      controller.loadMore();
+                    }
+                    return false;
+                  },
+                  child: ListView.builder(
+                    itemCount: controller.allRequests.length,
+                    itemBuilder: (context, index) {
+                      final item = controller.allRequests[index];
+                      return CustomRequestContainer(
+                        date: item.formattedCreatedAt,
+                        necessity: item.requestTypeLabel,
+                        requester: item.department?.name ?? '',
+                        state: item.statusLabel,
+                        onTap: () async {
+                          await Get.to(() => DisOrderDetailsPage(item: item));
+                          controller.refreshRequests();
                         },
-                      ),
-                    );
-            },
+                      );
+                    },
+                  ),
+                ),
+              );
+            }),
           ),
         ],
       ),

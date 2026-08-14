@@ -87,7 +87,7 @@ class CustomSuppliersContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        supplierModel.email,
+                        supplierModel.email!,
                         style: TextStyle(
                           color: constGray,
                           fontFamily: cairo,
@@ -144,48 +144,10 @@ class CustomSuppliersContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
-                  Align(
-                    alignment: AlignmentGeometry.centerRight,
-                    child: Text(
-                      'ملاحظات : ${supplierModel.notes ?? '----------'}',
-                      softWrap: true,
-                      // overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: lateef,
-                        fontSize: 18,
-                        color: constGray,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
-            Wrap(
-              spacing: 8, // المسافة بين العناصر أفقياً
-              runSpacing: 8, // المسافة بين الصفوف عامودياً
-              textDirection: TextDirection.rtl, // ← من اليمين لليسار
-              children: List.generate(
-                supplierModel.products.length, // قائمة البيانات
-                (index) => Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: constLightBlue,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Text(
-                    supplierModel.products[index].name,
-                    style: TextStyle(
-                      color: constBlue,
-                      fontFamily: lateef,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),

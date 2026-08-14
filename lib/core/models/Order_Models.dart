@@ -195,7 +195,7 @@ final List<Order> allOrders = [
     type: 'دوري',
     rejectionReason:
         'الكمية المطلوبة تتجاوز الحد الأقصى المتاح في المستودع حالياً. الرجاء تقليل الكمية أو إعادة الطلب لاحقاً.',
-        duration: 'أسبوعين',
+    duration: 'أسبوعين',
   ),
 
   Order(
@@ -287,8 +287,7 @@ class OrderModel {
   }
 
   bool get isValid =>
-      (medicineName?.trim().isNotEmpty ?? false) &&
-      quantity.trim().isNotEmpty ;
+      (medicineName?.trim().isNotEmpty ?? false) && quantity.trim().isNotEmpty;
 
   Map<String, dynamic> toJson() => {
     'medicineName': medicineName,

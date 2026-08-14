@@ -184,6 +184,8 @@ class Dispatcher {
   }) async {
     try {
       final token = await TokenStorage.getAccessToken();
+      print(token);
+
       if (token == null) {
         ApiErrorHandler.handleException('لا يوجد جلسة. الرجاء تسجيل الدخول');
         return fallback;

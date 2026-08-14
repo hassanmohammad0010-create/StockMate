@@ -11,7 +11,8 @@ String normalizeArabic(String text) {
       .replaceAll('إ', 'ا')
       .replaceAll('آ', 'ا')
       .replaceAll('ة', 'ه')
-      .replaceAll('ى', 'ي');
+      .replaceAll('ى', 'ي')
+      .toLowerCase(); //
 }
 
 /// حقل بحث عام وقابل لإعادة الاستخدام.
@@ -126,23 +127,13 @@ class _CustomSearchFieldState extends State<CustomSearchField> {
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle:
-              widget.hintStyle ??
-              TextStyle(
-                fontFamily: cairo,
-                fontSize: 14,
-              ),
+              widget.hintStyle ?? TextStyle(fontFamily: cairo, fontSize: 14),
           hintTextDirection: widget.textDirection,
-          prefixIcon: Icon(
-            Icons.search_rounded,
-            size: 22,
-          ),
+          prefixIcon: Icon(Icons.search_rounded, size: 22),
           suffixIcon: hasText
               ? GestureDetector(
                   onTap: _handleClear,
-                  child: Icon(
-                    Icons.close_rounded,
-                    size: 20,
-                  ),
+                  child: Icon(Icons.close_rounded, size: 20),
                 )
               : const SizedBox.shrink(),
           filled: true,

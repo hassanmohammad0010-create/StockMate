@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/models/Request_Model.dart';
+import 'package:stock_mate_project/core/models/Order_Item_Details.dart';
 
 class VersionCustomRecurringDetailsCard extends StatelessWidget {
   const VersionCustomRecurringDetailsCard({
@@ -10,10 +10,14 @@ class VersionCustomRecurringDetailsCard extends StatelessWidget {
     required this.requestItemModel,
   });
 
-  final RequestItemModel requestItemModel;
+  final DetailRequestItem requestItemModel;
 
   @override
   Widget build(BuildContext context) {
+    final variant = requestItemModel.variant;
+    final product = variant?.product;
+    final unit = variant?.unit;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -34,28 +38,26 @@ class VersionCustomRecurringDetailsCard extends StatelessWidget {
           _buildDetailRow(
             icon: Icons.edit_outlined,
             label: 'المادة المطلوبة',
-            value: requestItemModel.productName,
+            value: product?.name ?? variant?.variantName ?? '---',
           ),
           _buildDivider(),
           _buildDetailRow(
             icon: Icons.inventory_2_outlined,
-            label: 'الكمية',
-            value: '${requestItemModel.quantity} وحدة',
-          ),
-
-          _buildDivider(),
-          _buildDetailRow(
-            icon: Icons.badge_outlined,
-            label: '  الماركة',
-            value: requestItemModel.brand ?? '---',
+            label: 'الكمية المطلوبة',
+            value:
+                '${requestItemModel.requestedQuantity} ${unit?.abbreviation ?? ''}',
           ),
           _buildDivider(),
           _buildDetailRow(
             icon: Icons.badge_outlined,
-            label: 'الوكيل ',
-            value: requestItemModel.suppliers != null
-                ? requestItemModel.suppliers![0].name
-                : '---',
+            label: 'الفئة',
+            value: product?.category?.name ?? '---',
+          ),
+          _buildDivider(),
+          _buildDetailRow(
+            icon: Icons.badge_outlined,
+            label: 'الكمية الموافق عليها',
+            value: requestItemModel.approvedQuantity?.toString() ?? '---',
           ),
         ],
       ),
