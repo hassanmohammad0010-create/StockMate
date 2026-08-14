@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/PrescriptionController.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Prescription_Details_Sheet.dart';
+import 'package:stock_mate_project/core/utils/New_Customs/My_Prescription_Card.dart';
+import 'package:stock_mate_project/Controller/Service/Pharmacy_Dispense_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescription_Details_Page.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Patient_Search_Field.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Prescription_Card.dart';
 
 class ProcessedPrescriptionsPage extends StatelessWidget {
   const ProcessedPrescriptionsPage({super.key});
@@ -15,40 +15,90 @@ class ProcessedPrescriptionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final h = context.screenHeight;
 
-    final controller = Get.find<PrescriptionController>();
+    // ✅ استخدام PharmacyDispenseController مع حالتين:
+    //    partially_delivered + delivered
+    final controller = Get.put(
+      PharmacyDispenseController(statuses: const ['partially_delivered']),
+      tag: 'processedPrescriptions',
+    );
+
+    // ✅ متغير محلي للبحث
+    final searchQuery = ''.obs;
+
     return Scaffold(
       backgroundColor: constBackgroundColor,
       body: Column(
         children: [
+          // ── حقل البحث ──
           PatientSearchField(
-            onChanged: controller.updateProcessedSearch,
-            onClear: () {
-              controller.updateProcessedSearch('');
-            },
+            onChanged: (query) => searchQuery.value = query,
+            onClear: () => searchQuery.value = '',
           ),
+
+          // ── قائمة الوصفات المصروفة ──
           Expanded(
             child: Obx(() {
-              final prescriptions = controller.processedPrescriptions;
+              // ✅ حالة التحميل الأول
+              if (controller.isLoading.value &&
+                  controller.prescriptions.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-              if (prescriptions.isEmpty) {
-                return const _EmptyState(
-                  icon: Icons.fact_check_outlined,
-                  message: 'لا توجد وصفات معالجة مطابقة',
+              // ✅ حالة الخطأ
+              if (controller.errorMessage.value.isNotEmpty &&
+                  controller.prescriptions.isEmpty) {
+                return _buildErrorState(controller);
+              }
+
+              // ✅ فلترة محلية حسب نص البحث
+              final query = searchQuery.value.toLowerCase().trim();
+              final filtered = query.isEmpty
+                  ? controller.prescriptions.toList()
+                  : controller.prescriptions.where((p) {
+                      final name = p.patientName.toLowerCase();
+                      final nationalId = (p.nationalId ?? '').toLowerCase();
+                      final familyBook = (p.familyBookNumber ?? '')
+                          .toLowerCase();
+                      final summary = p.medicationSummary.toLowerCase();
+                      return name.contains(query) ||
+                          nationalId.contains(query) ||
+                          familyBook.contains(query) ||
+                          summary.contains(query);
+                    }).toList();
+
+              // ✅ حالة القائمة الفارغة (بعد الفلترة)
+              if (filtered.isEmpty) {
+                return _EmptyState(
+                  icon: controller.prescriptions.isEmpty
+                      ? Icons.fact_check_outlined
+                      : Icons.search_off_outlined,
+                  message: controller.prescriptions.isEmpty
+                      ? 'لا توجد وصفات مصروفة بعد'
+                      : 'لا توجد وصفات مطابقة للبحث',
                 );
               }
 
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(
-                  vertical: h * 0.005,
+              // ✅ القائمة
+              return RefreshIndicator(
+                color: constBlue,
+                onRefresh: () => controller.fetchPrescriptions(),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: h * 0.005),
+                  itemCount: filtered.length + (controller.hasMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index >= filtered.length) {
+                      return _buildLoadMoreFooter(controller);
+                    }
+                    final prescription = filtered[index];
+                    return MyPrescriptionCard(
+                      prescription: prescription,
+                      onTap: () => Get.to(
+                        () => PrescriptionDetailsPage(queueItem: prescription),
+                        transition: Transition.rightToLeft,
+                      ),
+                    );
+                  },
                 ),
-                itemCount: prescriptions.length,
-                itemBuilder: (context, index) {
-                  final prescription = prescriptions[index];
-                  return PrescriptionCard(
-                    prescription: prescription,
-                    onTap: () => showPrescriptionDetails(context, prescription),
-                  );
-                },
               );
             }),
           ),
@@ -56,8 +106,62 @@ class ProcessedPrescriptionsPage extends StatelessWidget {
       ),
     );
   }
+
+  // ─── فوتر تحميل المزيد ────────────────────────────────────────────
+  Widget _buildLoadMoreFooter(PharmacyDispenseController c) {
+    return Obx(
+      () => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: c.isLoadingMore.value
+            ? const Center(child: CircularProgressIndicator())
+            : Center(
+                child: TextButton(
+                  onPressed: c.loadMore,
+                  child: const Text(
+                    'تحميل المزيد',
+                    style: TextStyle(
+                      color: constBlue,
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+
+  // ─── حالة الخطأ ───────────────────────────────────────────────────
+  Widget _buildErrorState(PharmacyDispenseController c) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.cloud_off_outlined, size: 70, color: Colors.grey.shade400),
+          const SizedBox(height: 12),
+          Text(
+            c.errorMessage.value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontFamily: 'Cairo',
+              color: Colors.grey,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextButton.icon(
+            onPressed: () => c.fetchPrescriptions(),
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text('إعادة المحاولة'),
+            style: TextButton.styleFrom(foregroundColor: constBlue),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
+// ─── حالة فارغة ────────────────────────────────────────────────────
 class _EmptyState extends StatelessWidget {
   final IconData icon;
   final String message;
@@ -70,11 +174,15 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 48, color: const Color(0xFFD1D5DB)),
-           SizedBox(height: context.screenHeight * 0.01),
+          Icon(icon, size: 64, color: const Color(0xFFD1D5DB)),
+          SizedBox(height: context.screenHeight * 0.01),
           Text(
             message,
-            style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
+            style: const TextStyle(
+              color: Color(0xFF9CA3AF),
+              fontSize: 14,
+              fontFamily: 'Cairo',
+            ),
           ),
         ],
       ),

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/ArchiveController.dart'; // ← جديد
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
@@ -91,8 +90,6 @@ class CartPage extends StatelessWidget {
                           confirmText: 'تأكيد',
                           onConfirm: () {
                             Get.back();
-                            ArchiveController.to.confirmCart();
-
                             customSnackBar(
                               title: 'تم التأكيد',
                               message: 'تم تأكيد السلة اليومية بنجاح.',

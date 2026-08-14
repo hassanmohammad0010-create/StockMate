@@ -15,9 +15,7 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Re
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Main_Page_Heap_of_Purchasing.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Ordinary_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Details_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Archive_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
@@ -25,7 +23,6 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Depar
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/New_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriotion_Archive_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriptions_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Processed_Prescriptions_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
@@ -58,12 +55,8 @@ abstract class AppPages {
       name: AppRoutes.AddRecurringOrderPage,
       page: () => const AddRecurringOrderPage(),
     ),
-    GetPage(
-      name: AppRoutes.ArchiveDetailsPage,
-      page: () => const ArchiveDetailsPage(),
-    ),
+   
     GetPage(name: AppRoutes.ArchivePage, page: () => const ArchivePage()),
-    GetPage(name: AppRoutes.CartArchivePage, page: () => CartArchivePage()),
     GetPage(name: AppRoutes.CartPage, page: () => const CartPage()),
     GetPage(
       name: AppRoutes.DepartmentHeadsAddNewOrderPage,
@@ -89,10 +82,6 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.RecurringConfirmPage,
       page: () => const RecurringConfirmPage(),
-    ),
-    GetPage(
-      name: AppRoutes.PrescriptionArchivePage,
-      page: () => PrescriptionArchivePage(),
     ),
     GetPage(name: AppRoutes.PrescriptionsPage, page: () => PrescriptionsPage()),
     GetPage(

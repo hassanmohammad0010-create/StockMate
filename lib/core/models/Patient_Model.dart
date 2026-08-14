@@ -1,66 +1,148 @@
 // ignore_for_file: file_names
 
-class PatientModel {
-  final String id;
-  final String name;
-  final String nationalNumber;
-  final DateTime arrivalTime;
-  final String status; // حقل الحالة
+/// ─────────────────────────────────────────────────────────────
+/// مودل قائمة المرضى — List Patients
+/// GET /patients
+/// ─────────────────────────────────────────────────────────────
 
-  PatientModel({
-    required this.id,
-    required this.name,
-    required this.nationalNumber,
-    required this.arrivalTime,
-    this.status = 'في الانتظار', // القيمة الافتراضية
+class PatientsPageData {
+  final List<PatientListItem> items;
+  final int total;
+  final int page;
+  final int limit;
+  final int totalPages;
+
+  const PatientsPageData({
+    required this.items,
+    required this.total,
+    required this.page,
+    required this.limit,
+    required this.totalPages,
   });
 
-  factory PatientModel.fromJson(Map<String, dynamic> json) {
-    return PatientModel(
-      id: json['id'].toString(),
-      name: json['name'] ?? '',
-      nationalNumber: json['national_number'] ?? '',
-      arrivalTime: DateTime.tryParse(json['arrival_time'] ?? '') ?? DateTime.now(),
-      status: json['status'] ?? 'في الانتظار',
+  factory PatientsPageData.fromJson(Map<String, dynamic> json) {
+    return PatientsPageData(
+      items: (json['items'] as List<dynamic>? ?? [])
+          .map((e) => PatientListItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      total: json['total'] as int? ?? 0,
+      page: json['page'] as int? ?? 1,
+      limit: json['limit'] as int? ?? 20,
+      totalPages: json['totalPages'] as int? ?? 1,
+    );
+  }
+}
+
+// ─── مودل المريض الواحد ────────────────────────────────────────────
+
+class PatientListItem {
+  final String id;
+  final String fullName;
+  final String? nationalId;
+  final String? familyBookNumber;
+  final String? patientId;
+  final String registeredById;
+  final PatientRegisteredBy? registeredBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  /// ✅ id مدخل الطابور (تذكرة الانتظار) — لازم لإند بوينت الحجز
+  final String? queueEntryId;
+
+  const PatientListItem({
+    required this.id,
+    required this.fullName,
+    this.nationalId,
+    this.familyBookNumber,
+    this.patientId,
+    required this.registeredById,
+    this.registeredBy,
+    required this.createdAt,
+    required this.updatedAt,
+    this.queueEntryId,
+  });
+
+  factory PatientListItem.fromJson(Map<String, dynamic> json) {
+    return PatientListItem(
+      id: json['id']?.toString() ?? '',
+      fullName: json['fullName']?.toString() ?? '',
+      nationalId: json['nationalId']?.toString(),
+      familyBookNumber: json['familyBookNumber']?.toString(),
+      patientId: json['patientId']?.toString(),
+      registeredById: json['registeredById']?.toString() ?? '',
+      registeredBy: json['registeredBy'] is Map
+          ? PatientRegisteredBy.fromJson(
+              json['registeredBy'] as Map<String, dynamic>,
+            )
+          : null,
+      createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? '') ??
+          DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? '') ??
+          DateTime.now(),
+      // queueEntryId لا يأتي من هذا الإند بوينت — يُمرر من طابور القسم
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'national_number': nationalNumber,
-      'arrival_time': arrivalTime.toIso8601String(),
-      'status': status,
-    };
-  }
+  // ─── Helpers للعرض ───────────────────────────────────────────────
 
-  PatientModel copyWith({
-    String? id,
-    String? name,
-    String? nationalNumber,
-    DateTime? arrivalTime,
-    String? status,
-  }) {
-    return PatientModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      nationalNumber: nationalNumber ?? this.nationalNumber,
-      arrivalTime: arrivalTime ?? this.arrivalTime,
-      status: status ?? this.status,
-    );
-  }
+  /// الاسم
+  String get name => fullName;
 
-  Duration get waitingDuration => DateTime.now().difference(arrivalTime);
-
-  String get waitingDurationText {
-    final duration = waitingDuration;
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-
-    if (hours > 0) {
-      return '$hours ساعة${minutes > 0 ? ' و $minutes دقيقة' : ''}';
+  /// ✅ التسلسل: nationalId ← familyBookNumber ← patientId ← 'غير متوفر'
+  String get nationalNumber {
+    if (nationalId != null && nationalId!.trim().isNotEmpty) {
+      return nationalId!;
     }
-    return '$minutes دقيقة';
+    if (familyBookNumber != null && familyBookNumber!.trim().isNotEmpty) {
+      return familyBookNumber!;
+    }
+    if (patientId != null && patientId!.trim().isNotEmpty) {
+      return patientId!;
+    }
+    return 'غير متوفر';
+  }
+
+  /// مدة الانتظار = الوقت منذ التسجيل/الإضافة للطابور
+  Duration get waitingDuration => DateTime.now().difference(createdAt);
+
+  /// نص مدة الانتظار
+  String get waitingDurationText {
+    final minutes = waitingDuration.inMinutes;
+    final hours = waitingDuration.inHours;
+
+    if (hours >= 1) {
+      final remainingMinutes = minutes % 60;
+      return remainingMinutes == 0
+          ? '$hours ساعة'
+          : '$hours سا $remainingMinutes د';
+    }
+    if (minutes > 0) return '$minutes دقيقة';
+    return 'الآن';
+  }
+
+  /// من سجّل المريض
+  String get registeredByName => registeredBy?.fullName ?? '—';
+
+  /// تنسيق تاريخ التسجيل
+  String get formattedCreatedAt {
+    final d = createdAt.toLocal();
+    String two(int v) => v.toString().padLeft(2, '0');
+    return '${two(d.day)}/${two(d.month)}/${d.year} • ${two(d.hour)}:${two(d.minute)}';
+  }
+}
+
+// ─── من سجّل المريض ─────────────────────────────────────────────────
+
+class PatientRegisteredBy {
+  final String id;
+  final String fullName;
+
+  const PatientRegisteredBy({required this.id, required this.fullName});
+
+  factory PatientRegisteredBy.fromJson(Map<String, dynamic> json) {
+    return PatientRegisteredBy(
+      id: json['id']?.toString() ?? '',
+      fullName: json['fullName']?.toString() ?? '',
+    );
   }
 }

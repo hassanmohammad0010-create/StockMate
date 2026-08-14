@@ -3,59 +3,141 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/Patients_Controller.dart';
+import 'package:stock_mate_project/Controller/Service/Patients_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Patient_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class PatientsPage extends StatelessWidget {
   const PatientsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final PatientsController controller = Get.put(PatientsController());
-
+    final controller = Get.put(PatientsController());
     final h = context.screenHeight;
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
-
       body: Column(
         children: [
-          CustomBackContainer(),
-          CustomNameContainer(
+          const CustomBackContainer(),
+          const CustomNameContainer(
             empName: 'قائمة المرضى',
             specializationName: 'المرضى الحاليين في الانتظار',
           ),
-          Obx(() {
-            if (controller.patients.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: h * 0.3),
-                  child: Text(
-                    'لا يوجد مرضى في الانتظار',
+          Expanded(
+            child: Obx(() {
+              // ✅ حالة التحميل الأول
+              if (controller.isLoading.value && controller.patients.isEmpty) {
+                return const Center(child: CustomLoadingIndicator());
+              }
+
+              // ✅ حالة الخطأ
+              if (controller.errorMessage.value.isNotEmpty &&
+                  controller.patients.isEmpty) {
+                return _buildErrorState(controller);
+              }
+
+              // ✅ حالة القائمة الفارغة
+              if (controller.patients.isEmpty) {
+                return _buildEmptyState();
+              }
+
+              // ✅ القائمة + فوتر تحميل المزيد
+              return RefreshIndicator(
+                color: constBlue,
+                onRefresh: () => controller.fetchPatients(),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: h * 0.015),
+                  itemCount:
+                      controller.patients.length + (controller.hasMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index >= controller.patients.length) {
+                      return _buildLoadMoreFooter(controller);
+                    }
+                    final patient = controller.patients[index];
+                    return PatientCard(
+                      patient: patient,
+                      queueNumber: index + 1,
+                    );
+                  },
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.people_outline, size: 64, color: Colors.grey.shade300),
+          const SizedBox(height: 16),
+          const Text(
+            'لا يوجد مرضى في الانتظار',
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Cairo',
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(PatientsController c) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.cloud_off_outlined, size: 70, color: Colors.grey.shade400),
+          const SizedBox(height: 12),
+          Text(
+            c.errorMessage.value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontFamily: 'Cairo',
+              color: Colors.grey,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextButton.icon(
+            onPressed: () => c.fetchPatients(),
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text('إعادة المحاولة'),
+            style: TextButton.styleFrom(foregroundColor: constBlue),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadMoreFooter(PatientsController c) {
+    return Obx(
+      () => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: c.isLoadingMore.value
+            ? const Center(child: CircularProgressIndicator())
+            : Center(
+                child: TextButton(
+                  onPressed: c.loadMore,
+                  child: const Text(
+                    'تحميل المزيد',
                     style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey.shade500,
-                      fontFamily: cairo,
+                      color: Colors.blue,
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
-              );
-            }
-
-            return Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(vertical: h * 0.015),
-                itemCount: controller.patients.length,
-                itemBuilder: (context, index) {
-                  final patient = controller.patients[index];
-                  return PatientCard(patient: patient, queueNumber: index + 1);
-                },
               ),
-            );
-          }),
-        ],
       ),
     );
   }

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/PrescriptionController.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/New_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Processed_Prescriptions_Page.dart';
@@ -17,10 +16,6 @@ class PrescriptionsPage extends StatelessWidget {
   final ToggleController controller = Get.put(
     ToggleController(),
     tag: AppRoutes.PrescriptionsPage,
-  );
-
-  final PrescriptionController prescriptionController = Get.put(
-    PrescriptionController(),
   );
 
   @override
