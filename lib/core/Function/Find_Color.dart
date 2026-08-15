@@ -21,7 +21,7 @@ class FindColor {
       return constBlue;
     } else if (word == 'مرفوض') {
       return constRed;
-    } else if (word == 'يومي' || word == 'شهري' || word == 'اسبوعي') {
+    } else if (word == 'يومي' || word == 'شهري' || word == 'أسبوعي') {
       return constBlue;
     }
   }
@@ -41,7 +41,7 @@ class FindColor {
       return constLightBlue;
     } else if (word == 'مرفوض') {
       return constLightRed;
-    } else if (word == 'يومي' || word == 'شهري' || word == 'اسبوعي') {
+    } else if (word == 'يومي' || word == 'شهري' || word == 'أسبوعي') {
       return constLightBlue;
     }
   }

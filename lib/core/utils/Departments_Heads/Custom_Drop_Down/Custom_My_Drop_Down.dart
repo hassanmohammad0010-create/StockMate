@@ -206,6 +206,8 @@ class _CustomDropdownState<T> extends FormFieldState<T>
     final w = context.screenWidth;
 
     final hasValue = value != null;
+    // ✅ لا يوجد عناصر لعرضها (وما إحنا بحالة تحميل) → منمنع الفتح ومنعرض "لا يوجد"
+    final isEmptyList = widget.items.isEmpty && !widget.isLoading;
     // ✅ إذا فيه errorBorder يدوي أو خطأ من الـ validator نفسه، نلوّن الحدود
     final isError = widget.errorBorder || hasError;
     final showClear = hasValue && widget.clearable;
@@ -215,6 +217,11 @@ class _CustomDropdownState<T> extends FormFieldState<T>
         : (_isOpen ? constBlue : Colors.grey.shade300);
 
     final borderWidth = (_isOpen || isError) ? 1.5 : 1.0;
+
+    void handleOpen() {
+      if (isEmptyList) return; // ✅ ما في داعي نفتح overlay فاضي
+      _openOverlay(context);
+    }
 
     return CompositedTransformTarget(
       link: _layerLink,
@@ -233,7 +240,7 @@ class _CustomDropdownState<T> extends FormFieldState<T>
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => _openOverlay(context),
+                    onTap: handleOpen,
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(14, 0, 8, 0),
@@ -242,7 +249,9 @@ class _CustomDropdownState<T> extends FormFieldState<T>
                           Icon(
                             widget.prefixIcon ?? widget.icon,
                             size: 25,
-                            color: constBlue,
+                            color: isEmptyList
+                                ? Colors.grey.shade400
+                                : constBlue,
                           ),
                           SizedBox(width: w * 0.04),
                           Expanded(
@@ -267,7 +276,10 @@ class _CustomDropdownState<T> extends FormFieldState<T>
                                       ],
                                     )
                                   : Text(
-                                      widget.label,
+                                      // ✅ نص "لا يوجد" بدل الـ label لما تكون
+                                      // القائمة فاضية، بدل استبدال الويدجت
+                                      // بالكامل بـ CustomEmptyState
+                                      isEmptyList ? 'لا يوجد' : widget.label,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey.shade500,
@@ -296,21 +308,23 @@ class _CustomDropdownState<T> extends FormFieldState<T>
                       ),
                     ),
                   ),
-                GestureDetector(
-                  onTap: () => _openOverlay(context),
-                  behavior: HitTestBehavior.opaque,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.only(end: 12),
-                    child: AnimatedRotation(
-                      turns: _isOpen ? 0.5 : 0,
-                      duration: const Duration(milliseconds: 180),
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: Colors.grey.shade500,
+                // ✅ نخفي سهم الفتح لو ما في عناصر أصلاً
+                if (!isEmptyList)
+                  GestureDetector(
+                    onTap: handleOpen,
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 12),
+                      child: AnimatedRotation(
+                        turns: _isOpen ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 180),
+                        child: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: Colors.grey.shade500,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

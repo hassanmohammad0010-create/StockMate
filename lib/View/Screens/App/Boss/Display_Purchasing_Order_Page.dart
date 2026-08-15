@@ -11,6 +11,8 @@ import 'package:stock_mate_project/core/Function/Find_Color.dart';
 import 'package:stock_mate_project/core/models/Order_Item.dart'
     show OrderStatus, OrderPriority;
 import 'package:stock_mate_project/core/models/Purchase_Request_Model.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
@@ -82,17 +84,42 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                   (controller.isApproving.value || controller.isRejecting.value)
                   ? null
                   : () {
-                      showConfirmDialog(
+                      CustomDialog.show(
+                        title: 'تأكيد الموافقة',
+                        message: 'هل أنت متأكد من الموافقة على هذا الطلب؟',
+                        type: DialogType.warning,
+                        confirmText: 'موافقة',
+                        cancelText: 'رفض',
                         onConfirm: () => controller.approveRequest(),
-                        onReject: () {
-                          showDialogWithTextFailed(
-                            onConfirm: (reason) {
-                              controller.rejectRequest(reason);
+                        onCancel: () {
+                          final TextEditingController reasonController =
+                              TextEditingController();
+
+                          CustomDialog.show(
+                            title: 'سبب الرفض',
+                            message: 'الرجاء إدخال سبب رفض الطلب',
+                            type: DialogType.warning,
+                            confirmText: 'تأكيد',
+                            cancelText: 'إلغاء',
+                            showTextField: true,
+                            textFieldHint: 'ادخل سبب الرفض',
+                            textFieldLabel: 'سبب الرفض',
+                            textFieldIcon: Icons.edit_outlined,
+                            textFieldKeyboard: TextInputType.text,
+                            textFieldController: reasonController,
+                            textFieldValidator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'الرجاء إدخال سبب الرفض';
+                              }
+                              return null;
+                            },
+                            onConfirm: () {
+                              controller.rejectRequest(
+                                reasonController.text.trim(),
+                              );
                             },
                           );
                         },
-                        sub: 'هل أنت متأكد من الموافقة على هذا الطلب؟',
-                        tital: 'تأكيد الموافقة',
                       );
                     },
               child: controller.isApproving.value

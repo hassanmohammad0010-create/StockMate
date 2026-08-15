@@ -8,6 +8,7 @@ import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
+// ignore: must_be_immutable
 class InventoryPage extends StatelessWidget {
   InventoryPage({super.key});
 
@@ -42,36 +43,53 @@ class InventoryPage extends StatelessWidget {
       ),
       body: GetBuilder<GetDepartmentsController>(
         builder: (controller) {
-          return controller.department == null
-              ? CustomLoadingIndicator()
-              : controller.department!.isEmpty
-              ? CustomEmptyState(tital: 'لا يوجد اقسام لعرضها')
-              : ListView.builder(
-                  padding: EdgeInsets.only(
-                    top: context.screenHeight * 0.01,
-                    bottom: context.screenHeight * 0.01,
-                  ),
-                  itemCount: controller.department!.length,
-                  itemBuilder: (context, index) {
-                    return CustomListTile(
-                      backgroundColor: constLightBlue,
-                      description:
-                          controller.department![index].managerName ??
-                          'لا يوجد رئيس للقسم',
-                      icon: Icons.category,
-                      iconColor: constBlue,
-                      onTap: () {
-                        Get.to(
-                          () => DisplayStockMaterialPage(
-                            departmentId:
-                                controller.department![index].id, // ✅ اتصلحت
-                          ),
+          if (controller.department == null) {
+            return CustomLoadingIndicator();
+          }
+
+          // ← RefreshIndicator يلف CustomScrollView كامل بدل ما يلف
+          // ListView لحاله، هيك السحب للتحديث يشتغل من أي مكان بالصفحة
+          // وحتى لو القائمة فاضية
+          return RefreshIndicator(
+            onRefresh: controller.fetchDepartments,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                if (controller.department!.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: CustomEmptyState(tital: 'لا يوجد اقسام لعرضها'),
+                  )
+                else
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      top: context.screenHeight * 0.01,
+                      bottom: context.screenHeight * 0.01,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return CustomListTile(
+                          backgroundColor: constLightBlue,
+                          description:
+                              controller.department![index].managerName ??
+                              'لا يوجد رئيس للقسم',
+                          icon: Icons.category,
+                          iconColor: constBlue,
+                          onTap: () {
+                            Get.to(
+                              () => DisplayStockMaterialPage(
+                                departmentId: controller.department![index].id,
+                              ),
+                            );
+                          },
+                          title: controller.department![index].name,
                         );
-                      },
-                      title: controller.department![index].name,
-                    );
-                  },
-                );
+                      }, childCount: controller.department!.length),
+                    ),
+                  ),
+              ],
+            ),
+          );
         },
       ),
     );

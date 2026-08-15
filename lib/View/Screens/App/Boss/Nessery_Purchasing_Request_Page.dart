@@ -14,8 +14,8 @@ class NesseryPurchasingRequestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UrgentPurchaseRequestsController controller = Get.put(
-      UrgentPurchaseRequestsController(),
+    final UrgentPurchaseRequestsController controller = Get.find(
+      // UrgentPurchaseRequestsController(),
     );
 
     return Scaffold(

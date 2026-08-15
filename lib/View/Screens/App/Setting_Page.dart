@@ -126,25 +126,6 @@ class SettingPage extends StatelessWidget {
                 ),
               ),
             ),
-            CustomListTile(
-              backgroundColor: constLightBlue,
-              description: 'انشاء حساب جديد لموظف',
-              icon: Icons.person,
-              iconColor: constBlue,
-              onTap: () {
-                Get.toNamed(AppRoutes.CreateEmployeeAccountPage);
-              },
-              title: 'انشاء حساب جديد',
-            ),
-
-            CustomListTile(
-              backgroundColor: constLightBlue,
-              description: 'طلب تغيير كلمة مرور الحساب',
-              icon: Icons.password,
-              iconColor: constBlue,
-              onTap: () {},
-              title: 'كلمة المرور',
-            ),
 
             CustomListTile(
               backgroundColor: constLightBlue,

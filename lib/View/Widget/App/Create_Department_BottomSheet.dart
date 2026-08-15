@@ -21,7 +21,7 @@ class CreateDepartmentBottomSheet extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final List<String> departmentType = ['مخزن مركزي', 'صيدلية', 'قسم اعتيادي'];
   final Map<String, String> depType = {
-    'مخزن مركزي': ' central_warehouse',
+    'مخزن مركزي': 'central_warehouse',
     'صيدلية': 'pharmacy',
     'قسم اعتيادي': 'standard',
   };

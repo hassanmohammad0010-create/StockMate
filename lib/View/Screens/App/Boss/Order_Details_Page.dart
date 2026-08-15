@@ -9,6 +9,8 @@ import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/Function/Custom_Dialog_With_Textfailed.dart';
 import 'package:stock_mate_project/core/Function/Find_Color.dart';
 import 'package:stock_mate_project/core/models/Order_Item.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
@@ -22,6 +24,25 @@ class DisOrderDetailsPage extends StatelessWidget {
         RequestItemController(requestId: item.id),
         tag: item.id,
       );
+  String _statusLabel(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.draft:
+        return 'معلق';
+      case OrderStatus.pending_hospital_approval:
+        return 'بأنتظار موافقتك';
+      case OrderStatus.pending_manager_approval:
+      case OrderStatus.preparing:
+        return 'قيد التنفيذ';
+      case OrderStatus.hospital_rejected:
+      case OrderStatus.manager_rejected:
+      case OrderStatus.cancelled:
+        return 'مرفوض';
+      case OrderStatus.partially_complete:
+        return 'منجز';
+      case OrderStatus.complete:
+        return 'مستلم';
+    }
+  }
 
   final OrdertItem item;
   final RequestItemController controller;
@@ -60,17 +81,47 @@ class DisOrderDetailsPage extends StatelessWidget {
                   (controller.isApproving.value || controller.isRejecting.value)
                   ? null
                   : () {
-                      showConfirmDialog(
-                        onConfirm: () => controller.approveRequest(),
-                        onReject: () {
-                          showDialogWithTextFailed(
-                            onConfirm: (reason) {
-                              controller.rejectRequest(reason);
+                      CustomDialog.show(
+                        title: 'تأكيد الموافقة',
+                        message: 'هل أنت متأكد من الموافقة على هذا الطلب؟',
+                        type: DialogType.warning,
+                        confirmText: 'موافقة',
+                        cancelText: 'رفض',
+                        onConfirm: () {
+                          Get.back(); // ✅ سكر ديالوج التأكيد أول
+                          controller.approveRequest();
+                        },
+                        onCancel: () {
+                          Get.back(); // ✅ سكر ديالوج التأكيد أول
+                          final TextEditingController reasonController =
+                              TextEditingController();
+
+                          CustomDialog.show(
+                            title: 'سبب الرفض',
+                            message: 'الرجاء إدخال سبب رفض الطلب',
+                            type: DialogType.warning,
+                            confirmText: 'تأكيد',
+                            cancelText: 'إلغاء',
+                            showTextField: true,
+                            textFieldHint: 'ادخل سبب الرفض',
+                            textFieldLabel: 'سبب الرفض',
+                            textFieldIcon: Icons.edit_outlined,
+                            textFieldKeyboard: TextInputType.text,
+                            textFieldController: reasonController,
+                            textFieldValidator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'الرجاء إدخال سبب الرفض';
+                              }
+                              return null;
+                            },
+                            onConfirm: () {
+                              Get.back(); // ✅ سكر ديالوج سبب الرفض
+                              controller.rejectRequest(
+                                reasonController.text.trim(),
+                              );
                             },
                           );
                         },
-                        sub: 'هل أنت متأكد من الموافقة على هذا الطلب؟',
-                        tital: 'تأكيد الموافقة',
                       );
                     },
               child: controller.isApproving.value
@@ -277,54 +328,65 @@ class DisOrderDetailsPage extends StatelessWidget {
                             SizedBox(height: context.screenHeight * 0.01),
                             Divider(indent: 16, endIndent: 16, thickness: 0.5),
                             // ─── الحالة ───────────────────────────────
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.list_alt_outlined,
-                                      size: context.screenHeight * 0.028,
-                                      color: constGray,
-                                    ),
-                                    SizedBox(width: context.screenWidth * 0.02),
-                                    Text(
-                                      'الحالة',
-                                      style: TextStyle(
+                            Obx(() {
+                              // ✅ نعتمد على status من الكونترولر إذا موجود، وإلا نرجع لـ item كـ fallback
+                              final currentStatus =
+                                  controller.details.value?.status ??
+                                  item.status;
+                              final label = _statusLabel(currentStatus);
+
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.list_alt_outlined,
+                                        size: context.screenHeight * 0.028,
                                         color: constGray,
+                                      ),
+                                      SizedBox(
+                                        width: context.screenWidth * 0.02,
+                                      ),
+                                      Text(
+                                        'الحالة',
+                                        style: TextStyle(
+                                          color: constGray,
+                                          fontFamily: cairo,
+                                          fontSize:
+                                              context.screenHeight * 0.019,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: context.screenWidth * 0.04,
+                                      vertical: context.screenHeight * 0.005,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: FindColor().findBackgroundColor(
+                                        word: label,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      label,
+                                      style: TextStyle(
                                         fontFamily: cairo,
                                         fontSize: context.screenHeight * 0.019,
                                         fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: context.screenWidth * 0.04,
-                                    vertical: context.screenHeight * 0.005,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: FindColor().findBackgroundColor(
-                                      word: item.statusLabel,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    item.statusLabel,
-                                    style: TextStyle(
-                                      fontFamily: cairo,
-                                      fontSize: context.screenHeight * 0.019,
-                                      fontWeight: FontWeight.w600,
-                                      color: FindColor().findFontColorFunction(
-                                        word: item.statusLabel,
+                                        color: FindColor()
+                                            .findFontColorFunction(word: label),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              );
+                            }),
 
                             // ─── سبب الرفض (لو موجود) ─────────────────
                             Obx(() {

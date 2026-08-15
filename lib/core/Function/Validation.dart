@@ -43,4 +43,14 @@ class Validation {
       return null;
     }
   }
+
+  generalValidationForDropdown(String? data) {
+    if (data == null) {
+      return 'الحقل ضروري';
+    } else if (data.isEmpty) {
+      return 'الحقل ضروري';
+    } else {
+      return null;
+    }
+  }
 }

@@ -16,6 +16,7 @@ class GetDepartmentsWithoutMangerController extends GetxController {
 
   Future<void> fetchDepartments() async {
     isLoading.value = true;
+
     final result = await GetFilteredDepartmentsService.getFilteredDepartments();
     departments.assignAll(result);
     isLoading.value = false;
