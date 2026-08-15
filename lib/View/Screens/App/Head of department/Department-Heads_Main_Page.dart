@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabController.dart';
+import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class DepartmentHeadsMainPage extends StatelessWidget {
   const DepartmentHeadsMainPage({super.key});
@@ -19,10 +21,14 @@ class DepartmentHeadsMainPage extends StatelessWidget {
     final w = context.screenWidth;
 
     if (!Get.isRegistered<DepartmentHeadsMainTabController>()) {
-      Get.put(DepartmentHeadsMainTabController());
+      Get.put(DepartmentHeadsMainTabController(), permanent: true);
     }
     final DepartmentHeadsMainTabController tabCtrl =
         Get.find<DepartmentHeadsMainTabController>();
+
+    final GetNameRollOfUserController getNameRollOfUserController = Get.put(
+      GetNameRollOfUserController(),
+    );
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -175,15 +181,25 @@ class DepartmentHeadsMainPage extends StatelessWidget {
           ),
         ),
         // drawer: CustomDrawer(),
-        body: TabBarView(
-          controller: tabCtrl.tabController,
-          children: [
-            DepartmentHeadsHomePage(),
-            DepartmentHeadsInventoryPage(),
-            DepartmentOrdersPage(),
-            SettingPage(),
-          ],
-        ),
+        // ✅ Obx بتستمع لـ id.value (RxnString) وتمنع بناء التبويبات
+        // قبل ما الـ id يوصل فعليًا من التوكن/الـ API.
+        body: Obx(() {
+          final String? departmentId = getNameRollOfUserController.id.value;
+
+          if (departmentId == null) {
+            return const Center(child: CustomLoadingIndicator());
+          }
+
+          return TabBarView(
+            controller: tabCtrl.tabController,
+            children: [
+              DepartmentHeadsHomePage(),
+              DepartmentHeadsInventoryPage(departmentId: departmentId),
+              DepartmentOrdersPage(),
+              SettingPage(),
+            ],
+          );
+        }),
       ),
     );
   }

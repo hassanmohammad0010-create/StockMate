@@ -3,118 +3,123 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
+import 'package:stock_mate_project/Controller/App/Live_Stock_Material_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
-import 'package:stock_mate_project/core/Bindings/App/Inventory_Details_Binding.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Details_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Material_Info_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
-import 'package:stock_mate_project/core/models/Material_Model.dart';
-import 'package:stock_mate_project/core/router/app_routes.dart';
-import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
+import 'package:stock_mate_project/core/models/New_MaterialItem.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Search_Field.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
-class DepartmentHeadsInventoryPage extends GetView<FilterController> {
-  const DepartmentHeadsInventoryPage({super.key});
+class DepartmentHeadsInventoryPage extends StatelessWidget {
+  DepartmentHeadsInventoryPage({super.key, required this.departmentId}) {
+    filterController.initFilters(['الكل', 'ثابتة', 'مستهلكة']);
+  }
 
-  static const String _filterTag = AppRoutes.DepartmentHeadsInventoryPage;
+  final String departmentId;
 
-  // تعريف الـ Tag ليتعرف GetView على الكونترولر الصحيح
-  @override
-  String? get tag => _filterTag;
+  final FilterController filterController = Get.put(
+    FilterController(),
+    tag: 'DisplayStockPage',
+  );
+
+  late final LiveStockController controller = Get.put(
+    LiveStockController(departmentId: departmentId),
+    tag:
+        departmentId, // ✅ tag فريد لكل قسم، عشان كل قسم ياخد Controller خاص بيه
+  );
+
+  final TextEditingController searchController = TextEditingController();
+  final RxString searchQuery = ''.obs;
 
   @override
   Widget build(BuildContext context) {
-    final h = context.screenHeight;
-    final w = context.screenWidth;
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          Get.delete<FilterController>(tag: 'DisplayStockPage');
+          Get.delete<LiveStockController>(tag: departmentId);
+        }
+      },
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Align(
+              alignment: AlignmentGeometry.centerRight,
+              child: CustomFilterBar(controller: filterController),
+            ),
+            CustomSearchField(
+              controller: searchController,
+              onChanged: (value) {
+                searchQuery.value = normalizeArabic(value.trim());
+              },
+              onClear: () {
+                searchQuery.value = '';
+              },
+            ),
+            Expanded(
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CustomLoadingIndicator());
+                }
 
-    // تسجيل الكونترولر مع الفلاتر المطلوبة لهذه الصفحة فقط
-    if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
-      Get.put<FilterController>(
-        FilterController()..initFilters(['الكل', 'ثابتة', 'مستهلكة']),
-        tag: _filterTag,
-      );
-    }
+                final String selected = filterController.selectedFilter.value;
+                final String query = searchQuery.value;
 
-    return Scaffold(
-      backgroundColor: constBackgroundColor,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Align(
-            alignment: AlignmentGeometry.centerRight,
-            child: CustomFilterBar(controller: controller),
-          ),
-          CustomSearchField(
-            controller: controller.searchController,
-            onChanged: (value) => controller.updateSearch(value),
-          ),
-          Expanded(
-            child: Obx(() {
-              // لتحديث القائمة عند تغيير نسخة المخزون
-              CartController.to.inventoryVersion.value;
+                final List<MaterialItem> filteredByCategory =
+                    switch (selected) {
+                      'الكل' => controller.allMaterials,
+                      'ثابتة' =>
+                        controller.allMaterials
+                            .where((o) => o.category == MaterialCategory.fixed)
+                            .toList(),
+                      'مستهلكة' =>
+                        controller.allMaterials
+                            .where(
+                              (o) => o.category == MaterialCategory.consumable,
+                            )
+                            .toList(),
+                      _ => controller.allMaterials,
+                    };
 
-              final String selected = controller.selectedFilter.value;
-              final String query = controller.searchQuery.value
-                  .trim()
-                  .toLowerCase();
+                final List<MaterialItem> material = query.isEmpty
+                    ? filteredByCategory
+                    : filteredByCategory
+                          .where((o) => normalizeArabic(o.name).contains(query))
+                          .toList();
 
-              // === منطق الفلترة حسب النوع (خاص بهذه الصفحة فقط) ===
-              List<MaterialItem> filteredMaterial = switch (selected) {
-                'ثابتة' =>
-                  allMaterial
-                      .where((o) => o.category == MaterialCategory.fixed)
-                      .toList(),
-                'مستهلكة' =>
-                  allMaterial
-                      .where(
-                        (o) =>
-                            o.category == MaterialCategory.consumable ||
-                            o.category == MaterialCategory.medicine,
-                      )
-                      .toList(),
-                // 'الكل' أو أي قيمة أخرى
-                _ => allMaterial,
-              };
-
-              // === منطق البحث النصي ===
-              if (query.isNotEmpty) {
-                filteredMaterial = filteredMaterial
-                    .where(
-                      (o) =>
-                          normalizeArabic(
-                            o.name,
-                          ).toLowerCase().contains(query) ||
-                          normalizeArabic(o.id).toLowerCase().contains(query),
-                    )
-                    .toList();
-              }
-
-              // === عرض النتائج ===
-              return filteredMaterial.isEmpty
-                  ? const SearchEmptyState()
-                  : ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                        vertical: h * 0.005,
-                        horizontal: w * 0.01,
-                      ),
-                      itemCount: filteredMaterial.length,
-                      itemBuilder: (context, index) {
-                        final item = filteredMaterial[index];
-                        return Container();
-                        // MaterialCard(
-                        //   onTap: () {
-                        //     Get.to(
-                        //       () => InventoryDetailsPage(item: item),
-                        //       binding: InventoryDetailsBinding(),
-                        //     );
-                        //   },
-                        //   materialItem: item,
-                        // );
-                      },
-                    );
-            }),
-          ),
-        ],
+                return material.isEmpty
+                    ? CustomEmptyState(tital: 'لا يوجد مواد لعرضها')
+                    : RefreshIndicator(
+                        onRefresh: controller.refreshMaterials,
+                        child: ListView.builder(
+                          padding: EdgeInsets.only(
+                            top: 0,
+                            bottom: context.screenHeight * 0.015,
+                          ),
+                          itemCount: material.length,
+                          itemBuilder: (context, index) {
+                            return MaterialCard(
+                              onTap: () {
+                                Get.to(
+                                  () => DisplayMaterialInfoPage(
+                                    item: material[index],
+                                  ),
+                                );
+                              },
+                              materialItem: material[index],
+                            );
+                          },
+                        ),
+                      );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }

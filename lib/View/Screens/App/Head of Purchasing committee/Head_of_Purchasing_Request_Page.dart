@@ -89,13 +89,13 @@ class HeadOfPurchasingRequestPage extends StatelessWidget {
 }
 
 void _openOrderDetails(Order order) {
-  Get.to(
-    () =>
-        // order.isRecurring
-        // ? RecurringOrderDetailsPage(order: order)
-        // :
-        OrderDetailsPage(order: order),
-  );
+  // Get.to(
+  //   () =>
+  //       // order.isRecurring
+  //       // ? RecurringOrderDetailsPage(order: order)
+  //       // :
+  //       OrderDetailsPage(order: order),
+  // );
 }
 
 Widget _buildEmptyState() {

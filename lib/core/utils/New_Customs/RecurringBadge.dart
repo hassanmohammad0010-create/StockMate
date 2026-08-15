@@ -16,7 +16,7 @@ class RecurringBadge extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: h * 0.002, horizontal: w * 0.01),
-      width: w * 0.18,
+      width: w * 0.2,
       decoration: BoxDecoration(
         color: const Color(0xFFEDE9FE),
         borderRadius: BorderRadius.circular(8),

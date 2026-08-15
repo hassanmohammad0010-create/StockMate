@@ -5,7 +5,6 @@ import 'package:stock_mate_project/core/Bindings/App/DepartmentHeadsInventoryBin
 import 'package:stock_mate_project/core/Bindings/Auth/Login_Page_Bending.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Entry_And_Exit_Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Request_Page.dart';
@@ -66,11 +65,11 @@ abstract class AppPages {
       name: AppRoutes.DepartmentHeadsHomePage,
       page: () => DepartmentHeadsHomePage(),
     ),
-    GetPage(
-      name: AppRoutes.DepartmentHeadsInventoryPage,
-      page: () => const DepartmentHeadsInventoryPage(),
-      binding: DepartmentHeadsInventoryBinding(),
-    ),
+    // GetPage(
+    //   name: AppRoutes.DepartmentHeadsInventoryPage,
+    //   page: () =>  DepartmentHeadsInventoryPage(),
+    //   binding: DepartmentHeadsInventoryBinding(),
+    // ),
     GetPage(
       name: AppRoutes.DepartmentOrdersPage,
       page: () => const DepartmentOrdersPage(),

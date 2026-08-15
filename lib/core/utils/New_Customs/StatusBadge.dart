@@ -21,12 +21,15 @@ class StatusBadge extends StatelessWidget {
     switch (status) {
       // ── معلق (مسودة + بانتظار موافقة المشفى) ──
       case OrderStatus.draft:
-      case OrderStatus.pending_hospital_approval:
         label = 'معلق';
         bgColor = constLightOrange;
         textColor = constOrange;
         break;
-
+      case OrderStatus.pending_hospital_approval:
+        label = 'بانتظار الموافقة';
+        bgColor = constLightOrange;
+        textColor = constOrange;
+        break;
       // ── قيد التنفيذ (بانتظار المدير + قيد التجهيز) ──
       case OrderStatus.pending_manager_approval:
       case OrderStatus.preparing:
@@ -60,11 +63,8 @@ class StatusBadge extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: h * 0.002,
-        horizontal: w * 0.01,
-      ),
-      width: w * 0.18,
+      padding: EdgeInsets.symmetric(vertical: h * 0.002, horizontal: w * 0.01),
+      width: w * 0.21,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8),

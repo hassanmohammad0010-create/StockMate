@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Service/Dispatcher.dart';
-import 'package:stock_mate_project/Test/PrescriptionDetailsModel.dart';
+import 'package:stock_mate_project/core/models/Prescription_Details_Model.dart';
 
 /// سيرفس جلب تفاصيل الوصفة
 /// GET /prescriptions/{id}

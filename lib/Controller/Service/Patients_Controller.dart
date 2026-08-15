@@ -36,8 +36,8 @@ class PatientsController extends GetxController {
     fetchPatients();
   }
 
-  String get _departmentId => getNameRollOfUserController.id ?? '';
-
+  String get _departmentId => getNameRollOfUserController.id.value ?? '';
+  
   // ─── جلب الصفحة الأولى ────────────────────────────────────────────
   Future<void> fetchPatients({int page = 1}) async {
     isLoading.value = true;

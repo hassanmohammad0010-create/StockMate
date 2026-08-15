@@ -1,17 +1,18 @@
-// ignore_for_file: file_names
-
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Service/Token_Storage.dart';
 
 class GetNameRollOfUserController extends GetxController {
-  String? name, role, id, departmentName;
+  final RxnString id = RxnString();
+  final RxnString name = RxnString();
+  final RxnString role = RxnString();
+  final RxnString departmentName = RxnString();
+
   @override
   void onInit() async {
     super.onInit();
-    id = await TokenStorage.getDepartmentID();
-    name = await TokenStorage.getUserName();
-    role = await TokenStorage.getUserRole();
-    departmentName = await TokenStorage.getDepartmentName();
-    update();
+    id.value = await TokenStorage.getDepartmentID();
+    name.value = await TokenStorage.getUserName();
+    role.value = await TokenStorage.getUserRole();
+    departmentName.value = await TokenStorage.getDepartmentName();
   }
 }

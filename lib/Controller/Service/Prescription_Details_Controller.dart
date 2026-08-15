@@ -6,10 +6,10 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Service/Pharmacy_Dispense_Controller.dart';
 import 'package:stock_mate_project/Service/Head%20of%20department/Cancel_Prescription_Service.dart';
 import 'package:stock_mate_project/Service/Head%20of%20department/Dispense_Prescription_Service.dart';
-import 'package:stock_mate_project/Test/GetPrescriptionDetailsService.dart';
-import 'package:stock_mate_project/Test/PrescriptionDetailsModel.dart';
+import 'package:stock_mate_project/Service/Head%20of%20department/Get_Prescription_Details_Service.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/models/Dispense_Queue_Item.dart';
+import 'package:stock_mate_project/core/models/Prescription_Details_Model.dart';
 
 class PrescriptionDetailsController extends GetxController {
   PrescriptionDetailsController({required this.queueItem});
