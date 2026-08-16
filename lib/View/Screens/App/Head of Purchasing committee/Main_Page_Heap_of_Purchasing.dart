@@ -12,7 +12,6 @@ class MainPageHeadOfPurchasingPage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        // backgroundColor: constColor,
         backgroundColor: constBackgroundColor,
         appBar: AppBar(
           toolbarHeight: context.screenHeight * 0.1,

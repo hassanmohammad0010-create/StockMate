@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Service/Boss/Urgent_Purchase_Requests_Controller.dart';
+import 'package:stock_mate_project/Controller/App/Urgent_Purchase_Requests_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Request_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
@@ -14,9 +14,7 @@ class NesseryPurchasingRequestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UrgentPurchaseRequestsController controller = Get.find(
-      // UrgentPurchaseRequestsController(),
-    );
+    final UrgentPurchaseRequestsController controller = Get.find();
 
     return Scaffold(
       body: Column(

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Urgent_RefillRequests_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
-import 'package:stock_mate_project/Service/Boss/Urgent_Purchase_Requests_Controller.dart';
+import 'package:stock_mate_project/Controller/App/Urgent_Purchase_Requests_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/User_Mangment_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
@@ -21,7 +21,13 @@ class BossHomePage extends StatelessWidget {
     UrgentRefillRequestsController(fetchAll: true),
   );
   final UrgentPurchaseRequestsController urgentPurchaseRequestsController =
-      Get.put(UrgentPurchaseRequestsController());
+      Get.put(
+        UrgentPurchaseRequestsController(
+          status: 'pending_hospital_approval',
+          priority: 'urgent',
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

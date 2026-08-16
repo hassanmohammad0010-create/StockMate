@@ -4,11 +4,6 @@
 import 'package:stock_mate_project/core/models/Order_Item.dart'
     show OrderStatus, OrderPriority;
 
-/// ─────────────────────────────────────────────────────────────
-/// مودل قائمة طلبات الشراء — List Purchase Requests
-/// GET /purchasing/requests
-/// ─────────────────────────────────────────────────────────────
-
 class PurchaseRequestsPageData {
   final List<PurchaseRequestListItem> items;
   final int total;
@@ -78,13 +73,15 @@ class PurchaseRequestListItem {
   }
 
   // ─── تسميات عربية للعرض (نفس تصنيف statusLabel بتاع OrderStatus) ──
+  // ─── تسميات عربية للعرض (نفس تصنيف statusLabel بتاع OrderStatus) ──
   String get statusLabel {
     switch (status) {
       case OrderStatus.draft:
         return 'معلق';
       case OrderStatus.pending_hospital_approval:
-        return 'بأنتظار موافقتك';
+        return 'بأنتظار موافقة المدير';
       case OrderStatus.pending_manager_approval:
+        return 'بأنتظار موافقة اللجنة';
       case OrderStatus.preparing:
         return 'قيد التنفيذ';
       case OrderStatus.hospital_rejected:
