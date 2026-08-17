@@ -1,4 +1,3 @@
-
 // // ignore_for_file: file_names
 // /// ══════════════════════════════════════════════════════════════════════
 // /// enum الحالات - يجب أن يتطابق 100% مع الباك اند
@@ -274,15 +273,12 @@ class RequestItemInput {
   final String variantId;
   final int requestedQuantity;
 
-  RequestItemInput({
-    required this.variantId,
-    required this.requestedQuantity,
-  });
+  RequestItemInput({required this.variantId, required this.requestedQuantity});
 
   Map<String, dynamic> toJson() => {
-        'variantId': variantId,
-        'requestedQuantity': requestedQuantity,
-      };
+    'variantId': variantId,
+    'requestedQuantity': requestedQuantity,
+  };
 }
 
 class CreateRefillRequestModel {
@@ -302,20 +298,20 @@ class CreateRefillRequestModel {
 
   /// يُستخدم عند POST (إنشاء طلب جديد) — يرسل كل الحقول
   Map<String, dynamic> toJson() => {
-        'priority': priority,
-        'requestType': requestType,
-        'frequencyInterval': frequencyInterval,
-        'notes': notes,
-        'items': items.map((e) => e.toJson()).toList(),
-      };
+    'priority': priority,
+    'requestType': requestType,
+    'frequencyInterval': frequencyInterval,
+    'notes': notes,
+    'items': items.map((e) => e.toJson()).toList(),
+  };
 
   /// ✅ يُستخدم عند PATCH (تعديل مسودة موجودة) — حسب توثيق الـ endpoint
   /// PATCH /department-refills/requests/{id} يقبل فقط items و notes
   /// إن احتجت إرسال priority أيضاً لاحقاً أضفها هنا بعد التأكد من الـ Docs
   Map<String, dynamic> toUpdateJson() => {
-        'items': items.map((e) => e.toJson()).toList(),
-        'notes': notes,
-      };
+    'items': items.map((e) => e.toJson()).toList(),
+    'notes': notes,
+  };
 }
 
 /// ══════════════════════════════════════════════════════════════════════
@@ -374,9 +370,11 @@ class RefillRequest {
           ? int.tryParse(json['frequencyInterval'].toString())
           : null,
       notes: json['notes']?.toString(),
-      createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? '') ??
+      createdAt:
+          DateTime.tryParse(json['createdAt']?.toString() ?? '') ??
           DateTime.now(),
-      updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? '') ??
+      updatedAt:
+          DateTime.tryParse(json['updatedAt']?.toString() ?? '') ??
           DateTime.now(),
       items: (json['items'] as List? ?? [])
           .map((e) => RefillRequestItem.fromJson(e as Map<String, dynamic>))
@@ -390,8 +388,7 @@ class RefillDepartment {
   final String name;
   final String type;
 
-  RefillDepartment(
-      {required this.id, required this.name, required this.type});
+  RefillDepartment({required this.id, required this.name, required this.type});
 
   factory RefillDepartment.fromJson(Map<String, dynamic> json) {
     return RefillDepartment(
@@ -457,8 +454,11 @@ class RefillVariant {
   final String variantName;
   final String sku;
 
-  RefillVariant(
-      {required this.id, required this.variantName, required this.sku});
+  RefillVariant({
+    required this.id,
+    required this.variantName,
+    required this.sku,
+  });
 
   factory RefillVariant.fromJson(Map<String, dynamic> json) {
     return RefillVariant(

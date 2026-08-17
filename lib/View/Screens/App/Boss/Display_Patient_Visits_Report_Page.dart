@@ -1,50 +1,49 @@
+// lib/View/Screens/App/Boss/Display_Patient_Visits_Report_Page.dart
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/App/Get_Catalog_Variants_Controller.dart';
+import 'package:stock_mate_project/Controller/App/Get_All_Doctors_Controller.dart';
 import 'package:stock_mate_project/Controller/App/Get_Departments_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/DatePicker_Controller.dart';
-import 'package:stock_mate_project/Service/Boss/Excel_Report_Service.dart';
-import 'package:stock_mate_project/Service/Boss/Get_Inventory_Movement_Report_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_Patient_Visits_Report_Service.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Date_Field.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/Function/show_Loading_Dialog.dart';
-import 'package:stock_mate_project/core/models/Catalog_Variants_Page_Data_Model.dart';
 import 'package:stock_mate_project/core/models/Department_Model.dart';
 import 'package:stock_mate_project/core/models/Group_By_Option_Model.dart';
-import 'package:stock_mate_project/core/models/Transaction_Type_Option_Model.dart';
+import 'package:stock_mate_project/core/models/User_Model.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Custom_My_Drop_Down.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 
-class ElectronicInventoryPage extends StatelessWidget {
-  ElectronicInventoryPage({super.key});
-  final String pageName = '/ElectronicInventoryPage';
+class DisplayPatientVisitsReportPage extends StatelessWidget {
+  DisplayPatientVisitsReportPage({super.key});
+  final String pageName = '/DisplayPatientVisitsReportPage';
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final DatePickerController controller = Get.put(DatePickerController());
+  // ← تاغ مستقل عشان ما يتصادم مع DatePickerController تبع صفحة تانية
+  final DatePickerController controller = Get.put(
+    DatePickerController(),
+    tag: 'PatientVisitsReport',
+  );
   final GetDepartmentsController departmentsController = Get.put(
     GetDepartmentsController(),
   );
-  final GetCatalogVariantsController variantsController = Get.put(
-    GetCatalogVariantsController(),
+  final GetAllDoctorsController doctorsController = Get.put(
+    GetAllDoctorsController(),
   );
-  final GetInventoryMovementReportService reportService =
-      GetInventoryMovementReportService();
+  final GetPatientVisitsReportService reportService =
+      GetPatientVisitsReportService();
 
-  // ✅ حالة الاختيارات (Rxn لأن CustomDropdown الجديدة تحتاج type كامل مش String)
   final Rxn<DepartmentModel> selectedDepartment = Rxn<DepartmentModel>();
-  final Rxn<CatalogVariant> selectedVariant = Rxn<CatalogVariant>();
-  final Rx<TransactionTypeOption> selectedTransactionType =
-      TransactionTypeOption.all.first.obs; // "الكل" افتراضيًا
-  // ← اختيار التجميع، "بدون تجميع" افتراضيًا (value = null)
+  final Rxn<UserItem> selectedDoctor = Rxn<UserItem>();
   final Rx<GroupByOption> selectedGroupBy = GroupByOption.all.first.obs;
 
   Future<void> _onConfirm(BuildContext context) async {
-    if (!formKey.currentState!.validate()) return;
-
     if (controller.fromDate.value == null || controller.toDate.value == null) {
       customSnackBar(
         title: 'خطأ',
@@ -71,49 +70,27 @@ class ElectronicInventoryPage extends StatelessWidget {
       from: controller.formatDate(controller.fromDate.value),
       to: controller.formatDate(controller.toDate.value),
       departmentId: selectedDepartment.value?.id,
-      variantId: selectedVariant.value?.id,
-      transactionType: selectedTransactionType.value.value,
-      groupBy: selectedGroupBy.value.value, // ← بترسل null لو "بدون تجميع"
+      doctorId: selectedDoctor.value?.id,
+      groupBy: selectedGroupBy.value.value,
     );
 
+    hideLoadingDialog();
+
     if (report == null) {
-      hideLoadingDialog();
       // ❌ في حال الفشل: ApiErrorHandler بيعرض الرسالة المناسبة تلقائيًا
       return;
     }
 
-    try {
-      final filePath = await ExcelReportService.generateInventoryMovementExcel(
-        report: report,
-        fromDate: controller.formatDate(controller.fromDate.value),
-        toDate: controller.formatDate(controller.toDate.value),
-      );
-
-      hideLoadingDialog();
-
-      final isDownloads =
-          filePath.contains('Download') || filePath.contains('Downloads');
-      final nameOfFile = filePath.split(RegExp(r'[/\\]')).last;
-
-      customSnackBar(
-        title: 'تم بنجاح',
-        message: isDownloads
-            ? 'تم حفظ التقرير في مجلد التنزيلات (Downloads) باسم:\n$nameOfFile'
-            : 'تم توليد التقرير بنجاح وحفظه في مجلد التطبيق',
-        color: constGreen,
-        messageColor: constLightGreen,
-      );
-
-      await ExcelReportService.openFile(filePath);
-    } catch (e) {
-      hideLoadingDialog();
-      customSnackBar(
-        title: 'خطأ',
-        message: 'حدث خطأ أثناء توليد ملف التقرير',
-        color: constRed,
-        messageColor: constLightRed,
-      );
-    }
+    // ⚠️ مؤقتاً بنعرض ملخص بسيط بالـ snackbar بانتظار توضيح شكل العرض
+    // النهائي المطلوب (جدول؟ رسم بياني؟ تصدير Excel متل تقرير المخزون؟)
+    customSnackBar(
+      title: 'تم جلب التقرير',
+      message:
+          'إجمالي الزيارات: ${report.summary.totalVisits}\n'
+          'عدد المرضى: ${report.summary.uniquePatients}',
+      color: constGreen,
+      messageColor: constLightGreen,
+    );
   }
 
   @override
@@ -122,7 +99,7 @@ class ElectronicInventoryPage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          CustomHeadContainer(title: 'تقرير جرد الكتروني'),
+          CustomHeadContainer(title: 'تقرير زيارات المرضى'),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
@@ -152,7 +129,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ─── القسم / المستودع ─────────────────
+                        // ─── القسم ─────────────────────────────
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: context.screenWidth * 0.02,
@@ -160,14 +137,14 @@ class ElectronicInventoryPage extends StatelessWidget {
                           ),
                           child: Container(
                             alignment: Alignment.center,
-                            width: context.screenWidth * 0.28,
+                            width: context.screenWidth * 0.22,
                             height: context.screenHeight * 0.05,
                             decoration: BoxDecoration(
                               color: constLightBlue,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'القسم / المستودع',
+                              'القسم',
                               style: TextStyle(
                                 color: constBlue,
                                 fontFamily: lateef,
@@ -196,7 +173,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                         ),
                         SizedBox(height: context.screenHeight * 0.01),
 
-                        // ─── الصنف ─────────────────────────────
+                        // ─── الطبيب ─────────────────────────────
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: context.screenWidth * 0.02,
@@ -211,7 +188,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'الصنف',
+                              'الطبيب',
                               style: TextStyle(
                                 color: constBlue,
                                 fontFamily: lateef,
@@ -221,59 +198,17 @@ class ElectronicInventoryPage extends StatelessWidget {
                           ),
                         ),
                         Obx(
-                          () => CustomDropdown<CatalogVariant>(
-                            items: variantsController.variants,
-                            labelBuilder: (v) => v.displayName,
-                            label: 'اختر الصنف (اختياري)',
-                            hint: 'اختر الصنف',
-                            icon: Icons.inventory_2_outlined,
+                          () => CustomDropdown<UserItem>(
+                            items: doctorsController.doctors,
+                            labelBuilder: (d) => d.fullName,
+                            label: 'اختر الطبيب (اختياري)',
+                            hint: 'اختر الطبيب',
+                            icon: Icons.person_outline,
                             searchable: true,
-                            isLoading: variantsController.isLoading.value,
-                            value: selectedVariant.value,
+                            isLoading: doctorsController.isLoading.value,
+                            value: selectedDoctor.value,
                             onChanged: (data) {
-                              selectedVariant.value = data;
-                            },
-                          ),
-                        ),
-                        SizedBox(height: context.screenHeight * 0.01),
-
-                        // ─── نوع الحركة ────────────────────────
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: context.screenWidth * 0.02,
-                            vertical: context.screenHeight * 0.01,
-                          ),
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: context.screenWidth * 0.25,
-                            height: context.screenHeight * 0.05,
-                            decoration: BoxDecoration(
-                              color: constLightBlue,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'نوع الحركة',
-                              style: TextStyle(
-                                color: constBlue,
-                                fontFamily: lateef,
-                                fontSize: context.screenHeight * 0.024,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Obx(
-                          () => CustomDropdown<TransactionTypeOption>(
-                            items: TransactionTypeOption.all,
-                            labelBuilder: (t) => t.label,
-                            label: 'نوع الحركة',
-                            hint: 'اختر نوع الحركة',
-                            icon: Icons.sync_alt_outlined,
-                            clearable: false,
-                            value: selectedTransactionType.value,
-                            onChanged: (data) {
-                              if (data != null) {
-                                selectedTransactionType.value = data;
-                              }
+                              selectedDoctor.value = data;
                             },
                           ),
                         ),
@@ -319,6 +254,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                             },
                           ),
                         ),
+                        SizedBox(height: context.screenHeight * 0.01),
 
                         // ─── من تاريخ ─────────────────────────
                         Padding(
@@ -357,6 +293,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                             onClear: controller.clearFromDate,
                           ),
                         ),
+
                         // ─── الى تاريخ ────────────────────────
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -393,6 +330,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: context.screenHeight * 0.01),
+
                         Align(
                           alignment: AlignmentGeometry.center,
                           child: Padding(

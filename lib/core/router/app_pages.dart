@@ -54,7 +54,7 @@ abstract class AppPages {
       name: AppRoutes.AddRecurringOrderPage,
       page: () => const AddRecurringOrderPage(),
     ),
-   
+
     GetPage(name: AppRoutes.ArchivePage, page: () => const ArchivePage()),
     GetPage(name: AppRoutes.CartPage, page: () => const CartPage()),
     GetPage(
@@ -123,7 +123,7 @@ abstract class AppPages {
     ),
     GetPage(
       name: AppRoutes.ElectronicInventoryPage,
-      page: () => const ElectronicInventoryPage(),
+      page: () => ElectronicInventoryPage(),
     ),
     GetPage(
       name: AppRoutes.EntryAndExitReportPage,
