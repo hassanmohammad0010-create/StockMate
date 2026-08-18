@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabController.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
+import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
@@ -29,6 +30,12 @@ class DepartmentHeadsMainPage extends StatelessWidget {
     final GetNameRollOfUserController getNameRollOfUserController = Get.put(
       GetNameRollOfUserController(),
     );
+
+    if (!Get.isRegistered<UnreadNotificationController>()) {
+      Get.put(UnreadNotificationController(), permanent: true);
+    }
+    final UnreadNotificationController unreadCtrl =
+        Get.find<UnreadNotificationController>();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -77,18 +84,39 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                         Get.toNamed(AppRoutes.NotificationPage);
                       },
                     ),
-                    Positioned(
-                      right: w * 0.02,
-                      top: h * 0.01,
-                      child: Container(
-                        width: w * 0.02,
-                        height: h * 0.015,
-                        decoration: const BoxDecoration(
-                          color: constRed,
-                          shape: BoxShape.circle,
+                    Obx(() {
+                      final count = unreadCtrl.unreadCount.value;
+                      if (count <= 0) return const SizedBox.shrink();
+
+                      return Positioned(
+                        right: w * 0.01,
+                        top: h * 0.005,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: w * 0.012,
+                            vertical: 1,
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: w * 0.05,
+                            minHeight: h * 0.02,
+                          ),
+                          decoration: const BoxDecoration(
+                            color: constRed,
+                            shape: BoxShape.circle,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            count > 99 ? '99+' : '$count',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
               ],

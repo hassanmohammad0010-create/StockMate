@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Setting_Controller.dart';
+import 'package:stock_mate_project/Controller/Service/Get_User_Profile_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
@@ -15,6 +16,7 @@ class SettingPage extends StatelessWidget {
     final h = context.screenHeight;
     final w = context.screenWidth;
     final SettingController controller = Get.put(SettingController());
+    final UserProfileController upc = Get.put(UserProfileController());
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -76,7 +78,7 @@ class SettingPage extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          'الدكتور محمد الاحمد',
+                          upc.fullName,
                           style: TextStyle(
                             color: constGray,
                             fontFamily: cairo,
@@ -109,7 +111,7 @@ class SettingPage extends StatelessWidget {
                         SizedBox(width: w * 0.02),
                         Flexible(
                           child: Text(
-                            'hasanmohammad@gmail.com',
+                            upc.email,
                             maxLines: 1,
                             overflow: TextOverflow.clip,
                             textAlign: TextAlign.left,

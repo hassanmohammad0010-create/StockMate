@@ -8,39 +8,56 @@ import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Material_Info_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Material_Card.dart';
 import 'package:stock_mate_project/core/models/New_MaterialItem.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Search_Field.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class DepartmentHeadsInventoryPage extends StatelessWidget {
-  DepartmentHeadsInventoryPage({super.key, required this.departmentId}) {
-    filterController.initFilters(['الكل', 'ثابتة', 'مستهلكة']);
-  }
+  // ✅ الكونستركتور فارغ تمامًا الآن — لا شيء ينفذ هنا.
+  // كل منطق Get.put وتهيئة الفلاتر انتقل إلى build() (بنفس نمط DepartmentOrdersPage)
+  // عشان ما يصطدم بقاعدة "ممنوع تعديل حالة GetX أثناء بناء شجرة الأب"
+  // عند فتح هذه الصفحة من داخل Obx (مثل صفحة الإشعارات).
+   DepartmentHeadsInventoryPage({super.key, required this.departmentId});
 
   final String departmentId;
 
-  final FilterController filterController = Get.put(
-    FilterController(),
-    tag: 'DisplayStockPage',
-  );
+  final RxString searchQuery =  RxString('');
 
-  late final LiveStockController controller = Get.put(
-    LiveStockController(departmentId: departmentId),
-    tag:
-        departmentId, // ✅ tag فريد لكل قسم، عشان كل قسم ياخد Controller خاص بيه
-  );
-
-  final TextEditingController searchController = TextEditingController();
-  final RxString searchQuery = ''.obs;
+  static const String _filterTag = AppRoutes.DepartmentHeadsInventoryPage;
 
   @override
   Widget build(BuildContext context) {
+    // ✅ 1) الفلتر: أنشئه فقط لو مو مسجل مسبقاً
+    if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
+      Get.put<FilterController>(
+        FilterController()..initFilters(['الكل', 'ثابتة', 'مستهلكة']),
+        tag: _filterTag,
+      );
+    }
+    final FilterController filterController = Get.find<FilterController>(
+      tag: _filterTag,
+    );
+
+    // ✅ 2) كونترولر المخزون: tag فريد لكل قسم
+    if (!Get.isRegistered<LiveStockController>(tag: departmentId)) {
+      Get.put(
+        LiveStockController(departmentId: departmentId),
+        tag: departmentId,
+      );
+    }
+    final LiveStockController controller = Get.find<LiveStockController>(
+      tag: departmentId,
+    );
+
+    final TextEditingController searchController = TextEditingController();
+
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          Get.delete<FilterController>(tag: 'DisplayStockPage');
+          Get.delete<FilterController>(tag: _filterTag);
           Get.delete<LiveStockController>(tag: departmentId);
         }
       },
@@ -80,7 +97,9 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
                       'مستهلكة' =>
                         controller.allMaterials
                             .where(
-                              (o) => o.category == MaterialCategory.consumable,
+                              (o) =>
+                                  o.category == MaterialCategory.consumable ||
+                                  o.category == MaterialCategory.medicine,
                             )
                             .toList(),
                       _ => controller.allMaterials,

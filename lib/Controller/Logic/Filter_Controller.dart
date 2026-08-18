@@ -28,7 +28,8 @@ class FilterController extends GetxController {
   bool isSelected(String filter) => selectedFilter.value == filter;
   void updateSearch(String query) => searchQuery.value = query;
 
-  void resetFilter() => selectedFilter.value = filters.isNotEmpty ? filters.first : '';
+  void resetFilter() =>
+      selectedFilter.value = filters.isNotEmpty ? filters.first : '';
 
   void clearSearch() {
     searchController.clear();
