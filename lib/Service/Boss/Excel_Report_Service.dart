@@ -7,6 +7,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stock_mate_project/core/models/Adjustment_Type_Model.dart';
 import 'package:stock_mate_project/core/models/Inventory_Movement_Report_Model.dart';
+import 'package:stock_mate_project/core/models/Patient_Visits_Report_Model.dart';
 
 class ExcelReportService {
   /// يبني ملف Excel من تقرير حركة المخزون، يحفظه، ويرجّع المسار
@@ -359,6 +360,151 @@ class ExcelReportService {
         xls.IntCellValue(row.quantity),
         xls.TextCellValue(row.reportedBy?.fullName ?? '-'),
         xls.TextCellValue(row.notes ?? '-'),
+      ]);
+    }
+  }
+
+  // ✅ أضيفي هذا التابع داخل نفس class ExcelReportService الموجود
+  static Future<String> generatePatientVisitsExcel({
+    required PatientVisitsReport report,
+    required String fromDate,
+    required String toDate,
+  }) async {
+    final excel = xls.Excel.createExcel();
+    excel.delete('Sheet1');
+
+    _buildVisitsSummarySheet(excel, report, fromDate, toDate);
+    _buildVisitsStatusSheet(excel, report);
+    _buildVisitsDepartmentSheet(excel, report);
+    _buildVisitsSeriesSheet(excel, report);
+    _buildVisitsRowsSheet(excel, report);
+
+    final bytes = excel.encode();
+    if (bytes == null) {
+      throw Exception('فشل توليد ملف الإكسل');
+    }
+
+    final dir = await getTemporaryDirectory();
+    final fileName =
+        'تقرير_زيارات_المرضى_${DateTime.now().millisecondsSinceEpoch}.xlsx';
+    final filePath = '${dir.path}/$fileName';
+
+    final file = File(filePath);
+    await file.writeAsBytes(bytes);
+
+    return filePath;
+  }
+
+  // ─── ورقة الملخص ────────────────────────────────────────────
+  static void _buildVisitsSummarySheet(
+    xls.Excel excel,
+    PatientVisitsReport report,
+    String fromDate,
+    String toDate,
+  ) {
+    final sheet = excel['الملخص'];
+
+    sheet.appendRow([xls.TextCellValue('تقرير زيارات المرضى')]);
+    sheet.appendRow([xls.TextCellValue('الفترة: $fromDate إلى $toDate')]);
+    sheet.appendRow([]);
+    sheet.appendRow([xls.TextCellValue('المؤشر'), xls.TextCellValue('القيمة')]);
+    sheet.appendRow([
+      xls.TextCellValue('إجمالي عدد الزيارات'),
+      xls.IntCellValue(report.summary.totalVisits),
+    ]);
+    sheet.appendRow([
+      xls.TextCellValue('عدد المرضى الفريدين'),
+      xls.IntCellValue(report.summary.uniquePatients),
+    ]);
+  }
+
+  // ─── ورقة حسب الحالة ─────────────────────────────────────────
+  static void _buildVisitsStatusSheet(
+    xls.Excel excel,
+    PatientVisitsReport report,
+  ) {
+    final sheet = excel['حسب الحالة'];
+
+    sheet.appendRow([
+      xls.TextCellValue('الحالة'),
+      xls.TextCellValue('عدد الزيارات'),
+    ]);
+
+    for (final s in report.summary.byStatus) {
+      sheet.appendRow([xls.TextCellValue(s.status), xls.IntCellValue(s.count)]);
+    }
+  }
+
+  // ─── ورقة حسب القسم ─────────────────────────────────────────
+  static void _buildVisitsDepartmentSheet(
+    xls.Excel excel,
+    PatientVisitsReport report,
+  ) {
+    final sheet = excel['حسب القسم'];
+
+    sheet.appendRow([
+      xls.TextCellValue('القسم'),
+      xls.TextCellValue('عدد الزيارات'),
+      xls.TextCellValue('عدد المرضى الفريدين'),
+    ]);
+
+    for (final d in report.byDepartment) {
+      sheet.appendRow([
+        xls.TextCellValue(d.departmentName),
+        xls.IntCellValue(d.visitCount),
+        xls.IntCellValue(d.uniquePatientCount),
+      ]);
+    }
+  }
+
+  // ─── ورقة السلسلة الزمنية ───────────────────────────────────
+  static void _buildVisitsSeriesSheet(
+    xls.Excel excel,
+    PatientVisitsReport report,
+  ) {
+    final sheet = excel['السلسلة الزمنية'];
+
+    sheet.appendRow([
+      xls.TextCellValue('التاريخ'),
+      xls.TextCellValue('عدد الزيارات'),
+    ]);
+
+    for (final s in report.series) {
+      sheet.appendRow([
+        xls.TextCellValue(s.bucket),
+        xls.IntCellValue(s.visitCount),
+      ]);
+    }
+  }
+
+  // ─── ورقة تفاصيل الزيارات ────────────────────────────────────
+  static void _buildVisitsRowsSheet(
+    xls.Excel excel,
+    PatientVisitsReport report,
+  ) {
+    final sheet = excel['تفاصيل الزيارات'];
+
+    sheet.appendRow([
+      xls.TextCellValue('التاريخ'),
+      xls.TextCellValue('الحالة'),
+      xls.TextCellValue('المريض'),
+      xls.TextCellValue('الرقم الوطني'),
+      xls.TextCellValue('الطبيب'),
+      xls.TextCellValue('الاختصاص'),
+      xls.TextCellValue('القسم'),
+      xls.TextCellValue('سبب الإلغاء'),
+    ]);
+
+    for (final row in report.rows.items) {
+      sheet.appendRow([
+        xls.TextCellValue(row.visitDate?.toString() ?? '-'),
+        xls.TextCellValue(row.status),
+        xls.TextCellValue(row.patient?.fullName ?? '-'),
+        xls.TextCellValue(row.patient?.nationalId ?? '-'),
+        xls.TextCellValue(row.doctor?.fullName ?? '-'),
+        xls.TextCellValue(row.doctor?.specialty ?? '-'),
+        xls.TextCellValue(row.department?.name ?? '-'),
+        xls.TextCellValue(row.cancelReason ?? '-'),
       ]);
     }
   }

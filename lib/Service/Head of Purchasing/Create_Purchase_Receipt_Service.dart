@@ -18,7 +18,6 @@ class CreatePurchaseReceiptService {
     required String purchaseRequestId,
     required String supplierId,
     required DateTime receivingDate,
-    required String type,
     String? notes,
     required List<CreatePurchaseReceiptItemInput> items,
     List<File> receiptImages = const [],
@@ -34,7 +33,7 @@ class CreatePurchaseReceiptService {
         request.fields['purchaseRequestId'] = purchaseRequestId;
         request.fields['supplierId'] = supplierId;
         request.fields['receivingDate'] = _fmtDate(receivingDate);
-        request.fields['type'] = type;
+        request.fields['type'] = 'final_batch';
         if (notes != null && notes.isNotEmpty) {
           request.fields['notes'] = notes;
         }

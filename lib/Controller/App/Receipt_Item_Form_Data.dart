@@ -144,7 +144,7 @@ class CreatePurchaseReceiptController extends GetxController {
       purchaseRequestId: purchaseRequestId,
       supplierId: supplierId.value!,
       receivingDate: receivingDate.value!,
-      type: type.value,
+
       notes: notesController.text.trim(),
       items: items,
       receiptImages: receiptImages,
