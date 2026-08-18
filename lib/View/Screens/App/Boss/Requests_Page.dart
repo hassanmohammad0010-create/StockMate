@@ -231,24 +231,41 @@ class RequestPage extends StatelessWidget {
   ) {
     switch (selectedFilter) {
       case 'بأنتظار موافقتك':
-        return items.where((r) => r.statusLabel == 'بأنتظار موافقتك').toList();
+        return items
+            .where((r) => r.status == OrderStatus.pending_hospital_approval)
+            .toList();
 
       case 'قيد التنفيذ':
-        return items.where((r) => r.statusLabel == 'قيد التنفيذ').toList();
+        return items
+            .where(
+              (r) =>
+                  r.status == OrderStatus.pending_manager_approval ||
+                  r.status == OrderStatus.preparing,
+            )
+            .toList();
 
       case 'منجز':
         return items
-            .where((r) => r.statusLabel == 'منجز' || r.statusLabel == 'مستلم')
+            .where(
+              (r) =>
+                  r.status == OrderStatus.complete ||
+                  r.status == OrderStatus.partially_complete,
+            )
             .toList();
-      case 'مكتمل جزئي':
-        return items.where((r) => r.statusLabel == 'مكتمل جزئي').toList();
+
       case 'مرفوضة':
-        return items.where((r) => r.statusLabel == 'مرفوض').toList();
+        return items
+            .where(
+              (r) =>
+                  r.status == OrderStatus.hospital_rejected ||
+                  r.status == OrderStatus.manager_rejected ||
+                  r.status == OrderStatus.cancelled,
+            )
+            .toList();
 
       case 'الكل':
       default:
-        // ← نستثني الطلبات "معلق" من عرض "الكل"
-        return items.where((r) => r.statusLabel != 'معلق').toList();
+        return items.where((r) => r.status != OrderStatus.draft).toList();
     }
   }
 }

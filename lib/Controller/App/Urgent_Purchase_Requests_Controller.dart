@@ -5,6 +5,11 @@ import 'package:stock_mate_project/Service/Boss/Get_Urgent_Purchase_RequestsList
 import 'package:stock_mate_project/core/models/Purchase_Request_Model.dart';
 
 class UrgentPurchaseRequestsController extends GetxController {
+  UrgentPurchaseRequestsController({required this.status, this.priority});
+
+  final String status;
+  final String? priority;
+
   final GetUrgentPurchaseRequestsListService _service =
       GetUrgentPurchaseRequestsListService();
 
@@ -31,6 +36,8 @@ class UrgentPurchaseRequestsController extends GetxController {
     final result = await _service.getUrgentRequests(
       page: _currentPage,
       limit: _limit,
+      status: status,
+      priority: priority,
     );
 
     if (result != null) {
@@ -50,6 +57,8 @@ class UrgentPurchaseRequestsController extends GetxController {
     final result = await _service.getUrgentRequests(
       page: _currentPage,
       limit: _limit,
+      status: status,
+      priority: priority,
     );
 
     if (result != null) {

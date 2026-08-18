@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Urgent_RefillRequests_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
-import 'package:stock_mate_project/Service/Boss/Urgent_Purchase_Requests_Controller.dart';
+import 'package:stock_mate_project/Controller/App/Urgent_Purchase_Requests_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Patient_Visits_Report_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Adjustments_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/User_Mangment_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
@@ -21,7 +23,13 @@ class BossHomePage extends StatelessWidget {
     UrgentRefillRequestsController(fetchAll: true),
   );
   final UrgentPurchaseRequestsController urgentPurchaseRequestsController =
-      Get.put(UrgentPurchaseRequestsController());
+      Get.put(
+        UrgentPurchaseRequestsController(
+          status: 'pending_hospital_approval',
+          priority: 'urgent',
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,16 +131,26 @@ class BossHomePage extends StatelessWidget {
                   },
                   title: 'تقرير جرد الكتروني',
                 ),
-                // CustomListTile(
-                //   backgroundColor: constLightBlue,
-                //   description: 'سجل  لعمليات دخول وخروج المواد',
-                //   icon: Icons.fact_check_rounded,
-                //   iconColor: constBlue,
-                //   onTap: () {
-                //     Get.toNamed(AppRoutes.EntryAndExitReportPage);
-                //   },
-                //   title: 'تقرير عمليات الدخول والخروج',
-                // ),
+                CustomListTile(
+                  backgroundColor: constLightBlue,
+                  description: 'جرد لحركة دخول وخروج المرضى ',
+                  icon: Icons.propane_tank_outlined,
+                  iconColor: constBlue,
+                  onTap: () {
+                    Get.to(() => DisplayPatientVisitsReportPage());
+                  },
+                  title: 'تقرير جرد مرضى المستشفى',
+                ),
+                CustomListTile(
+                  backgroundColor: constLightBlue,
+                  description: 'جرد لحركة المواد التالفة  ',
+                  icon: Icons.propane_tank_outlined,
+                  iconColor: constBlue,
+                  onTap: () {
+                    Get.to(() => ElectronicAdjustmentsPage());
+                  },
+                  title: 'تقرير جرد توالف المستشفى',
+                ),
                 CustomListTile(
                   backgroundColor: constLightBlue,
                   description: 'عرض كامل تفاصيل الموردين ',

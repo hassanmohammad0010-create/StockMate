@@ -7,10 +7,12 @@ import 'package:stock_mate_project/Controller/Auth/Enter_OTB_Controller.dart';
 import 'package:stock_mate_project/Controller/Loading%20Indecator%20Controller/Loading_Indicator_Controller.dart';
 import 'package:stock_mate_project/Service/Auth/OTB_Service.dart';
 import 'package:stock_mate_project/Service/Token_Storage.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Main_Page_Heap_of_Purchasing.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_OTB.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class EnterOTBPage extends StatelessWidget {
@@ -118,14 +120,31 @@ class EnterOTBPage extends StatelessWidget {
                                           );
                                       loadingIndicatorController.isntLoad();
                                       if (response) {
-                                        await TokenStorage.getUserRole() ==
-                                                    'department_manager' ||
-                                                await TokenStorage.getUserRole() ==
-                                                    'pharmacy_staff'
-                                            ? Get.offAll(
-                                                DepartmentHeadsMainPage(),
-                                              )
-                                            : Get.offAll(() => MainPage());
+                                        String? role =
+                                            await TokenStorage.getUserRole();
+                                        if (role != null) {
+                                          role == 'department_manager' ||
+                                                  role == 'pharmacy_staff'
+                                              ? Get.offAll(
+                                                  DepartmentHeadsMainPage(),
+                                                )
+                                              : role == 'purchasing_manager'
+                                              ? Get.offAll(
+                                                  () =>
+                                                      MainPageHeadOfPurchasingPage(),
+                                                )
+                                              : role == 'doctor'
+                                              ? Get.offAll(() => MainPage())
+                                              : Get.offAll(() => MainPage());
+                                        } else {
+                                          customSnackBar(
+                                            title: 'حدث خطأ ',
+                                            message:
+                                                'الرجاء تسجيل الدخول مجددا',
+                                            color: constRed,
+                                            messageColor: constLightRed,
+                                          );
+                                        }
                                       }
                                     },
                                   ),

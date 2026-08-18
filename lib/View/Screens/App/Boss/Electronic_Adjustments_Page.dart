@@ -1,3 +1,4 @@
+// lib/View/Screens/App/Boss/Electronic_Adjustments_Page.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -5,25 +6,27 @@ import 'package:stock_mate_project/Controller/App/Get_Catalog_Variants_Controlle
 import 'package:stock_mate_project/Controller/App/Get_Departments_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/DatePicker_Controller.dart';
 import 'package:stock_mate_project/Service/Boss/Excel_Report_Service.dart';
-import 'package:stock_mate_project/Service/Boss/Get_Inventory_Movement_Report_Service.dart';
+import 'package:stock_mate_project/Service/Boss/Get_Adjustments_Report_Service.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Date_Field.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/Function/show_Loading_Dialog.dart';
+import 'package:stock_mate_project/core/models/Adjustment_Type_Option_Model.dart';
 import 'package:stock_mate_project/core/models/Catalog_Variants_Page_Data_Model.dart';
 import 'package:stock_mate_project/core/models/Department_Model.dart';
 import 'package:stock_mate_project/core/models/Group_By_Option_Model.dart';
-import 'package:stock_mate_project/core/models/Transaction_Type_Option_Model.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Custom_My_Drop_Down.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 
-class ElectronicInventoryPage extends StatelessWidget {
-  ElectronicInventoryPage({super.key});
-  final String pageName = '/ElectronicInventoryPage';
+class ElectronicAdjustmentsPage extends StatelessWidget {
+  ElectronicAdjustmentsPage({super.key});
+  final String pageName = '/ElectronicAdjustmentsPage';
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  // ✅ نفس الكنترولرات المشتركة تمامًا مع صفحة جرد المخزون
+  // (GetX بترجع نفس الـ instance تلقائياً لو مسجلة أصلاً، فمفيش تكرار طلبات)
   final DatePickerController controller = Get.put(DatePickerController());
   final GetDepartmentsController departmentsController = Get.put(
     GetDepartmentsController(),
@@ -31,15 +34,13 @@ class ElectronicInventoryPage extends StatelessWidget {
   final GetCatalogVariantsController variantsController = Get.put(
     GetCatalogVariantsController(),
   );
-  final GetInventoryMovementReportService reportService =
-      GetInventoryMovementReportService();
+  final GetAdjustmentsReportService reportService =
+      GetAdjustmentsReportService();
 
-  // ✅ حالة الاختيارات (Rxn لأن CustomDropdown الجديدة تحتاج type كامل مش String)
   final Rxn<DepartmentModel> selectedDepartment = Rxn<DepartmentModel>();
   final Rxn<CatalogVariant> selectedVariant = Rxn<CatalogVariant>();
-  final Rx<TransactionTypeOption> selectedTransactionType =
-      TransactionTypeOption.all.first.obs; // "الكل" افتراضيًا
-  // ← اختيار التجميع، "بدون تجميع" افتراضيًا (value = null)
+  final Rx<AdjustmentTypeOption> selectedAdjustmentType =
+      AdjustmentTypeOption.all.first.obs; // "الكل" افتراضيًا
   final Rx<GroupByOption> selectedGroupBy = GroupByOption.all.first.obs;
 
   Future<void> _onConfirm(BuildContext context) async {
@@ -67,23 +68,23 @@ class ElectronicInventoryPage extends StatelessWidget {
 
     showLoadingDialog();
 
-    final report = await reportService.getFullReport(
+    final report = await reportService.getReport(
       from: controller.formatDate(controller.fromDate.value),
       to: controller.formatDate(controller.toDate.value),
       departmentId: selectedDepartment.value?.id,
       variantId: selectedVariant.value?.id,
-      transactionType: selectedTransactionType.value.value,
-      groupBy: selectedGroupBy.value.value, // ← بترسل null لو "بدون تجميع"
+      adjustmentType: selectedAdjustmentType.value.value,
+      groupBy: selectedGroupBy.value.value ?? 'day',
     );
 
     if (report == null) {
       hideLoadingDialog();
-      // ❌ في حال الفشل: ApiErrorHandler بيعرض الرسالة المناسبة تلقائيًا
+      // ❌ في حال الفشل: ApiErrorHandler بيعرض الرسالة المناسبة تلقائياً
       return;
     }
 
     try {
-      final filePath = await ExcelReportService.generateInventoryMovementExcel(
+      final filePath = await ExcelReportService.generateAdjustmentsExcel(
         report: report,
         fromDate: controller.formatDate(controller.fromDate.value),
         toDate: controller.formatDate(controller.toDate.value),
@@ -122,7 +123,7 @@ class ElectronicInventoryPage extends StatelessWidget {
       body: Column(
         children: [
           CustomBackContainer(),
-          CustomHeadContainer(title: 'تقرير جرد الكتروني'),
+          CustomHeadContainer(title: 'تقرير التسويات'),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
@@ -237,7 +238,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                         ),
                         SizedBox(height: context.screenHeight * 0.01),
 
-                        // ─── نوع الحركة ────────────────────────
+                        // ─── نوع التسوية ────────────────────────
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: context.screenWidth * 0.02,
@@ -252,7 +253,7 @@ class ElectronicInventoryPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'نوع الحركة',
+                              'نوع التسوية',
                               style: TextStyle(
                                 color: constBlue,
                                 fontFamily: lateef,
@@ -262,17 +263,17 @@ class ElectronicInventoryPage extends StatelessWidget {
                           ),
                         ),
                         Obx(
-                          () => CustomDropdown<TransactionTypeOption>(
-                            items: TransactionTypeOption.all,
+                          () => CustomDropdown<AdjustmentTypeOption>(
+                            items: AdjustmentTypeOption.all,
                             labelBuilder: (t) => t.label,
-                            label: 'نوع الحركة',
-                            hint: 'اختر نوع الحركة',
-                            icon: Icons.sync_alt_outlined,
+                            label: 'نوع التسوية',
+                            hint: 'اختر نوع التسوية',
+                            icon: Icons.build_outlined,
                             clearable: false,
-                            value: selectedTransactionType.value,
+                            value: selectedAdjustmentType.value,
                             onChanged: (data) {
                               if (data != null) {
-                                selectedTransactionType.value = data;
+                                selectedAdjustmentType.value = data;
                               }
                             },
                           ),

@@ -13,7 +13,11 @@ class FindColor {
       return constGreen;
     } else if (word == 'قيد التنفيذ') {
       return constBlue;
-    } else if (word == 'بأنتظار موافقتك') {
+    } else if (word == 'بأنتظار موافقة المدير') {
+      // ✅ جديدة
+      return constOrange;
+    } else if (word == 'بأنتظار موافقة اللجنة') {
+      // ✅ جديدة
       return constOrange;
     } else if (word == 'ضروري') {
       return constRed;
@@ -33,7 +37,11 @@ class FindColor {
       return constLightGreen;
     } else if (word == 'قيد التنفيذ') {
       return constLightBlue;
-    } else if (word == 'بأنتظار موافقتك') {
+    } else if (word == 'بأنتظار موافقة المدير') {
+      // ✅ جديدة
+      return constLightOrange;
+    } else if (word == 'بأنتظار موافقة اللجنة') {
+      // ✅ جديدة
       return constLightOrange;
     } else if (word == 'ضروري') {
       return constLightRed;
@@ -54,8 +62,8 @@ class FindColor {
     switch (requestStatus) {
       case OrderStatus.draft:
       case OrderStatus.pending_hospital_approval:
-        return constOrange;
       case OrderStatus.pending_manager_approval:
+        return constOrange;
       case OrderStatus.preparing:
         return constBlue;
       case OrderStatus.hospital_rejected:
@@ -73,8 +81,8 @@ class FindColor {
     switch (requestStatus) {
       case OrderStatus.draft:
       case OrderStatus.pending_hospital_approval:
-        return constLightOrange;
       case OrderStatus.pending_manager_approval:
+        return constLightOrange;
       case OrderStatus.preparing:
         return constLightBlue;
       case OrderStatus.hospital_rejected:

@@ -39,7 +39,7 @@ class LoginService {
               ? jsonBody['data']
               : null;
           final String? otpCode = data?['code'] as String?;
-
+          print(otpCode);
           customSnackBar(
             title: 'تم إرسال الرمز',
             message: otpCode != null

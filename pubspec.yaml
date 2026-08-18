@@ -54,13 +54,17 @@ dependencies:
   firebase_core: ^4.13.0
   firebase_messaging: ^16.5.0
   flutter_local_notifications: ^20.1.0
+  image_picker: ^1.1.2
+  excel: ^4.0.6          
+  path_provider: ^2.1.4  
+  open_filex: ^4.5.0 
   # shared_preferences: ^2.3.3
 
 
 
 dev_dependencies:
   flutter_launcher_icons: "^0.14.4"
-  flutter_native_splash: ^2.4.7
+  flutter_native_splash: ^2.4.4
 
   flutter_test:
     sdk: flutter

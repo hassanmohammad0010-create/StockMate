@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Purchase_Order_Details_Controller.dart';
+import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
+import 'package:stock_mate_project/Service/Head%20of%20Purchasing/Manager_Approve_Purchase_Request_Service.dart';
+import 'package:stock_mate_project/Service/Head%20of%20Purchasing/Manager_Reject_Purchase_Request_Service.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Purchasing_Item_Card.dart';
-import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
-import 'package:stock_mate_project/core/Function/Custom_Dialog_With_Textfailed.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/Function/Find_Color.dart';
+import 'package:stock_mate_project/core/Function/show_Loading_Dialog.dart';
+import 'package:stock_mate_project/core/models/Approve_Purchase_Item_Input.dart';
 import 'package:stock_mate_project/core/models/Order_Item.dart'
     show OrderStatus, OrderPriority;
 import 'package:stock_mate_project/core/models/Purchase_Request_Model.dart';
@@ -24,7 +28,11 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
         PurchaseOrderDetailsController(requestId: requestId),
         tag: requestId,
       );
-
+  // ✅ جديد
+  final GetNameRollOfUserController userController = Get.put(
+    GetNameRollOfUserController(),
+  );
+  final RxBool _isManagerProcessing = false.obs;
   final String requestId;
   final PurchaseOrderDetailsController controller;
 
@@ -34,8 +42,9 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
       case OrderStatus.draft:
         return 'معلق';
       case OrderStatus.pending_hospital_approval:
-        return 'بأنتظار موافقتك';
+        return 'بأنتظار موافقة المدير'; // ✅ عدلناها
       case OrderStatus.pending_manager_approval:
+        return 'بأنتظار موافقة اللجنة'; // ✅ جديدة، منفصلة عن preparing
       case OrderStatus.preparing:
         return 'قيد التنفيذ';
       case OrderStatus.hospital_rejected:
@@ -49,6 +58,74 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
     }
   }
 
+  Future<void> _approveAsManager(BuildContext context) async {
+    final d = controller.details.value;
+    if (d == null) return;
+
+    _isManagerProcessing.value = true;
+    showLoadingDialog(); // ✅ جديد
+
+    final items = d.items
+        .map(
+          (item) => ApprovePurchaseItemInput(
+            purchaseRequestItemId: item.id,
+            approvedQuantity: item.requestedQuantity,
+          ),
+        )
+        .toList();
+
+    final success = await ManagerApprovePurchaseRequestService().approveRequest(
+      purchaseRequestId: requestId,
+      items: items,
+    );
+
+    hideLoadingDialog(); // ✅ جديد
+    _isManagerProcessing.value = false;
+
+    if (success) {
+      customSnackBar(
+        title: 'تمت الموافقة',
+        message: 'تمت الموافقة على الطلب بنجاح',
+        color: constGreen,
+        messageColor: constLightGreen,
+      );
+      await controller.fetchDetails();
+    }
+  }
+
+  Future<void> _rejectAsManager(String reason) async {
+    if (reason.isEmpty) {
+      customSnackBar(
+        title: 'خطأ',
+        message: 'الرجاء إدخال سبب الرفض',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+      return;
+    }
+
+    _isManagerProcessing.value = true;
+    showLoadingDialog(); // ✅ جديد
+
+    final success = await ManagerRejectPurchaseRequestService().rejectRequest(
+      purchaseRequestId: requestId,
+      reason: reason,
+    );
+
+    hideLoadingDialog(); // ✅ جديد
+    _isManagerProcessing.value = false;
+
+    if (success) {
+      customSnackBar(
+        title: 'تم الرفض',
+        message: 'تم رفض الطلب بنجاح',
+        color: constGreen,
+        messageColor: constLightGreen,
+      );
+      await controller.fetchDetails();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -59,20 +136,93 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        // ← نفس منطق DisOrderDetailsPage بالضبط
         floatingActionButton: Obx(() {
-          if (controller.isLoading.value) {
+          if (controller.isLoading.value || userController.role.value == null) {
             return const SizedBox.shrink();
           }
 
           final currentStatus = controller.details.value?.status;
+          final String? currentRole = userController.role.value;
 
+          // ═══════════════ purchasing_manager ═══════════════
+          if (currentRole == 'purchasing_manager') {
+            if (controller.isApproved.value ||
+                controller.isRejected.value ||
+                currentStatus != OrderStatus.pending_manager_approval) {
+              return const SizedBox.shrink();
+            }
+
+            return SizedBox(
+              width: context.screenWidth * 0.15,
+              height: context.screenHeight * 0.1,
+              child: FloatingActionButton(
+                backgroundColor: constBlue,
+                elevation: 8,
+                shape: const CircleBorder(),
+                onPressed: _isManagerProcessing.value
+                    ? null
+                    : () {
+                        CustomDialog.show(
+                          title: 'تأكيد الموافقة',
+                          message: 'هل أنت متأكد من الموافقة على هذا الطلب؟',
+                          type: DialogType.warning,
+                          confirmText: 'موافقة',
+                          cancelText: 'رفض',
+                          onConfirm: () {
+                            Get.back(); // ✅ سكر ديالوج التأكيد
+                            _approveAsManager(context);
+                          },
+                          onCancel: () {
+                            Get.back(); // ✅ سكر ديالوج التأكيد
+                            final TextEditingController reasonController =
+                                TextEditingController();
+
+                            CustomDialog.show(
+                              title: 'سبب الرفض',
+                              message: 'الرجاء إدخال سبب رفض الطلب',
+                              type: DialogType.warning,
+                              confirmText: 'تأكيد',
+                              cancelText: 'إلغاء',
+                              showTextField: true,
+                              textFieldHint: 'ادخل سبب الرفض',
+                              textFieldLabel: 'سبب الرفض',
+                              textFieldIcon: Icons.edit_outlined,
+                              textFieldKeyboard: TextInputType.text,
+                              textFieldController: reasonController,
+                              textFieldValidator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'الرجاء إدخال سبب الرفض';
+                                }
+                                return null;
+                              },
+                              onConfirm: () {
+                                Get.back(); // ✅ سكر ديالوج سبب الرفض
+                                _rejectAsManager(reasonController.text.trim());
+                              },
+                            );
+                          },
+                        );
+                      },
+                child: _isManagerProcessing.value
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(Icons.check, color: Colors.white),
+              ),
+            );
+          }
+
+          // ═══════════════ hospital_manager (نفس السلوك الأصلي) ═══════════════
           if (controller.isApproved.value ||
               controller.isRejected.value ||
               currentStatus != OrderStatus.pending_hospital_approval) {
             return const SizedBox.shrink();
           }
-
           return SizedBox(
             width: context.screenWidth * 0.15,
             height: context.screenHeight * 0.1,
@@ -90,8 +240,12 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                         type: DialogType.warning,
                         confirmText: 'موافقة',
                         cancelText: 'رفض',
-                        onConfirm: () => controller.approveRequest(),
+                        onConfirm: () {
+                          Get.back(); // ✅ إضافة
+                          controller.approveRequest();
+                        },
                         onCancel: () {
+                          Get.back(); // ✅ إضافة
                           final TextEditingController reasonController =
                               TextEditingController();
 
@@ -114,6 +268,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                               return null;
                             },
                             onConfirm: () {
+                              Get.back(); // ✅ إضافة
                               controller.rejectRequest(
                                 reasonController.text.trim(),
                               );
