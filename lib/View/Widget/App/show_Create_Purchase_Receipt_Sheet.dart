@@ -1,527 +1,576 @@
-// lib/View/Widget/App/Create_Purchase_Receipt_Sheet.dart
-import 'dart:io';
+// lib/View/Widget/App/Create_Purchase_Receipt_BottomSheet.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/App/Create_Purchase_Receipt_Controller.dart';
 import 'package:stock_mate_project/Controller/App/Get_All_Suppliers_Controller.dart';
-import 'package:stock_mate_project/Controller/App/Receipt_Item_Form_Data.dart';
+import 'package:stock_mate_project/Service/Head%20of%20Purchasing/Create_Purchase_Receipt_Service.dart';
+import 'package:stock_mate_project/View/Widget/App/Custom_Purchasing_Item_Card.dart';
+import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
+import 'package:stock_mate_project/core/Function/Validation.dart';
+import 'package:stock_mate_project/core/Function/show_Loading_Dialog.dart';
 import 'package:stock_mate_project/core/models/Purchase_Request_Model.dart';
+import 'package:stock_mate_project/core/models/Supplier_Model.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Custom_My_Drop_Down.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Row.dart';
 
-void showCreatePurchaseReceiptSheet({
-  required BuildContext context,
-  required String purchaseRequestId,
-  required List<PurchaseDetailItem> requestItems,
-}) {
-  final CreatePurchaseReceiptController controller = Get.put(
-    CreatePurchaseReceiptController(
-      purchaseRequestId: purchaseRequestId,
-      requestItems: requestItems,
-    ),
-  );
+class CreatePurchaseReceiptBottomSheet extends StatefulWidget {
+  const CreatePurchaseReceiptBottomSheet({
+    super.key,
+    required this.purchaseRequestId,
+    required this.items,
+    required this.onSuccess,
+  });
 
-  final GetAllSuppliersController suppliersController = Get.put(
-    GetAllSuppliersController(),
-  );
+  final String purchaseRequestId;
+  final List<PurchaseDetailItem> items;
+  final VoidCallback onSuccess;
 
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (sheetContext) {
-      return Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-        ),
-        child: DraggableScrollableSheet(
-          initialChildSize: 0.9,
-          minChildSize: 0.5,
-          maxChildSize: 0.95,
-          expand: false,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              child: SingleChildScrollView(
-                controller: scrollController,
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.screenWidth * 0.04,
-                  vertical: context.screenHeight * 0.02,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: context.screenWidth * 0.4,
-                        height: context.screenHeight * 0.05,
-                        decoration: BoxDecoration(
-                          color: constLightBlue,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'إنشاء إيصال استلام',
-                          style: TextStyle(
-                            color: constBlue,
-                            fontFamily: cairo,
-                            fontSize: context.screenHeight * 0.022,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.02),
+  @override
+  State<CreatePurchaseReceiptBottomSheet> createState() =>
+      _CreatePurchaseReceiptBottomSheetState();
+}
 
-                    // ─── المورد ─────────────────────────────
-                    Text(
-                      'المورد',
-                      style: TextStyle(
-                        fontFamily: cairo,
-                        fontSize: context.screenHeight * 0.018,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.005),
-                    GetBuilder<GetAllSuppliersController>(
-                      builder: (sc) {
-                        if (sc.suppliers == null) {
-                          return const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12),
-                            child: Center(
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          );
-                        }
-                        return Obx(
-                          () => DropdownButtonFormField<String>(
-                            value: controller.supplierId.value,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            items: sc.suppliers!
-                                .map(
-                                  (s) => DropdownMenuItem<String>(
-                                    value: s.id,
-                                    child: Text(
-                                      s.name,
-                                      style: TextStyle(fontFamily: cairo),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (value) {
-                              controller.supplierId.value = value;
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: context.screenHeight * 0.02),
+class _CreatePurchaseReceiptBottomSheetState
+    extends State<CreatePurchaseReceiptBottomSheet> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late final CreatePurchaseReceiptController _receiptController;
+  late final GetAllSuppliersController _suppliersController;
+  final Rxn<SupplierModel> _selectedSupplier = Rxn<SupplierModel>();
+  final Rxn<DateTime> _receivingDate = Rxn<DateTime>();
 
-                    // ─── تاريخ الاستلام ──────────────────────
-                    Text(
-                      'تاريخ الاستلام',
-                      style: TextStyle(
-                        fontFamily: cairo,
-                        fontSize: context.screenHeight * 0.018,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.005),
-                    Obx(
-                      () => InkWell(
-                        onTap: () async {
-                          final picked = await showDatePicker(
-                            context: context,
-                            initialDate:
-                                controller.receivingDate.value ??
-                                DateTime.now(),
-                            firstDate: DateTime(2020),
-                            lastDate: DateTime(2100),
-                          );
-                          if (picked != null) {
-                            controller.receivingDate.value = picked;
-                          }
-                        },
+  @override
+  void initState() {
+    super.initState();
+    _receiptController = Get.put(
+      CreatePurchaseReceiptController(requestItems: widget.items),
+      tag: widget.purchaseRequestId,
+    );
+    _suppliersController = Get.put(GetAllSuppliersController());
+  }
+
+  Future<void> _pickReceivingDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _receivingDate.value ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) _receivingDate.value = picked;
+  }
+
+  Future<void> _onConfirm() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedSupplier.value == null) {
+      customSnackBar(
+        title: 'خطأ',
+        message: 'الرجاء اختيار المورد',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+      return;
+    }
+
+    if (_receivingDate.value == null) {
+      customSnackBar(
+        title: 'خطأ',
+        message: 'الرجاء اختيار تاريخ الاستلام',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+      return;
+    }
+
+    final builtItems = _receiptController.buildItems();
+    if (builtItems == null) {
+      customSnackBar(
+        title: 'خطأ',
+        message:
+            'الرجاء إكمال بيانات كل صنف (الكمية، الدفعة، التاريخين، السعر)',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+      return;
+    }
+
+    Get.back(); // إغلاق الشيت
+    showLoadingDialog();
+
+    final success = await CreatePurchaseReceiptService().createReceipt(
+      purchaseRequestId: widget.purchaseRequestId,
+      supplierId: _selectedSupplier.value!.id,
+      receivingDate: _receivingDate.value!,
+      notes: _receiptController.notesController.text.trim(),
+      items: builtItems,
+      receiptImages: _receiptController.receiptImages,
+    );
+
+    hideLoadingDialog();
+
+    if (success) {
+      customSnackBar(
+        title: 'تم بنجاح',
+        message: 'تم إنشاء إيصال الاستلام بنجاح',
+        color: constGreen,
+        messageColor: constLightGreen,
+      );
+      widget.onSuccess();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SingleChildScrollView(
+              controller: scrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.screenWidth * 0.03,
+                    vertical: context.screenHeight * 0.02,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
                         child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 14,
-                          ),
+                          alignment: Alignment.center,
+                          width: context.screenWidth * 0.35,
+                          height: context.screenHeight * 0.05,
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(12),
+                            color: constLightBlue,
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            controller.receivingDate.value == null
-                                ? 'اختر التاريخ'
-                                : '${controller.receivingDate.value!.year}-${controller.receivingDate.value!.month.toString().padLeft(2, '0')}-${controller.receivingDate.value!.day.toString().padLeft(2, '0')}',
-                            style: TextStyle(fontFamily: cairo),
+                            'إنشاء إيصال استلام',
+                            style: TextStyle(
+                              color: constBlue,
+                              fontFamily: lateef,
+                              fontSize: context.screenHeight * 0.024,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.02),
+                      SizedBox(height: context.screenHeight * 0.015),
 
-                    // ─── نوع الدفعة ──────────────────────────
-                    Text(
-                      'نوع الدفعة',
-                      style: TextStyle(
-                        fontFamily: cairo,
-                        fontSize: context.screenHeight * 0.018,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.005),
-                    Obx(
-                      () => DropdownButtonFormField<String>(
-                        value: controller.type.value,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        items: const [
-                          DropdownMenuItem(value: 'batch', child: Text('دفعة')),
-                          DropdownMenuItem(
-                            value: 'final_batch',
-                            child: Text('دفعة أخيرة'),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          if (value != null) controller.type.value = value;
+                      // ─── المورد ─────────────────────────────
+                      GetBuilder<GetAllSuppliersController>(
+                        builder: (sController) {
+                          if (sController.suppliers == null) {
+                            return const Center(
+                              child: CustomLoadingIndicator(),
+                            );
+                          }
+                          return CustomDropdown<SupplierModel>(
+                            items: sController.suppliers ?? [],
+                            labelBuilder: (s) => s.name,
+                            label: 'المورد',
+                            hint: '',
+                            icon: Icons.business_center_outlined,
+                            validator: (data) => Validation()
+                                .generalValidationForDropdown(data?.name),
+                            value: _selectedSupplier.value,
+                            onChanged: (data) {
+                              _selectedSupplier.value = data;
+                            },
+                          );
                         },
                       ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.02),
+                      SizedBox(height: context.screenHeight * 0.015),
 
-                    // ─── الملاحظات ───────────────────────────
-                    Text(
-                      'ملاحظات',
-                      style: TextStyle(
-                        fontFamily: cairo,
-                        fontSize: context.screenHeight * 0.018,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.005),
-                    TextFormField(
-                      controller: controller.notesController,
-                      maxLines: 2,
-                      decoration: InputDecoration(
-                        hintText: 'ملاحظات إضافية (اختياري)',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.02),
-
-                    // ─── الأصناف ──────────────────────────────
-                    Text(
-                      'بيانات الأصناف',
-                      style: TextStyle(
-                        fontFamily: cairo,
-                        fontSize: context.screenHeight * 0.02,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.01),
-                    ...controller.itemsFormData.map(
-                      (formData) => _ItemFormCard(formData: formData),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.02),
-
-                    // ─── صور الإيصال ─────────────────────────
-                    Text(
-                      'صور الإيصال',
-                      style: TextStyle(
-                        fontFamily: cairo,
-                        fontSize: context.screenHeight * 0.018,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.01),
-                    Obx(
-                      () => Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          ...controller.receiptImages.asMap().entries.map(
-                            (entry) => Stack(
+                      // ─── تاريخ الاستلام ─────────────────────
+                      Obx(
+                        () => GestureDetector(
+                          onTap: _pickReceivingDate,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.screenWidth * 0.04,
+                              vertical: context.screenHeight * 0.018,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Row(
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.file(
-                                    entry.value,
-                                    width: 80,
-                                    height: 80,
-                                    fit: BoxFit.cover,
-                                  ),
+                                Icon(
+                                  Icons.calendar_today_outlined,
+                                  color: constBlue,
+                                  size: 22,
                                 ),
-                                Positioned(
-                                  top: -6,
-                                  right: -6,
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        controller.removeImage(entry.key),
-                                    child: const CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: Colors.red,
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 14,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                SizedBox(width: context.screenWidth * 0.03),
+                                Text(
+                                  _receivingDate.value == null
+                                      ? 'اختر تاريخ الاستلام'
+                                      : '${_receivingDate.value!.year}-${_receivingDate.value!.month.toString().padLeft(2, '0')}-${_receivingDate.value!.day.toString().padLeft(2, '0')}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: _receivingDate.value == null
+                                        ? Colors.grey.shade500
+                                        : Colors.black,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          InkWell(
-                            onTap: () =>
-                                _showImageSourceSheet(context, controller),
-                            child: Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.grey.shade300),
-                              ),
-                              child: const Icon(
-                                Icons.add_a_photo_outlined,
-                                color: Colors.grey,
+                        ),
+                      ),
+                      SizedBox(height: context.screenHeight * 0.015),
+
+                      // ─── الملاحظات ───────────────────────────
+                      CustomMyTextFormField(
+                        controller: _receiptController.notesController,
+                        label: 'ملاحظات (اختياري)',
+                        hint: '',
+                        prefixIcon: Icons.notes_outlined,
+                      ),
+                      SizedBox(height: context.screenHeight * 0.02),
+
+                      // ─── الصور ───────────────────────────────
+                      Text(
+                        'صور الإيصال',
+                        style: TextStyle(
+                          fontFamily: cairo,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                      SizedBox(height: context.screenHeight * 0.01),
+                      Obx(
+                        () => Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            ..._receiptController.receiptImages.map(
+                              (file) => Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.file(
+                                      file,
+                                      width: 80,
+                                      height: 80,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: -6,
+                                    right: -6,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          _receiptController.removeImage(file),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(2),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.close,
+                                          size: 14,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.03),
-
-                    // ─── زر الحفظ ────────────────────────────
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: constBlue,
-                          padding: EdgeInsets.symmetric(
-                            vertical: context.screenHeight * 0.018,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                            GestureDetector(
+                              onTap: _receiptController.pickFromGallery,
+                              child: Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: constLightBlue,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  Icons.photo_library_outlined,
+                                  color: constBlue,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: _receiptController.pickFromCamera,
+                              child: Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: constLightBlue,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  Icons.camera_alt_outlined,
+                                  color: constBlue,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        onPressed: () async {
-                          final success = await controller.submit();
-                          if (success) {
-                            Navigator.of(sheetContext).pop();
-                          }
-                        },
-                        child: Text(
-                          'حفظ الإيصال',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: cairo,
-                            fontSize: context.screenHeight * 0.02,
-                          ),
+                      ),
+                      SizedBox(height: context.screenHeight * 0.02),
+
+                      // ─── الأصناف ─────────────────────────────
+                      // ─── الأصناف ─────────────────────────────
+                      Text(
+                        'بيانات الأصناف',
+                        style: TextStyle(
+                          fontFamily: cairo,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
                         ),
                       ),
-                    ),
-                    SizedBox(height: context.screenHeight * 0.02),
-                  ],
+                      SizedBox(height: context.screenHeight * 0.015),
+
+                      // استخدام asMap للحصول على الـ index لعمل Divider بين العناصر فقط (وليس بعد الأخير)
+                      ...widget.items.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        var item = entry.value;
+                        final String materialName =
+                            item.variant?.product?.name ??
+                            item.variant?.variantName ??
+                            '-';
+                        final String unitAbbreviation =
+                            item.variant?.unit?.abbreviation ?? '';
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // عنوان اختياري يوضح رقم الصنف (يعطي شكل أرتب بعد إزالة الكونتينر)
+                            Text(
+                              'تفاصيل الصنف ${index + 1}',
+                              style: TextStyle(
+                                fontFamily: cairo,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: constBlue,
+                              ),
+                            ),
+                            SizedBox(height: context.screenHeight * 0.01),
+
+                            // كارت عرض بيانات المادة الأساسية
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              child: Column(
+                                children: [
+                                  CustomRow(
+                                    title: 'المادة',
+                                    iconData: Icons.design_services_outlined,
+                                    label: materialName,
+                                  ),
+                                  CustomRow(
+                                    title: 'الكمية المطلوبة',
+                                    iconData: Icons.inventory_2_outlined,
+                                    label:
+                                        '${item.requestedQuantity} $unitAbbreviation',
+                                  ),
+                                  CustomRow(
+                                    title: 'السعر المتوقع',
+                                    iconData: Icons.attach_money,
+                                    label: '${item.estimatedPrice}\$',
+                                  ),
+                                  // ← الكمية المعتمدة/المستلمة تظهر فقط لو متوفرة
+                                  if (item.approvedQuantity != null)
+                                    CustomRow(
+                                      title: 'الكمية المعتمدة',
+                                      iconData: Icons.check_circle_outline,
+                                      label:
+                                          '${item.approvedQuantity} $unitAbbreviation',
+                                    ),
+                                  if (item.receivedQuantity > 0)
+                                    CustomRow(
+                                      title: 'الكمية المستلمة',
+                                      iconData: Icons.move_to_inbox_outlined,
+                                      label:
+                                          '${item.receivedQuantity} $unitAbbreviation',
+                                    ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: context.screenHeight * 0.015),
+
+                            // الحقول الخاصة بالصنف
+                            CustomMyTextFormField(
+                              controller: _receiptController
+                                  .quantityControllers[item.id],
+                              label: 'الكمية المستلمة',
+                              hint: '',
+                              keyboardType: TextInputType.number,
+                              prefixIcon: Icons.numbers,
+                              validator: (data) =>
+                                  Validation().generalValidation(data!),
+                            ),
+                            SizedBox(height: context.screenHeight * 0.012),
+
+                            CustomMyTextFormField(
+                              controller: _receiptController
+                                  .batchNumberControllers[item.id],
+                              label: 'رقم الدفعة',
+                              hint: '',
+                              prefixIcon: Icons.tag_outlined,
+                              validator: (data) =>
+                                  Validation().generalValidation(data!),
+                            ),
+                            SizedBox(height: context.screenHeight * 0.012),
+
+                            CustomMyTextFormField(
+                              controller: _receiptController
+                                  .purchasePriceControllers[item.id],
+                              label: 'سعر الشراء',
+                              hint: '',
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                              prefixIcon: Icons.attach_money,
+                              validator: (data) =>
+                                  Validation().generalValidation(data!),
+                            ),
+                            SizedBox(height: context.screenHeight * 0.012),
+
+                            Obx(
+                              () => GestureDetector(
+                                onTap: () => _receiptController
+                                    .pickManufacturingDate(context, item.id),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: context.screenWidth * 0.03,
+                                    vertical: context.screenHeight * 0.014,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.event_outlined,
+                                        size: 18,
+                                        color: constBlue,
+                                      ),
+                                      SizedBox(
+                                        width: context.screenWidth * 0.02,
+                                      ),
+                                      Text(
+                                        _receiptController
+                                                    .manufacturingDates[item
+                                                    .id] ==
+                                                null
+                                            ? 'تاريخ التصنيع'
+                                            : _receiptController
+                                                  .manufacturingDates[item.id]
+                                                  .toString()
+                                                  .split(' ')
+                                                  .first,
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: context.screenHeight * 0.012),
+
+                            Obx(
+                              () => GestureDetector(
+                                onTap: () => _receiptController
+                                    .pickExpirationDate(context, item.id),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: context.screenWidth * 0.03,
+                                    vertical: context.screenHeight * 0.014,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.event_busy_outlined,
+                                        size: 18,
+                                        color: constBlue,
+                                      ),
+                                      SizedBox(
+                                        width: context.screenWidth * 0.02,
+                                      ),
+                                      Text(
+                                        _receiptController.expirationDates[item
+                                                    .id] ==
+                                                null
+                                            ? 'تاريخ الانتهاء'
+                                            : _receiptController
+                                                  .expirationDates[item.id]
+                                                  .toString()
+                                                  .split(' ')
+                                                  .first,
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // إضافة الفاصل (Divider) بين الأصناف، باستثناء الصنف الأخير
+                            if (index < widget.items.length - 1) ...[
+                              SizedBox(height: context.screenHeight * 0.025),
+                              const Divider(
+                                color: Colors.grey,
+                                thickness: 1,
+                                height: 1,
+                              ),
+                              SizedBox(height: context.screenHeight * 0.025),
+                            ],
+                          ],
+                        );
+                      }).toList(),
+                      SizedBox(height: context.screenHeight * 0.03),
+                      Align(
+                        alignment: Alignment.center,
+                        child: CustomMainButtom(
+                          title: 'تأكيد',
+                          color: constBlue,
+                          fontcolor: Colors.white,
+                          onPressed: _onConfirm,
+                        ),
+                      ),
+                      SizedBox(height: context.screenHeight * 0.03),
+                    ],
+                  ),
                 ),
               ),
-            );
-          },
-        ),
-      );
-    },
-  ).whenComplete(() {
-    Get.delete<CreatePurchaseReceiptController>();
-  });
-}
-
-void _showImageSourceSheet(
-  BuildContext context,
-  CreatePurchaseReceiptController controller,
-) {
-  showModalBottomSheet(
-    context: context,
-    builder: (_) => SafeArea(
-      child: Wrap(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.photo_library_outlined),
-            title: const Text('اختيار من المعرض'),
-            onTap: () {
-              Navigator.pop(context);
-              controller.pickImageFromGallery();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.camera_alt_outlined),
-            title: const Text('التقاط صورة'),
-            onTap: () {
-              Navigator.pop(context);
-              controller.pickImageFromCamera();
-            },
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-class _ItemFormCard extends StatelessWidget {
-  const _ItemFormCard({required this.formData});
-
-  final ReceiptItemFormData formData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: context.screenHeight * 0.015),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            formData.item.variant?.variantName ?? 'صنف غير معروف',
-            style: TextStyle(
-              fontFamily: cairo,
-              fontWeight: FontWeight.w700,
-              fontSize: context.screenHeight * 0.018,
             ),
-          ),
-          SizedBox(height: context.screenHeight * 0.01),
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: formData.quantityController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'الكمية المستلمة',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextFormField(
-                  controller: formData.purchasePriceController,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'سعر الشراء',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: context.screenHeight * 0.01),
-          TextFormField(
-            controller: formData.batchNumberController,
-            decoration: InputDecoration(
-              labelText: 'رقم الدفعة (Batch Number)',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          SizedBox(height: context.screenHeight * 0.01),
-          Row(
-            children: [
-              Expanded(
-                child: Obx(
-                  () => InkWell(
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate:
-                            formData.manufacturingDate.value ?? DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2100),
-                      );
-                      if (picked != null) {
-                        formData.manufacturingDate.value = picked;
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        formData.manufacturingDate.value == null
-                            ? 'تاريخ الإنتاج'
-                            : '${formData.manufacturingDate.value!.year}-${formData.manufacturingDate.value!.month.toString().padLeft(2, '0')}-${formData.manufacturingDate.value!.day.toString().padLeft(2, '0')}',
-                        style: TextStyle(fontFamily: cairo, fontSize: 13),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Obx(
-                  () => InkWell(
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate:
-                            formData.expirationDate.value ?? DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2100),
-                      );
-                      if (picked != null) {
-                        formData.expirationDate.value = picked;
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        formData.expirationDate.value == null
-                            ? 'تاريخ الانتهاء'
-                            : '${formData.expirationDate.value!.year}-${formData.expirationDate.value!.month.toString().padLeft(2, '0')}-${formData.expirationDate.value!.day.toString().padLeft(2, '0')}',
-                        style: TextStyle(fontFamily: cairo, fontSize: 13),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

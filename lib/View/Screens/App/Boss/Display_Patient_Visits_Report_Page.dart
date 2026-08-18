@@ -7,6 +7,7 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Get_All_Doctors_Controller.dart';
 import 'package:stock_mate_project/Controller/App/Get_Departments_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/DatePicker_Controller.dart';
+import 'package:stock_mate_project/Service/Boss/Excel_Report_Service.dart';
 import 'package:stock_mate_project/Service/Boss/Get_Patient_Visits_Report_Service.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Date_Field.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
@@ -44,6 +45,8 @@ class DisplayPatientVisitsReportPage extends StatelessWidget {
   final Rx<GroupByOption> selectedGroupBy = GroupByOption.all.first.obs;
 
   Future<void> _onConfirm(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
+
     if (controller.fromDate.value == null || controller.toDate.value == null) {
       customSnackBar(
         title: 'خطأ',
@@ -74,23 +77,44 @@ class DisplayPatientVisitsReportPage extends StatelessWidget {
       groupBy: selectedGroupBy.value.value,
     );
 
-    hideLoadingDialog();
-
     if (report == null) {
-      // ❌ في حال الفشل: ApiErrorHandler بيعرض الرسالة المناسبة تلقائيًا
+      hideLoadingDialog();
+      // ❌ في حال الفشل: ApiErrorHandler بيعرض الرسالة المناسبة تلقائياً
       return;
     }
 
-    // ⚠️ مؤقتاً بنعرض ملخص بسيط بالـ snackbar بانتظار توضيح شكل العرض
-    // النهائي المطلوب (جدول؟ رسم بياني؟ تصدير Excel متل تقرير المخزون؟)
-    customSnackBar(
-      title: 'تم جلب التقرير',
-      message:
-          'إجمالي الزيارات: ${report.summary.totalVisits}\n'
-          'عدد المرضى: ${report.summary.uniquePatients}',
-      color: constGreen,
-      messageColor: constLightGreen,
-    );
+    try {
+      final filePath = await ExcelReportService.generatePatientVisitsExcel(
+        report: report,
+        fromDate: controller.formatDate(controller.fromDate.value),
+        toDate: controller.formatDate(controller.toDate.value),
+      );
+
+      hideLoadingDialog();
+
+      final isDownloads =
+          filePath.contains('Download') || filePath.contains('Downloads');
+      final nameOfFile = filePath.split(RegExp(r'[/\\]')).last;
+
+      customSnackBar(
+        title: 'تم بنجاح',
+        message: isDownloads
+            ? 'تم حفظ التقرير في مجلد التنزيلات (Downloads) باسم:\n$nameOfFile'
+            : 'تم توليد التقرير بنجاح وحفظه في مجلد التطبيق',
+        color: constGreen,
+        messageColor: constLightGreen,
+      );
+
+      await ExcelReportService.openFile(filePath);
+    } catch (e) {
+      hideLoadingDialog();
+      customSnackBar(
+        title: 'خطأ',
+        message: 'حدث خطأ أثناء توليد ملف التقرير',
+        color: constRed,
+        messageColor: constLightRed,
+      );
+    }
   }
 
   @override

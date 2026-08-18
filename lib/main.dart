@@ -94,9 +94,7 @@ void main() async {
 
   runApp(
     StockMate(
-      initialRoute: isLockEnabled
-          ? AppRoutes.LockScreen
-          : AppRoutes.SplashViewPage,
+      initialRoute: isLockEnabled ? AppRoutes.LockScreen : AppRoutes.LoginPage,
     ),
   );
 }

@@ -1,5 +1,4 @@
 // ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -8,6 +7,7 @@ import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart
 import 'package:stock_mate_project/Service/Head%20of%20Purchasing/Manager_Approve_Purchase_Request_Service.dart';
 import 'package:stock_mate_project/Service/Head%20of%20Purchasing/Manager_Reject_Purchase_Request_Service.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Purchasing_Item_Card.dart';
+import 'package:stock_mate_project/View/Widget/App/show_Create_Purchase_Receipt_Sheet.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 import 'package:stock_mate_project/core/Function/Find_Color.dart';
 import 'package:stock_mate_project/core/Function/show_Loading_Dialog.dart';
@@ -144,7 +144,40 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
           final currentStatus = controller.details.value?.status;
           final String? currentRole = userController.role.value;
 
-          // ═══════════════ purchasing_manager ═══════════════
+          // ═══════════════ purchasing_manager + preparing (جديد) ═══════════════
+          if (currentRole == 'purchasing_manager' &&
+              currentStatus == OrderStatus.preparing) {
+            final d = controller.details.value;
+            if (d == null || d.items.isEmpty) return const SizedBox.shrink();
+
+            return SizedBox(
+              width: context.screenWidth * 0.15,
+              height: context.screenHeight * 0.1,
+              child: FloatingActionButton(
+                backgroundColor: constBlue,
+                elevation: 8,
+                shape: const CircleBorder(),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => CreatePurchaseReceiptBottomSheet(
+                      purchaseRequestId: requestId,
+                      items: d.items,
+                      onSuccess: () => controller.fetchDetails(),
+                    ),
+                  );
+                },
+                child: const Icon(
+                  Icons.receipt_long_outlined,
+                  color: Colors.white,
+                ),
+              ),
+            );
+          }
+
+          // ═══════════════ purchasing_manager (الموافقة والرفض) ═══════════════
           if (currentRole == 'purchasing_manager') {
             if (controller.isApproved.value ||
                 controller.isRejected.value ||
@@ -217,12 +250,13 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
             );
           }
 
-          // ═══════════════ hospital_manager (نفس السلوك الأصلي) ═══════════════
+          // ═══════════════ hospital_manager (السلوك الأصلي) ═══════════════
           if (controller.isApproved.value ||
               controller.isRejected.value ||
               currentStatus != OrderStatus.pending_hospital_approval) {
             return const SizedBox.shrink();
           }
+
           return SizedBox(
             width: context.screenWidth * 0.15,
             height: context.screenHeight * 0.1,
