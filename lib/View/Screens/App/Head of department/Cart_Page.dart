@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Cart_Controller.dart';
-import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Cart_Container.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Cart_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 
@@ -26,9 +26,11 @@ class CartPage extends StatelessWidget {
       backgroundColor: constBackgroundColor,
       body: Column(
         children: [
-          CustomBackContainer(),
+          const CustomBackContainer(),
           SizedBox(height: h * 0.01),
-          CustomHeadContainer(title: 'السلة اليومية'),
+          const CustomHeadContainer(title: 'السلة اليومية'),
+
+          // ── قائمة السلة ──
           Expanded(
             child: Obx(() {
               if (cartController.cartItems.isEmpty) {
@@ -65,37 +67,50 @@ class CartPage extends StatelessWidget {
               );
             }),
           ),
+
+          // ─── ✅✅✅ حقل الملاحظات الاختياري (نهاية الصفحة) ───
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: w * 0.05),
+            child: CustomMyTextFormField(
+              prefixIcon: Icons.edit_note_outlined,
+              label: 'ملاحظات (اختياري)',
+              hint: 'أضف أي ملاحظات حول الاستهلاك اليومي',
+              controller: cartController.notesController,
+            ),
+          ),
+
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: w * 0.05,
               vertical: h * 0.01,
             ),
-            child: Divider(),
+            child: const Divider(),
           ),
+
+          // ── زر تأكيد السلة ──
           Padding(
             padding: EdgeInsets.only(bottom: h * 0.02),
             child: Obx(() {
               final isEmpty = cartController.cartItems.isEmpty;
+              final confirming = cartController.isConfirming.value;
+
               return CustomMainButtom(
-                title: 'تأكيد السلة اليومية',
-                color: isEmpty ? constLightBlue : constBlue,
-                fontcolor: isEmpty ? constBlue : Colors.white,
-                onPressed: isEmpty
+                title: confirming ? 'جارٍ التأكيد...' : 'تأكيد السلة اليومية',
+                color: isEmpty || confirming ? constLightBlue : constBlue,
+                fontcolor: isEmpty || confirming ? constBlue : Colors.white,
+                onPressed: (isEmpty || confirming)
                     ? null
                     : () {
                         CustomDialog.show(
                           type: DialogType.warning,
                           title: 'تأكيد السلة',
-                          message: 'هل أنت متأكد من تأكيد السلة اليومية؟',
+                          message:
+                              'هل أنت متأكد من تأكيد السلة اليومية؟\nسيتم تسجيل الاستهلاك في المخزون.',
                           confirmText: 'تأكيد',
                           onConfirm: () {
                             Get.back();
-                            customSnackBar(
-                              title: 'تم التأكيد',
-                              message: 'تم تأكيد السلة اليومية بنجاح.',
-                              color: constGreen,
-                              messageColor: Colors.white,
-                            );
+                            // ✅✅✅ استدعاء الإند بوينت الفعلي
+                            cartController.confirmDailyCart();
                           },
                         );
                       },

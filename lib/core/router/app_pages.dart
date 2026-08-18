@@ -1,7 +1,8 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Adjustments_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Patients_Page.dart';
-import 'package:stock_mate_project/core/Bindings/App/DepartmentHeadsInventoryBinding.dart';
 import 'package:stock_mate_project/core/Bindings/Auth/Login_Page_Bending.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
@@ -14,12 +15,9 @@ import 'package:stock_mate_project/View/Screens/App/Boss/Under_Implementation_Re
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Main_Page_Heap_of_Purchasing.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Ordinary_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Add_Recurring_Order_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Archive_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Add_New_Order_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Home_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/New_Prescription_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Ordinary_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescriptions_Page.dart';
@@ -55,7 +53,6 @@ abstract class AppPages {
       page: () => const AddRecurringOrderPage(),
     ),
 
-    GetPage(name: AppRoutes.ArchivePage, page: () => const ArchivePage()),
     GetPage(name: AppRoutes.CartPage, page: () => const CartPage()),
     GetPage(
       name: AppRoutes.DepartmentHeadsAddNewOrderPage,
@@ -153,5 +150,5 @@ abstract class AppPages {
       page: () => const ConfirmDisableLockScreen(),
     ),
     GetPage(name: AppRoutes.PatientsPage, page: () => const PatientsPage()),
-  ];
+    GetPage(name: AppRoutes.InventoryAdjustmentsPage, page: () => const InventoryAdjustmentsPage()),  ];
 }

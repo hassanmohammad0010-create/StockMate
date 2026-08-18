@@ -232,13 +232,15 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                               CustomListTile(
                                 backgroundColor: constLightBlue,
                                 description:
-                                    'عرض الأرشيف للمصروفات اليومية السابقة',
-                                icon: Icons.fact_check_rounded,
+                                    'عرض تفاصيل المتلفات (التسويات والإتلاف)',
+                                icon: Icons.inventory_2_outlined,
                                 iconColor: constBlue,
                                 onTap: () {
-                                  Get.toNamed(AppRoutes.ArchivePage);
+                                  Get.toNamed(
+                                    AppRoutes.InventoryAdjustmentsPage,
+                                  );
                                 },
-                                title: 'الأرشيف',
+                                title: 'المتلفات',
                               ),
                             ],
                           )
