@@ -16,7 +16,7 @@ class SettingPage extends StatelessWidget {
     final h = context.screenHeight;
     final w = context.screenWidth;
     final SettingController controller = Get.put(SettingController());
-    final UserProfileController upc = Get.put(UserProfileController());
+    final UserProfileController upc = Get.find();
 
     return Scaffold(
       backgroundColor: constBackgroundColor,

@@ -37,4 +37,10 @@ class SettingController extends GetxController {
       await loadLockState();
     }
   }
+
+  @override
+  void onClose() {
+    Get.delete<SettingController>();
+    super.onClose();
+  }
 }

@@ -3,17 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Controller/Logic/Batch_Deletion_Controller.dart';
-import 'package:stock_mate_project/core/models/Material_Model.dart';
+import 'package:stock_mate_project/Controller/Service/Batch_Deletion_Controller.dart';
+import 'package:stock_mate_project/core/models/New_MaterialItem.dart'; // ✅✅✅ الموديل الموحد
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Drop_Down/Custom_My_Drop_Down.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
-/// صفحة بسيطة لطلب حذف كمية من دفعة معينة (بأي حالة صلاحية).
-/// لا تقوم هذه الصفحة أو الكنترولر بإنقاص الكمية فعلياً من المخزون؛
-/// فقط تسجّل الطلب (المادة، الدفعة، الكمية، السبب) تمهيداً لإرساله للباك اند لاحقاً.
+/// صفحة إتلاف/تسوية كمية من دفعة معينة
 class BatchDeletionPage extends StatelessWidget {
   const BatchDeletionPage({
     super.key,
@@ -29,9 +27,10 @@ class BatchDeletionPage extends StatelessWidget {
     final h = context.screenHeight;
     final w = context.screenWidth;
 
+    // ✅✅✅ الـ tag يستخدم variantId و batchId من الموديل الجديد
     final c = Get.put(
       BatchDeletionController(material: material, batch: batch),
-      tag: '${material.id}_${batch.id}',
+      tag: '${material.variantId}_${batch.batchId}',
     );
 
     return Scaffold(
@@ -47,7 +46,7 @@ class BatchDeletionPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(height: h * 0.005),
-                    CustomHeadContainer(title: 'حذف كمية من الدفعة'),
+                    const CustomHeadContainer(title: 'إتلاف كمية من الدفعة'),
                     SizedBox(height: h * 0.02),
 
                     // ── بطاقة معلومات الدفعة ─────────────────────────
@@ -109,7 +108,7 @@ class BatchDeletionPage extends StatelessWidget {
                         vertical: h * 0.005,
                       ),
                       child: Text(
-                        'الكمية المراد حذفها',
+                        'الكمية المراد إتلافها',
                         style: TextStyle(
                           fontSize: h * 0.017,
                           fontFamily: cairo,
@@ -123,7 +122,7 @@ class BatchDeletionPage extends StatelessWidget {
                       child: CustomMyTextFormField(
                         prefixIcon: Icons.numbers_outlined,
                         keyboardType: TextInputType.number,
-                        label: 'الكمية المراد حذفها *',
+                        label: 'الكمية المراد إتلافها *',
                         hint: 'أدخل الكمية',
                         controller: c.quantityController,
                         validator: (value) {
@@ -143,14 +142,14 @@ class BatchDeletionPage extends StatelessWidget {
 
                     SizedBox(height: h * 0.02),
 
-                    // ── حقل السبب (Dropdown) ────────────────────────
+                    // ── حقل نوع التسوية (عربي → إنكليزي) ────────────
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: w * 0.04,
                         vertical: h * 0.005,
                       ),
                       child: Text(
-                        'سبب الحذف',
+                        'نوع التسوية',
                         style: TextStyle(
                           fontSize: h * 0.017,
                           fontFamily: cairo,
@@ -163,44 +162,51 @@ class BatchDeletionPage extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: w * 0.03),
                       child: Obx(
                         () => CustomDropdown<String>(
-                          items: kBatchDeletionReasons,
+                          items:
+                              BatchDeletionController.adjustmentReasonsArabic,
                           labelBuilder: (v) => v,
-                          label: 'سبب الحذف *',
-                          hint: 'اختر سبب حذف هذه الكمية',
+                          label: 'نوع التسوية *',
+                          hint: 'اختر نوع التسوية',
                           icon: Icons.remove_circle_outline,
-                          value: c.selectedReason.value,
+                          searchable: false,
+                          value: c.selectedReason.value.isEmpty
+                              ? null
+                              : c.selectedReason.value,
                           errorBorder: c.reasonError.value,
                           errorText: c.reasonError.value
-                              ? 'يرجى اختيار سبب الحذف'
+                              ? 'يرجى اختيار نوع التسوية'
                               : null,
                           onChanged: c.selectReason,
                         ),
                       ),
                     ),
 
-                    // ── حقل نصي إضافي عند اختيار "أخرى" ─────────────
-                    Obx(() {
-                      if (!c.isOtherSelected) return const SizedBox.shrink();
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: w * 0.03,
-                          vertical: h * 0.02,
+                    SizedBox(height: h * 0.02),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: w * 0.04,
+                        vertical: h * 0.005,
+                      ),
+                      child: Text(
+                        'اضافة ملاحظة',
+                        style: TextStyle(
+                          fontSize: h * 0.017,
+                          fontFamily: cairo,
+                          fontWeight: FontWeight.w600,
+                          color: constGray,
                         ),
-                        child: CustomMyTextFormField(
-                          prefixIcon: Icons.edit_note_outlined,
-                          label: 'اكتب السبب *',
-                          hint: 'اكتب سبب حذف هذه الكمية',
-                          controller: c.otherReasonController,
-                          validator: (value) {
-                            if (!c.isOtherSelected) return null;
-                            if (value == null || value.trim().isEmpty) {
-                              return 'يرجى إدخال سبب الحذف';
-                            }
-                            return null;
-                          },
-                        ),
-                      );
-                    }),
+                      ),
+                    ),
+                    // ── حقل الملاحظات (اختياري) ─────────────────────
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: w * 0.03),
+                      child: CustomMyTextFormField(
+                        prefixIcon: Icons.edit_note_outlined,
+                        label: 'ملاحظات (اختياري)',
+                        hint: 'مثال: تلف أثناء النقل، نقص من الرف...',
+                        controller: c.notesController,
+                      ),
+                    ),
 
                     SizedBox(height: h * 0.03),
                   ],
@@ -209,15 +215,18 @@ class BatchDeletionPage extends StatelessWidget {
             ),
           ),
 
-          // ── زر التأكيد ────────────────────────────────────────
+          // ── زر التأكيد ────────────────────────────────────────────
           Padding(
             padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-            child: CustomMainButtom(
-              title: 'تأكيد الحذف',
-              color: constRed,
-              fontcolor: Colors.white,
-              onPressed: c.confirmDeletion,
-            ),
+            child: Obx(() {
+              final submitting = c.isSubmitting.value;
+              return CustomMainButtom(
+                title: submitting ? 'جارٍ الإتلاف...' : 'تأكيد الإتلاف',
+                color: submitting ? constLightRed : constRed,
+                fontcolor: submitting ? constRed : Colors.white,
+                onPressed: submitting ? null : c.confirmDeletion,
+              );
+            }),
           ),
           SizedBox(height: h * 0.02),
         ],
