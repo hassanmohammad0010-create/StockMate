@@ -2,10 +2,6 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/Order_Item.dart';
 
 class FindColor {
-  // ─────────────────────────────────────────────────────────
-  // الدوال اللي بتاخد String (للاستخدام مع statusLabel/priorityLabel
-  // أو أي نص جاهز في الواجهة)
-  // ─────────────────────────────────────────────────────────
   findFontColorFunction({required String word}) {
     if (word == 'مستلم') {
       return constGreen;
@@ -13,7 +9,9 @@ class FindColor {
       return constGreen;
     } else if (word == 'قيد التنفيذ') {
       return constBlue;
-    } else if (word == 'بأنتظار موافقة المدير') {
+    } else if (word == 'بأنتظار موافقة المدير' ||
+        word == 'بانتظار الموافقة' ||
+        word == 'بانتظار التأكيد') {
       // ✅ جديدة
       return constOrange;
     } else if (word == 'بأنتظار موافقة اللجنة') {
@@ -37,7 +35,9 @@ class FindColor {
       return constLightGreen;
     } else if (word == 'قيد التنفيذ') {
       return constLightBlue;
-    } else if (word == 'بأنتظار موافقة المدير') {
+    } else if (word == 'بأنتظار موافقة المدير' ||
+        word == 'بانتظار الموافقة' ||
+        word == 'بانتظار التأكيد') {
       // ✅ جديدة
       return constLightOrange;
     } else if (word == 'بأنتظار موافقة اللجنة') {
@@ -47,7 +47,7 @@ class FindColor {
       return constLightRed;
     } else if (word == 'عادي') {
       return constLightBlue;
-    } else if (word == 'مرفوض') {
+    } else if (word == 'مرفوض' || word == 'ملغى؛') {
       return constLightRed;
     } else if (word == 'يومي' || word == 'شهري' || word == 'أسبوعي') {
       return constLightBlue;

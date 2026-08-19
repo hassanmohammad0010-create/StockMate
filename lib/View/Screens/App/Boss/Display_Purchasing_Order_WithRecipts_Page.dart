@@ -2,10 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/App/Get_Purchase_Receipts_Controller.dart';
 import 'package:stock_mate_project/Controller/App/Purchase_Order_Details_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/Service/Head%20of%20Purchasing/Manager_Approve_Purchase_Request_Service.dart';
 import 'package:stock_mate_project/Service/Head%20of%20Purchasing/Manager_Reject_Purchase_Request_Service.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchase_Receipt_Details_Page.dart';
+import 'package:stock_mate_project/View/Widget/App/Custom_Purchase_Receipt_Card.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Purchasing_Item_Card.dart';
 import 'package:stock_mate_project/View/Widget/App/show_Create_Purchase_Receipt_Sheet.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
@@ -22,21 +25,25 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.d
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
-class DisplayPurchasingOrderPage extends StatelessWidget {
-  DisplayPurchasingOrderPage({super.key, required this.requestId})
+class DisplayPurchasingOrderWithReciptsPage extends StatelessWidget {
+  DisplayPurchasingOrderWithReciptsPage({super.key, required this.requestId})
     : controller = Get.put(
         PurchaseOrderDetailsController(requestId: requestId),
         tag: requestId,
+      ),
+      receiptsController = Get.put(
+        GetPurchaseReceiptsController(purchaseRequestId: requestId),
+        tag: requestId,
       );
-  // ✅ جديد
+
   final GetNameRollOfUserController userController = Get.put(
     GetNameRollOfUserController(),
   );
   final RxBool _isManagerProcessing = false.obs;
   final String requestId;
   final PurchaseOrderDetailsController controller;
+  final GetPurchaseReceiptsController receiptsController;
 
-  // ← نفس تصنيف statusLabel الموجود بـ PurchaseRequestListItem
   String _statusLabel(OrderStatus status) {
     switch (status) {
       case OrderStatus.draft:
@@ -44,7 +51,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
       case OrderStatus.pending_hospital_approval:
         return 'بأنتظار موافقة المدير';
       case OrderStatus.pending_manager_approval:
-        return 'بأنتظار موافقة اللجنة'; // ✅  منفصلة عن preparing
+        return 'بأنتظار موافقة اللجنة';
       case OrderStatus.preparing:
         return 'قيد التنفيذ';
       case OrderStatus.hospital_rejected:
@@ -63,7 +70,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
     if (d == null) return;
 
     _isManagerProcessing.value = true;
-    showLoadingDialog(); // ✅ جديد
+    showLoadingDialog();
 
     final items = d.items
         .map(
@@ -79,7 +86,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
       items: items,
     );
 
-    hideLoadingDialog(); // ✅ جديد
+    hideLoadingDialog();
     _isManagerProcessing.value = false;
 
     if (success) {
@@ -105,14 +112,14 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
     }
 
     _isManagerProcessing.value = true;
-    showLoadingDialog(); // ✅ جديد
+    showLoadingDialog();
 
     final success = await ManagerRejectPurchaseRequestService().rejectRequest(
       purchaseRequestId: requestId,
       reason: reason,
     );
 
-    hideLoadingDialog(); // ✅ جديد
+    hideLoadingDialog();
     _isManagerProcessing.value = false;
 
     if (success) {
@@ -133,6 +140,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           Get.delete<PurchaseOrderDetailsController>(tag: requestId);
+          Get.delete<GetPurchaseReceiptsController>(tag: requestId);
         }
       },
       child: Scaffold(
@@ -144,7 +152,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
           final currentStatus = controller.details.value?.status;
           final String? currentRole = userController.role.value;
 
-          // ═══════════════ purchasing_manager + preparing (جديد) ═══════════════
+          // ═══════════════ purchasing_manager + preparing ═══════════════
           if (currentRole == 'purchasing_manager' &&
               currentStatus == OrderStatus.preparing) {
             final d = controller.details.value;
@@ -165,7 +173,11 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                     builder: (_) => CreatePurchaseReceiptBottomSheet(
                       purchaseRequestId: requestId,
                       items: d.items,
-                      onSuccess: () => controller.fetchDetails(),
+                      onSuccess: () {
+                        controller.fetchDetails();
+                        receiptsController
+                            .refreshReceipts(); // ✅ تحديث سجل الإيصالات
+                      },
                     ),
                   );
                 },
@@ -202,11 +214,11 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                           confirmText: 'موافقة',
                           cancelText: 'رفض',
                           onConfirm: () {
-                            Get.back(); // ✅ سكر ديالوج التأكيد
+                            Get.back();
                             _approveAsManager(context);
                           },
                           onCancel: () {
-                            Get.back(); // ✅ سكر ديالوج التأكيد
+                            Get.back();
                             final TextEditingController reasonController =
                                 TextEditingController();
 
@@ -229,7 +241,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                                 return null;
                               },
                               onConfirm: () {
-                                Get.back(); // ✅ سكر ديالوج سبب الرفض
+                                Get.back();
                                 _rejectAsManager(reasonController.text.trim());
                               },
                             );
@@ -275,11 +287,11 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                         confirmText: 'موافقة',
                         cancelText: 'رفض',
                         onConfirm: () {
-                          Get.back(); // ✅ إضافة
+                          Get.back();
                           controller.approveRequest();
                         },
                         onCancel: () {
-                          Get.back(); // ✅ إضافة
+                          Get.back();
                           final TextEditingController reasonController =
                               TextEditingController();
 
@@ -302,7 +314,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                               return null;
                             },
                             onConfirm: () {
-                              Get.back(); // ✅ إضافة
+                              Get.back();
                               controller.rejectRequest(
                                 reasonController.text.trim(),
                               );
@@ -352,6 +364,7 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
+                      // ─── نفس بطاقة معلومات الطلب الأصلية ─────────
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: context.screenWidth * 0.02,
@@ -370,15 +383,13 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                                 color: Colors.grey.withOpacity(0.3),
                                 spreadRadius: 3,
                                 blurRadius: 8,
-                                offset: Offset(0, 0),
+                                offset: const Offset(0, 0),
                               ),
                             ],
                           ),
                           child: Column(
                             children: [
                               SizedBox(height: context.screenHeight * 0.01),
-
-                              // ─── صاحب الطلب ────────────────────────
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -417,7 +428,6 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                               ),
                               SizedBox(height: context.screenHeight * 0.01),
                               Divider(indent: 16, endIndent: 16),
-                              // ─── التاريخ ───────────────────────────
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -460,7 +470,6 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                                 endIndent: 16,
                                 thickness: 0.5,
                               ),
-                              // ─── الأولوية ──────────────────────────
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -522,7 +531,6 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                                 endIndent: 16,
                                 thickness: 0.5,
                               ),
-                              // ─── الحالة ────────────────────────────
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -576,8 +584,6 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-
-                              // ─── الملاحظات (لو موجودة) ─────────────
                               if (d.notes != null && d.notes!.isNotEmpty) ...[
                                 SizedBox(height: context.screenHeight * 0.01),
                                 Divider(
@@ -612,9 +618,6 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                                   ],
                                 ),
                               ],
-
-                              // ─── سبب الرفض (لو موجود) ───────────────
-                              // ← Obx مستقل عشان يتحدث فوراً بعد الرفض
                               Obx(() {
                                 final currentDetails = controller.details.value;
                                 if (currentDetails == null ||
@@ -696,6 +699,74 @@ class DisplayPurchasingOrderPage extends StatelessWidget {
                                 },
                               ),
                       ),
+
+                      // ─── سجل إيصالات الاستلام (الجزء الجديد) ───────
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.02,
+                          vertical: context.screenHeight * 0.01,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.receipt_long_outlined,
+                              size: context.screenHeight * 0.026,
+                              color: constGray,
+                            ),
+                            SizedBox(width: context.screenWidth * 0.02),
+                            Text(
+                              'سجل إيصالات الاستلام',
+                              style: TextStyle(
+                                fontFamily: cairo,
+                                color: constGray,
+                                fontSize: context.screenHeight * 0.019,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Obx(() {
+                        if (receiptsController.isLoading.value) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: CustomLoadingIndicator(),
+                          );
+                        }
+
+                        if (receiptsController.receipts.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: context.screenHeight * 0.02,
+                            ),
+                            child: CustomEmptyState(
+                              tital: 'لا توجد إيصالات استلام لهذا الطلب',
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.only(
+                            bottom: context.screenHeight * 0.02,
+                          ),
+                          itemCount: receiptsController.receipts.length,
+                          itemBuilder: (context, index) {
+                            final receipt = receiptsController.receipts[index];
+                            return CustomPurchaseReceiptCard(
+                              receipt: receipt,
+                              onTap: () {
+                                Get.to(
+                                  () => DisplayPurchaseReceiptDetailsPage(
+                                    receiptId: receipt.id,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }),
                     ],
                   ),
                 );

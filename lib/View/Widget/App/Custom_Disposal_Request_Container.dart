@@ -1,0 +1,94 @@
+import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/core/Function/Find_Color.dart';
+
+// ignore: must_be_immutable
+class CustomDisposalRequestContainer extends StatelessWidget {
+  CustomDisposalRequestContainer({
+    super.key,
+    required this.onTap,
+    required this.date,
+    required this.destinationName,
+    required this.state,
+  });
+
+  String state, destinationName, date;
+  VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // لون الظل
+                blurRadius: 2, // ضبابية الظل
+                spreadRadius: 0.5, // انتشار الظل
+                offset: Offset(0, 0), // اتجاه الظل (x, y)
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'طلب بيع إتلاف',
+                    style: TextStyle(
+                      color: constColor,
+                      fontFamily: lateef,
+                      fontSize: 28,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: FindColor().findBackgroundColor(word: state),
+                    ),
+                    child: Text(
+                      state,
+                      style: TextStyle(
+                        color: FindColor().findFontColorFunction(word: state),
+                        fontFamily: lateef,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                'الوجهة : $destinationName',
+                style: TextStyle(
+                  color: constGray,
+                  fontFamily: lateef,
+                  fontSize: 22,
+                ),
+              ),
+              Text(
+                'التاريخ :$date',
+                style: TextStyle(
+                  color: constGray,
+                  fontFamily: lateef,
+                  fontSize: 22,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

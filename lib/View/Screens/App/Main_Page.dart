@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Boss_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Requests_Page.dart';
@@ -15,6 +16,13 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ نفس نمط DepartmentHeadsMainPage: تسجيل واحد فقط، permanent
+    if (!Get.isRegistered<UnreadNotificationController>()) {
+      Get.put(UnreadNotificationController(), permanent: true);
+    }
+    final UnreadNotificationController unreadCtrl =
+        Get.find<UnreadNotificationController>();
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -46,18 +54,40 @@ class MainPage extends StatelessWidget {
                         Get.toNamed(AppRoutes.NotificationPage);
                       },
                     ),
-                    Positioned(
-                      right: context.screenWidth * 0.02,
-                      top: context.screenHeight * 0.01,
-                      child: Container(
-                        width: context.screenWidth * 0.02,
-                        height: context.screenHeight * 0.015,
-                        decoration: const BoxDecoration(
-                          color: constRed,
-                          shape: BoxShape.circle,
+                    // ✅ الـ badge صار reactive وبيختفي تلقائياً لو العدد صفر
+                    Obx(() {
+                      final count = unreadCtrl.unreadCount.value;
+                      if (count <= 0) return const SizedBox.shrink();
+
+                      return Positioned(
+                        right: context.screenWidth * 0.01,
+                        top: context.screenHeight * 0.005,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.012,
+                            vertical: 1,
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: context.screenWidth * 0.05,
+                            minHeight: context.screenHeight * 0.02,
+                          ),
+                          decoration: const BoxDecoration(
+                            color: constRed,
+                            shape: BoxShape.circle,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            count > 99 ? '99+' : '$count',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
               ],
