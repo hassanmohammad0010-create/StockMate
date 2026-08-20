@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Test/ChatBotController.dart';
-import 'package:stock_mate_project/Test/ChatBubbleWidget.dart';
-import 'package:stock_mate_project/Test/ChatInputFieldWidget.dart';
-import 'package:stock_mate_project/Test/TypingIndicatorWidget.dart';
+import 'package:stock_mate_project/Controller/Service/Chat_Bot_Controller.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Chat_Bubble_Widget.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Chat_Input_Field_Widget.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Typing_Indicator_Widget.dart';
 
 class ChatBotPage extends StatefulWidget {
   const ChatBotPage({super.key});

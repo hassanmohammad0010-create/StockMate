@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Test/ChatBotService.dart';
-import 'package:stock_mate_project/Test/ChatMessageModel.dart';
+import 'package:stock_mate_project/Service/App/Chat_Bot_Service.dart';
+import 'package:stock_mate_project/core/models/Chat_Message_Model.dart';
 
 class ChatBotController extends GetxController {
   final ChatBotService _service = ChatBotService();

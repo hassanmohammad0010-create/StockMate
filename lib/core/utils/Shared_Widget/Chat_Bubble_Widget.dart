@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/Test/ChatMessageModel.dart';
+import 'package:stock_mate_project/core/models/Chat_Message_Model.dart';
 
 class ChatBubbleWidget extends StatelessWidget {
   final ChatMessageModel message;

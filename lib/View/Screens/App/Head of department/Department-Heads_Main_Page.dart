@@ -7,7 +7,7 @@ import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabContro
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/Controller/Service/Get_User_Profile_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
-import 'package:stock_mate_project/Test/ChatBotPage.dart';
+import 'package:stock_mate_project/View/Screens/App/Chat_Bot_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';

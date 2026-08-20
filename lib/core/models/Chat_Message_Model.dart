@@ -80,6 +80,8 @@ class ChatBotResponseModel {
 
   ChatBotResponseModel({required this.success, required this.reply});
 
+  // ─── هذا هو الجزء اللي تغير فقط داخل ChatBotResponseModel.fromJson ───
+
   factory ChatBotResponseModel.fromJson(Map<String, dynamic> json) {
     final bool success = json['success'] == true;
 
@@ -88,8 +90,13 @@ class ChatBotResponseModel {
     final dynamic data = json['data'];
 
     if (data is Map<String, dynamic>) {
-      reply = (data['reply'] ?? data['message'] ?? data['response'] ?? '')
-          .toString();
+      reply =
+          (data['answer'] ??
+                  data['reply'] ??
+                  data['message'] ??
+                  data['response'] ??
+                  '')
+              .toString();
     } else if (data is String) {
       reply = data;
     } else {

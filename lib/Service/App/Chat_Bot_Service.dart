@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:stock_mate_project/Service/Dispatcher.dart';
-import 'package:stock_mate_project/Test/ChatMessageModel.dart';
+import 'package:stock_mate_project/core/models/Chat_Message_Model.dart';
 
 /// سيرفس الشات بوت / المساعد الذكي
 ///
