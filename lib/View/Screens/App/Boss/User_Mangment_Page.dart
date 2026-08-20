@@ -61,230 +61,274 @@ class UserMangmentPage extends StatelessWidget {
     GetDepartmentHeaderWithoutPostionController(),
   );
   String? name, email, specialty, role;
-
   void _openCreateUserSheet(BuildContext context) {
+    // المفترض أن createUserPageKey معرف خارج الدالة، إذا لم يكن كذلك، قم بإلغاء تعليق السطر التالي:
+    // final GlobalKey<FormState> createUserPageKey = GlobalKey();
+
+    final GlobalKey contentKey =
+        GlobalKey(); // ✅ مفتاح لقياس حجم المحتوى الداخلي
+    final DraggableScrollableController scrollableController =
+        DraggableScrollableController(); // ✅ متحكم في السحب والحجم
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-          ),
-          child: DraggableScrollableSheet(
-            initialChildSize: 0.75,
-            minChildSize: 0.4,
-            maxChildSize: 0.95,
-            expand: false,
-            builder: (context, scrollController) {
-              return Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Form(
-                    key: createUserPageKey,
-                    child: GetBuilder<Createuserpagecontroller>(
-                      builder: (createuserpagecontroller) {
-                        return createuserpagecontroller.rolesModel.isEmpty
-                            ? Padding(
+        return StatefulBuilder(
+          // ✅ للسماح بتحديث الحالة داخل المودال
+          builder: (context, setState) {
+            // ✅ قياس حجم المحتوى بعد البناء مباشرة وتعديل حجم الشيت ليناسبه
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final renderBox =
+                  contentKey.currentContext?.findRenderObject() as RenderBox?;
+              if (renderBox != null) {
+                final contentHeight = renderBox.size.height;
+                final screenHeight = MediaQuery.of(sheetContext).size.height;
+
+                // حساب النسبة المئوية لحجم المحتوى بالنسبة للشاشة (الحد الأدنى 0.4 كما في كودك الأصلي)
+                double targetSize = (contentHeight / screenHeight).clamp(
+                  0.4,
+                  0.95,
+                );
+
+                // تحريك الشيت للحجم المناسب بسلاسة
+                if ((scrollableController.size - targetSize).abs() > 0.05) {
+                  scrollableController.animateTo(
+                    targetSize,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                  );
+                }
+              }
+            });
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+              ),
+              child: DraggableScrollableSheet(
+                controller: scrollableController, // ✅ ربط المتحكم
+                initialChildSize:
+                    0.4, // نبدأ بحجم صغير ثم يكبره الكود أعلاه ديناميكياً
+                minChildSize: 0.4,
+                maxChildSize: 0.95,
+                expand: false,
+                builder: (context, scrollController) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Form(
+                        key: createUserPageKey,
+                        child: GetBuilder<Createuserpagecontroller>(
+                          builder: (createuserpagecontroller) {
+                            // ✅ قمنا بإزالة شرط "isEmpty ? Loading : Form" الخارجي
+                            // لكي نسمح بعرض الفورم والملاحظة حتى لو كانت القائمة فارغة.
+                            // (ملاحظة: إذا كان لديك متغير isLoading في الكونترولر، يفضل استخدامه هنا بدلاً من فحص isEmpty وحده)
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.screenWidth * 0.02,
+                                vertical: context.screenHeight * 0.005,
+                              ),
+                              child: Container(
                                 padding: EdgeInsets.symmetric(
-                                  vertical: context.screenHeight * 0.1,
+                                  vertical: context.screenHeight * 0.015,
+                                  horizontal: context.screenWidth * 0.03,
                                 ),
-                                child: Align(
-                                  alignment: AlignmentGeometry.center,
-                                  child: CustomLoadingIndicator(),
-                                ),
-                              )
-                            : Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: context.screenWidth * 0.02,
-                                  vertical: context.screenHeight * 0.005,
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: context.screenHeight * 0.015,
-                                    horizontal: context.screenWidth * 0.03,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
+                                child: Column(
+                                  key:
+                                      contentKey, // ✅ ربط المفتاح هنا لقياس ارتفاع هذا العمود
+                                  mainAxisSize: MainAxisSize
+                                      .min, // ✅ مهم جداً ليأخذ حجم محتواه فقط
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: context.screenHeight * 0.01,
+                                      ),
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: context.screenWidth * 0.32,
+                                        height: context.screenHeight * 0.05,
+                                        decoration: BoxDecoration(
+                                          color: constLightBlue,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'ادخل المعلومات',
+                                          style: TextStyle(
+                                            color: constBlue,
+                                            fontFamily: lateef,
+                                            fontSize:
+                                                context.screenHeight * 0.026,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: context.screenHeight * 0.01,
+                                    ),
+
+                                    Obx(
+                                      () => CustomDropdown<String>(
+                                        items:
+                                            createuserpagecontroller.roleNames,
+                                        labelBuilder: (v) => v,
+                                        label: 'الدور الخاص بالمستخدم',
+                                        hint: '',
+                                        validator: (data) => Validation()
+                                            .generalValidationForDropdown(data),
+                                        icon: Icons.rule_outlined,
+                                        value: createuserpagecontroller
+                                            .selectedRole
+                                            .value,
+                                        onChanged: (data) {
+                                          createuserpagecontroller
+                                                  .selectedRole
+                                                  .value =
+                                              data;
+                                        },
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      height: context.screenHeight * 0.01,
+                                    ),
+
+                                    CustomMyTextFormField(
+                                      controller: nameController,
+                                      label: 'الاسم',
+                                      hint: '',
+                                      prefixIcon: Icons.person,
+                                      onChanged: (data) {
+                                        name = data;
+                                      },
+                                      validator: (data) =>
+                                          Validation().generalValidation(data!),
+                                    ),
+
+                                    SizedBox(
+                                      height: context.screenHeight * 0.01,
+                                    ),
+
+                                    CustomMyTextFormField(
+                                      label: 'البريد الالكتروني',
+                                      hint: '',
+                                      controller: emailController,
+                                      prefixIcon: Icons.email,
+                                      onChanged: (data) {
+                                        email = data;
+                                      },
+                                      validator: (data) =>
+                                          Validation().emailValidate(data!),
+                                    ),
+
+                                    SizedBox(
+                                      height: context.screenHeight * 0.01,
+                                    ),
+
+                                    CustomMyTextFormField(
+                                      label: 'الاختصاص',
+                                      controller: specialtyController,
+                                      hint: '',
+                                      onChanged: (data) {
+                                        specialty = data;
+                                      },
+                                      prefixIcon: Icons.sports_cricket_sharp,
+                                      validator: (data) =>
+                                          Validation().generalValidation(data!),
+                                    ),
+
+                                    SizedBox(
+                                      height: context.screenHeight * 0.01,
+                                    ),
+
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                          vertical: context.screenHeight * 0.01,
+                                          horizontal:
+                                              context.screenWidth * 0.04,
+                                          vertical: context.screenHeight * 0.02,
                                         ),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          width: context.screenWidth * 0.32,
-                                          height: context.screenHeight * 0.05,
-                                          decoration: BoxDecoration(
-                                            color: constLightBlue,
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'ادخل المعلومات',
-                                            style: TextStyle(
-                                              color: constBlue,
-                                              fontFamily: lateef,
-                                              fontSize:
-                                                  context.screenHeight * 0.026,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: context.screenHeight * 0.01,
-                                      ),
-                                      Obx(
-                                        () => CustomDropdown<String>(
-                                          items: createuserpagecontroller
-                                              .roleNames,
-                                          labelBuilder: (v) => v,
-                                          label: 'الدور الخاص بالمستخدم',
-                                          hint: '',
-                                          validator: (data) => Validation()
-                                              .generalValidationForDropdown(
-                                                data,
-                                              ), //
-                                          icon: Icons.rule_outlined,
-                                          value: createuserpagecontroller
-                                              .selectedRole
-                                              .value,
-                                          onChanged: (data) {
-                                            createuserpagecontroller
-                                                    .selectedRole
-                                                    .value =
-                                                data;
+                                        child: CustomMainButtom(
+                                          title: 'تأكيد',
+                                          color: constBlue,
+                                          fontcolor: Colors.white,
+                                          onPressed: () async {
+                                            if (!createUserPageKey.currentState!
+                                                .validate()) {
+                                              return;
+                                            }
+
+                                            role = createuserpagecontroller
+                                                .getRoleId(
+                                                  roleName:
+                                                      createuserpagecontroller
+                                                          .selectedRole
+                                                          .value!,
+                                                );
+
+                                            Get.back();
+                                            showLoadingDialog();
+
+                                            final bool response =
+                                                await UserService.createUser(
+                                                  fullName: name!,
+                                                  email: email!,
+                                                  roleId: role!,
+                                                  specialty: specialty,
+                                                );
+
+                                            hideLoadingDialog();
+
+                                            if (response) {
+                                              nameController.clear();
+                                              emailController.clear();
+                                              specialtyController.clear();
+                                              createuserpagecontroller
+                                                      .selectedRole
+                                                      .value =
+                                                  null;
+                                              name = null;
+                                              email = null;
+                                              specialty = null;
+                                              role = null;
+
+                                              getUsersListController
+                                                  .refreshUsers();
+                                            }
                                           },
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: context.screenHeight * 0.01,
-                                      ),
-                                      CustomMyTextFormField(
-                                        controller: nameController,
-                                        label: 'الاسم',
-                                        hint: '',
-                                        prefixIcon: Icons.person,
-                                        onChanged: (data) {
-                                          name = data;
-                                        },
-                                        validator: (data) => Validation()
-                                            .generalValidation(data!),
-                                      ),
-                                      SizedBox(
-                                        height: context.screenHeight * 0.01,
-                                      ),
-                                      CustomMyTextFormField(
-                                        label: 'لبريد الالكتروني',
-                                        hint: '',
-                                        controller: emailController,
-                                        prefixIcon: Icons.email,
-                                        onChanged: (data) {
-                                          email = data;
-                                        },
-                                        validator: (data) =>
-                                            Validation().emailValidate(data!),
-                                      ),
-                                      SizedBox(
-                                        height: context.screenHeight * 0.01,
-                                      ),
-                                      CustomMyTextFormField(
-                                        label: 'الاختصاص',
-                                        controller: specialtyController,
-                                        hint: '',
-                                        onChanged: (data) {
-                                          specialty = data;
-                                        },
-                                        prefixIcon: Icons.sports_cricket_sharp,
-                                        validator: (data) => Validation()
-                                            .generalValidation(data!),
-                                      ),
-                                      SizedBox(
-                                        height: context.screenHeight * 0.01,
-                                      ),
-                                      Align(
-                                        alignment: AlignmentGeometry.center,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                                context.screenWidth * 0.04,
-                                            vertical:
-                                                context.screenHeight * 0.02,
-                                          ),
-                                          child: CustomMainButtom(
-                                            title: 'تأكيد',
-                                            color: constBlue,
-                                            fontcolor: Colors.white,
-                                            onPressed: () async {
-                                              if (!createUserPageKey
-                                                  .currentState!
-                                                  .validate()) {
-                                                return;
-                                              }
-
-                                              // ✅ الفورم أصلاً بيتحقق من selectedRole عبر الـ validator
-                                              // (generalValidationForDropdown)، فما عاد نحتاج فحص يدوي هون
-                                              role = createuserpagecontroller
-                                                  .getRoleId(
-                                                    roleName:
-                                                        createuserpagecontroller
-                                                            .selectedRole
-                                                            .value!,
-                                                  );
-
-                                              // ✅ يقفل الشيت أولاً (بنفس منطق الشيتين التانيين)
-                                              Get.back();
-                                              showLoadingDialog();
-
-                                              final bool response =
-                                                  await UserService.createUser(
-                                                    fullName: name!,
-                                                    email: email!,
-                                                    roleId: role!,
-                                                    specialty: specialty,
-                                                  );
-
-                                              hideLoadingDialog(); // ← يتسكر بكل الحالات
-
-                                              if (response) {
-                                                nameController.clear();
-                                                emailController.clear();
-                                                specialtyController.clear();
-                                                createuserpagecontroller
-                                                        .selectedRole
-                                                        .value =
-                                                    null;
-                                                name = null;
-                                                email = null;
-                                                specialty = null;
-                                                role = null;
-
-                                                getUsersListController
-                                                    .refreshUsers();
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    SizedBox(
+                                      height: context.screenHeight * 0.05,
+                                    ),
+                                    // ✅ الملاحظة أسفل الزر في حال كانت قائمة الأدوار فارغة
+                                  ],
                                 ),
-                              );
-                      },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );
@@ -293,186 +337,263 @@ class UserMangmentPage extends StatelessWidget {
   // ✅ الشيت الجديد: ربط طبيب كمدير قسم
   void _openAssignDoctorSheet(BuildContext context) {
     getAllDoctorsController.selectedDoctor.value = null;
-    selectedDoctorDepartment.value = null; // ✅ اتغيّر
+    selectedDoctorDepartment.value = null;
+
     final GlobalKey<FormState> openAssignDoctorSheetKey = GlobalKey();
+    final GlobalKey contentKey =
+        GlobalKey(); // ✅ مفتاح لقياس حجم المحتوى الداخلي
+    final DraggableScrollableController scrollableController =
+        DraggableScrollableController(); // ✅ متحكم في السحب والحجم
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
-        return Form(
-          key: openAssignDoctorSheetKey,
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-            ),
-            child: DraggableScrollableSheet(
-              initialChildSize: 0.55,
-              minChildSize: 0.3,
-              maxChildSize: 0.9,
-              expand: false,
-              builder: (context, scrollController) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  child: SingleChildScrollView(
-                    controller: scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.screenWidth * 0.02,
-                        vertical: context.screenHeight * 0.02,
+        return StatefulBuilder(
+          // ✅ للسماح بتحديث الحالة داخل المودال
+          builder: (context, setState) {
+            // ✅ قياس حجم المحتوى بعد البناء مباشرة وتعديل حجم الشيت ليناسبه
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final renderBox =
+                  contentKey.currentContext?.findRenderObject() as RenderBox?;
+              if (renderBox != null) {
+                final contentHeight = renderBox.size.height;
+                final screenHeight = MediaQuery.of(sheetContext).size.height;
+
+                // حساب النسبة المئوية لحجم المحتوى بالنسبة للشاشة
+                double targetSize = (contentHeight / screenHeight).clamp(
+                  0.3,
+                  0.95,
+                );
+
+                // تحريك الشيت للحجم المناسب بسلاسة
+                if ((scrollableController.size - targetSize).abs() > 0.05) {
+                  scrollableController.animateTo(
+                    targetSize,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                  );
+                }
+              }
+            });
+
+            return Form(
+              key: openAssignDoctorSheetKey,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+                ),
+                child: DraggableScrollableSheet(
+                  controller: scrollableController, // ✅ ربط المتحكم
+                  initialChildSize:
+                      0.3, // نبدأ بحجم صغير ثم يكبره الكود أعلاه ديناميكياً
+                  minChildSize: 0.3,
+                  maxChildSize: 0.95,
+                  expand: false,
+                  builder: (context, scrollController) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: context.screenHeight * 0.01,
-                            ),
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: context.screenWidth * 0.32,
-                              height: context.screenHeight * 0.05,
-                              decoration: BoxDecoration(
-                                color: constLightBlue,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                'ربط طبيب بقسم',
-                                style: TextStyle(
-                                  color: constBlue,
-                                  fontFamily: lateef,
-                                  fontSize: context.screenHeight * 0.026,
-                                ),
-                              ),
-                            ),
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.02,
+                            vertical: context.screenHeight * 0.02,
                           ),
-                          SizedBox(height: context.screenHeight * 0.01),
-
-                          // ── دروب داون اختيار الطبيب ──
-                          // ✅ حذفنا فرع "لا يوجد أطباء" — الدروب داون نفسه
-                          // بيعرض "لا يوجد" جواه لما تكون doctors فاضية
-                          Obx(() {
-                            if (getAllDoctorsController.isLoading.value) {
-                              return Padding(
+                          child: Column(
+                            key:
+                                contentKey, // ✅ ربط المفتاح هنا لقياس ارتفاع هذا العمود
+                            mainAxisSize: MainAxisSize
+                                .min, // ✅ مهم جداً ليأخذ حجم محتواه فقط
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
                                 padding: EdgeInsets.symmetric(
-                                  vertical: context.screenHeight * 0.03,
+                                  vertical: context.screenHeight * 0.01,
                                 ),
-                                child: const Center(
-                                  child: CustomLoadingIndicator(),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: context.screenWidth * 0.32,
+                                  height: context.screenHeight * 0.05,
+                                  decoration: BoxDecoration(
+                                    color: constLightBlue,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    'ربط طبيب بقسم',
+                                    style: TextStyle(
+                                      color: constBlue,
+                                      fontFamily: lateef,
+                                      fontSize: context.screenHeight * 0.026,
+                                    ),
+                                  ),
                                 ),
-                              );
-                            }
+                              ),
+                              SizedBox(height: context.screenHeight * 0.01),
 
-                            return CustomDropdown<UserItem>(
-                              items: getAllDoctorsController.doctors,
-                              labelBuilder: (d) => d.fullName,
-                              label: 'الطبيب',
-                              validator: (data) =>
-                                  Validation().generalValidationForDropdown(
-                                    data?.fullName,
-                                  ), //
-                              hint: '',
-                              icon: Icons.person_outline,
-                              value:
-                                  getAllDoctorsController.selectedDoctor.value,
-                              onChanged: (data) {
-                                getAllDoctorsController.selectedDoctor.value =
-                                    data;
-                              },
-                            );
-                          }),
+                              // ── دروب داون اختيار الطبيب ──
+                              Obx(() {
+                                if (getAllDoctorsController.isLoading.value) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: context.screenHeight * 0.03,
+                                    ),
+                                    child: const Center(
+                                      child: CustomLoadingIndicator(),
+                                    ),
+                                  );
+                                }
 
-                          SizedBox(height: context.screenHeight * 0.015),
-
-                          // ── دروب داون اختيار القسم (كل الأقسام) ──
-                          // ✅ حذفنا فرع "لا يوجد أقسام" لنفس السبب
-                          GetBuilder<GetDepartmentsController>(
-                            builder: (controller) {
-                              if (controller.department == null) {
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: context.screenHeight * 0.03,
-                                  ),
-                                  child: const Center(
-                                    child: CustomLoadingIndicator(),
-                                  ),
-                                );
-                              }
-
-                              return Obx(
-                                () => CustomDropdown<DepartmentModel>(
-                                  items: controller.department!,
-                                  labelBuilder: (d) => d.name,
-                                  label: 'القسم',
+                                return CustomDropdown<UserItem>(
+                                  items: getAllDoctorsController.doctors,
+                                  labelBuilder: (d) => d.fullName,
+                                  label: 'الطبيب',
+                                  validator: (data) =>
+                                      Validation().generalValidationForDropdown(
+                                        data?.fullName,
+                                      ),
                                   hint: '',
-                                  validator: (data) => Validation()
-                                      .generalValidationForDropdown(data?.name),
-
-                                  icon: Icons.apartment_outlined,
-                                  value: selectedDoctorDepartment.value,
+                                  icon: Icons.person_outline,
+                                  value: getAllDoctorsController
+                                      .selectedDoctor
+                                      .value,
                                   onChanged: (data) {
-                                    selectedDoctorDepartment.value = data;
+                                    getAllDoctorsController
+                                            .selectedDoctor
+                                            .value =
+                                        data;
+                                  },
+                                );
+                              }),
+
+                              SizedBox(height: context.screenHeight * 0.015),
+
+                              // ── دروب داون اختيار القسم ──
+                              GetBuilder<GetDepartmentsController>(
+                                builder: (deptController) {
+                                  if (deptController.department == null) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: context.screenHeight * 0.03,
+                                      ),
+                                      child: const Center(
+                                        child: CustomLoadingIndicator(),
+                                      ),
+                                    );
+                                  }
+
+                                  return Obx(
+                                    () => CustomDropdown<DepartmentModel>(
+                                      items: deptController.department!,
+                                      labelBuilder: (d) => d.name,
+                                      label: 'القسم',
+                                      hint: '',
+                                      validator: (data) => Validation()
+                                          .generalValidationForDropdown(
+                                            data?.name,
+                                          ),
+                                      icon: Icons.apartment_outlined,
+                                      value: selectedDoctorDepartment.value,
+                                      onChanged: (data) {
+                                        selectedDoctorDepartment.value = data;
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+
+                              SizedBox(height: context.screenHeight * 0.02),
+
+                              Align(
+                                alignment: Alignment.center,
+                                child: CustomMainButtom(
+                                  title: 'تأكيد',
+                                  color: constBlue,
+                                  fontcolor: Colors.white,
+                                  onPressed: () async {
+                                    if (openAssignDoctorSheetKey.currentState!
+                                        .validate()) {
+                                      final doctor = getAllDoctorsController
+                                          .selectedDoctor
+                                          .value;
+                                      final department =
+                                          selectedDoctorDepartment.value;
+
+                                      if (doctor == null || department == null)
+                                        return;
+
+                                      Get.back();
+                                      showLoadingDialog();
+
+                                      final success = await UpdateUserService()
+                                          .updateUser(
+                                            userId: doctor.id,
+                                            departmentId: department.id,
+                                          );
+
+                                      hideLoadingDialog();
+
+                                      if (success) {
+                                        customSnackBar(
+                                          title: 'تم بنجاح',
+                                          message: 'تم ربط الطبيب بالقسم بنجاح',
+                                          color: constGreen,
+                                          messageColor: constLightGreen,
+                                        );
+                                        getUsersListController.refreshUsers();
+                                      }
+                                    }
                                   },
                                 ),
-                              );
-                            },
-                          ),
+                              ),
 
-                          SizedBox(height: context.screenHeight * 0.02),
+                              // ✅ الملاحظة أسفل الزر في حال كانت القوائم فارغة
+                              Obx(() {
+                                final bool isDoctorsEmpty =
+                                    getAllDoctorsController.doctors.isEmpty;
+                                final deptController =
+                                    Get.find<GetDepartmentsController>();
+                                final bool isDeptsEmpty =
+                                    deptController.department?.isEmpty ?? true;
 
-                          Align(
-                            alignment: Alignment.center,
-                            child: CustomMainButtom(
-                              title: 'تأكيد',
-                              color: constBlue,
-                              fontcolor: Colors.white,
-                              onPressed: () async {
-                                if (openAssignDoctorSheetKey.currentState!
-                                    .validate()) {
-                                  final doctor = getAllDoctorsController
-                                      .selectedDoctor
-                                      .value;
-                                  final department = selectedDoctorDepartment
-                                      .value; // ✅ اتغيّر
-
-                                  Get.back();
-                                  showLoadingDialog();
-
-                                  final success = await UpdateUserService()
-                                      .updateUser(
-                                        userId: doctor!.id,
-                                        departmentId: department!.id,
-                                      );
-
-                                  hideLoadingDialog();
-
-                                  if (success) {
-                                    customSnackBar(
-                                      title: 'تم بنجاح',
-                                      message: 'تم ربط الطبيب بالقسم بنجاح',
-                                      color: constGreen,
-                                      messageColor: constLightGreen,
-                                    );
-                                    getUsersListController.refreshUsers();
-                                  }
+                                if (isDoctorsEmpty || isDeptsEmpty) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      top: context.screenHeight * 0.02,
+                                      bottom: context.screenHeight * 0.02,
+                                      right: context.screenHeight * 0.02,
+                                    ),
+                                    child: Text(
+                                      'ملاحظة : لا يوجد أطباء أو أقسام متاحة للتعيين',
+                                      style: TextStyle(
+                                        color: Colors.grey, // خط رمادي
+                                        fontFamily: lateef,
+                                        fontSize: context.screenHeight * 0.025,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  );
                                 }
-                              },
-                            ),
+                                return const SizedBox.shrink(); // إخفاء الملاحظة إذا كانت القوائم ممتلئة
+                              }),
+                              SizedBox(height: context.screenHeight * 0.05),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+                    );
+                  },
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -481,179 +602,272 @@ class UserMangmentPage extends StatelessWidget {
   void _openDepartmentsSheet(BuildContext context) {
     getDepartmentHeaderWithoutPostionController.selectedManager.value = null;
     getDepartmentsController.selectedDepartment.value = null;
-    final GlobalKey<FormState> departmentsSheetKey = GlobalKey(); // ✅ جديد
+
+    final GlobalKey<FormState> departmentsSheetKey = GlobalKey();
+    final GlobalKey contentKey =
+        GlobalKey(); // ✅ مفتاح لقياس حجم المحتوى الداخلي
+    final DraggableScrollableController scrollableController =
+        DraggableScrollableController(); // ✅ متحكم في السحب والحجم
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
-        return Form(
-          // ✅ جديد - يلف كل المحتوى
-          key: departmentsSheetKey,
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-            ),
-            child: DraggableScrollableSheet(
-              initialChildSize: 0.55,
-              minChildSize: 0.3,
-              maxChildSize: 0.9,
-              expand: false,
-              builder: (context, scrollController) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  child: SingleChildScrollView(
-                    controller: scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.screenWidth * 0.02,
-                        vertical: context.screenHeight * 0.02,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // ... العنوان زي ما هو ...
-                          SizedBox(height: context.screenHeight * 0.01),
+        return StatefulBuilder(
+          // ✅ للسماح بتحديث الحالة داخل المودال
+          builder: (context, setState) {
+            // ✅ قياس حجم المحتوى بعد البناء مباشرة وتعديل حجم الشيت ليناسبه
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final renderBox =
+                  contentKey.currentContext?.findRenderObject() as RenderBox?;
+              if (renderBox != null) {
+                final contentHeight = renderBox.size.height;
+                final screenHeight = MediaQuery.of(sheetContext).size.height;
 
-                          Obx(() {
-                            if (getDepartmentsController.isLoading.value) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: context.screenHeight * 0.03,
-                                ),
-                                child: const Center(
-                                  child: CustomLoadingIndicator(),
-                                ),
-                              );
-                            }
-                            return CustomDropdown<DepartmentModel>(
-                              items: getDepartmentsController.departments,
-                              labelBuilder: (d) => d.name,
-                              label: 'القسم',
-                              hint: '',
-                              validator: (data) =>
-                                  Validation().generalValidationForDropdown(
-                                    data == null ? null : data.name,
-                                  ), // ✅
-                              icon: Icons.apartment_outlined,
-                              value: getDepartmentsController
-                                  .selectedDepartment
-                                  .value,
-                              onChanged: (data) {
-                                getDepartmentsController
-                                        .selectedDepartment
-                                        .value =
-                                    data;
-                              },
-                            );
-                          }),
-
-                          SizedBox(height: context.screenHeight * 0.015),
-
-                          Obx(() {
-                            if (getDepartmentHeaderWithoutPostionController
-                                .isLoading
-                                .value) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: context.screenHeight * 0.03,
-                                ),
-                                child: const Center(
-                                  child: CustomLoadingIndicator(),
-                                ),
-                              );
-                            }
-                            return CustomDropdown<UserItem>(
-                              items: getDepartmentHeaderWithoutPostionController
-                                  .managers,
-                              labelBuilder: (m) => m.fullName,
-                              label: 'رئيس القسم',
-                              hint: '',
-                              validator: (data) =>
-                                  Validation().generalValidationForDropdown(
-                                    data == null ? null : data.fullName,
-                                  ), // ✅
-                              icon: Icons.person_outline,
-                              value: getDepartmentHeaderWithoutPostionController
-                                  .selectedManager
-                                  .value,
-                              onChanged: (data) {
-                                getDepartmentHeaderWithoutPostionController
-                                        .selectedManager
-                                        .value =
-                                    data;
-                              },
-                            );
-                          }),
-
-                          SizedBox(height: context.screenHeight * 0.02),
-
-                          Align(
-                            alignment: Alignment.center,
-                            child: CustomMainButtom(
-                              title: 'تأكيد',
-                              color: constBlue,
-                              fontcolor: Colors.white,
-                              onPressed: () async {
-                                // ✅ فحص الفورم أولاً
-                                if (!departmentsSheetKey.currentState!
-                                    .validate()) {
-                                  return;
-                                }
-
-                                final department = getDepartmentsController
-                                    .selectedDepartment
-                                    .value;
-                                final manager =
-                                    getDepartmentHeaderWithoutPostionController
-                                        .selectedManager
-                                        .value;
-
-                                // احتياطي إضافي (نادراً ما يصير لو validate نجح)
-                                if (department == null || manager == null)
-                                  return;
-
-                                Get.back();
-                                showLoadingDialog();
-
-                                final success =
-                                    await AssignDepartmentManagerService()
-                                        .assignManager(
-                                          departmentId: department.id,
-                                          managerId: manager.id,
-                                        );
-
-                                hideLoadingDialog();
-
-                                if (success) {
-                                  customSnackBar(
-                                    title: 'تم بنجاح',
-                                    message: 'تم ربط القسم بالمدير بنجاح',
-                                    color: constGreen,
-                                    messageColor: constLightGreen,
-                                  );
-                                  getDepartmentHeaderWithoutPostionController
-                                      .fetchManagers();
-                                  getUsersListController.refreshUsers();
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                // حساب النسبة المئوية لحجم المحتوى بالنسبة للشاشة
+                double targetSize = (contentHeight / screenHeight).clamp(
+                  0.3,
+                  0.95,
                 );
-              },
-            ),
-          ),
+
+                // تحريك الشيت للحجم المناسب بسلاسة (فقط إذا كان الفرق ملحوظاً لتجنب الاهتزاز)
+                if ((scrollableController.size - targetSize).abs() > 0.05) {
+                  scrollableController.animateTo(
+                    targetSize,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                  );
+                }
+              }
+            });
+
+            return Form(
+              key: departmentsSheetKey,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+                ),
+                child: DraggableScrollableSheet(
+                  controller: scrollableController, // ✅ ربط المتحكم
+                  initialChildSize:
+                      0.3, // نبدأ بحجم صغير ثم يكبره الكود أعلاه ديناميكياً
+                  minChildSize: 0.3,
+                  maxChildSize: 0.95,
+                  expand: false,
+                  builder: (context, scrollController) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.02,
+                            vertical: context.screenHeight * 0.02,
+                          ),
+                          child: Column(
+                            key:
+                                contentKey, // ✅ ربط المفتاح هنا لقياس ارتفاع هذا العمود
+                            mainAxisSize: MainAxisSize
+                                .min, // ✅ مهم جداً ليأخذ حجم محتواه فقط
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: context.screenHeight * 0.01,
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: context.screenWidth * 0.32,
+                                  height: context.screenHeight * 0.05,
+                                  decoration: BoxDecoration(
+                                    color: constLightBlue,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    'ربط مدير بقسم',
+                                    style: TextStyle(
+                                      color: constBlue,
+                                      fontFamily: lateef,
+                                      fontSize: context.screenHeight * 0.026,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: context.screenHeight * 0.01),
+
+                              Obx(() {
+                                if (getDepartmentsController.isLoading.value) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: context.screenHeight * 0.03,
+                                    ),
+                                    child: const Center(
+                                      child: CustomLoadingIndicator(),
+                                    ),
+                                  );
+                                }
+                                return CustomDropdown<DepartmentModel>(
+                                  items: getDepartmentsController.departments,
+                                  labelBuilder: (d) => d.name,
+                                  label: 'القسم',
+                                  hint: '',
+                                  validator: (data) => Validation()
+                                      .generalValidationForDropdown(data?.name),
+                                  icon: Icons.apartment_outlined,
+                                  value: getDepartmentsController
+                                      .selectedDepartment
+                                      .value,
+                                  onChanged: (data) {
+                                    getDepartmentsController
+                                            .selectedDepartment
+                                            .value =
+                                        data;
+                                  },
+                                );
+                              }),
+
+                              SizedBox(height: context.screenHeight * 0.015),
+
+                              Obx(() {
+                                if (getDepartmentHeaderWithoutPostionController
+                                    .isLoading
+                                    .value) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: context.screenHeight * 0.03,
+                                    ),
+                                    child: const Center(
+                                      child: CustomLoadingIndicator(),
+                                    ),
+                                  );
+                                }
+                                return CustomDropdown<UserItem>(
+                                  items:
+                                      getDepartmentHeaderWithoutPostionController
+                                          .managers,
+                                  labelBuilder: (m) => m.fullName,
+                                  label: 'رئيس القسم',
+                                  hint: '',
+                                  validator: (data) =>
+                                      Validation().generalValidationForDropdown(
+                                        data?.fullName,
+                                      ),
+                                  icon: Icons.person_outline,
+                                  value:
+                                      getDepartmentHeaderWithoutPostionController
+                                          .selectedManager
+                                          .value,
+                                  onChanged: (data) {
+                                    getDepartmentHeaderWithoutPostionController
+                                            .selectedManager
+                                            .value =
+                                        data;
+                                  },
+                                );
+                              }),
+
+                              SizedBox(height: context.screenHeight * 0.02),
+
+                              Align(
+                                alignment: Alignment.center,
+                                child: CustomMainButtom(
+                                  title: 'تأكيد',
+                                  color: constBlue,
+                                  fontcolor: Colors.white,
+                                  onPressed: () async {
+                                    if (!departmentsSheetKey.currentState!
+                                        .validate()) {
+                                      return;
+                                    }
+
+                                    final department = getDepartmentsController
+                                        .selectedDepartment
+                                        .value;
+                                    final manager =
+                                        getDepartmentHeaderWithoutPostionController
+                                            .selectedManager
+                                            .value;
+
+                                    if (department == null || manager == null) {
+                                      return;
+                                    }
+
+                                    Get.back();
+                                    showLoadingDialog();
+
+                                    final success =
+                                        await AssignDepartmentManagerService()
+                                            .assignManager(
+                                              departmentId: department.id,
+                                              managerId: manager.id,
+                                            );
+
+                                    hideLoadingDialog();
+
+                                    if (success) {
+                                      customSnackBar(
+                                        title: 'تم بنجاح',
+                                        message: 'تم ربط القسم بالمدير بنجاح',
+                                        color: constGreen,
+                                        messageColor: constLightGreen,
+                                      );
+                                      getDepartmentHeaderWithoutPostionController
+                                          .fetchManagers();
+                                      getUsersListController.refreshUsers();
+                                    }
+                                  },
+                                ),
+                              ),
+
+                              // ✅ الملاحظة أسفل الزر
+                              Obx(() {
+                                final bool isDepartmentsEmpty =
+                                    getDepartmentsController
+                                        .departments
+                                        .isEmpty;
+                                final bool isManagersEmpty =
+                                    getDepartmentHeaderWithoutPostionController
+                                        .managers
+                                        .isEmpty;
+
+                                if (isDepartmentsEmpty || isManagersEmpty) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      top: context.screenHeight * 0.02,
+                                      bottom: context.screenHeight * 0.02,
+                                      right: context.screenHeight * 0.02,
+                                    ),
+                                    child: Text(
+                                      'ملاحظة : لا يوجد أقسام أو مدراء بلا تعيين',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontFamily: lateef,
+                                        fontSize: context.screenHeight * 0.022,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              }),
+                              SizedBox(height: context.screenHeight * 0.05),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          },
         );
       },
     );
