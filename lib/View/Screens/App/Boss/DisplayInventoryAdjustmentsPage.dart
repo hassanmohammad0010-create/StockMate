@@ -2,37 +2,36 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Controller/App/Get_Disposal_Sales_Controller.dart';
+import 'package:stock_mate_project/Controller/App/Get_Inventory_Adjustments_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Disposal_Sale_Details_Page.dart';
-import 'package:stock_mate_project/View/Widget/App/Custom_Disposal_Request_Container.dart';
-import 'package:stock_mate_project/core/models/Disposal_Sales_Page_Data_Model.dart';
+import 'package:stock_mate_project/View/Widget/App/Custom_Adjustment_Container.dart';
+import 'package:stock_mate_project/core/models/Adjustment_Type_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
-class DiplayDisposalRequestPage extends StatelessWidget {
-  DiplayDisposalRequestPage({super.key}) {
+class DisplayInventoryAdjustmentsPage extends StatelessWidget {
+  DisplayInventoryAdjustmentsPage({super.key}) {
     filterController.initFilters([
       'الكل',
-      'بانتظار الموافقة',
-      'بانتظار التأكيد',
-      'مكتمل',
-      'مرفوضة',
+      'تالف',
+      'منتهي الصلاحية',
+      'نقص/فقدان',
+      'موجود (إضافة)',
     ]);
   }
 
-  final String pageName = '/DiplayDisposalRequestPage';
+  final String pageName = '/DisplayInventoryAdjustmentsPage';
 
   final FilterController filterController = Get.put(
     FilterController(),
-    tag: 'DiplayDisposalRequestPage',
+    tag: 'DisplayInventoryAdjustmentsPage',
   );
 
-  final GetDisposalSalesController controller = Get.find(
-    // GetDisposalSalesController(),
+  final GetInventoryAdjustmentsController controller = Get.find(
+    // GetInventoryAdjustmentsController(),
   );
 
   @override
@@ -41,14 +40,14 @@ class DiplayDisposalRequestPage extends StatelessWidget {
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          Get.delete<FilterController>(tag: 'DiplayDisposalRequestPage');
+          Get.delete<FilterController>(tag: 'DisplayInventoryAdjustmentsPage');
         }
       },
       child: Scaffold(
         body: Column(
           children: [
             CustomBackContainer(),
-            CustomHeadContainer(title: 'طلبات بيع الإتلاف'),
+            CustomHeadContainer(title: 'تسويات المخزون'),
             CustomFilterBar(controller: filterController),
             Expanded(
               child: Obx(() {
@@ -62,7 +61,7 @@ class DiplayDisposalRequestPage extends StatelessWidget {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CustomEmptyState(tital: 'تعذر تحميل الطلبات'),
+                      CustomEmptyState(tital: 'تعذر تحميل التسويات'),
                       TextButton(
                         onPressed: controller.refreshRequests,
                         child: const Text('إعادة المحاولة'),
@@ -72,13 +71,13 @@ class DiplayDisposalRequestPage extends StatelessWidget {
                 }
 
                 final String selected = filterController.selectedFilter.value;
-                final List<DisposalSaleListItem> requests = _filterItems(
+                final List<AdjustmentRow> requests = _filterItems(
                   controller.allRequests,
                   selected,
                 );
 
                 if (requests.isEmpty) {
-                  return CustomEmptyState(tital: 'لا يوجد طلبات لعرضها');
+                  return CustomEmptyState(tital: 'لا يوجد تسويات لعرضها');
                 }
 
                 return RefreshIndicator(
@@ -96,18 +95,13 @@ class DiplayDisposalRequestPage extends StatelessWidget {
                       itemCount: requests.length,
                       itemBuilder: (context, index) {
                         final item = requests[index];
-                        return CustomDisposalRequestContainer(
-                          date: item.formattedCreatedAt,
-                          destinationName: item.destination?.name ?? '-',
-                          state: item.statusLabel,
-                          onTap: () async {
-                            await Get.to(
-                              () => DisposalSaleDetailsPage(
-                                disposalSaleRequestId: item.id,
-                              ),
-                            );
-                            controller.refreshRequests();
-                          },
+                        return CustomAdjustmentContainer(
+                          variantName: item.variant?.variantName ?? '-',
+                          departmentName: item.department?.name ?? '-',
+                          quantity: item.quantity,
+                          typeLabel: item.arabicTypeLabel,
+                          date: _formatDate(item.createdAt),
+                          reportedByName: item.reportedBy?.fullName ?? '-',
                         );
                       },
                     ),
@@ -121,40 +115,40 @@ class DiplayDisposalRequestPage extends StatelessWidget {
     );
   }
 
-  List<DisposalSaleListItem> _filterItems(
-    List<DisposalSaleListItem> items,
+  List<AdjustmentRow> _filterItems(
+    List<AdjustmentRow> items,
     String selectedFilter,
   ) {
     switch (selectedFilter) {
-      case 'بانتظار الموافقة':
+      case 'تالف':
         return items
-            .where((r) => r.status == DisposalSaleRequestStatus.pendingApproval)
+            .where((r) => r.adjustmentType == AdjustmentType.damaged)
             .toList();
 
-      case 'بانتظار التأكيد':
+      case 'منتهي الصلاحية':
         return items
-            .where(
-              (r) => r.status == DisposalSaleRequestStatus.awaitingConfirmation,
-            )
+            .where((r) => r.adjustmentType == AdjustmentType.expired)
             .toList();
 
-      case 'مكتمل':
+      case 'نقص/فقدان':
         return items
-            .where((r) => r.status == DisposalSaleRequestStatus.completed)
+            .where((r) => r.adjustmentType == AdjustmentType.shrinkage)
             .toList();
 
-      case 'مرفوضة':
+      case 'موجود (إضافة)':
         return items
-            .where(
-              (r) =>
-                  r.status == DisposalSaleRequestStatus.rejected ||
-                  r.status == DisposalSaleRequestStatus.cancelled,
-            )
+            .where((r) => r.adjustmentType == AdjustmentType.found)
             .toList();
 
       case 'الكل':
       default:
         return items;
     }
+  }
+
+  String _formatDate(DateTime d) {
+    final local = d.toLocal();
+    String two(int v) => v.toString().padLeft(2, '0');
+    return '${two(local.day)}/${two(local.month)}/${local.year} • ${two(local.hour)}:${two(local.minute)}';
   }
 }

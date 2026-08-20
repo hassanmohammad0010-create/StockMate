@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/App/Get_Disposal_Sales_Controller.dart';
+import 'package:stock_mate_project/Controller/App/Get_Inventory_Adjustments_Controller.dart';
 import 'package:stock_mate_project/Controller/App/Urgent_RefillRequests_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/Controller/App/Urgent_Purchase_Requests_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Diplay_Disposal_Request_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/DisplayInventoryAdjustmentsPage.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Patient_Visits_Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Adjustments_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/User_Mangment_Page.dart';
@@ -31,12 +34,18 @@ class BossHomePage extends StatelessWidget {
         ),
       );
 
+  // ✅ الكنترولرين الجديدين لعدّ طلبات الإتلاف والمواد التالفة فعليًا
+  final GetDisposalSalesController disposalSalesController = Get.put(
+    GetDisposalSalesController(),
+  );
+  final GetInventoryAdjustmentsController inventoryAdjustmentsController =
+      Get.put(GetInventoryAdjustmentsController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Obx(() {
-          // ✅ نفس منطق DepartmentHeadsHomePage: قراءة .value + Obx reactive
           final String? name = getNameRollOfUserController.name.value;
 
           if (name == null) {
@@ -93,30 +102,49 @@ class BossHomePage extends StatelessWidget {
                       },
                     );
                   }),
-                  CustomMainPageCard(
-                    requestNum:
-                        urgentPurchaseRequestsController.allRequests.length,
-                    description: 'طلبات الاتلاف',
-                    buttomtital: 'عرض المحتوى',
-                    icons: Icons.warning_amber_rounded,
-                    iconBackgroundColor: constLightBlue,
-                    iconColor: constBlue,
-                    onTap: () {
-                      Get.to(() => DiplayDisposalRequestPage());
-                    },
-                  ),
-                  CustomMainPageCard(
-                    requestNum:
-                        urgentPurchaseRequestsController.allRequests.length,
-                    description: 'المواد التالفة',
-                    buttomtital: 'عرض المحتوى',
-                    icons: Icons.sync,
-                    iconBackgroundColor: constLightBlue,
-                    iconColor: constBlue,
-                    onTap: () {
-                      Get.toNamed(AppRoutes.NesseryPurchasingRequestPage);
-                    },
-                  ),
+                  // ✅ طلبات الاتلاف — بقى بياخد عدده الفعلي
+                  Obx(() {
+                    if (disposalSalesController.isLoading.value) {
+                      return SizedBox(
+                        width: context.screenWidth * 0.44,
+                        height: context.screenHeight * 0.12,
+                        child: const Center(child: CustomLoadingIndicator()),
+                      );
+                    }
+                    return CustomMainPageCard(
+                      requestNum: disposalSalesController.allRequests.length,
+                      description: 'طلبات الاتلاف',
+                      buttomtital: 'عرض المحتوى',
+                      icons: Icons.warning_amber_rounded,
+                      iconBackgroundColor: constLightBlue,
+                      iconColor: constBlue,
+                      onTap: () {
+                        Get.to(() => DiplayDisposalRequestPage());
+                      },
+                    );
+                  }),
+                  // ✅ المواد التالفة — بقى بياخد عدده الفعلي
+                  Obx(() {
+                    if (inventoryAdjustmentsController.isLoading.value) {
+                      return SizedBox(
+                        width: context.screenWidth * 0.44,
+                        height: context.screenHeight * 0.12,
+                        child: const Center(child: CustomLoadingIndicator()),
+                      );
+                    }
+                    return CustomMainPageCard(
+                      requestNum:
+                          inventoryAdjustmentsController.allRequests.length,
+                      description: 'المواد التالفة',
+                      buttomtital: 'عرض المحتوى',
+                      icons: Icons.sync,
+                      iconBackgroundColor: constLightBlue,
+                      iconColor: constBlue,
+                      onTap: () {
+                        Get.to(() => DisplayInventoryAdjustmentsPage());
+                      },
+                    );
+                  }),
                 ],
               ),
               SizedBox(height: context.screenHeight * 0.01),
