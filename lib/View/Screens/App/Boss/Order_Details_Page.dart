@@ -5,10 +5,9 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Get_Request_Items_Controller.dart';
 import 'package:stock_mate_project/core/Function/Find_Color.dart';
-import 'package:stock_mate_project/core/models/Order_Item.dart';
+import 'package:stock_mate_project/core/models/Order_Item.dart'; // يحتوي على OrderStatus و OrderPriority
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
-
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
@@ -16,11 +15,17 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indic
 import 'package:stock_mate_project/core/utils/Shared_Widget/Version_Custom_Recurring_Details_Card.dart';
 
 class DisOrderDetailsPage extends StatelessWidget {
-  DisOrderDetailsPage({super.key, required this.item})
+  // ✅ 1. استقبال الـ ID فقط بدلاً من الـ Object كامل
+  DisOrderDetailsPage({super.key, required this.requestId})
     : controller = Get.put(
-        RequestItemController(requestId: item.id),
-        tag: item.id,
+        RequestItemController(requestId: requestId),
+        tag: requestId,
       );
+
+  final String requestId;
+  final RequestItemController controller;
+
+  // ✅ 2. دالة تحويل الـ Enum إلى نص عربي
   String _statusLabel(OrderStatus status) {
     switch (status) {
       case OrderStatus.draft:
@@ -41,8 +46,17 @@ class DisOrderDetailsPage extends StatelessWidget {
     }
   }
 
-  final OrdertItem item;
-  final RequestItemController controller;
+  // ✅ 3. دالة مساعدة لتحويل نوع الطلب إلى نص عربي
+  String _getRequestTypeLabel(String type) {
+    switch (type.toLowerCase()) {
+      case 'normal':
+        return 'عادي';
+      case 'recurring':
+        return 'متكرر';
+      default:
+        return type;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +64,19 @@ class DisOrderDetailsPage extends StatelessWidget {
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          Get.delete<RequestItemController>(tag: item.id);
+          // ✅ حذف الكونترولر باستخدام الـ ID
+          Get.delete<RequestItemController>(tag: requestId);
         }
       },
       child: Scaffold(
         floatingActionButton: Obx(() {
-          if (controller.isLoading.value) {
-            return const SizedBox.shrink();
-          }
+          if (controller.isLoading.value) return const SizedBox.shrink();
 
-          final currentStatus = controller.details.value?.status;
+          final d = controller.details.value;
+          if (d == null) return const SizedBox.shrink();
+
+          // ✅ الاعتماد على الحالة القادمة من الـ details
+          final currentStatus = d.status;
 
           if (controller.isApproved.value ||
               controller.isRejected.value ||
@@ -85,11 +102,11 @@ class DisOrderDetailsPage extends StatelessWidget {
                         confirmText: 'موافقة',
                         cancelText: 'رفض',
                         onConfirm: () {
-                          Get.back(); // ✅ سكر ديالوج التأكيد أول
+                          Get.back();
                           controller.approveRequest();
                         },
                         onCancel: () {
-                          Get.back(); // ✅ سكر ديالوج التأكيد أول
+                          Get.back();
                           final TextEditingController reasonController =
                               TextEditingController();
 
@@ -112,7 +129,7 @@ class DisOrderDetailsPage extends StatelessWidget {
                               return null;
                             },
                             onConfirm: () {
-                              Get.back(); // ✅ سكر ديالوج سبب الرفض
+                              Get.back();
                               controller.rejectRequest(
                                 reasonController.text.trim(),
                               );
@@ -136,210 +153,127 @@ class DisOrderDetailsPage extends StatelessWidget {
         }),
         body: Column(
           children: [
-            CustomBackContainer(),
-            CustomHeadContainer(title: 'تفاصيل الطلب'),
+            const CustomBackContainer(),
+            const CustomHeadContainer(title: 'تفاصيل الطلب'),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.screenWidth * 0.02,
-                        vertical: context.screenHeight * 0.003,
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: context.screenWidth * 0.04,
-                          vertical: context.screenHeight * 0.015,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              spreadRadius: 3,
-                              blurRadius: 8,
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(height: context.screenHeight * 0.01),
-                            // ─── القسم ───────────────────────────────
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.person,
-                                      size: context.screenHeight * 0.028,
-                                      color: constGray,
-                                    ),
-                                    SizedBox(width: context.screenWidth * 0.02),
-                                    Text(
-                                      ' القسم',
-                                      style: TextStyle(
-                                        color: constGray,
-                                        fontFamily: cairo,
-                                        fontSize: context.screenHeight * 0.019,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  item.department?.name ?? '-',
-                                  style: TextStyle(
-                                    fontFamily: cairo,
-                                    fontSize: context.screenHeight * 0.019,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: context.screenHeight * 0.01),
-                            Divider(indent: 16, endIndent: 16, thickness: 0.5),
-                            // ─── النوع ───────────────────────────────
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.grid_view_outlined,
-                                      size: context.screenHeight * 0.028,
-                                      color: constGray,
-                                    ),
-                                    SizedBox(width: context.screenWidth * 0.02),
-                                    Text(
-                                      'النوع',
-                                      style: TextStyle(
-                                        color: constGray,
-                                        fontFamily: cairo,
-                                        fontSize: context.screenHeight * 0.019,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  item.requestTypeLabel,
-                                  style: TextStyle(
-                                    fontFamily: cairo,
-                                    fontSize: context.screenHeight * 0.019,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: context.screenHeight * 0.01),
-                            Divider(indent: 16, endIndent: 16, thickness: 0.5),
-                            // ─── التاريخ ──────────────────────────────
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.date_range,
-                                      size: context.screenHeight * 0.028,
-                                      color: constGray,
-                                    ),
-                                    SizedBox(width: context.screenWidth * 0.02),
-                                    Text(
-                                      'التاريخ',
-                                      style: TextStyle(
-                                        color: constGray,
-                                        fontFamily: cairo,
-                                        fontSize: context.screenHeight * 0.019,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  item.formattedCreatedAt,
-                                  style: TextStyle(
-                                    fontFamily: cairo,
-                                    fontSize: context.screenHeight * 0.019,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: context.screenHeight * 0.01),
-                            Divider(indent: 16, endIndent: 16, thickness: 0.5),
-                            // ─── الأولوية ─────────────────────────────
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.bolt_outlined,
-                                      size: context.screenHeight * 0.028,
-                                      color: constGray,
-                                    ),
-                                    SizedBox(width: context.screenWidth * 0.02),
-                                    Text(
-                                      'الاولوية',
-                                      style: TextStyle(
-                                        color: constGray,
-                                        fontFamily: cairo,
-                                        fontSize: context.screenHeight * 0.019,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: context.screenWidth * 0.04,
-                                    vertical: context.screenHeight * 0.005,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: item.priority == OrderPriority.urgent
-                                        ? const Color(0xFFFDE8E8)
-                                        : const Color(0xFFE8F0FE),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    item.priorityLabel,
-                                    style: TextStyle(
-                                      fontFamily: cairo,
-                                      fontSize: context.screenHeight * 0.019,
-                                      fontWeight: FontWeight.w600,
-                                      color:
-                                          item.priority == OrderPriority.urgent
-                                          ? Colors.red
-                                          : Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: context.screenHeight * 0.01),
-                            Divider(indent: 16, endIndent: 16, thickness: 0.5),
-                            // ─── الحالة ───────────────────────────────
-                            Obx(() {
-                              // ✅ نعتمد على status من الكونترولر إذا موجود، وإلا نرجع لـ item كـ fallback
-                              final currentStatus =
-                                  controller.details.value?.status ??
-                                  item.status;
-                              final label = _statusLabel(currentStatus);
+              // ✅ 4. تغليف المحتوى بـ Obx للتعامل مع حالة التحميل والبيانات
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CustomLoadingIndicator());
+                }
 
-                              return Row(
+                final d = controller.details.value;
+
+                if (controller.hasError.value || d == null) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CustomEmptyState(tital: 'تعذر تحميل تفاصيل الطلب'),
+                      TextButton(
+                        onPressed: controller.fetchDetails,
+                        child: const Text(
+                          'إعادة المحاولة',
+                          style: TextStyle(color: constBlue),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.02,
+                          vertical: context.screenHeight * 0.01,
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.screenWidth * 0.04,
+                            vertical: context.screenHeight * 0.015,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                spreadRadius: 3,
+                                blurRadius: 8,
+                                offset: const Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              SizedBox(height: context.screenHeight * 0.01),
+
+                              // ─── رقم الطلب ───────────────────────────────
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.confirmation_number_outlined,
+                                label: 'رقم الطلب',
+                                value: d.requestNumber,
+                              ),
+                              SizedBox(height: context.screenHeight * 0.01),
+                              const Divider(
+                                indent: 16,
+                                endIndent: 16,
+                                thickness: 0.5,
+                              ),
+
+                              // ─── القسم ───────────────────────────────
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.business_outlined,
+                                label: 'القسم',
+                                value: d.department?.name ?? '-',
+                              ),
+                              SizedBox(height: context.screenHeight * 0.01),
+                              const Divider(
+                                indent: 16,
+                                endIndent: 16,
+                                thickness: 0.5,
+                              ),
+
+                              // ─── النوع ───────────────────────────────
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.grid_view_outlined,
+                                label: 'النوع',
+                                value: _getRequestTypeLabel(d.requestType),
+                              ),
+                              SizedBox(height: context.screenHeight * 0.01),
+                              const Divider(
+                                indent: 16,
+                                endIndent: 16,
+                                thickness: 0.5,
+                              ),
+
+                              // ─── التاريخ ──────────────────────────────
+                              _buildInfoRow(
+                                context,
+                                icon: Icons.date_range_outlined,
+                                label: 'التاريخ',
+                                value: d.formattedCreatedAt,
+                              ),
+                              SizedBox(height: context.screenHeight * 0.01),
+                              const Divider(
+                                indent: 16,
+                                endIndent: 16,
+                                thickness: 0.5,
+                              ),
+
+                              // ─── الأولوية ─────────────────────────────
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       Icon(
-                                        Icons.list_alt_outlined,
+                                        Icons.bolt_outlined,
                                         size: context.screenHeight * 0.028,
                                         color: constGray,
                                       ),
@@ -347,14 +281,8 @@ class DisOrderDetailsPage extends StatelessWidget {
                                         width: context.screenWidth * 0.02,
                                       ),
                                       Text(
-                                        'الحالة',
-                                        style: TextStyle(
-                                          color: constGray,
-                                          fontFamily: cairo,
-                                          fontSize:
-                                              context.screenHeight * 0.019,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        'الأولوية',
+                                        style: _labelStyle(context),
                                       ),
                                     ],
                                   ),
@@ -365,135 +293,224 @@ class DisOrderDetailsPage extends StatelessWidget {
                                       vertical: context.screenHeight * 0.005,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: FindColor().findBackgroundColor(
-                                        word: label,
-                                      ),
+                                      color: d.priority == OrderPriority.urgent
+                                          ? const Color(0xFFFDE8E8)
+                                          : const Color(0xFFE8F0FE),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      label,
+                                      d.priority == OrderPriority.urgent
+                                          ? 'عاجل'
+                                          : 'عادي',
                                       style: TextStyle(
                                         fontFamily: cairo,
                                         fontSize: context.screenHeight * 0.019,
                                         fontWeight: FontWeight.w600,
-                                        color: FindColor()
-                                            .findFontColorFunction(word: label),
+                                        color:
+                                            d.priority == OrderPriority.urgent
+                                            ? Colors.red
+                                            : Colors.blue,
                                       ),
                                     ),
                                   ),
                                 ],
-                              );
-                            }),
+                              ),
+                              SizedBox(height: context.screenHeight * 0.01),
+                              const Divider(
+                                indent: 16,
+                                endIndent: 16,
+                                thickness: 0.5,
+                              ),
 
-                            // ─── سبب الرفض (لو موجود) ─────────────────
-                            Obx(() {
-                              final d = controller.details.value;
-                              if (d == null ||
-                                  !d.isRejected ||
-                                  d.activeRejectionReason == null) {
-                                return const SizedBox.shrink();
-                              }
-                              return Column(
-                                children: [
-                                  SizedBox(height: context.screenHeight * 0.01),
-                                  Divider(
-                                    indent: 16,
-                                    endIndent: 16,
-                                    thickness: 0.5,
-                                  ),
-                                  Row(
+                              // ─── الحالة ───────────────────────────────
+                              Builder(
+                                builder: (context) {
+                                  final label = _statusLabel(d.status);
+                                  return Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        'سبب الرفض',
-                                        style: TextStyle(
-                                          color: constGray,
-                                          fontFamily: cairo,
-                                          fontSize:
-                                              context.screenHeight * 0.019,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.list_alt_outlined,
+                                            size: context.screenHeight * 0.028,
+                                            color: constGray,
+                                          ),
+                                          SizedBox(
+                                            width: context.screenWidth * 0.02,
+                                          ),
+                                          Text(
+                                            'الحالة',
+                                            style: _labelStyle(context),
+                                          ),
+                                        ],
                                       ),
-                                      Flexible(
+                                      Container(
+                                        alignment: Alignment.center,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              context.screenWidth * 0.04,
+                                          vertical:
+                                              context.screenHeight * 0.005,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: FindColor()
+                                              .findBackgroundColor(word: label),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
                                         child: Text(
-                                          d.activeRejectionReason!,
-                                          textAlign: TextAlign.left,
+                                          label,
                                           style: TextStyle(
                                             fontFamily: cairo,
                                             fontSize:
-                                                context.screenHeight * 0.017,
+                                                context.screenHeight * 0.019,
+                                            fontWeight: FontWeight.w600,
+                                            color: FindColor()
+                                                .findFontColorFunction(
+                                                  word: label,
+                                                ),
                                           ),
                                         ),
                                       ),
                                     ],
-                                  ),
-                                ],
-                              );
-                            }),
-                          ],
+                                  );
+                                },
+                              ),
+
+                              // ─── سبب الرفض (لو موجود) ─────────────────
+                              if (d.isRejected &&
+                                  d.activeRejectionReason != null) ...[
+                                SizedBox(height: context.screenHeight * 0.01),
+                                const Divider(
+                                  indent: 16,
+                                  endIndent: 16,
+                                  thickness: 0.5,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline,
+                                      size: context.screenHeight * 0.028,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: context.screenWidth * 0.02),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'سبب الرفض',
+                                            style: _labelStyle(
+                                              context,
+                                            ).copyWith(color: Colors.red),
+                                          ),
+                                          SizedBox(
+                                            height:
+                                                context.screenHeight * 0.005,
+                                          ),
+                                          Text(
+                                            d.activeRejectionReason!,
+                                            style: TextStyle(
+                                              fontFamily: cairo,
+                                              fontSize:
+                                                  context.screenHeight * 0.017,
+                                              color: Colors.red.shade700,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
 
-                    // ─── قائمة الأصناف ─────────────────────────────
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: context.screenHeight * 0.02,
+                      // ─── قائمة الأصناف ─────────────────────────────
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.screenWidth * 0.02,
+                          vertical: context.screenHeight * 0.02,
+                        ),
+                        child: d.items.isEmpty
+                            ? const CustomEmptyState(
+                                tital: 'لا توجد أصناف لهذا الطلب',
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemCount: d.items.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: context.screenHeight * 0.01,
+                                    ),
+                                    child: VersionCustomRecurringDetailsCard(
+                                      requestItemModel: d
+                                          .items[index], // ✅ يمرر DetailRequestItem
+                                    ),
+                                  );
+                                },
+                              ),
                       ),
-                      child: Obx(() {
-                        if (controller.isLoading.value) {
-                          return const Center(child: CustomLoadingIndicator());
-                        }
-
-                        final d = controller.details.value;
-
-                        if (controller.hasError.value || d == null) {
-                          return Column(
-                            children: [
-                              CustomEmptyState(
-                                tital: 'تعذر تحميل تفاصيل الأصناف',
-                              ),
-                              TextButton(
-                                onPressed: controller.fetchDetails,
-                                child: const Text('إعادة المحاولة'),
-                              ),
-                            ],
-                          );
-                        }
-
-                        if (d.items.isEmpty) {
-                          return CustomEmptyState(
-                            tital: 'لا توجد أصناف لهذا الطلب',
-                          );
-                        }
-
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          itemCount: d.items.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: context.screenWidth * 0.02,
-                                vertical: context.screenHeight * 0.005,
-                              ),
-                              child: VersionCustomRecurringDetailsCard(
-                                requestItemModel: d.items[index],
-                              ),
-                            );
-                          },
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+                );
+              }),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  // ✅ دالة مساعدة لتنظيف الكود وتقليل التكرار
+  Widget _buildInfoRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: context.screenHeight * 0.028, color: constGray),
+            SizedBox(width: context.screenWidth * 0.02),
+            Text(label, style: _labelStyle(context)),
+          ],
+        ),
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontFamily: cairo,
+              fontSize: context.screenHeight * 0.019,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  TextStyle _labelStyle(BuildContext context) {
+    return TextStyle(
+      color: constGray,
+      fontFamily: cairo,
+      fontSize: context.screenHeight * 0.019,
+      fontWeight: FontWeight.w600,
     );
   }
 }

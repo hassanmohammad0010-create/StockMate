@@ -34,6 +34,7 @@ class EnterOTBPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        backgroundColor: constBackgroundColor,
         // خليها true عشان الشاشة تتفاعل مع الكيبورد
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
@@ -91,7 +92,7 @@ class EnterOTBPage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            ),
+                          ),
                           SizedBox(height: context.screenHeight * 0.01),
                           Padding(
                             padding: EdgeInsets.symmetric(
@@ -141,7 +142,9 @@ class EnterOTBPage extends StatelessWidget {
                                                 : role == 'hospital_manager'
                                                 ? Get.offAll(() => MainPage())
                                                 : role == 'doctor'
-                                                ? Get.offAll(() => DoctorMainPage())
+                                                ? Get.offAll(
+                                                    () => DoctorMainPage(),
+                                                  )
                                                 : Get.offAll(() => MainPage());
                                           } else {
                                             customSnackBar(

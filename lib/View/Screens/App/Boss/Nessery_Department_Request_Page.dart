@@ -77,7 +77,9 @@ class NesseryDepartmentRequestPage extends StatelessWidget {
                         requester: item.department?.name ?? '',
                         state: item.statusLabel,
                         onTap: () async {
-                          await Get.to(() => DisOrderDetailsPage(item: item));
+                          await Get.to(
+                            () => DisOrderDetailsPage(requestId: item.id),
+                          );
                           controller.refreshRequests();
                         },
                       );

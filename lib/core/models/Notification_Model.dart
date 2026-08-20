@@ -65,6 +65,8 @@ class NotificationModel {
   /// معرّف نقل الإتلاف (Disposal Transfer) إن وُجد ضمن data
   String? get disposalTransferId => data?['disposalTransferId'] as String?;
 
+    String? get disposalSaleRequestId => data?['disposalSaleRequestId'] as String?;
+
   /// يُستخدم لتحديث حالة isRead محلياً في القائمة فوراً بعد نجاح markAsRead
   /// بدون الحاجة لإعادة جلب كامل القائمة من السيرفر
   NotificationModel copyWith({bool? isRead, DateTime? readAt}) {

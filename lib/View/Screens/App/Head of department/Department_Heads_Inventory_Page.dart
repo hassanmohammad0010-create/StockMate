@@ -19,11 +19,11 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
   // كل منطق Get.put وتهيئة الفلاتر انتقل إلى build() (بنفس نمط DepartmentOrdersPage)
   // عشان ما يصطدم بقاعدة "ممنوع تعديل حالة GetX أثناء بناء شجرة الأب"
   // عند فتح هذه الصفحة من داخل Obx (مثل صفحة الإشعارات).
-   DepartmentHeadsInventoryPage({super.key, required this.departmentId});
+  DepartmentHeadsInventoryPage({super.key, required this.departmentId});
 
   final String departmentId;
 
-  final RxString searchQuery =  RxString('');
+  final RxString searchQuery = RxString('');
 
   static const String _filterTag = AppRoutes.DepartmentHeadsInventoryPage;
 
@@ -62,6 +62,7 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
         }
       },
       child: Scaffold(
+        backgroundColor: constBackgroundColor,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

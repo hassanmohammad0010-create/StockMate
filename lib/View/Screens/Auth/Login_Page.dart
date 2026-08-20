@@ -33,6 +33,7 @@ class LoginPage extends StatelessWidget {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
+          backgroundColor: constBackgroundColor,
           resizeToAvoidBottomInset: true,
           body: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),

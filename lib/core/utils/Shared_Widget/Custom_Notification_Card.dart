@@ -25,9 +25,15 @@ class CustomNotificationCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: h * 0.09,
+        // ✅✅✅ minHeight بدل height الثابت:
+        // النص القصير → نفس الحجم القديم تماماً
+        // النص الطويل → الكونتينر يتمدد تلقائياً بدون overflow
+        constraints: BoxConstraints(minHeight: h * 0.09),
         margin: EdgeInsets.symmetric(vertical: h * 0.005, horizontal: w * 0.01),
-        padding: EdgeInsets.symmetric(horizontal: w * 0.03),
+        padding: EdgeInsets.symmetric(
+          horizontal: w * 0.03,
+          vertical: h * 0.012, // ✅ padding عمودي بدل الارتفاع الثابت
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -40,6 +46,7 @@ class CustomNotificationCard extends StatelessWidget {
           ],
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               children: [
@@ -69,7 +76,7 @@ class CustomNotificationCard extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min, // ✅ يكبر مع المحتوى فقط
                 children: [
                   Text(
                     title,
@@ -80,7 +87,12 @@ class CustomNotificationCard extends StatelessWidget {
                   Text(
                     subtitle,
                     textAlign: TextAlign.right,
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    // ✅ بدون maxLines → النص يلتف والكونتينر يرتفع تلقائياً
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      height: 1.4, // ✅ تباعد مريح بين الأسطر عند الالتفاف
+                    ),
                   ),
                 ],
               ),
