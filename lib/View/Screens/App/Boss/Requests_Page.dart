@@ -5,7 +5,7 @@ import 'package:stock_mate_project/Controller/App/PurchaseRequestsController.dar
 import 'package:stock_mate_project/Controller/App/Refill_Requests_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
 import 'package:stock_mate_project/Controller/Logic/Toggle_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_WithRecipts_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Request_Container.dart';
 import 'package:stock_mate_project/core/models/Order_Item.dart';
@@ -122,10 +122,16 @@ class RequestPage extends StatelessWidget {
                                         state: item.statusLabel,
                                         onTap: () async {
                                           await Get.to(
-                                            () => DisplayPurchasingOrderPage(
-                                              requestId: item.id,
-                                            ),
+                                            () =>
+                                                DisplayPurchasingOrderWithReciptsPage(
+                                                  requestId: item.id,
+                                                ),
                                           );
+                                          // await Get.to(
+                                          //   () => DisplayPurchasingOrderPage(
+                                          //     requestId: item.id,
+                                          //   ),
+                                          // );
                                           purchaseRequestsController
                                               .refreshRequests();
                                         },

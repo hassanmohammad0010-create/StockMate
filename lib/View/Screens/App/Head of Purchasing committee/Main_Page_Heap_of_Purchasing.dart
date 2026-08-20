@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Head_Of_Purchasing_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Head_of_Purchasing_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class MainPageHeadOfPurchasingPage extends StatelessWidget {
   const MainPageHeadOfPurchasingPage({super.key});
   final String pageName = '/MainPageHeadOfPurchasingPage';
+
   @override
   Widget build(BuildContext context) {
+    // ✅ نفس نمط DepartmentHeadsMainPage: تسجيل واحد فقط، permanent
+    if (!Get.isRegistered<UnreadNotificationController>()) {
+      Get.put(UnreadNotificationController(), permanent: true);
+    }
+    final UnreadNotificationController unreadCtrl =
+        Get.find<UnreadNotificationController>();
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -24,20 +35,45 @@ class MainPageHeadOfPurchasingPage extends StatelessWidget {
                     color: Colors.white,
                     size: context.screenHeight * 0.033,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    // ✅ ربط فعلي بدل الفراغ
+                    Get.toNamed(AppRoutes.NotificationPage);
+                  },
                 ),
-                Positioned(
-                  right: 10,
-                  top: 10,
-                  child: Container(
-                    width: context.screenHeight * 0.012,
-                    height: context.screenHeight * 0.012,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+                // ✅ الـ badge صار reactive وبيختفي تلقائياً لو العدد صفر
+                Obx(() {
+                  final count = unreadCtrl.unreadCount.value;
+                  if (count <= 0) return const SizedBox.shrink();
+
+                  return Positioned(
+                    right: context.screenWidth * 0.01,
+                    top: context.screenHeight * 0.005,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.screenWidth * 0.012,
+                        vertical: 1,
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: context.screenWidth * 0.05,
+                        minHeight: context.screenHeight * 0.02,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        count > 99 ? '99+' : '$count',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
             SizedBox(width: context.screenWidth * 0.02),
@@ -89,7 +125,6 @@ class MainPageHeadOfPurchasingPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               Tab(
                 icon: const Icon(Icons.receipt_long_sharp),
                 child: Text(
