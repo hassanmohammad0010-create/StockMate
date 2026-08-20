@@ -18,7 +18,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Toggle_Buttom
 
 class RequestPage extends StatelessWidget {
   RequestPage({super.key}) {
-    // ✅ تسجيل واحد فقط مع tag
     filterController.initFilters([
       'الكل',
       'بأنتظار موافقتك',
@@ -28,7 +27,6 @@ class RequestPage extends StatelessWidget {
     ]);
   }
 
-  // ✅ Controller واحد مع tag موحد
   final FilterController filterController = Get.put(
     FilterController(),
     tag: 'RequestPage',
@@ -43,7 +41,6 @@ class RequestPage extends StatelessWidget {
     RefillRequestsController(),
   );
 
-  // ✅ كنترولر طلبات الشراء
   final PurchaseRequestsController purchaseRequestsController = Get.put(
     PurchaseRequestsController(),
   );
@@ -54,7 +51,6 @@ class RequestPage extends StatelessWidget {
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          // ✅ حذف كلا الـ Controller عند الخروج
           Get.delete<FilterController>(tag: 'RequestPage');
           Get.delete<ToggleController>(tag: 'RequestPage');
         }
@@ -82,37 +78,65 @@ class RequestPage extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 controller: toggleController.pageController,
                 children: [
-                  // ─────────── طلبات الشراء ───────────
+                  // ─────────── 1. طلبات الشراء (المستودع) ───────────
                   Column(
                     children: [
                       CustomFilterBar(controller: filterController),
                       Expanded(
-                        child: Obx(() {
-                          if (purchaseRequestsController.isLoading.value) {
-                            return const Center(
-                              child: CustomLoadingIndicator(),
-                            );
-                          }
-
-                          final String selected =
-                              filterController.selectedFilter.value;
-                          final List<PurchaseRequestListItem> requests =
-                              _filterPurchaseItems(
-                                purchaseRequestsController.allRequests,
-                                selected,
+                        child: RefreshIndicator(
+                          onRefresh: purchaseRequestsController.refreshRequests,
+                          child: Obx(() {
+                            // 1️⃣ حالة التحميل
+                            if (purchaseRequestsController.isLoading.value) {
+                              return CustomScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                slivers: const [
+                                  SliverFillRemaining(
+                                    hasScrollBody: false,
+                                    child: Center(
+                                      child: CustomLoadingIndicator(),
+                                    ),
+                                  ),
+                                ],
                               );
+                            }
 
-                          return requests.isEmpty
-                              ? CustomEmptyState(
-                                  tital: 'لا يوجد طلبات لعرضها...',
-                                )
-                              : RefreshIndicator(
-                                  onRefresh: purchaseRequestsController
-                                      .refreshRequests,
-                                  child: ListView.builder(
-                                    padding: const EdgeInsets.only(top: 0),
-                                    itemCount: requests.length,
-                                    itemBuilder: (context, index) {
+                            final String selected =
+                                filterController.selectedFilter.value;
+                            final List<PurchaseRequestListItem> requests =
+                                _filterPurchaseItems(
+                                  purchaseRequestsController.allRequests,
+                                  selected,
+                                );
+
+                            // 2️⃣ حالة الفراغ
+                            if (requests.isEmpty) {
+                              return CustomScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                slivers: const [
+                                  SliverFillRemaining(
+                                    hasScrollBody: false,
+                                    child: CustomEmptyState(
+                                      tital: 'لا يوجد طلبات لعرضها...',
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            // 3️⃣ حالة وجود البيانات
+                            return CustomScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              slivers: [
+                                SliverPadding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: context.screenHeight * 0.01,
+                                  ),
+                                  sliver: SliverList(
+                                    delegate: SliverChildBuilderDelegate((
+                                      context,
+                                      index,
+                                    ) {
                                       final item = requests[index];
                                       return CustomRequestContainer(
                                         date: item.formattedCreatedAt,
@@ -127,53 +151,80 @@ class RequestPage extends StatelessWidget {
                                                   requestId: item.id,
                                                 ),
                                           );
-                                          // await Get.to(
-                                          //   () => DisplayPurchasingOrderPage(
-                                          //     requestId: item.id,
-                                          //   ),
-                                          // );
                                           purchaseRequestsController
                                               .refreshRequests();
                                         },
                                       );
-                                    },
+                                    }, childCount: requests.length),
                                   ),
-                                );
-                        }),
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
                       ),
                     ],
                   ),
 
-                  // ─────────── طلبات الأقسام ───────────
+                  // ─────────── 2. طلبات الأقسام ───────────
                   Column(
                     children: [
                       CustomFilterBar(controller: filterController),
                       Expanded(
-                        child: Obx(() {
-                          if (refillRequestsController.isLoading.value) {
-                            return const Center(
-                              child: CustomLoadingIndicator(),
-                            );
-                          }
+                        child: RefreshIndicator(
+                          onRefresh: refillRequestsController.refreshRequests,
+                          child: Obx(() {
+                            // 1️⃣ حالة التحميل
+                            if (refillRequestsController.isLoading.value) {
+                              return CustomScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                slivers: const [
+                                  SliverFillRemaining(
+                                    hasScrollBody: false,
+                                    child: Center(
+                                      child: CustomLoadingIndicator(),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
 
-                          final String selected =
-                              filterController.selectedFilter.value;
-                          final List<OrdertItem> requests = _filterOrdertItems(
-                            refillRequestsController.allRequests,
-                            selected,
-                          );
+                            final String selected =
+                                filterController.selectedFilter.value;
+                            final List<OrdertItem> requests =
+                                _filterOrdertItems(
+                                  refillRequestsController.allRequests,
+                                  selected,
+                                );
 
-                          return requests.isEmpty
-                              ? CustomEmptyState(
-                                  tital: 'لا يوجد طلبات لعرضها...',
-                                )
-                              : RefreshIndicator(
-                                  onRefresh:
-                                      refillRequestsController.refreshRequests,
-                                  child: ListView.builder(
-                                    padding: const EdgeInsets.only(top: 0),
-                                    itemCount: requests.length,
-                                    itemBuilder: (context, index) {
+                            // 2️⃣ حالة الفراغ
+                            if (requests.isEmpty) {
+                              return CustomScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                slivers: const [
+                                  SliverFillRemaining(
+                                    hasScrollBody: false,
+                                    child: CustomEmptyState(
+                                      tital: 'لا يوجد طلبات لعرضها...',
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            // 3️⃣ حالة وجود البيانات
+                            return CustomScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              slivers: [
+                                SliverPadding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: context.screenHeight * 0.01,
+                                  ),
+                                  sliver: SliverList(
+                                    delegate: SliverChildBuilderDelegate((
+                                      context,
+                                      index,
+                                    ) {
                                       final item = requests[index];
                                       return CustomRequestContainer(
                                         date: item.formattedCreatedAt,
@@ -182,17 +233,21 @@ class RequestPage extends StatelessWidget {
                                         state: item.statusLabel,
                                         onTap: () async {
                                           await Get.to(
-                                            () =>
-                                                DisOrderDetailsPage(item: item),
+                                            () => DisOrderDetailsPage(
+                                              requestId: item.id,
+                                            ),
                                           );
                                           refillRequestsController
                                               .refreshRequests();
                                         },
                                       );
-                                    },
+                                    }, childCount: requests.length),
                                   ),
-                                );
-                        }),
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
                       ),
                     ],
                   ),
@@ -212,21 +267,16 @@ class RequestPage extends StatelessWidget {
     switch (selectedFilter) {
       case 'بأنتظار موافقتك':
         return items.where((r) => r.statusLabel == 'بأنتظار موافقتك').toList();
-
       case 'قيد التنفيذ':
         return items.where((r) => r.statusLabel == 'قيد التنفيذ').toList();
-
       case 'منجز':
         return items
             .where((r) => r.statusLabel == 'منجز' || r.statusLabel == 'مستلم')
             .toList();
-
       case 'مرفوضة':
         return items.where((r) => r.statusLabel == 'مرفوض').toList();
-
       case 'الكل':
       default:
-        // ← نستثني الطلبات "معلق" من عرض "الكل"
         return items.where((r) => r.statusLabel != 'معلق').toList();
     }
   }
@@ -240,7 +290,6 @@ class RequestPage extends StatelessWidget {
         return items
             .where((r) => r.status == OrderStatus.pending_hospital_approval)
             .toList();
-
       case 'قيد التنفيذ':
         return items
             .where(
@@ -249,7 +298,6 @@ class RequestPage extends StatelessWidget {
                   r.status == OrderStatus.preparing,
             )
             .toList();
-
       case 'منجز':
         return items
             .where(
@@ -258,7 +306,6 @@ class RequestPage extends StatelessWidget {
                   r.status == OrderStatus.partially_complete,
             )
             .toList();
-
       case 'مرفوضة':
         return items
             .where(
@@ -268,7 +315,6 @@ class RequestPage extends StatelessWidget {
                   r.status == OrderStatus.cancelled,
             )
             .toList();
-
       case 'الكل':
       default:
         return items.where((r) => r.status != OrderStatus.draft).toList();

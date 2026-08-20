@@ -5,8 +5,11 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabController.dart';
 import 'package:stock_mate_project/Controller/Logic/NotificationController.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Disposal_Sale_Details_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Order_Details_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Request_Details_Page.dart';
 import 'package:stock_mate_project/core/models/Notification_Model.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Head_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
@@ -123,7 +126,9 @@ class NotificationPage extends StatelessWidget {
           );
           break;
 
-        case 'batch_expiration_alert':
+        case 'batch_expiration_alert' ||
+            'stock_below_minimum' ||
+            'stock_above_maximum':
           final deptId = notification.departmentId;
           if (deptId == null) return;
           // لا يوجد حالياً endpoint لجلب دفعة واحدة بمعرفها،
@@ -132,10 +137,23 @@ class NotificationPage extends StatelessWidget {
           _goToInventoryTab();
           break;
 
-        case 'disposal_transfer_initiated':
-          // TODO: لا توجد صفحة تفاصيل لنقل الإتلاف حالياً — أضفها هنا لاحقاً
+        case 'disposal_sale_request_status_changed':
+          Get.to(
+            DisposalSaleDetailsPage(
+              disposalSaleRequestId: notification.disposalSaleRequestId ?? '',
+            ),
+          );
+          break;
+        case 'periodic_refill_pending_approval' || 'periodic_refill_generated':
+          Get.to(
+            DisOrderDetailsPage(requestId: notification.refillRequestId ?? ''),
+          );
           break;
 
+        case 'queue_wait_exceeded':
+          Get.toNamed(AppRoutes.PatientsPage);
+
+          break;
         default:
           // نوع غير معروف: نكتفي بتعليمه كمقروء بدون تنقل
           break;
