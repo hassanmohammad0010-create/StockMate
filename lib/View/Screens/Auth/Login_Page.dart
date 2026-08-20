@@ -8,8 +8,10 @@ import 'package:stock_mate_project/Service/Auth/Login_Service.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Enter_OTB_Page.dart';
 import 'package:stock_mate_project/core/Function/Validation.dart';
 import 'package:stock_mate_project/View/Widget/Auth/Custom_Circle.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Text_Failed.dart';
 
 class LoginPage extends StatelessWidget {
@@ -118,29 +120,33 @@ class LoginPage extends StatelessWidget {
                     child: Column(
                       children: [
                         SizedBox(height: context.screenHeight * 0.02),
-                        CustomTextFormFaild(
-                          labelText: 'البريد الالكتروني',
-                          icon: Icon(
-                            Icons.email_outlined,
-                            size: context.screenHeight * 0.04,
+                        Padding(
+                          padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+                          child: CustomMyTextFormField(
+                            label: 'البريد الالكتروني',
+                            hint: '',
+                            prefixIcon: Icons.email_outlined,
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: (data) {
+                              email = data;
+                            },
+                            validator: (data) =>
+                                Validation().emailValidate(data!),
                           ),
-                          onChange: (data) {
-                            email = data;
-                          },
-                          validator: (data) =>
-                              Validation().emailValidate(data!),
                         ),
                         SizedBox(height: context.screenHeight * 0.02),
                         GetBuilder<LoadingIndicatorController>(
                           builder: (controller) {
-                            return CustomButtom(
+                            return CustomMainButtom(
                               widget: loadingIndicatorController.load
                                   ? CustomLoadingIndicator(
                                       color: constLightBlue,
                                     )
                                   : null,
-                              tital: 'تسجيل الدخول',
-                              onTap: () async {
+                              title: 'تسجيل الدخول',
+                              color: constBlue,
+                              fontcolor: Colors.white,
+                              onPressed: () async {
                                 if (loginPageKey.currentState!.validate()) {
                                   loadingIndicatorController.isLoad();
                                   bool response =
@@ -149,13 +155,11 @@ class LoginPage extends StatelessWidget {
                                       );
                                   if (response) {
                                     loadingIndicatorController.isntLoad();
-
                                     Get.to(() => EnterOTBPage(email: email!));
                                   } else {
                                     loadingIndicatorController.isntLoad();
                                   }
                                 }
-                                // Get.to(() => EnterOTBPage(email: email!));
                               },
                             );
                           },

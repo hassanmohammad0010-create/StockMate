@@ -17,7 +17,10 @@ InputDecoration buildCustomTextFieldDecoration({
     alignLabelWithHint: true,
     labelText: label,
     hintText: hint,
-    hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+    hintStyle: TextStyle(
+      color: Colors.grey.shade500,
+      fontSize: 15,
+    ), // ✅ كانت 13
     prefixIcon: prefixIcon != null
         ? SizedBox(
             width: 40,
@@ -41,34 +44,28 @@ InputDecoration buildCustomTextFieldDecoration({
     filled: true,
     fillColor: enabled ? Colors.white : Colors.grey.shade50,
 
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
 
-    // border عادي
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: Colors.grey.shade300),
     ),
-    // border عادي بدون focus
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: Colors.grey.shade300),
     ),
-    // border عند التركيز
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: constBlue, width: 1.5),
     ),
-    // border عند الخطأ
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
     ),
-    // border عند التركيز مع الخطأ
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
     ),
-    // border عند التعطيل
     disabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: Colors.grey.shade200),
@@ -76,10 +73,10 @@ InputDecoration buildCustomTextFieldDecoration({
 
     labelStyle: TextStyle(
       color: hasText ? constBlue : Colors.grey.shade500,
-      fontSize: hasText ? 12 : 14,
+      fontSize: hasText ? 14 : 18, // ✅ كانت 12 : 14
       fontWeight: hasText ? FontWeight.w500 : FontWeight.w400,
     ),
 
-    errorStyle: TextStyle(color: constRed, fontSize: 11),
+    errorStyle: TextStyle(color: constRed, fontSize: 12), // ✅ كانت 11
   );
 }

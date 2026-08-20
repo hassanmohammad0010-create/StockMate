@@ -9,19 +9,21 @@ class CustomOtb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OtpTextField(
-      margin: EdgeInsetsGeometry.symmetric(horizontal: 4),
-      filled: true,
-      fillColor: Colors.white,
-      numberOfFields: 6,
-
-      enabledBorderColor: constColor,
-      fieldWidth: 54,
-      keyboardType: TextInputType.number,
-      borderRadius: BorderRadius.circular(8),
-      borderColor: constColor,
-      showFieldAsBox: true,
-      onSubmit: onSubmit,
+    return Directionality(
+      textDirection: TextDirection.ltr, // ✅ يفرض ترتيب واتجاه إدخال LTR
+      child: OtpTextField(
+        margin: EdgeInsetsGeometry.symmetric(horizontal: 4),
+        filled: true,
+        fillColor: Colors.white,
+        numberOfFields: 6,
+        enabledBorderColor: constColor,
+        fieldWidth: 54,
+        keyboardType: TextInputType.number,
+        borderRadius: BorderRadius.circular(8),
+        borderColor: constColor,
+        showFieldAsBox: true,
+        onSubmit: onSubmit,
+      ),
     );
   }
 }

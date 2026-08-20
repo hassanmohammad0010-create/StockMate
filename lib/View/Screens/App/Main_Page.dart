@@ -2,12 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Service/Get_User_Profile_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Boss_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Requests_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -16,12 +18,14 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ نفس نمط DepartmentHeadsMainPage: تسجيل واحد فقط، permanent
     if (!Get.isRegistered<UnreadNotificationController>()) {
       Get.put(UnreadNotificationController(), permanent: true);
     }
     final UnreadNotificationController unreadCtrl =
         Get.find<UnreadNotificationController>();
+    final UserProfileController userProfileController = Get.put(
+      UserProfileController(),
+    );
 
     return DefaultTabController(
       length: 4,
@@ -54,7 +58,6 @@ class MainPage extends StatelessWidget {
                         Get.toNamed(AppRoutes.NotificationPage);
                       },
                     ),
-                    // ✅ الـ badge صار reactive وبيختفي تلقائياً لو العدد صفر
                     Obx(() {
                       final count = unreadCtrl.unreadCount.value;
                       if (count <= 0) return const SizedBox.shrink();
@@ -174,14 +177,22 @@ class MainPage extends StatelessWidget {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            BossHomePage(),
-            InventoryPage(),
-            RequestPage(),
-            SettingPage(),
-          ],
-        ),
+        body: Obx(() {
+          // ✅ الـ AppBar والـ TabBar ظاهرين دايمًا، بس الـ body بيصير لودينغ لحد ما توصل البيانات
+          if (userProfileController.isLoading.value &&
+              !userProfileController.isLoaded) {
+            return const Center(child: CustomLoadingIndicator());
+          }
+
+          return TabBarView(
+            children: [
+              BossHomePage(),
+              InventoryPage(),
+              RequestPage(),
+              SettingPage(),
+            ],
+          );
+        }),
       ),
     );
   }

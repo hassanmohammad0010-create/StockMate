@@ -108,9 +108,9 @@ class BossHomePage extends StatelessWidget {
                   CustomMainPageCard(
                     requestNum:
                         urgentPurchaseRequestsController.allRequests.length,
-                    description: 'الفواتير',
+                    description: 'المواد التالفة',
                     buttomtital: 'عرض المحتوى',
-                    icons: Icons.receipt_long,
+                    icons: Icons.sync,
                     iconBackgroundColor: constLightBlue,
                     iconColor: constBlue,
                     onTap: () {

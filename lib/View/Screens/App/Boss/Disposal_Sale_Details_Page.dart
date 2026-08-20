@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Get_Disposal_Sale_Details_Controller.dart';
 import 'package:stock_mate_project/core/Function/Find_Color.dart';
+import 'package:stock_mate_project/core/models/Disposal_Sales_Page_Data_Model.dart'
+    show DisposalSaleRequestStatus;
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
@@ -34,6 +38,87 @@ class DisposalSaleDetailsPage extends StatelessWidget {
         }
       },
       child: Scaffold(
+        // ✅ جديد — نفس منطق DisOrderDetailsPage
+        floatingActionButton: Obx(() {
+          if (controller.isLoading.value) {
+            return const SizedBox.shrink();
+          }
+
+          final currentStatus = controller.details.value?.status;
+
+          if (controller.isApproved.value ||
+              controller.isRejected.value ||
+              currentStatus != DisposalSaleRequestStatus.pendingApproval) {
+            return const SizedBox.shrink();
+          }
+
+          return SizedBox(
+            width: context.screenWidth * 0.15,
+            height: context.screenHeight * 0.1,
+            child: FloatingActionButton(
+              backgroundColor: constBlue,
+              elevation: 8,
+              shape: const CircleBorder(),
+              onPressed:
+                  (controller.isApproving.value || controller.isRejecting.value)
+                  ? null
+                  : () {
+                      CustomDialog.show(
+                        title: 'تأكيد الموافقة',
+                        message: 'هل أنت متأكد من الموافقة على هذا الطلب؟',
+                        type: DialogType.warning,
+                        confirmText: 'موافقة',
+                        cancelText: 'رفض',
+                        onConfirm: () {
+                          Get.back();
+                          controller.approveRequest();
+                        },
+                        onCancel: () {
+                          Get.back();
+                          final TextEditingController reasonController =
+                              TextEditingController();
+
+                          CustomDialog.show(
+                            title: 'سبب الرفض',
+                            message: 'الرجاء إدخال سبب رفض الطلب',
+                            type: DialogType.warning,
+                            confirmText: 'تأكيد',
+                            cancelText: 'إلغاء',
+                            showTextField: true,
+                            textFieldHint: 'ادخل سبب الرفض',
+                            textFieldLabel: 'سبب الرفض',
+                            textFieldIcon: Icons.edit_outlined,
+                            textFieldKeyboard: TextInputType.text,
+                            textFieldController: reasonController,
+                            textFieldValidator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'الرجاء إدخال سبب الرفض';
+                              }
+                              return null;
+                            },
+                            onConfirm: () {
+                              Get.back();
+                              controller.rejectRequest(
+                                reasonController.text.trim(),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+              child: controller.isApproving.value
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.check, color: Colors.white),
+            ),
+          );
+        }),
         body: Column(
           children: [
             CustomBackContainer(),
@@ -107,69 +192,90 @@ class DisposalSaleDetailsPage extends StatelessWidget {
                                 value: d.formattedCreatedAt,
                               ),
                               const Divider(indent: 16, endIndent: 16),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.list_alt_outlined,
-                                        size: context.screenHeight * 0.028,
-                                        color: constGray,
-                                      ),
-                                      SizedBox(
-                                        width: context.screenWidth * 0.02,
-                                      ),
-                                      Text(
-                                        'الحالة',
-                                        style: TextStyle(
+
+                              // ─── الحالة ✅ صارت Obx مستقلة عشان تتحدث فورًا ──
+                              Obx(() {
+                                final currentDetails = controller.details.value;
+                                final label =
+                                    currentDetails?.statusLabel ??
+                                    d.statusLabel;
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.list_alt_outlined,
+                                          size: context.screenHeight * 0.028,
                                           color: constGray,
+                                        ),
+                                        SizedBox(
+                                          width: context.screenWidth * 0.02,
+                                        ),
+                                        Text(
+                                          'الحالة',
+                                          style: TextStyle(
+                                            color: constGray,
+                                            fontFamily: cairo,
+                                            fontSize:
+                                                context.screenHeight * 0.019,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: context.screenWidth * 0.04,
+                                        vertical: context.screenHeight * 0.005,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: FindColor().findBackgroundColor(
+                                          word: label,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        label,
+                                        style: TextStyle(
                                           fontFamily: cairo,
                                           fontSize:
                                               context.screenHeight * 0.019,
                                           fontWeight: FontWeight.w600,
+                                          color: FindColor()
+                                              .findFontColorFunction(
+                                                word: label,
+                                              ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: context.screenWidth * 0.04,
-                                      vertical: context.screenHeight * 0.005,
                                     ),
-                                    decoration: BoxDecoration(
-                                      color: FindColor().findBackgroundColor(
-                                        word: d.statusLabel,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+                                  ],
+                                );
+                              }),
+
+                              // ─── سبب الرفض (لو موجود) ✅ Obx مستقلة ────
+                              Obx(() {
+                                final currentDetails = controller.details.value;
+                                if (currentDetails == null ||
+                                    !currentDetails.isRejected ||
+                                    currentDetails.rejectionReason == null) {
+                                  return const SizedBox.shrink();
+                                }
+                                return Column(
+                                  children: [
+                                    const Divider(indent: 16, endIndent: 16),
+                                    _infoRow(
+                                      context,
+                                      icon: Icons.info_outline,
+                                      label: 'سبب الرفض',
+                                      value: currentDetails.rejectionReason!,
                                     ),
-                                    child: Text(
-                                      d.statusLabel,
-                                      style: TextStyle(
-                                        fontFamily: cairo,
-                                        fontSize: context.screenHeight * 0.019,
-                                        fontWeight: FontWeight.w600,
-                                        color: FindColor()
-                                            .findFontColorFunction(
-                                              word: d.statusLabel,
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              if (d.isRejected &&
-                                  d.rejectionReason != null) ...[
-                                const Divider(indent: 16, endIndent: 16),
-                                _infoRow(
-                                  context,
-                                  icon: Icons.info_outline,
-                                  label: 'سبب الرفض',
-                                  value: d.rejectionReason!,
-                                ),
-                              ],
+                                  ],
+                                );
+                              }),
+
                               const Divider(indent: 16, endIndent: 16),
                               Row(
                                 mainAxisAlignment:

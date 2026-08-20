@@ -123,19 +123,34 @@ class EnterOTBPage extends StatelessWidget {
                                         String? role =
                                             await TokenStorage.getUserRole();
                                         if (role != null) {
-                                          role == 'department_manager' ||
-                                                  role == 'pharmacy_staff'
-                                              ? Get.offAll(
-                                                  DepartmentHeadsMainPage(),
-                                                )
-                                              : role == 'purchasing_manager'
-                                              ? Get.offAll(
-                                                  () =>
-                                                      MainPageHeadOfPurchasingPage(),
-                                                )
-                                              : role == 'doctor'
-                                              ? Get.offAll(() => MainPage())
-                                              : Get.offAll(() => MainPage());
+                                          String? role =
+                                              await TokenStorage.getUserRole();
+                                          if (role != null) {
+                                            role == 'department_manager' ||
+                                                    role == 'pharmacy_staff'
+                                                ? Get.offAll(
+                                                    () =>
+                                                        DepartmentHeadsMainPage(),
+                                                  )
+                                                : role == 'purchasing_manager'
+                                                ? Get.offAll(
+                                                    () =>
+                                                        MainPageHeadOfPurchasingPage(),
+                                                  )
+                                                : role == 'hospital_manager'
+                                                ? Get.offAll(() => MainPage())
+                                                : role == 'doctor'
+                                                ? null // TODO: تحديد الصفحة الخاصة بالدكتور لاحقًا
+                                                : Get.offAll(() => MainPage());
+                                          } else {
+                                            customSnackBar(
+                                              title: 'حدث خطأ ',
+                                              message:
+                                                  'الرجاء تسجيل الدخول مجددا',
+                                              color: constRed,
+                                              messageColor: constLightRed,
+                                            );
+                                          }
                                         } else {
                                           customSnackBar(
                                             title: 'حدث خطأ ',
