@@ -3,21 +3,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Adjustment_Details_Page.dart';
-import 'package:stock_mate_project/Controller/Service/Inventory_Adjustments_Controller.dart';
-import 'package:stock_mate_project/core/models/Inventory_Adjustments_Model.dart';
+import 'package:stock_mate_project/Controller/Service/Refill_Deliveries_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Refill_Delivery_Details_Page.dart';
+import 'package:stock_mate_project/core/models/Refill_Delivery_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
-class InventoryAdjustmentsPage extends StatelessWidget {
-  const InventoryAdjustmentsPage({super.key});
+class RefillDeliveriesPage extends StatelessWidget {
+  const RefillDeliveriesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final h = context.screenHeight;
     final w = context.screenWidth;
 
-    final c = Get.put(InventoryAdjustmentsController(), tag: 'adjustments');
+    final c = Get.put(RefillDeliveriesController(), tag: 'deliveries');
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -32,7 +32,7 @@ class InventoryAdjustmentsPage extends StatelessWidget {
               children: [
                 const Expanded(
                   child: Text(
-                    'سجل التسويات والإتلاف',
+                    'سجل التسليمات',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -44,15 +44,17 @@ class InventoryAdjustmentsPage extends StatelessWidget {
                 Obx(
                   () => Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
-                      color: constLightBlue,
+                      color: constLightGreen,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       '${c.total.value}',
                       style: const TextStyle(
-                        color: constBlue,
+                        color: constGreen,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Cairo',
                       ),
@@ -64,38 +66,38 @@ class InventoryAdjustmentsPage extends StatelessWidget {
           ),
           SizedBox(height: h * 0.015),
 
-          // ── القائمة ──
+          // ── القائمة ─
           Expanded(
             child: Obx(() {
-              if (c.isLoading.value && c.adjustments.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
+              if (c.isLoading.value && c.deliveries.isEmpty) {
+                return const Center(child: CustomLoadingIndicator());
               }
 
-              if (c.errorMessage.value.isNotEmpty && c.adjustments.isEmpty) {
+              if (c.errorMessage.value.isNotEmpty && c.deliveries.isEmpty) {
                 return _buildErrorState(c);
               }
 
-              if (c.adjustments.isEmpty) {
+              if (c.deliveries.isEmpty) {
                 return _buildEmptyState();
               }
 
               return RefreshIndicator(
                 color: constBlue,
-                onRefresh: () => c.fetchAdjustments(),
+                onRefresh: () => c.fetchDeliveries(),
                 child: ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-                  itemCount: c.adjustments.length + (c.hasMore ? 1 : 0),
+                  itemCount: c.deliveries.length + (c.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
-                    if (index >= c.adjustments.length) {
+                    if (index >= c.deliveries.length) {
                       return _buildLoadMoreFooter(c);
                     }
-                    final adjustment = c.adjustments[index];
-                    return _AdjustmentCard(
-                      adjustment: adjustment,
+                    final delivery = c.deliveries[index];
+                    return _DeliveryCard(
+                      delivery: delivery,
+                      index: index + 1,
                       onTap: () => Get.to(
-                        () => InventoryAdjustmentDetailsPage(
-                          adjustment: adjustment,
-                        ),
+                        () =>
+                            RefillDeliveryDetailsPage(deliveryId: delivery.id),
                         transition: Transition.rightToLeft,
                       ),
                     );
@@ -109,12 +111,12 @@ class InventoryAdjustmentsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadMoreFooter(InventoryAdjustmentsController c) {
+  Widget _buildLoadMoreFooter(RefillDeliveriesController c) {
     return Obx(
       () => Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: c.isLoadingMore.value
-            ? const Center(child: CustomLoadingIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Center(
                 child: TextButton(
                   onPressed: c.loadMore,
@@ -137,11 +139,14 @@ class InventoryAdjustmentsPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.history_edu_outlined,
-              size: 70, color: Colors.grey.shade300),
+          Icon(
+            Icons.local_shipping_outlined,
+            size: 70,
+            color: Colors.grey.shade300,
+          ),
           const SizedBox(height: 12),
           const Text(
-            'لا توجد تسويات مسجلة',
+            'لا توجد تسليمات مسجلة',
             style: TextStyle(
               fontSize: 15,
               fontFamily: 'Cairo',
@@ -154,7 +159,7 @@ class InventoryAdjustmentsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorState(InventoryAdjustmentsController c) {
+  Widget _buildErrorState(RefillDeliveriesController c) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +177,7 @@ class InventoryAdjustmentsPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           TextButton.icon(
-            onPressed: () => c.fetchAdjustments(),
+            onPressed: () => c.fetchDeliveries(),
             icon: const Icon(Icons.refresh, size: 18),
             label: const Text('إعادة المحاولة'),
             style: TextButton.styleFrom(foregroundColor: constBlue),
@@ -183,54 +188,21 @@ class InventoryAdjustmentsPage extends StatelessWidget {
   }
 }
 
-// ─── كارد تسوية واحدة ──────────────────────────────────────────────
-class _AdjustmentCard extends StatelessWidget {
-  final InventoryAdjustment adjustment;
+// ─── كارد تسليم واحد ───────────────────────────────────────────────
+class _DeliveryCard extends StatelessWidget {
+  final RefillDelivery delivery;
+  final int index;
   final VoidCallback onTap;
 
-  const _AdjustmentCard({
-    required this.adjustment,
+  const _DeliveryCard({
+    required this.delivery,
+    required this.index,
     required this.onTap,
   });
 
-  Color get _typeColor {
-    switch (adjustment.adjustmentType) {
-      case AdjustmentType.expired:
-        return constRed;
-      case AdjustmentType.damaged:
-        return constOrange;
-      case AdjustmentType.shrinkage:
-        return constGray;
-      case AdjustmentType.found:
-        return constGreen;
-    }
-  }
+  Color get _typeColor => delivery.type.isFinal ? constGreen : constBlue;
 
-  Color get _typeBg {
-    switch (adjustment.adjustmentType) {
-      case AdjustmentType.expired:
-        return constLightRed;
-      case AdjustmentType.damaged:
-        return constLightOrange;
-      case AdjustmentType.shrinkage:
-        return const Color(0xFFF3F4F6);
-      case AdjustmentType.found:
-        return constLightGreen;
-    }
-  }
-
-  IconData get _typeIcon {
-    switch (adjustment.adjustmentType) {
-      case AdjustmentType.expired:
-        return Icons.event_busy_outlined;
-      case AdjustmentType.damaged:
-        return Icons.broken_image_outlined;
-      case AdjustmentType.shrinkage:
-        return Icons.remove_circle_outline;
-      case AdjustmentType.found:
-        return Icons.add_circle_outline;
-    }
-  }
+  Color get _typeBg => delivery.type.isFinal ? constLightGreen : constLightBlue;
 
   @override
   Widget build(BuildContext context) {
@@ -266,10 +238,27 @@ class _AdjustmentCard extends StatelessWidget {
               // الشريط الجانبي الملون
               Container(
                 width: w * 0.01,
-                height: h * 0.075,
+                height: h * 0.07,
                 decoration: BoxDecoration(
                   color: _typeColor,
                   borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              SizedBox(width: w * 0.03),
+
+              // أيقونة التسليم
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: _typeBg,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  delivery.type.isFinal
+                      ? Icons.done_all_rounded
+                      : Icons.local_shipping_outlined,
+                  color: _typeColor,
+                  size: 22,
                 ),
               ),
               SizedBox(width: w * 0.03),
@@ -278,19 +267,18 @@ class _AdjustmentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── الصف الأول: الاسم + شارة النوع ──
+                    // ── الصف الأول: العنوان + شارة النوع ──
                     Row(
                       children: [
                         Expanded(
                           child: Text(
-                            adjustment.displayName,
+                            'تسليم #$index',
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF111827),
                               fontFamily: 'Cairo',
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Container(
@@ -302,109 +290,68 @@ class _AdjustmentCard extends StatelessWidget {
                             color: _typeBg,
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(_typeIcon, size: 13, color: _typeColor),
-                              const SizedBox(width: 4),
-                              Text(
-                                adjustment.adjustmentType.label,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: _typeColor,
-                                  fontFamily: 'Cairo',
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            delivery.type.label,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: _typeColor,
+                              fontFamily: 'Cairo',
+                            ),
                           ),
                         ),
                       ],
                     ),
                     SizedBox(height: h * 0.008),
 
-                    // ── الصف الثاني: الكمية + الوحدة + رقم الدفعة ──
+                    // ── الصف الثاني: تاريخ التسليم ──
                     Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: _typeColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: _typeColor.withOpacity(0.3)),
-                          ),
-                          child: Directionality(
-                            textDirection: TextDirection.ltr,
-                            child: Text(
-                              '${adjustment.quantity} ${adjustment.unitAbbreviation}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                color: _typeColor,
-                                fontFamily: 'Cairo',
-                              ),
-                            ),
-                          ),
+                        Icon(
+                          Icons.local_shipping_outlined,
+                          size: 14,
+                          color: Colors.grey.shade600,
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'دفعة: ${adjustment.batchNumber}',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade600,
-                              fontFamily: 'Cairo',
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                        const SizedBox(width: 5),
+                        Text(
+                          'التسليم: ${delivery.formattedDeliveredAt}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade700,
+                            fontFamily: 'Cairo',
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: h * 0.006),
+                    SizedBox(height: h * 0.005),
 
-                    // ── الصف الثالث: الملاحظات ──
-                    if (adjustment.hasNotes)
-                      Text(
-                        adjustment.notes,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade700,
-                          fontFamily: 'Cairo',
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    SizedBox(height: h * 0.006),
-
-                    // ── الصف الرابع: التاريخ + المُبلّغ ──
+                    // ── الصف الثالث: تاريخ التأكيد + معرف الطلب ──
                     Row(
                       children: [
-                        Icon(Icons.calendar_today_outlined,
-                            size: 13, color: Colors.grey.shade500),
-                        const SizedBox(width: 4),
+                        Icon(
+                          Icons.verified_outlined,
+                          size: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                        const SizedBox(width: 5),
                         Text(
-                          adjustment.formattedDateOnly,
+                          'التأكيد: ${delivery.formattedConfirmedAt}',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.grey.shade500,
+                            color: Colors.grey.shade600,
                             fontFamily: 'Cairo',
                           ),
                         ),
                         const Spacer(),
-                        Icon(Icons.person_outline,
-                            size: 13, color: Colors.grey.shade500),
-                        const SizedBox(width: 4),
-                        Flexible(
+                        Directionality(
+                          textDirection: TextDirection.ltr,
                           child: Text(
-                            adjustment.reportedByName,
+                            '#${delivery.shortRequestId}',
                             style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade500,
+                              fontSize: 10,
+                              color: Colors.grey.shade400,
                               fontFamily: 'Cairo',
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],

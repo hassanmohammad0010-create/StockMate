@@ -10,6 +10,7 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_
 import 'package:stock_mate_project/core/models/Patient_Model.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class PatientsDetailsPage extends StatelessWidget {
   const PatientsDetailsPage({super.key, required this.patient});
@@ -36,7 +37,7 @@ class PatientsDetailsPage extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (c.isLoading.value && c.details.value == null) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CustomLoadingIndicator());
               }
               if (c.errorMessage.value.isNotEmpty && c.details.value == null) {
                 return _buildErrorState(c);

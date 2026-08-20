@@ -8,6 +8,7 @@ import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Confirm_Section.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Main_Buttom.dart';
 
 class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
@@ -24,7 +25,7 @@ class OrdinaryConfirmPage extends GetView<AddOrdinaryOrderController> {
         final request = controller.createdRequest.value;
 
         if (request == null) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CustomLoadingIndicator());
         }
 
         final now = request.createdAt;

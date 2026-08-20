@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, deprecated_member_use
+// ignore_for_file: file_names, deprecated_member_use, unused_element_parameter
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

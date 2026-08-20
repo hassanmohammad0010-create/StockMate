@@ -7,9 +7,12 @@ import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class DepartmentHeadsMainTabController extends GetxController
     with GetSingleTickerProviderStateMixin {
+
+  DepartmentHeadsMainTabController({this.length});
+
   late final TabController tabController;
   int _previousIndex = 0;
-
+  int? length;
   static const int inventoryTabIndex = 1;
     static const int orderTabIndex = 2;
 
@@ -17,7 +20,7 @@ class DepartmentHeadsMainTabController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: length ?? 4, vsync: this);
     tabController.addListener(_onTabChanged);
   }
 

@@ -65,11 +65,150 @@ class RequestDetailsPage extends StatelessWidget {
                     _buildItemsCard(d, h),
                     if (d.notes != null && d.notes!.trim().isNotEmpty)
                       _buildNotesCard(d),
+
+                    // ─── ✅✅✅ زر إلغاء الطلب (من الكونترولر مباشرة) ───
+                    if (c.canCancel) _buildCancelButton(c, d),
+
                     SizedBox(height: h * 0.03),
                   ],
                 ),
               );
             }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── ✅✅✅ زر إلغاء الطلب ───────────────────────────────────────
+  Widget _buildCancelButton(RequestDetailsController ctrl, OrderItemDetails d) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Obx(() {
+        final isCancelling = ctrl.isCancelling.value;
+
+        return SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: isCancelling
+                ? null
+                : () => _showCancelConfirmationDialog(ctrl, d),
+            icon: isCancelling
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: constRed,
+                    ),
+                  )
+                : const Icon(Icons.cancel_outlined, size: 20),
+            label: Text(
+              isCancelling ? 'جارٍ الإلغاء...' : 'إلغاء الطلب',
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Cairo',
+                color: constRed,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: constRed),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  // ─── ✅✅✅ ديالوغ تأكيد الإلغاء ──────────────────────────────────
+  void _showCancelConfirmationDialog(
+    RequestDetailsController ctrl,
+    OrderItemDetails d,
+  ) {
+    final context = Get.context!;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: constRed, size: 24),
+            SizedBox(width: 8),
+            Text(
+              'تأكيد الإلغاء',
+              style: TextStyle(fontFamily: 'Cairo', fontSize: 16),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟',
+              style: TextStyle(fontFamily: 'Cairo', fontSize: 13),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: constLightRed.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.info_outline, size: 16, color: constRed),
+                  SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'لا يمكن التراجع عن هذا الإجراء بعد التأكيد',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'Cairo',
+                        color: constRed,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: Text(
+                'رقم الطلب: ${d.requestNumber}',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontFamily: 'Cairo',
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('رجوع', style: TextStyle(fontFamily: 'Cairo')),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(ctx).pop(); // إغلاق الديالوغ
+              await ctrl.cancelRequest(); // ✅ الإلغاء + تحديث التفاصيل تلقائياً
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: constRed,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text(
+              'تأكيد الإلغاء',
+              style: TextStyle(fontFamily: 'Cairo'),
+            ),
           ),
         ],
       ),

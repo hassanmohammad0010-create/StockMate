@@ -7,6 +7,7 @@ import 'package:stock_mate_project/core/utils/New_Customs/My_Prescription_Card.d
 import 'package:stock_mate_project/Controller/Service/Pharmacy_Dispense_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescription_Details_Page.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Patient_Search_Field.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class NewPrescriptionPage extends StatelessWidget {
   const NewPrescriptionPage({super.key});
@@ -40,7 +41,7 @@ class NewPrescriptionPage extends StatelessWidget {
               // ✅ حالة التحميل الأول
               if (controller.isLoading.value &&
                   controller.prescriptions.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CustomLoadingIndicator());
               }
 
               // ✅ حالة الخطأ

@@ -1,4 +1,6 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Home_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Adjustments_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
@@ -150,5 +152,11 @@ abstract class AppPages {
       page: () => const ConfirmDisableLockScreen(),
     ),
     GetPage(name: AppRoutes.PatientsPage, page: () => const PatientsPage()),
-    GetPage(name: AppRoutes.InventoryAdjustmentsPage, page: () => const InventoryAdjustmentsPage()),  ];
+    GetPage(
+      name: AppRoutes.InventoryAdjustmentsPage,
+      page: () => const InventoryAdjustmentsPage(),
+    ),
+    GetPage(name: AppRoutes.DoctorHomePage, page: () => DoctorHomePage()),
+    GetPage(name: AppRoutes.DoctorMainPage, page: () => const DoctorMainPage()),
+  ];
 }

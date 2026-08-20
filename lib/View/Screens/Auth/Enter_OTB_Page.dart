@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, file_names
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +7,7 @@ import 'package:stock_mate_project/Controller/Auth/Enter_OTB_Controller.dart';
 import 'package:stock_mate_project/Controller/Loading%20Indecator%20Controller/Loading_Indicator_Controller.dart';
 import 'package:stock_mate_project/Service/Auth/OTB_Service.dart';
 import 'package:stock_mate_project/Service/Token_Storage.dart';
+import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Main_Page_Heap_of_Purchasing.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department-Heads_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
@@ -134,7 +135,7 @@ class EnterOTBPage extends StatelessWidget {
                                                       MainPageHeadOfPurchasingPage(),
                                                 )
                                               : role == 'doctor'
-                                              ? Get.offAll(() => MainPage())
+                                              ? Get.offAll(() => DoctorMainPage())
                                               : Get.offAll(() => MainPage());
                                         } else {
                                           customSnackBar(

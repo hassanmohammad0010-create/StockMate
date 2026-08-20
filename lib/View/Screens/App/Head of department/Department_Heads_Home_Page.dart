@@ -7,6 +7,7 @@ import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabContro
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Requests_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Refill_Deliveries_Page.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
@@ -241,6 +242,16 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                   );
                                 },
                                 title: 'المتلفات',
+                              ),
+                              CustomListTile(
+                                backgroundColor: constLightBlue,
+                                description: 'عرض تفاصيل (الطلبات الواصلة)',
+                                icon: Icons.local_shipping_outlined,
+                                iconColor: constBlue,
+                                onTap: () {
+                                  Get.to(() => const RefillDeliveriesPage());
+                                },
+                                title: 'الطلبات الواصلة',
                               ),
                             ],
                           )

@@ -36,7 +36,8 @@ class NotificationModel {
       readAt: json['readAt'] != null
           ? DateTime.tryParse(json['readAt'] as String)
           : null,
-      createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(json['createdAt'] as String? ?? '') ??
           DateTime.now(),
     );
   }
@@ -45,7 +46,7 @@ class NotificationModel {
   /// غير مقروء = أزرق (يلفت الانتباه)، مقروء = رمادي فاتح
   /// تقدر تخصص ألوان حسب category/type لاحقاً إذا احتجت تمييز أدق
   Color get statusColor {
-    if (!isRead) return constBlue;
+    if (!isRead) return constRed;
     return Colors.grey.shade400;
   }
 
