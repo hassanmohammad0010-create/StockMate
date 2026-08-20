@@ -91,7 +91,7 @@ class EnterOTBPage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
+                            ),
                           SizedBox(height: context.screenHeight * 0.01),
                           Padding(
                             padding: EdgeInsets.symmetric(
@@ -124,19 +124,6 @@ class EnterOTBPage extends StatelessWidget {
                                         String? role =
                                             await TokenStorage.getUserRole();
                                         if (role != null) {
-                                          role == 'department_manager' ||
-                                                  role == 'pharmacy_staff'
-                                              ? Get.offAll(
-                                                  DepartmentHeadsMainPage(),
-                                                )
-                                              : role == 'purchasing_manager'
-                                              ? Get.offAll(
-                                                  () =>
-                                                      MainPageHeadOfPurchasingPage(),
-                                                )
-                                              : role == 'doctor'
-                                              ? Get.offAll(() => DoctorMainPage())
-                                              : Get.offAll(() => MainPage());
                                           String? role =
                                               await TokenStorage.getUserRole();
                                           if (role != null) {
@@ -154,7 +141,7 @@ class EnterOTBPage extends StatelessWidget {
                                                 : role == 'hospital_manager'
                                                 ? Get.offAll(() => MainPage())
                                                 : role == 'doctor'
-                                                ? null // TODO: تحديد الصفحة الخاصة بالدكتور لاحقًا
+                                                ? Get.offAll(() => DoctorMainPage())
                                                 : Get.offAll(() => MainPage());
                                           } else {
                                             customSnackBar(
