@@ -25,7 +25,6 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final h = context.screenHeight;
     final w = context.screenWidth;
 
@@ -71,9 +70,7 @@ class CustomCard extends StatelessWidget {
             SizedBox(height: h * 0.005),
             Container(
               width: w * 0.38,
-              margin: EdgeInsets.symmetric(
-                vertical: h * 0.005,
-              ),
+              margin: EdgeInsets.symmetric(vertical: h * 0.005),
               decoration: BoxDecoration(
                 color: buttonColor,
                 borderRadius: BorderRadius.circular(8),
@@ -83,7 +80,11 @@ class CustomCard extends StatelessWidget {
                 onPressed: onTap,
                 child: Text(
                   buttonTitle,
-                  style: TextStyle(fontSize: 12, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, dangling_library_doc_comments
 
 /// ─────────────────────────────────────────────────────────────
 /// مودل الوصفة الطبية

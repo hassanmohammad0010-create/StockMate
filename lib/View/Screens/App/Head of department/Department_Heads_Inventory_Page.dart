@@ -15,10 +15,6 @@ import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.da
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class DepartmentHeadsInventoryPage extends StatelessWidget {
-  // ✅ الكونستركتور فارغ تمامًا الآن — لا شيء ينفذ هنا.
-  // كل منطق Get.put وتهيئة الفلاتر انتقل إلى build() (بنفس نمط DepartmentOrdersPage)
-  // عشان ما يصطدم بقاعدة "ممنوع تعديل حالة GetX أثناء بناء شجرة الأب"
-  // عند فتح هذه الصفحة من داخل Obx (مثل صفحة الإشعارات).
   DepartmentHeadsInventoryPage({super.key, required this.departmentId});
 
   final String departmentId;
@@ -29,7 +25,6 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ 1) الفلتر: أنشئه فقط لو مو مسجل مسبقاً
     if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
       Get.put<FilterController>(
         FilterController()..initFilters(['الكل', 'ثابتة', 'مستهلكة']),
@@ -40,7 +35,6 @@ class DepartmentHeadsInventoryPage extends StatelessWidget {
       tag: _filterTag,
     );
 
-    // ✅ 2) كونترولر المخزون: tag فريد لكل قسم
     if (!Get.isRegistered<LiveStockController>(tag: departmentId)) {
       Get.put(
         LiveStockController(departmentId: departmentId),

@@ -7,12 +7,12 @@ class CustomHeadContainer extends StatelessWidget {
   const CustomHeadContainer({super.key, required this.title, this.trailing});
 
   final String title;
-  final String? trailing;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
+    final h = context.screenHeight;
+    final w = context.screenWidth;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: w * 0.025, vertical: h * 0.008),
@@ -35,8 +35,8 @@ class CustomHeadContainer extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.08,
-                height: MediaQuery.of(context).size.height * 0.08,
+                width: w * 0.08,
+                height: h * 0.08,
                 decoration: BoxDecoration(
                   color: constBlue,
                   borderRadius: BorderRadius.circular(12),
@@ -49,7 +49,7 @@ class CustomHeadContainer extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+              SizedBox(width: w * 0.03),
               Text(
                 title,
                 style: TextStyle(
@@ -59,7 +59,7 @@ class CustomHeadContainer extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.22),
+              SizedBox(width: w * 0.22),
               if (trailing != null)
                 Container(
                   padding: EdgeInsets.symmetric(
@@ -67,17 +67,9 @@ class CustomHeadContainer extends StatelessWidget {
                     vertical: h * 0.005,
                   ),
                   decoration: BoxDecoration(
-                    color: constLightBlue,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
-                    trailing!,
-                    style: TextStyle(
-                      color: constColor,
-                      fontFamily: cairo,
-                      fontSize: 16,
-                    ),
-                  ),
+                  child: trailing,
                 ),
             ],
           ),

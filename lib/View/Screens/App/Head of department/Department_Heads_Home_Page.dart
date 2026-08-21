@@ -21,13 +21,8 @@ class DepartmentHeadsHomePage extends StatelessWidget {
   final DepartmentHeadsMainTabController mainTabController =
       Get.find<DepartmentHeadsMainTabController>();
 
-  // ✅ نفس الـ tag المستخدم في DepartmentOrdersPage، حتى نقرأ من نفس
-  // الـ instance ونفس البيانات (مش نسخة تانية منفصلة).
   static const String _ordersFilterTag = AppRoutes.DepartmentOrdersPage;
 
-  /// ✅ يضمن وجود MyRequestsController وFilterController بنفس الـ tag
-  /// حتى لو المستخدم لسه ما فتحش تاب "الطلبات" فعليًا.
-  /// آمن للاستدعاء أكثر من مرة (isRegistered check).
   UnifiedRequestsController _ensureOrdersController() {
     if (!Get.isRegistered<FilterController>(tag: _ordersFilterTag)) {
       Get.put<FilterController>(
@@ -54,11 +49,6 @@ class DepartmentHeadsHomePage extends StatelessWidget {
     return Get.find<UnifiedRequestsController>(tag: _ordersFilterTag);
   }
 
-  /// ✅ تعيين الفلتر المناسب ثم الانتقال لتاب الطلبات (index 2).
-  /// نستدعي _ensureOrdersController() هنا صراحةً (بدل الاعتماد فقط على
-  /// استدعاء build) حتى نضمن أن FilterController موجود ومضبوط
-  /// *قبل* أي محاولة قراءة له من CustomFilterBar عند الانتقال،
-  /// بغض النظر عن توقيت rebuild الصفحة.
   void _goToOrdersTab(String filterValue) {
     final FilterController filterCtrl =
         Get.isRegistered<FilterController>(tag: _ordersFilterTag)
@@ -66,24 +56,21 @@ class DepartmentHeadsHomePage extends StatelessWidget {
         : Get.put<FilterController>(
             FilterController()..initFilters([
               'الكل',
-            'بانتظار التأكيد',
-            'بانتظار موافقة المشفى',
-            'بانتظار موافقة المدير',
-            'قيد التحضير',
-            'مكتمل جزئي',
-            'مكتمل',
-            'مرفوض مشفى',
-            'مرفوض مدير',
-            'ملغي',
-            'الطلبات الدورية',
+              'بانتظار التأكيد',
+              'بانتظار موافقة المشفى',
+              'بانتظار موافقة المدير',
+              'قيد التحضير',
+              'منجز جزئي',
+              'منجز',
+              'مرفوض',
+              'ملغي',
+              'الطلبات الدورية',
             ]),
             tag: _ordersFilterTag,
           );
 
     filterCtrl.setFilter(filterValue);
 
-    // ✅ ننتقل بعد فريم واحد لضمان أن أي Obx يقرأ selectedFilter
-    // (مثل CustomFilterBar) يكون استلم القيمة الجديدة قبل ظهور التاب.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       mainTabController.tabController.animateTo(2);
     });
@@ -105,8 +92,6 @@ class DepartmentHeadsHomePage extends StatelessWidget {
         final String? departmentName =
             getNameRollOfUserController.departmentName.value;
 
-        // ✅ قراءة الأعداد جوّه الـ Obx حتى تتحدث الكاردات تلقائيًا
-        // بمجرد وصول بيانات الطلبات من الـ API.
         final int completedCount = ordersController.completedCount;
         final int inProgressCount = ordersController.inProgressCount;
         final int pendingApprovalCount = ordersController.pendingApprovalCount;
@@ -138,7 +123,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 title: 'طلبات منجزة',
                                 buttonColor: constGreen,
                                 buttonTitle: 'عرض التفاصيل',
-                                onTap: () => _goToOrdersTab('مكتمل'),
+                                onTap: () => _goToOrdersTab('منجز'),
                               ),
                               CustomCard(
                                 icon: Icon(
@@ -148,7 +133,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 ),
                                 iconBackgroundColor: constLightBlue,
                                 number: '$inProgressCount',
-                                title: 'طلبات قيد التنفيذ',
+                                title: 'طلبات قيد التحضير',
                                 buttonColor: constBlue,
                                 buttonTitle: 'عرض التفاصيل',
                                 onTap: () => _goToOrdersTab('قيد التحضير'),
@@ -182,7 +167,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 title: 'طلبات مرفوضة',
                                 buttonColor: constRed,
                                 buttonTitle: 'عرض التفاصيل',
-                                onTap: () => _goToOrdersTab('مرفوض مشفى'),
+                                onTap: () => _goToOrdersTab('مرفوض'),
                               ),
                             ],
                           ),
@@ -247,16 +232,6 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 },
                                 title: 'المتلفات',
                               ),
-                              // CustomListTile(
-                              //   backgroundColor: constLightBlue,
-                              //   description: 'عرض تفاصيل (الطلبات الواصلة)',
-                              //   icon: Icons.local_shipping_outlined,
-                              //   iconColor: constBlue,
-                              //   onTap: () {
-                              //     Get.to(() => const RefillDeliveriesPage());
-                              //   },
-                              //   title: 'الطلبات الواصلة',
-                              // ),
                             ],
                           )
                         : Column(

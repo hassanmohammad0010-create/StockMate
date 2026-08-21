@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Service/Patient_Details_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/CompleteConsultationPage.dart';
 import 'package:stock_mate_project/core/models/Patient_Details_Info.dart';
-import 'package:stock_mate_project/core/models/Prescription_Model.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
 import 'package:stock_mate_project/core/models/Patient_Model.dart';
-import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
@@ -51,14 +49,15 @@ class PatientsDetailsPage extends StatelessWidget {
                 color: constBlue,
                 onRefresh: () => c.fetchHistory(),
                 child: ListView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: w * 0.04,
-                    vertical: h * 0.01,
+                  padding: EdgeInsets.fromLTRB(
+                    w * 0.04,
+                    h * 0.01,
+                    w * 0.04,
+                    // ✅ مساحة إضافية أسفل حتى لا يغطي الشريط الثابت آخر عنصر
+                    h * 0.12,
                   ),
                   children: [
-                    _buildActionButtons(c, w),
-                    SizedBox(height: h * 0.02),
-                    _buildInputFields(c, h, w),
+                    _buildBookingButton(c, w),
                     SizedBox(height: h * 0.02),
                     _buildSummaryCard(d, w),
                     const SizedBox(height: 12),
@@ -73,492 +72,118 @@ class PatientsDetailsPage extends StatelessWidget {
           ),
         ],
       ),
+      // ✅ زر إنهاء المعاينة ثابت أسفل الشاشة
+      bottomNavigationBar: _buildStickyCompleteBar(c, context),
     );
   }
 
-  // ─── ✅ الأزرار: حجز + إنهاء المعاينة + إلغاء الحجز ──────────────
-  Widget _buildActionButtons(PatientDetailsController c, double w) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            // زر حجز المريض
-            Expanded(
-              child: Obx(() {
-                final booking = c.isBooking.value;
-                final booked = c.isBooked.value;
-                return ElevatedButton.icon(
-                  onPressed: (booking || booked) ? null : c.bookPatient,
-                  icon: booking
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Icon(
-                          booked ? Icons.check_circle : Icons.event_available,
-                          size: 20,
-                        ),
-                  label: Text(
-                    booking
-                        ? 'جارٍ الحجز...'
-                        : booked
-                        ? 'قيد المعاينة'
-                        : 'حجز المريض',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Cairo',
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: booked ? constGray : constGreen,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                );
-              }),
-            ),
-            SizedBox(width: w * 0.03),
+  // ─── ✅ زر واحد يبدّل بين "حجز المريض" و"إلغاء الحجز" ─────────────
+  Widget _buildBookingButton(PatientDetailsController c, double w) {
+    return Obx(() {
+      final booking = c.isBooking.value;
+      final booked = c.isBooked.value;
+      final releasing = c.isReleasing.value;
+      final busy = booking || releasing;
 
-            // ✅ زر إنهاء المعاينة (يستبدل زر إرفاق الوصفة)
-            Expanded(
-              child: Obx(() {
-                final booked = c.isBooked.value;
-                return ElevatedButton.icon(
-                  onPressed: booked ? () => _showCompleteBottomSheet(c) : null,
-                  icon: const Icon(Icons.task_alt_outlined, size: 20),
-                  label: const Text(
-                    'إنهاء المعاينة',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Cairo',
-                    ),
+      return SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: busy ? null : c.toggleBooking,
+          icon: busy
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: constBlue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                );
-              }),
+                )
+              : Icon(
+                  booked
+                      ? Icons.person_remove_alt_1_outlined
+                      : Icons.event_available,
+                  size: 20,
+                ),
+          label: Text(
+            booking
+                ? 'جارٍ الحجز...'
+                : releasing
+                ? 'جارٍ إلغاء الحجز...'
+                : booked
+                ? 'إلغاء حجز المريض'
+                : 'حجز المريض',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Cairo',
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: booked ? constRed : constGreen,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  // ─── ✅ شريط ثابت أسفل الشاشة لزر إنهاء المعاينة ──────────────────
+  Widget _buildStickyCompleteBar(
+    PatientDetailsController c,
+    BuildContext context,
+  ) {
+    final w = context.screenWidth;
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+
+    return Obx(() {
+      final booked = c.isBooked.value;
+      return Container(
+        padding: EdgeInsets.fromLTRB(w * 0.04, 12, w * 0.04, 12 + bottomInset),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
-
-        // زر إلغاء الحجز
-        Obx(() {
-          if (!c.isBooked.value) return const SizedBox.shrink();
-          final releasing = c.isReleasing.value;
-          return Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: releasing ? null : c.releasePatient,
-                icon: releasing
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: constRed,
-                        ),
-                      )
-                    : const Icon(Icons.person_remove_alt_1_outlined, size: 20),
-                label: Text(
-                  releasing
-                      ? 'جارٍ إلغاء الحجز...'
-                      : 'إلغاء الحجز (الإعادة إلى الانتظار)',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Cairo',
-                    color: constRed,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: constRed),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ],
-    );
-  }
-
-  // ─── ✅✅✅ Bottom Sheet لإنهاء المعاينة ────────────────────────────
-  // ─── Bottom Sheet لإنهاء المعاينة ────────────────────────────────
-  void _showCompleteBottomSheet(PatientDetailsController c) {
-    final context = Get.context!;
-    final h = MediaQuery.of(context).size.height;
-    final w = MediaQuery.of(context).size.width;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetCtx) {
-        return Container(
-          padding: EdgeInsets.fromLTRB(w * 0.04, h * 0.02, w * 0.04, h * 0.03),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // المقبض
-                Center(
-                  child: Container(
-                    width: 50,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // العنوان
-                const Text(
-                  'إنهاء المعاينة',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Cairo',
-                    color: constColor,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // ملخص البيانات
-                _summaryItem(
-                  'التشخيص',
-                  c.diagnosisController.text.isEmpty
-                      ? '(فارغ)'
-                      : c.diagnosisController.text,
-                ),
-                _summaryItem(
-                  'الملاحظات السريرية',
-                  c.clinicalNotesController.text.isEmpty
-                      ? '(فارغ)'
-                      : c.clinicalNotesController.text,
-                ),
-                const SizedBox(height: 16),
-
-                // الأدوية الخارجية — باستخدام CustomMyTextFormField
-                CustomMyTextFormField(
-                  prefixIcon: Icons.medication_outlined,
-                  label: 'أدوية خارجية (اختياري)',
-                  hint: 'أي أدوية خارجية يوصى بها',
-                  controller: c.externalMedicationsController,
-                ),
-                const SizedBox(height: 16),
-
-                // الوصفات الطبية
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'الوصفات الطبية:',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Cairo',
-                          color: constColor,
-                        ),
-                      ),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        Navigator.of(sheetCtx).pop(); // إغلاق BottomSheet أولاً
-                        Get.to(
-                          () => const SendPrescriptionPage(),
-                          transition: Transition.rightToLeft,
-                        );
-                      },
-                      icon: const Icon(Icons.add, size: 18),
-                      label: const Text(
-                        'إضافة وصفة',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: 'Cairo',
-                          color: constBlue,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-
-                // قائمة الوصفات
-                Obx(() {
-                  final list = c.prescriptionController.prescriptions;
-                  if (list.isEmpty) {
-                    return Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.shade200),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'لا توجد وصفات',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                            fontFamily: 'Cairo',
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                  return Column(
-                    children: List.generate(
-                      list.length,
-                      (i) => _prescriptionTile(list[i], i + 1),
-                    ),
-                  );
-                }),
-                const SizedBox(height: 16),
-
-                // الأزرار
-                Obx(() {
-                  final completing = c.isCompleting.value;
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: completing
-                              ? null
-                              : () => Navigator.of(sheetCtx).pop(),
-                          child: const Text(
-                            'إلغاء',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Cairo',
-                              color: constGray,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.grey),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        flex: 2,
-                        child: ElevatedButton.icon(
-                          onPressed: completing
-                              ? null
-                              : () async {
-                                  Navigator.of(
-                                    sheetCtx,
-                                  ).pop(); // ✅ إغلاق BottomSheet
-                                  await Future.delayed(
-                                    const Duration(milliseconds: 300),
-                                  );
-                                  // ✅ سيستدعي Get.back() لإغلاق صفحة التفاصيل أيضاً
-                                  await c.completeConsultation();
-                                },
-                          icon: completing
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Icon(
-                                  Icons.check_circle_outline,
-                                  size: 20,
-                                ),
-                          label: Text(
-                            completing ? 'جارٍ الإنهاء...' : 'إنهاء المعاينة',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Cairo',
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: constGreen,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-  
-  Widget _summaryItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              '$label:',
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Cairo',
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: booked
+                ? () => Get.to(
+                    () => CompleteConsultationPage(patient: patient),
+                    transition: Transition.rightToLeft,
+                  )
+                : null,
+            icon: const Icon(Icons.task_alt_outlined, size: 20),
+            label: const Text(
+              'إنهاء المعاينة',
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
                 fontFamily: 'Cairo',
-                color: value == '(فارغ)' ? Colors.grey : constColor,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: constBlue,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: constGray.withOpacity(0.4),
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _prescriptionTile(Prescription p, int index) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: constLightBlue.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: constBlue.withOpacity(0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.receipt_long, size: 16, color: constBlue),
-              const SizedBox(width: 6),
-              Text(
-                'وصفة #$index',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Cairo',
-                  color: constBlue,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '${p.items.length} دواء',
-                style: const TextStyle(
-                  fontSize: 11,
-                  fontFamily: 'Cairo',
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: Text(
-              p.summaryText,
-              style: const TextStyle(
-                fontSize: 11,
-                fontFamily: 'Cairo',
-                color: constColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─── الحقول النصية ────────────────────────────────────────────────
-  Widget _buildInputFields(PatientDetailsController c, double h, double w) {
-    return Container(
-      padding: EdgeInsets.all(w * 0.04),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'معلومات الزيارة الحالية',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Cairo',
-              color: constColor,
-            ),
-          ),
-          SizedBox(height: h * 0.015),
-          CustomMyTextFormField(
-            prefixIcon: Icons.assignment_outlined,
-            label: 'التشخيص',
-            hint: 'أدخل التشخيص (اختياري)',
-            controller: c.diagnosisController,
-          ),
-          SizedBox(height: h * 0.015),
-          CustomMyTextFormField(
-            prefixIcon: Icons.notes_outlined,
-            label: 'الملاحظات السريرية',
-            hint: 'أضف أي ملاحظات سريرية (اختياري)',
-            controller: c.clinicalNotesController,
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 
   // ─── هيدر المريض ──────────────────────────────────────────────────
@@ -975,11 +600,9 @@ class PatientsDetailsPage extends StatelessWidget {
     double w,
   ) {
     return ListView(
-      padding: EdgeInsets.symmetric(horizontal: w * 0.04, vertical: h * 0.01),
+      padding: EdgeInsets.fromLTRB(w * 0.04, h * 0.01, w * 0.04, h * 0.12),
       children: [
-        _buildActionButtons(c, w),
-        SizedBox(height: h * 0.02),
-        _buildInputFields(c, h, w),
+        _buildBookingButton(c, w),
         SizedBox(height: h * 0.04),
         Center(
           child: Column(

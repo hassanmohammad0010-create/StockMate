@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/Service/Head%20of%20department/Get_Inventory_Adjustments_Service.dart';
@@ -11,29 +12,49 @@ class InventoryAdjustmentsController extends GetxController {
 
   late final GetNameRollOfUserController getNameRollOfUserController;
 
-  // ─── Reactive state ───────────────────────────────────────────────
   final RxList<InventoryAdjustment> adjustments = <InventoryAdjustment>[].obs;
   final RxBool isLoading = false.obs;
   final RxBool isLoadingMore = false.obs;
   final RxString errorMessage = ''.obs;
 
-  // ─── Pagination ───────────────────────────────────────────────────
   final RxInt total = 0.obs;
   final RxInt currentPage = 1.obs;
   final RxInt totalPages = 0.obs;
 
   bool get hasMore => currentPage.value < totalPages.value;
 
+  final ScrollController scrollController = ScrollController();
+
+  static const double _scrollThreshold = 200.0;
+
   @override
   void onInit() {
     super.onInit();
     getNameRollOfUserController = Get.find<GetNameRollOfUserController>();
+    scrollController.addListener(_onScroll);
     fetchAdjustments();
+  }
+
+  @override
+  void onClose() {
+    scrollController.removeListener(_onScroll);
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  void _onScroll() {
+    if (!scrollController.hasClients) return;
+
+    final maxScroll = scrollController.position.maxScrollExtent;
+    final currentScroll = scrollController.position.pixels;
+
+    if (currentScroll >= maxScroll - _scrollThreshold) {
+      loadMore();
+    }
   }
 
   String get _departmentId => getNameRollOfUserController.id.value ?? '';
 
-  // ─── جلب الصفحة الأولى ────────────────────────────────────────────
   Future<void> fetchAdjustments({int page = 1}) async {
     isLoading.value = true;
     errorMessage.value = '';
@@ -59,7 +80,6 @@ class InventoryAdjustmentsController extends GetxController {
     }
   }
 
-  // ─── تحميل المزيد ─────────────────────────────────────────────────
   Future<void> loadMore() async {
     if (isLoadingMore.value || isLoading.value || !hasMore) return;
 

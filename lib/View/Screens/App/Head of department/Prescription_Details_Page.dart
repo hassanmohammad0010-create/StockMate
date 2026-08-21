@@ -6,11 +6,13 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Service/Prescription_Details_Controller.dart';
 import 'package:stock_mate_project/core/models/Dispense_Queue_Item.dart';
 import 'package:stock_mate_project/core/models/Prescription_Details_Model.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
 class PrescriptionDetailsPage extends StatelessWidget {
   const PrescriptionDetailsPage({super.key, required this.queueItem});
@@ -34,26 +36,13 @@ class PrescriptionDetailsPage extends StatelessWidget {
           const CustomBackContainer(),
 
           // ── الهيدر ──
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    queueItem.patientName,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Cairo',
-                      color: constColor,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                _StatusBadge(status: queueItem.status),
-              ],
-            ),
+          SizedBox(height: h * 0.005),
+          CustomHeadContainer(
+            title: 'تفاصيل الوصفة',
+            trailing: _StatusBadge(status: queueItem.status),
           ),
+          SizedBox(height: h * 0.02),
+
           SizedBox(height: h * 0.015),
 
           Expanded(
@@ -77,17 +66,17 @@ class PrescriptionDetailsPage extends StatelessWidget {
                     icon: Icons.person_outline,
                     color: constBlue,
                     children: [
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.badge_outlined,
                         label: 'المريض',
                         value: d.patient?.fullName ?? queueItem.patientName,
                       ),
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.sick_outlined,
                         label: 'الطبيب',
                         value: d.doctor?.fullName ?? '—',
                       ),
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.local_hospital_outlined,
                         label: 'القسم',
                         value: d.visit?.department?.name ?? '—',
@@ -101,18 +90,18 @@ class PrescriptionDetailsPage extends StatelessWidget {
                     icon: Icons.receipt_long_outlined,
                     color: constOrange,
                     children: [
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.loop_outlined,
                         label: 'التكرار',
                         value:
                             'كل ${d.frequencyInterval} ${d.frequencyUnitLabel}',
                       ),
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.refresh_outlined,
                         label: 'الدورة',
                         value: '${d.currentCycleNumber} من ${d.totalCycles}',
                       ),
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.calendar_today_outlined,
                         label: 'تاريخ البدء',
                         value: d.formattedStartDate,
@@ -124,35 +113,16 @@ class PrescriptionDetailsPage extends StatelessWidget {
                   _MedicinesCard(controller: c, details: d),
                   SizedBox(height: h * 0.015),
 
-                  // ── حقل الملاحظات الاختياري ──
-                  Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: CustomMyTextFormField(
-                      prefixIcon: Icons.edit_note_outlined,
-                      label: 'ملاحظات (اختياري)',
-                      hint: 'أضف أي ملاحظات حول عملية الصرف',
-                      controller: c.notesController,
-                    ),
+                  CustomMyTextFormField(
+                    prefixIcon: Icons.edit_note_outlined,
+                    label: 'ملاحظات (اختياري)',
+                    hint: 'أضف أي ملاحظات حول عملية الصرف',
+                    controller: c.notesController,
                   ),
                   SizedBox(height: h * 0.015),
-
                   _DispenseSummary(controller: c),
                   SizedBox(height: h * 0.02),
-
                   _ConfirmDispenseButton(controller: c),
-
-                  // ─── ✅✅✅ زر إلغاء الوصفة ───
                   if (queueItem.status.canDispense) ...[
                     SizedBox(height: h * 0.012),
                     _CancelPrescriptionButton(
@@ -160,7 +130,6 @@ class PrescriptionDetailsPage extends StatelessWidget {
                       onPressed: () => _showCancelDialog(c),
                     ),
                   ],
-
                   SizedBox(height: h * 0.03),
                 ],
               );
@@ -240,7 +209,7 @@ class _StatusBadge extends StatelessWidget {
   Color get _color {
     switch (status) {
       case CycleStatus.ready:
-        return constGreen;
+        return constRed;
       case CycleStatus.partially_delivered:
         return constOrange;
       case CycleStatus.delivered:
@@ -255,7 +224,7 @@ class _StatusBadge extends StatelessWidget {
   Color get _bg {
     switch (status) {
       case CycleStatus.ready:
-        return constLightGreen;
+        return constLightRed;
       case CycleStatus.partially_delivered:
         return constLightOrange;
       case CycleStatus.delivered:
@@ -351,55 +320,6 @@ class _InfoCard extends StatelessWidget {
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _InfoRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: Colors.grey.shade600),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 90,
-            child: Text(
-              '$label:',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 13,
-                color: constColor,
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── بطاقة الأدوية مع stepper ──────────────────────────────────────
 class _MedicinesCard extends StatelessWidget {
   final PrescriptionDetailsController controller;
   final PrescriptionDetails details;
@@ -733,12 +653,12 @@ class _DispenseSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final status = controller.computeFinalStatus();
-      final color = status == CycleStatus.delivered ? constGreen : constOrange;
+      final color = status == CycleStatus.delivered ? constGreen : constRed;
 
       return Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.08),
+          color: color.withOpacity(0.02),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: color.withOpacity(0.4)),
         ),
@@ -771,7 +691,7 @@ class _DispenseSummary extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontFamily: 'Cairo',
-                      color: color.withOpacity(0.8),
+                      color: color.withOpacity(0.9),
                     ),
                   ),
                 ],

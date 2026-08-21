@@ -14,17 +14,16 @@ class MyPrescriptionCard extends StatelessWidget {
     required this.onTap,
   });
 
-  // ─── ألوان حسب الحالة ────────────────────────────────────────────
   Color get _accentColor {
     switch (prescription.status) {
       case CycleStatus.ready:
-        return constGreen;
+        return constRed;
       case CycleStatus.partially_delivered:
         return constOrange;
       case CycleStatus.delivered:
-        return constBlue;
+        return constGreen;
       case CycleStatus.missed:
-        return constRed;
+        return constBlue;
       case CycleStatus.cancelled:
         return constGray;
     }
@@ -33,13 +32,13 @@ class MyPrescriptionCard extends StatelessWidget {
   Color get _backgroundTint {
     switch (prescription.status) {
       case CycleStatus.ready:
-        return constLightGreen;
+        return constLightRed;
       case CycleStatus.partially_delivered:
         return constLightOrange;
       case CycleStatus.delivered:
-        return constLightBlue;
+        return constLightGreen;
       case CycleStatus.missed:
-        return constLightRed;
+        return constLightBlue;
       case CycleStatus.cancelled:
         return const Color(0xFFF3F4F6);
     }
@@ -93,7 +92,6 @@ class MyPrescriptionCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── الصف الأول: اسم المريض + شارة الحالة ──
                     Row(
                       children: [
                         Expanded(
@@ -131,8 +129,6 @@ class MyPrescriptionCard extends StatelessWidget {
                     ),
 
                     SizedBox(height: h * 0.01),
-
-                    // ── الصف الثاني: رقم الهوية + رقم الدورة ──
                     Row(
                       children: [
                         const Icon(
@@ -151,58 +147,10 @@ class MyPrescriptionCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: constLightBlue,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            'الدورة ${prescription.cycleNumber}',
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: constBlue,
-                              fontFamily: 'Cairo',
-                            ),
-                          ),
-                        ),
                       ],
                     ),
 
                     SizedBox(height: h * 0.008),
-
-                    // ── الصف الثالث: ملخص الأدوية ──
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.medication_outlined,
-                          size: 15,
-                          color: Color(0xFF6B7280),
-                        ),
-                        SizedBox(width: w * 0.01),
-                        Expanded(
-                          child: Text(
-                            prescription.medicationSummary,
-                            style: const TextStyle(
-                              fontSize: 12.5,
-                              color: Color(0xFF4B5563),
-                              fontFamily: 'Cairo',
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: h * 0.008),
-
-                    // ── الصف الرابع: مدة الانتظار + التاريخ ──
                     Row(
                       children: [
                         Icon(

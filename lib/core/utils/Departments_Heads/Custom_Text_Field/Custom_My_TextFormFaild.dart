@@ -45,6 +45,12 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
 
   late final VoidCallback _listener;
 
+  // ✅ بنتابع آخر حالة لـ hasText بس، مش النص كله،
+  // عشان نعمل setState فقط لما الحالة (فاضي <-> فيه نص) فعلاً تتغير،
+  // مش مع كل حرف بيتكتب. ده بيقلل rebuilds بشكل كبير أثناء الكتابة
+  // وبالتالي بيقلل الحمل وقت ما الكيبورد بيكون شغال/بيتحرك.
+  late bool _lastHasText;
+
   final _fieldKey = GlobalKey<FormFieldState>();
 
   @override
@@ -55,8 +61,14 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
       _internalController = TextEditingController(text: widget.initialValue);
     }
 
+    _lastHasText = _effectiveController.text.isNotEmpty;
+
     _listener = () {
-      if (mounted) setState(() {});
+      final hasTextNow = _effectiveController.text.isNotEmpty;
+      if (mounted && hasTextNow != _lastHasText) {
+        _lastHasText = hasTextNow;
+        setState(() {});
+      }
     };
 
     _effectiveController.addListener(_listener);
@@ -69,9 +81,17 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
     if (oldWidget.controller != widget.controller) {
       final oldCtrl = oldWidget.controller ?? _internalController;
       oldCtrl?.removeListener(_listener);
-      if (widget.controller == null && _internalController == null) {
-        _internalController = TextEditingController(text: widget.initialValue);
+
+      if (widget.controller == null) {
+        // ✅ لو مفيش internal controller اتعمل قبل كده، اعمل واحد جديد.
+        // (التعديل الأصلي كان بيتأكد إن _internalController == null بس،
+        // وده ممكن يسيب controller قديم متعلق لو كان الانتقال من external لـ null)
+        _internalController ??= TextEditingController(
+          text: widget.initialValue,
+        );
       }
+
+      _lastHasText = _effectiveController.text.isNotEmpty;
       _effectiveController.addListener(_listener);
     }
   }
@@ -85,10 +105,9 @@ class _CustomMyTextFormFieldState extends State<CustomMyTextFormField> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final hasText = _effectiveController.text.isNotEmpty;
+    final hasText = _lastHasText;
     final hasError = _fieldKey.currentState?.hasError ?? false;
 
     return TextFormField(

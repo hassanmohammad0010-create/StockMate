@@ -267,27 +267,25 @@ class UnifiedRequestsController extends GetxController {
             .toList();
         break;
 
-      case 'مكتمل جزئي':
+      case 'منجز جزئي':
         result = allRequests
             .where((r) => r.status == OrderStatus.partially_complete)
             .toList();
         break;
 
-      case 'مكتمل':
+      case 'منجز':
         result = allRequests
             .where((r) => r.status == OrderStatus.complete)
             .toList();
         break;
 
-      case 'مرفوض مشفى':
+      case 'مرفوض':
         result = allRequests
-            .where((r) => r.status == OrderStatus.hospital_rejected)
-            .toList();
-        break;
-
-      case 'مرفوض مدير':
-        result = allRequests
-            .where((r) => r.status == OrderStatus.manager_rejected)
+            .where(
+              (r) =>
+                  r.status == OrderStatus.hospital_rejected ||
+                  r.status == OrderStatus.manager_rejected,
+            )
             .toList();
         break;
 

@@ -211,9 +211,6 @@ class DepartmentHeadsMainPage extends StatelessWidget {
             ],
           ),
         ),
-        // drawer: CustomDrawer(),
-        // ✅ Obx بتستمع لـ id.value (RxnString) وتمنع بناء التبويبات
-        // قبل ما الـ id يوصل فعليًا من التوكن/الـ API.
         body: Obx(() {
           final String? departmentId = getNameRollOfUserController.id.value;
 

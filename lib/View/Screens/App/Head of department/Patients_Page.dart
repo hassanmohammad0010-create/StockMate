@@ -7,6 +7,7 @@ import 'package:stock_mate_project/Controller/Service/Patients_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Patient_Card.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class PatientsPage extends StatelessWidget {
@@ -28,27 +29,24 @@ class PatientsPage extends StatelessWidget {
           ),
           Expanded(
             child: Obx(() {
-              // ✅ حالة التحميل الأول
               if (controller.isLoading.value && controller.patients.isEmpty) {
                 return const Center(child: CustomLoadingIndicator());
               }
 
-              // ✅ حالة الخطأ
               if (controller.errorMessage.value.isNotEmpty &&
                   controller.patients.isEmpty) {
                 return _buildErrorState(controller);
               }
 
-              // ✅ حالة القائمة الفارغة
               if (controller.patients.isEmpty) {
-                return _buildEmptyState();
+                return CustomEmptyState(tital: 'لا يوجد مرضى في الانتظار');
               }
 
-              // ✅ القائمة + فوتر تحميل المزيد
               return RefreshIndicator(
                 color: constBlue,
                 onRefresh: () => controller.fetchPatients(),
                 child: ListView.builder(
+                  controller: controller.scrollController,
                   padding: EdgeInsets.symmetric(vertical: h * 0.015),
                   itemCount:
                       controller.patients.length + (controller.hasMore ? 1 : 0),
@@ -65,26 +63,6 @@ class PatientsPage extends StatelessWidget {
                 ),
               );
             }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.people_outline, size: 64, color: Colors.grey.shade300),
-          const SizedBox(height: 16),
-          const Text(
-            'لا يوجد مرضى في الانتظار',
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: 'Cairo',
-              color: Colors.grey,
-            ),
           ),
         ],
       ),
@@ -119,25 +97,14 @@ class PatientsPage extends StatelessWidget {
     );
   }
 
+  // ─── مؤشر تحميل تلقائي أسفل القائمة (بدون زر) ────────────────────
   Widget _buildLoadMoreFooter(PatientsController c) {
     return Obx(
       () => Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: c.isLoadingMore.value
-            ? const Center(child: CircularProgressIndicator())
-            : Center(
-                child: TextButton(
-                  onPressed: c.loadMore,
-                  child: const Text(
-                    'تحميل المزيد',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontFamily: 'Cairo',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
+            ? const Center(child: CustomLoadingIndicator())
+            : const SizedBox.shrink(),
       ),
     );
   }

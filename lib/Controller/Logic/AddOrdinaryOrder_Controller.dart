@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -17,14 +16,12 @@ import 'package:stock_mate_project/core/models/Medicine_Model.dart';
 class AddOrdinaryOrderController extends GetxController {
   static const int maxOrders = 5;
 
-  // ─── Services ───────────────────────────────────────────────────────────
   final MedicineService _medicineService = MedicineService();
   final RefillRequestService _refillRequestService = RefillRequestService();
 
   late final GetNameRollOfUserController getNameRollOfUserController;
   late final String _departmentId;
 
-  // ─── Reactive state: قائمة الأدوية من الـ API ─────────────────────────────
   final RxList<MedicineModel> medicines = <MedicineModel>[].obs;
   final RxBool isMedicinesLoading = false.obs;
   final RxString medicinesError = ''.obs;
@@ -32,26 +29,19 @@ class AddOrdinaryOrderController extends GetxController {
   List<String> get medicineNames =>
       medicines.map((m) => m.name).where((n) => n.isNotEmpty).toList();
 
-  // ─── Reactive state: كل كارد طلب بالواجهة ─────────────────────────────────
   final RxList<OrderFormEntry> orders = <OrderFormEntry>[
     const OrderFormEntry(),
   ].obs;
   final RxInt activeOrderIndex = 0.obs;
   final RxBool isLoading = false.obs;
 
-  // ✅ الأولوية العامة للطلب الكامل
   final RxString requestPriority = 'عادي'.obs;
 
-  // ✅ تخزين الطلب المُنشأ من الـ API
-  // - null: لا توجد مسودة بعد -> أي حفظ قادم سيكون POST (إنشاء)
-  // - غير null: توجد مسودة بالفعل -> أي حفظ قادم سيكون PATCH (تحديث)
   final Rx<RefillRequest?> createdRequest = Rx<RefillRequest?>(null);
 
-  // ─── TextEditingController للكمية + GlobalKey للـ Form لكل طلب ───────────
   final List<TextEditingController> _quantityControllers = [];
   final List<GlobalKey<FormState>> formKeys = [];
 
-  // ─── ملاحظات الطلب الكامل (حقل عام واحد لكل الطلب) ────────────────────────
   final TextEditingController notesController = TextEditingController();
 
   @override
@@ -72,7 +62,6 @@ class AddOrdinaryOrderController extends GetxController {
     super.onClose();
   }
 
-  // ─── جلب الأدوية من الـ API ────────────────────────────────────────────────
   Future<void> fetchMedicines() async {
     isMedicinesLoading.value = true;
     medicinesError.value = '';
@@ -89,7 +78,6 @@ class AddOrdinaryOrderController extends GetxController {
     isMedicinesLoading.value = false;
   }
 
-  // ─── Helpers ──────────────────────────────────────────────────────────────
   void _addControllerSet() {
     _quantityControllers.add(TextEditingController());
     formKeys.add(GlobalKey<FormState>());
@@ -101,7 +89,6 @@ class AddOrdinaryOrderController extends GetxController {
   GlobalKey<FormState> formKey([int? index]) =>
       formKeys[index ?? activeOrderIndex.value];
 
-  // ─── Order management ─────────────────────────────────────────────────────
   bool get canAddOrder => orders.length < maxOrders;
   bool get canRemoveOrder => orders.length > 1;
 
@@ -139,7 +126,6 @@ class AddOrdinaryOrderController extends GetxController {
     _loadQuantityToController(index);
   }
 
-  // ─── Sync: quantity ↔ model ───────────────────────────────────────────────
   void _saveCurrentQuantity() {
     final i = activeOrderIndex.value;
     if (i >= orders.length) return;
@@ -151,7 +137,6 @@ class AddOrdinaryOrderController extends GetxController {
     _quantityControllers[index].text = orders[index].quantity;
   }
 
-  // ─── Dropdown updates ─────────────────────────────────────────────────────
   void updateMedicineName(int index, String? name) {
     if (index >= orders.length) return;
 
@@ -160,13 +145,11 @@ class AddOrdinaryOrderController extends GetxController {
     orders.refresh();
   }
 
-  // ✅ تحديث الأولوية العامة للطلب الكامل
   void updateRequestPriority(String priority) {
     requestPriority.value = priority;
   }
 
-  // ✅ إعادة تعيين المسودة بالكامل — يُستخدم عند إلغاء الطلب من صفحة التأكيد
-  // أو عند رغبة المستخدم ببدء طلب جديد تماماً بدل تعديل المسودة الحالية.
+
   void resetDraft() {
     createdRequest.value = null;
     orders.value = [const OrderFormEntry()];
@@ -182,29 +165,22 @@ class AddOrdinaryOrderController extends GetxController {
     _addControllerSet();
   }
 
-  // ─── STEP 1: إنشاء/تحديث الطلب → draft → انتقال للتأكيد ───────────────────
-  // - أول مرة (لا توجد مسودة سابقة): POST -> إنشاء مسودة جديدة
-  // - عند الرجوع والتعديل (توجد مسودة سابقة): PATCH -> تحديث نفس المسودة
-  //   بدل إنشاء مسودة جديدة بـ id مختلف وترك القديمة يتيمة.
   Future<void> validateAndGoToConfirm() async {
     _saveCurrentQuantity();
 
     bool allValid = true;
     int invalidIndex = -1;
 
-    // ✅ التحقق من جميع النماذج
     for (int i = 0; i < orders.length; i++) {
       final formState = formKey(i).currentState;
 
       if (formState != null) {
-        // ✅ الطلب موجود في الشجرة، نتحقق منه باستخدام الـ validator
         if (!formState.validate()) {
           allValid = false;
           invalidIndex = i;
           break;
         }
       } else {
-        // ✅ الطلب غير موجود في الشجرة، نتحقق يدوياً من الـ Model
         final o = orders[i];
         if (o.selectedMedicine == null || o.quantity.trim().isEmpty) {
           allValid = false;
@@ -215,10 +191,8 @@ class AddOrdinaryOrderController extends GetxController {
     }
 
     if (!allValid) {
-      // ✅ الانتقال للطلب الذي يحتوي على خطأ إذا لم يكن هو الحالي
       if (invalidIndex != activeOrderIndex.value) {
         selectOrder(invalidIndex);
-        // ننتظر حتى يتم بناء الطلب الجديد ثم نتحقق منه لعرض الأخطاء
         WidgetsBinding.instance.addPostFrameCallback((_) {
           formKey(invalidIndex).currentState?.validate();
         });
@@ -233,7 +207,6 @@ class AddOrdinaryOrderController extends GetxController {
       return;
     }
 
-    // ✅ إرسال الطلب للباك اند
     isLoading.value = true;
     try {
       final items = orders
@@ -260,7 +233,6 @@ class AddOrdinaryOrderController extends GetxController {
 
       final currentPriority = requestPriority.value;
 
-      // ✅ حوّل من عربي لإنجليزي قبل الإرسال
       final String apiPriority;
       switch (currentPriority) {
         case 'عادي':
@@ -283,19 +255,12 @@ class AddOrdinaryOrderController extends GetxController {
         items: items,
       );
 
-      print('📤 Body المرسل: ${jsonEncode(requestBody.toJson())}');
-
-      // ✅ الفرق الجوهري: هل توجد مسودة سابقة؟
       final existingId = createdRequest.value?.id;
       final RefillRequest? result;
 
       if (existingId == null) {
-        // لا توجد مسودة سابقة -> أنشئ جديدة (POST)
-        print('🆕 لا توجد مسودة سابقة، سيتم إنشاء طلب جديد (POST)');
         result = await _refillRequestService.createRequest(requestBody);
       } else {
-        // توجد مسودة سابقة -> حدّثها بدلاً من إنشاء جديدة (PATCH)
-        print('♻️ توجد مسودة سابقة ($existingId)، سيتم تحديثها (PATCH)');
         result = await _refillRequestService.updateRequest(
           existingId,
           requestBody,
@@ -307,10 +272,7 @@ class AddOrdinaryOrderController extends GetxController {
       createdRequest.value = result;
 
       if (result.status == RequestStatus.draft) {
-        print('✅ تم الحفظ بنجاح | ID: ${result.id}');
-        print('📊 الحالة: ${result.status.displayName}');
-        print('📋 الرقم: ${result.requestNumber}');
-
+      
         Get.to(
           () => const OrdinaryConfirmPage(),
           transition: Transition.rightToLeft,
@@ -328,7 +290,6 @@ class AddOrdinaryOrderController extends GetxController {
     }
   }
 
-  // ─── STEP 2: تأكيد الإرسال (POST /{id}/submit) → pending_hospital_approval
   Future<void> confirmRequest() async {
     final requestId = createdRequest.value?.id;
     if (requestId == null) {
@@ -349,19 +310,14 @@ class AddOrdinaryOrderController extends GetxController {
 
       createdRequest.value = result;
 
-      print('✅ تم التأكيد بنجاح | ID: ${result.id}');
-      print('📊 الحالة الجديدة: ${result.status.displayName}');
-
       if (result.status == RequestStatus.pendingHospitalApproval) {
         customSnackBar(
           title: 'تم الإرسال',
-          message: 'تم إرسال الطلب للمشفى بنجاح (${result.requestNumber})',
+          message: 'تم إرسال الطلب (${result.requestNumber}) للمشفى بنجاح',
           color: constGreen,
           messageColor: Colors.white,
         );
 
-        // ✅ تصفير حالة المسودة بعد التأكيد الناجح — الطلب لم يعد draft،
-        // فلا يجب أن يُعاد استخدام id هذا الطلب لأي تعديل لاحق.
         createdRequest.value = null;
 
         Get.offAllNamed(AppRoutes.DepartmentHeadsMainPage);

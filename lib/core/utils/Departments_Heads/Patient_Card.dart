@@ -7,8 +7,8 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Patie
 import 'package:stock_mate_project/core/models/Patient_Model.dart';
 
 class PatientCard extends StatelessWidget {
-  final PatientListItem patient; // ✅ النوع الجديد (بدل PatientModel القديم)
-  final int queueNumber; // ترتيب المريض في الطابور
+  final PatientListItem patient; 
+  final int queueNumber;
 
   const PatientCard({
     super.key,
@@ -16,7 +16,6 @@ class PatientCard extends StatelessWidget {
     required this.queueNumber,
   });
 
-  // لون شارة مدة الانتظار حسب طولها (تنبيه بصري لمن انتظر طويلًا)
   Color _waitColor() {
     final minutes = patient.waitingDuration.inMinutes;
     if (minutes >= 60) return constRed;
@@ -57,7 +56,6 @@ class PatientCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // رقم دور المريض
             Container(
               width: w * 0.1,
               height: h * 0.05,
@@ -76,8 +74,6 @@ class PatientCard extends StatelessWidget {
               ),
             ),
             SizedBox(width: w * 0.03),
-
-            // اسم المريض والرقم
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,10 +102,7 @@ class PatientCard extends StatelessWidget {
                 ],
               ),
             ),
-
             SizedBox(width: w * 0.03),
-
-            // شارة مدة الانتظار
             Container(
               padding: EdgeInsets.symmetric(
                 horizontal: w * 0.02,

@@ -7,7 +7,9 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inven
 import 'package:stock_mate_project/Controller/Service/Inventory_Adjustments_Controller.dart';
 import 'package:stock_mate_project/core/models/Inventory_Adjustments_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Empty_State.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
 class InventoryAdjustmentsPage extends StatelessWidget {
   const InventoryAdjustmentsPage({super.key});
@@ -24,51 +26,36 @@ class InventoryAdjustmentsPage extends StatelessWidget {
       body: Column(
         children: [
           const CustomBackContainer(),
-
-          // ── الهيدر ──
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    'سجل التسويات والإتلاف',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Cairo',
-                      color: constColor,
-                    ),
+          SizedBox(height: h * 0.005),
+          CustomHeadContainer(
+            title: 'سجل التسويات والإتلاف',
+            trailing: Obx(
+              () => Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: constLightBlue,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${c.total.value}',
+                  style: const TextStyle(
+                    color: constBlue,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Cairo',
                   ),
                 ),
-                Obx(
-                  () => Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: constLightBlue,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${c.total.value}',
-                      style: const TextStyle(
-                        color: constBlue,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           SizedBox(height: h * 0.015),
 
-          // ── القائمة ──
           Expanded(
             child: Obx(() {
               if (c.isLoading.value && c.adjustments.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CustomLoadingIndicator());
               }
 
               if (c.errorMessage.value.isNotEmpty && c.adjustments.isEmpty) {
@@ -76,13 +63,15 @@ class InventoryAdjustmentsPage extends StatelessWidget {
               }
 
               if (c.adjustments.isEmpty) {
-                return _buildEmptyState();
+                return CustomEmptyState(tital: 'لا يوجد مواد تالفة');
               }
 
               return RefreshIndicator(
                 color: constBlue,
                 onRefresh: () => c.fetchAdjustments(),
                 child: ListView.builder(
+                  // ✅ نفس ScrollController المُدار داخل الكونترولر
+                  controller: c.scrollController,
                   padding: EdgeInsets.symmetric(horizontal: w * 0.04),
                   itemCount: c.adjustments.length + (c.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
@@ -115,41 +104,7 @@ class InventoryAdjustmentsPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: c.isLoadingMore.value
             ? const Center(child: CustomLoadingIndicator())
-            : Center(
-                child: TextButton(
-                  onPressed: c.loadMore,
-                  child: const Text(
-                    'تحميل المزيد',
-                    style: TextStyle(
-                      color: constBlue,
-                      fontFamily: 'Cairo',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.history_edu_outlined,
-              size: 70, color: Colors.grey.shade300),
-          const SizedBox(height: 12),
-          const Text(
-            'لا توجد تسويات مسجلة',
-            style: TextStyle(
-              fontSize: 15,
-              fontFamily: 'Cairo',
-              color: Colors.grey,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
+            : const SizedBox.shrink(),
       ),
     );
   }
@@ -183,15 +138,11 @@ class InventoryAdjustmentsPage extends StatelessWidget {
   }
 }
 
-// ─── كارد تسوية واحدة ──────────────────────────────────────────────
 class _AdjustmentCard extends StatelessWidget {
   final InventoryAdjustment adjustment;
   final VoidCallback onTap;
 
-  const _AdjustmentCard({
-    required this.adjustment,
-    required this.onTap,
-  });
+  const _AdjustmentCard({required this.adjustment, required this.onTap});
 
   Color get _typeColor {
     switch (adjustment.adjustmentType) {
@@ -241,7 +192,7 @@ class _AdjustmentCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         child: Container(
           margin: EdgeInsets.symmetric(vertical: h * 0.005),
           padding: EdgeInsets.symmetric(
@@ -250,7 +201,7 @@ class _AdjustmentCard extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: const Color(0xFFE5E7EB)),
             boxShadow: const [
               BoxShadow(
@@ -263,10 +214,9 @@ class _AdjustmentCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // الشريط الجانبي الملون
               Container(
                 width: w * 0.01,
-                height: h * 0.075,
+                height: h * 0.08,
                 decoration: BoxDecoration(
                   color: _typeColor,
                   borderRadius: BorderRadius.circular(4),
@@ -278,7 +228,6 @@ class _AdjustmentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── الصف الأول: الاسم + شارة النوع ──
                     Row(
                       children: [
                         Expanded(
@@ -323,17 +272,19 @@ class _AdjustmentCard extends StatelessWidget {
                     ),
                     SizedBox(height: h * 0.008),
 
-                    // ── الصف الثاني: الكمية + الوحدة + رقم الدفعة ──
                     Row(
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: _typeColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                                color: _typeColor.withOpacity(0.3)),
+                              color: _typeColor.withOpacity(0.3),
+                            ),
                           ),
                           child: Directionality(
                             textDirection: TextDirection.ltr,
@@ -362,27 +313,15 @@ class _AdjustmentCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: h * 0.006),
+                    SizedBox(height: h * 0.008),
 
-                    // ── الصف الثالث: الملاحظات ──
-                    if (adjustment.hasNotes)
-                      Text(
-                        adjustment.notes,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade700,
-                          fontFamily: 'Cairo',
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    SizedBox(height: h * 0.006),
-
-                    // ── الصف الرابع: التاريخ + المُبلّغ ──
                     Row(
                       children: [
-                        Icon(Icons.calendar_today_outlined,
-                            size: 13, color: Colors.grey.shade500),
+                        Icon(
+                          Icons.calendar_today_outlined,
+                          size: 13,
+                          color: Colors.grey.shade500,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           adjustment.formattedDateOnly,
@@ -392,9 +331,12 @@ class _AdjustmentCard extends StatelessWidget {
                             fontFamily: 'Cairo',
                           ),
                         ),
-                        const Spacer(),
-                        Icon(Icons.person_outline,
-                            size: 13, color: Colors.grey.shade500),
+                        SizedBox(width: w * 0.3),
+                        Icon(
+                          Icons.person_outline,
+                          size: 13,
+                          color: Colors.grey.shade500,
+                        ),
                         const SizedBox(width: 4),
                         Flexible(
                           child: Text(

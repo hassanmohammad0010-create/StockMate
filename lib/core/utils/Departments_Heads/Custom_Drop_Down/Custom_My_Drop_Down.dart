@@ -168,7 +168,7 @@ class _CustomDropdownState<T> extends FormFieldState<T>
           _overlay?.markNeedsBuild();
         },
         onSelect: (item) {
-          didChange(item); // ✅ يحدّث قيمة FormField ويشغّل onChanged + التحقق
+          didChange(item);
           _closeOverlay();
         },
         onDismiss: _closeOverlay,
@@ -202,16 +202,12 @@ class _CustomDropdownState<T> extends FormFieldState<T>
   }
 
   Widget _build({required BuildContext context}) {
-    final h = context.screenHeight;
-    final w = context.screenWidth;
-
     final hasValue = value != null;
-    // ✅ لا يوجد عناصر لعرضها (وما إحنا بحالة تحميل) → منمنع الفتح ومنعرض "لا يوجد"
     final isEmptyList = widget.items.isEmpty && !widget.isLoading;
-    // ✅ إذا فيه errorBorder يدوي أو خطأ من الـ validator نفسه، نلوّن الحدود
     final isError = widget.errorBorder || hasError;
     final showClear = hasValue && widget.clearable;
 
+    // ✅ نفس ألوان البوردر بتاعة CustomMyTextFormField (Input_Decoration.dart)
     final borderColor = isError
         ? constRed
         : (_isOpen ? constBlue : Colors.grey.shade300);
@@ -219,7 +215,7 @@ class _CustomDropdownState<T> extends FormFieldState<T>
     final borderWidth = (_isOpen || isError) ? 1.5 : 1.0;
 
     void handleOpen() {
-      if (isEmptyList) return; // ✅ ما في داعي نفتح overlay فاضي
+      if (isEmptyList) return;
       _openOverlay(context);
     }
 
@@ -232,7 +228,9 @@ class _CustomDropdownState<T> extends FormFieldState<T>
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
-              color: Colors.white,
+              // ✅ نفس fillColor بتاع CustomMyTextFormField (enabled ? white : grey.shade50)
+              color: isEmptyList ? Colors.grey.shade50 : Colors.white,
+              // ✅ نفس borderRadius (12 بدل 12، كانت متطابقة أصلاً)
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: borderColor, width: borderWidth),
             ),
@@ -243,49 +241,47 @@ class _CustomDropdownState<T> extends FormFieldState<T>
                     onTap: handleOpen,
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(14, 0, 8, 0),
+                      // ✅ نفس contentPadding الثابت بتاع buildCustomTextFieldDecoration
+                      // (horizontal: 20, vertical: 18) بدل النسبة h * 0.018
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 16,
+                      ),
                       child: Row(
                         children: [
-                          Icon(
-                            widget.prefixIcon ?? widget.icon,
-                            size: 25,
-                            color: isEmptyList
-                                ? Colors.grey.shade400
-                                : constBlue,
-                          ),
-                          SizedBox(width: w * 0.04),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: h * 0.018,
+                          if (widget.prefixIcon != null ||
+                              widget.icon != null) ...[
+                            // ✅ نفس SizedBox(width: 40) اللي في prefixIcon بتاع الـ text field
+                            SizedBox(
+                              width: 40,
+                              child: Icon(
+                                widget.prefixIcon ?? widget.icon,
+                                size: 25,
+                                color: isEmptyList
+                                    ? Colors.grey.shade400
+                                    : constBlue,
                               ),
-                              child: hasValue
-                                  ? Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          widget.labelBuilder(value as T),
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: constColor,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Text(
-                                      // ✅ نص "لا يوجد" بدل الـ label لما تكون
-                                      // القائمة فاضية، بدل استبدال الويدجت
-                                      // بالكامل بـ CustomEmptyState
-                                      isEmptyList ? 'لا يوجد' : widget.label,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade500,
-                                      ),
-                                    ),
                             ),
+                            const SizedBox(width: 8),
+                          ],
+                          Expanded(
+                            child: hasValue
+                                ? Text(
+                                    widget.labelBuilder(value as T),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: constColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )
+                                : Text(
+                                    isEmptyList ? 'لا يوجد' : widget.label,
+                                    style: TextStyle(
+                                      // ✅ نفس منطق label/hint بتاع buildCustomTextFieldDecoration
+                                      color: Colors.grey.shade500,
+                                      fontSize: 15,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
@@ -296,19 +292,15 @@ class _CustomDropdownState<T> extends FormFieldState<T>
                   GestureDetector(
                     onTap: _clearValue,
                     behavior: HitTestBehavior.opaque,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: w * 0.02,
-                        vertical: h * 0.005,
-                      ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       child: Icon(
                         Icons.close_rounded,
                         size: 20,
-                        color: Colors.grey.shade400,
+                        color: Colors.grey,
                       ),
                     ),
                   ),
-                // ✅ نخفي سهم الفتح لو ما في عناصر أصلاً
                 if (!isEmptyList)
                   GestureDetector(
                     onTap: handleOpen,
@@ -328,13 +320,12 @@ class _CustomDropdownState<T> extends FormFieldState<T>
               ],
             ),
           ),
-          // ✅ أولوية العرض: errorText يدوي (خارجي) ثم رسالة الـ validator
           if (isError && (widget.errorText != null || errorText != null))
             Padding(
-              padding: EdgeInsets.only(right: w * 0.05, top: h * 0.005),
+              padding: const EdgeInsets.only(right: 20, top: 6),
               child: Text(
                 widget.errorText ?? errorText ?? '',
-                style: TextStyle(color: constRed, fontSize: 11),
+                style: const TextStyle(color: constRed, fontSize: 12),
               ),
             ),
         ],

@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/core/models/Department_Queue_Entry.dart';
@@ -29,11 +30,37 @@ class PatientsController extends GetxController {
 
   bool get hasMore => currentPage.value < totalPages.value;
 
+  // ─── Infinite scroll ────────────────────────────────────────────
+  /// ✅ يُدار بالكامل من هنا؛ الصفحة فقط تربطه بالـ ListView
+  final ScrollController scrollController = ScrollController();
+
+  /// المسافة (بالبكسل) قبل نهاية القائمة التي نبدأ عندها التحميل
+  static const double _scrollThreshold = 200.0;
+
   @override
   void onInit() {
     super.onInit();
     getNameRollOfUserController = Get.find<GetNameRollOfUserController>();
+    scrollController.addListener(_onScroll);
     fetchPatients();
+  }
+
+  @override
+  void onClose() {
+    scrollController.removeListener(_onScroll);
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  void _onScroll() {
+    if (!scrollController.hasClients) return;
+
+    final maxScroll = scrollController.position.maxScrollExtent;
+    final currentScroll = scrollController.position.pixels;
+
+    if (currentScroll >= maxScroll - _scrollThreshold) {
+      loadMore();
+    }
   }
 
   String get _departmentId => getNameRollOfUserController.id.value ?? '';

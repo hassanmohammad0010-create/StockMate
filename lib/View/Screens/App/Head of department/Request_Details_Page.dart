@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Service/Unified_Requests_Controller.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/PriorityBadge.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/RecurringBadge.dart';
 import 'package:stock_mate_project/core/models/Order_Item_Details.dart';
@@ -14,6 +15,7 @@ import 'package:stock_mate_project/core/utils/Departments_Heads/StatusBadge.dart
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
+import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class RequestDetailsPage extends StatelessWidget {
   const RequestDetailsPage({super.key, required this.requestId});
@@ -40,21 +42,19 @@ class RequestDetailsPage extends StatelessWidget {
 
           Expanded(
             child: Obx(() {
-              // ✅ حالة التحميل
               if (c.isLoading.value) {
                 return const Center(child: CustomLoadingIndicator());
               }
 
-              // ✅ حالة الخطأ
               final d = c.details.value;
               if (d == null) {
                 return _buildErrorState(c);
               }
 
-              // ✅ جلب التسليمات الواردة من الـ Unified Controller
               final pendingDeliveries = _getPendingDeliveries(requestId);
+              final hasDeliveries = pendingDeliveries.isNotEmpty;
+               
 
-              // ✅ المحتوى
               return RefreshIndicator(
                 color: constBlue,
                 onRefresh: () => c.fetchDetails(),
@@ -73,7 +73,7 @@ class RequestDetailsPage extends StatelessWidget {
                       _buildNotesCard(d),
 
                     // ─── ✅ تسليمات واردة بانتظار التأكيد ─────────────────
-                    if (pendingDeliveries.isNotEmpty)
+                    if (hasDeliveries)
                       _buildPendingDeliveriesCard(pendingDeliveries),
 
                     // ─── ✅✅✅ زر إلغاء الطلب ─────────────────────────────
@@ -90,14 +90,62 @@ class RequestDetailsPage extends StatelessWidget {
     );
   }
 
-  // ─── ✅ جلب التسليمات الواردة من الـ Unified Controller ────────────
-  List<RefillDelivery> _getPendingDeliveries(String requestId) {
+  // ─── ✅ إعادة جلب البيانات عند العودة ──────────────────────────────
+  void _refreshAll() {
     try {
-      final unified = Get.find<UnifiedRequestsController>();
+      // إعادة جلب تفاصيل الطلب الحالي
+      final detailsCtrl = Get.find<RequestDetailsController>(tag: requestId);
+      detailsCtrl.fetchDetails();
+    } catch (_) {}
+
+    try {
+      // إعادة جلب الـ Unified Controller
+      final unified = _findUnifiedController();
+      unified?.fetchAll();
+    } catch (_) {}
+  }
+
+  // ─── ✅ جلب التسليمات الواردة (معالجة مشكلة الـ tag) ──────────────
+  List<RefillDelivery> _getPendingDeliveries(String requestId) {
+    final unified = _findUnifiedController();
+    if (unified != null) {
       return unified.getPendingDeliveries(requestId);
-    } catch (_) {
-      return [];
     }
+    return [];
+  }
+
+  // ─── ✅ البحث عن الـ Unified Controller (بدون tag أو مع tag) ───────
+  UnifiedRequestsController? _findUnifiedController() {
+    try {
+      // 1) محاولة بدون tag
+      if (Get.isRegistered<UnifiedRequestsController>()) {
+        return Get.find<UnifiedRequestsController>();
+      }
+    } catch (_) {}
+
+    try {
+      // 2) محاولة مع tag الصفحة الرئيسية
+      final tag = AppRoutes.DepartmentOrdersPage;
+      if (Get.isRegistered<UnifiedRequestsController>(tag: tag)) {
+        return Get.find<UnifiedRequestsController>(tag: tag);
+      }
+    } catch (_) {}
+
+    try {
+      // 3) محاولة مع أي tag (البحث اليدوي)
+      for (final key in GetInstance().toString().split('\n')) {
+        if (key.startsWith('UnifiedRequestsController')) {
+          final parts = key.split('?');
+          final t = parts.length > 1 ? parts[1] : null;
+          if (Get.isRegistered<UnifiedRequestsController>(tag: t)) {
+            return Get.find<UnifiedRequestsController>(tag: t);
+          }
+        }
+      }
+    } catch (_) {}
+
+    print('⚠️ لم يُعثر على UnifiedRequestsController');
+    return null;
   }
 
   // ─── ✅ كارد التسليمات الواردة ─────────────────────────────────────
@@ -197,11 +245,15 @@ class RequestDetailsPage extends StatelessWidget {
             onPressed: () => Get.to(
               () => RefillDeliveryDetailsPage(deliveryId: delivery.id),
               transition: Transition.rightToLeft,
-            ),
-            icon: const Icon(Icons.verified_outlined, size: 16),
+            )?.then((_) => _refreshAll()),
+            icon: const Icon(Icons.verified_outlined, size: 20),
             label: const Text(
               'تأكيد',
-              style: TextStyle(fontFamily: 'Cairo', fontSize: 12),
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: color,
@@ -395,7 +447,8 @@ class RequestDetailsPage extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              PriorityBadge(priority: d.priority),
+              if (!d.isRecurring && d.recurringInterval == null)
+                PriorityBadge(priority: d.priority),
               const SizedBox(width: 8),
               if (d.isRecurring && d.recurringInterval != null)
                 RecurringBadge(interval: d.recurringInterval!),
@@ -404,18 +457,22 @@ class RequestDetailsPage extends StatelessWidget {
           const SizedBox(height: 14),
           const Divider(height: 1),
           const SizedBox(height: 12),
-          _infoRow(Icons.event_outlined, 'تاريخ الإنشاء', d.formattedCreatedAt),
+          BuildRow(
+            icon: Icons.event_outlined,
+            label: 'تاريخ الإنشاء',
+            value: d.formattedCreatedAt,
+          ),
           if (d.isRecurring && d.frequencyInterval != null)
-            _infoRow(
-              Icons.repeat_outlined,
-              'عدد التكرارات',
-              '${d.frequencyInterval} مرة',
+            BuildRow(
+              icon: Icons.repeat_outlined,
+              label: 'عدد التكرارات',
+              value: '${d.frequencyInterval} مرة',
             ),
           if (d.requestedBy != null)
-            _infoRow(
-              Icons.person_outline,
-              'مقدم الطلب',
-              d.requestedBy!.fullName,
+            BuildRow(
+              icon: Icons.person_outline,
+              label: 'مقدم الطلب',
+              value: d.requestedBy!.fullName,
             ),
         ],
       ),
@@ -428,7 +485,7 @@ class RequestDetailsPage extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: constLightRed,
+        color: constLightRed.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: constRed.withOpacity(0.3)),
       ),
@@ -444,8 +501,8 @@ class RequestDetailsPage extends StatelessWidget {
                 const Text(
                   'سبب الرفض',
                   style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                     fontFamily: 'Cairo',
                     color: constRed,
                   ),
@@ -473,7 +530,7 @@ class RequestDetailsPage extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: constLightGreen,
+        color: constLightGreen.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: constGreen.withOpacity(0.3)),
       ),
@@ -483,9 +540,9 @@ class RequestDetailsPage extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'تمت الموافقة على الطلب بتاريخ: ${d.formattedApprovedAt}',
+              'تمت الموافقة على الطلب من قبل مدير المشفى بتاريخ: ${d.formattedApprovedAt}',
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: FontWeight.w700,
                 fontFamily: 'Cairo',
                 color: constGreen,
@@ -678,7 +735,7 @@ class RequestDetailsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withOpacity(0.04),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
@@ -771,40 +828,6 @@ class RequestDetailsPage extends StatelessWidget {
             icon: const Icon(Icons.refresh, size: 18),
             label: const Text('إعادة المحاولة'),
             style: TextButton.styleFrom(foregroundColor: constBlue),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─── صف معلومة ───────────────────────────────────────────────────
-  Widget _infoRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        children: [
-          Icon(icon, size: 18, color: Colors.grey.shade600),
-          const SizedBox(width: 8),
-          Text(
-            '$label: ',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade600,
-              fontFamily: 'Cairo',
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: const TextStyle(
-                fontSize: 13,
-                color: constColor,
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
           ),
         ],
       ),

@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/core/models/Inventory_Adjustments_Model.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
 class InventoryAdjustmentDetailsPage extends StatelessWidget {
   const InventoryAdjustmentDetailsPage({super.key, required this.adjustment});
@@ -59,17 +61,19 @@ class InventoryAdjustmentDetailsPage extends StatelessWidget {
       body: Column(
         children: [
           const CustomBackContainer(),
-
+          SizedBox(height: h * 0.005),
+          const CustomHeadContainer(title: 'تفاصيل الأتلاف'),
+          SizedBox(height: h * 0.02),
           // ── الهيدر ──
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: w * 0.04),
+            padding: EdgeInsets.symmetric(horizontal: w * 0.045),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
                     adjustment.displayName,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Cairo',
                       color: constColor,
@@ -78,11 +82,13 @@ class InventoryAdjustmentDetailsPage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: _typeBg,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: _typeColor.withOpacity(0.3)),
                   ),
                   child: Row(
@@ -116,13 +122,13 @@ class InventoryAdjustmentDetailsPage extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: _typeColor.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: _typeColor.withOpacity(0.3)),
                   ),
                   child: Row(
                     children: [
                       Icon(_typeIcon, size: 32, color: _typeColor),
-                      const SizedBox(width: 14),
+                      SizedBox(width: w * 0.05),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,23 +169,29 @@ class InventoryAdjustmentDetailsPage extends StatelessWidget {
                   icon: Icons.medication_outlined,
                   color: constBlue,
                   children: [
-                    _InfoRow(
+                    // _InfoRow(
+                    //   icon: Icons.label_outline,
+                    //   label: 'اسم الصنف',
+                    //   value: adjustment.displayName,
+                    // ),
+                    BuildRow(
                       icon: Icons.label_outline,
                       label: 'اسم الصنف',
                       value: adjustment.displayName,
                     ),
                     if (adjustment.productName.isNotEmpty)
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.inventory_2_outlined,
                         label: 'المنتج',
                         value: adjustment.productName,
                       ),
-                    _InfoRow(
+                    BuildRow(
                       icon: Icons.qr_code_2_outlined,
                       label: 'SKU',
                       value: adjustment.sku,
                     ),
-                    _InfoRow(
+
+                    BuildRow(
                       icon: Icons.category_outlined,
                       label: 'الفئة',
                       value: adjustment.categoryName,
@@ -194,27 +206,26 @@ class InventoryAdjustmentDetailsPage extends StatelessWidget {
                   icon: Icons.history_edu_outlined,
                   color: _typeColor,
                   children: [
-                    _InfoRow(
+                    BuildRow(
                       icon: Icons.calendar_today_outlined,
                       label: 'التاريخ',
                       value: adjustment.formattedCreatedAt,
                     ),
-                    _InfoRow(
+                    BuildRow(
                       icon: Icons.person_outline,
                       label: 'المُبلّغ',
                       value: adjustment.reportedByName,
                     ),
-                    _InfoRow(
+                    BuildRow(
                       icon: Icons.local_hospital_outlined,
                       label: 'القسم',
                       value: adjustment.departmentName,
                     ),
                     if (adjustment.hasNotes)
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.notes_outlined,
                         label: 'الملاحظات',
                         value: adjustment.notes,
-                        maxLines: 5,
                       ),
                   ],
                 ),
@@ -226,7 +237,7 @@ class InventoryAdjustmentDetailsPage extends StatelessWidget {
                   icon: Icons.inventory_outlined,
                   color: constOrange,
                   children: [
-                    _InfoRow(
+                    BuildRow(
                       icon: Icons.confirmation_number_outlined,
                       label: 'رقم الدفعة',
                       value: adjustment.batchNumber,
@@ -299,59 +310,6 @@ class _InfoCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           ...children,
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final int maxLines;
-
-  const _InfoRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-    this.maxLines = 1,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 16, color: Colors.grey.shade600),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 90,
-            child: Text(
-              '$label:',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              maxLines: maxLines,
-              style: const TextStyle(
-                fontSize: 13,
-                color: constColor,
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.w500,
-                height: 1.4,
-              ),
-            ),
-          ),
         ],
       ),
     );

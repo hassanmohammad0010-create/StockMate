@@ -31,12 +31,12 @@ class PatientDetailsController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
-  // ─── حالة الحجز ───────────────────────────────────────────────────
+  // ─── حالة الحجز (زر واحد يبدّل بين حجز/إلغاء) ─────────────────────
   final RxBool isBooking = false.obs;
   final RxBool isBooked = false.obs;
   final RxBool isReleasing = false.obs;
 
-  // ─── ✅ حالة إنهاء المعاينة ────────────────────────────────────────
+  // ─── حالة إنهاء المعاينة ──────────────────────────────────────────
   final RxBool isCompleting = false.obs;
 
   // ─── TextEditingControllers ──────────────────────────────────────
@@ -87,6 +87,15 @@ class PatientDetailsController extends GetxController {
       }
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // ─── ✅ زر واحد: حجز المريض إن لم يكن محجوزاً، أو إلغاء الحجز إن كان محجوزاً ─
+  Future<void> toggleBooking() async {
+    if (isBooked.value) {
+      await releasePatient();
+    } else {
+      await bookPatient();
     }
   }
 
@@ -175,7 +184,7 @@ class PatientDetailsController extends GetxController {
     }
   }
 
-  // ─── ✅✅✅ إنهاء المعاينة ─ POST /medical-visits/complete ─────────
+  // ─── إنهاء المعاينة ─ POST /medical-visits/complete ───────────────
   Future<void> completeConsultation() async {
     final entryId = patient.queueEntryId;
     if (entryId == null || entryId.isEmpty) {
@@ -216,7 +225,9 @@ class PatientDetailsController extends GetxController {
           await Get.find<PatientsController>().fetchPatients();
         }
 
-        Get.offNamed(AppRoutes.PatientsPage); // العودة إلى صفحة قائمة المرضى
+        // ✅ العودة إلى صفحة قائمة المرضى لاختيار مريض جديد
+        // (يُزيل أيضاً صفحة إنهاء المعاينة وصفحة تفاصيل المريض من المكدس)
+        Get.offAllNamed(AppRoutes.PatientsPage);
       } else {
         customSnackBar(
           title: 'فشل الإنهاء',
@@ -229,8 +240,4 @@ class PatientDetailsController extends GetxController {
       isCompleting.value = false;
     }
   }
-
-  // void attachPrescription() {
-  //   // هذا الزر سيستبدل بزر "إنهاء المعاينة" الذي يفتح bottom sheet
-  // }
 }

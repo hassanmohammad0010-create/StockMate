@@ -41,9 +41,9 @@ class DropdownOverlay<T> extends StatefulWidget {
   final VoidCallback onDismiss;
   final T? selectedItem;
   final bool isLoading;
-  final bool hasError;            // ✅ جديد
-  final String? errorMessage;     // ✅ جديد
-  final VoidCallback? onRetry;    // ✅ جديد
+  final bool hasError;           
+  final String? errorMessage;     
+  final VoidCallback? onRetry;    
 
   @override
   State<DropdownOverlay<T>> createState() => _DropdownOverlayState<T>();
@@ -125,7 +125,6 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // ✅ حقل البحث يظهر دائماً (إلا إذا كان هناك خطأ)
                           if (widget.searchable && !widget.hasError) ...[
                             Padding(
                               padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
@@ -135,7 +134,7 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                                 textDirection: TextDirection.rtl,
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 13),
-                                enabled: !widget.isLoading, // ✅ تعطيل البحث أثناء التحميل
+                                enabled: !widget.isLoading, 
                                 decoration: InputDecoration(
                                   hintText: 'بحث ...',
                                   hintStyle: TextStyle(
@@ -172,9 +171,7 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                               ),
                             ),
                             Divider(height: 1, color: Colors.grey.shade100),
-                          ],
-                          
-                          // ✅ حالة الخطأ: عرض زر إعادة المحاولة
+                          ],                  
                           if (widget.hasError)
                             Padding(
                               padding: const EdgeInsets.all(20),
@@ -219,13 +216,11 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                                 ],
                               ),
                             )
-                          // ✅ حالة التحميل
                           else if (widget.isLoading)
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 28),
                               child: CustomLoadingIndicator(size: 32),
                             )
-                          // ✅ لا توجد نتائج
                           else if (_displayItems.isEmpty)
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -241,7 +236,6 @@ class _DropdownOverlayState<T> extends State<DropdownOverlay<T>> {
                                 ),
                               ),
                             )
-                          // ✅ عرض القائمة
                           else
                             Flexible(
                               child: ListView.separated(

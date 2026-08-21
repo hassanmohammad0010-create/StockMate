@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, deprecated_member_use
+// ignore_for_file: file_names, deprecated_member_use, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
@@ -115,7 +115,9 @@ class RequestCard extends StatelessWidget {
 
                             if (request.isRecurring &&
                                 request.recurringInterval != null)
-                              RecurringBadge(interval: request.recurringInterval!)
+                              RecurringBadge(
+                                interval: request.recurringInterval!,
+                              )
                             else
                               PriorityBadge(priority: request.priority),
                           ],
@@ -150,15 +152,12 @@ class RequestCard extends StatelessWidget {
                     if (onConfirmDelivery != null)
                       ElevatedButton.icon(
                         onPressed: onConfirmDelivery,
-                        icon: const Icon(
-                          Icons.verified_outlined,
-                          size: 16,
-                        ),
+                        icon: const Icon(Icons.verified_outlined, size: 20),
                         label: const Text(
                           'تأكيد',
                           style: TextStyle(
                             fontFamily: 'Cairo',
-                            fontSize: 12,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -166,7 +165,7 @@ class RequestCard extends StatelessWidget {
                           backgroundColor: constGreen,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
+                            horizontal: 24,
                             vertical: 8,
                           ),
                           shape: RoundedRectangleBorder(
@@ -195,28 +194,30 @@ class _DeliveryBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final isFinal = delivery.type.isFinal;
     final color = isFinal ? constGreen : constOrange;
-    final bgColor = isFinal ? constLightGreen : constLightOrange;
+    final bgColor = isFinal
+        ? constLightGreen.withOpacity(0.5)
+        : constLightOrange.withOpacity(0.5);
     final icon = isFinal
         ? Icons.done_all_rounded
         : Icons.local_shipping_outlined;
     final label = isFinal ? 'نهائية' : 'دفعة';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withOpacity(0.8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: color),
+          Icon(icon, size: 16, color: color),
           const SizedBox(width: 4),
           Text(
             label,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: color,
               fontFamily: 'Cairo',
@@ -226,7 +227,7 @@ class _DeliveryBadge extends StatelessWidget {
           Text(
             delivery.shortDate,
             style: TextStyle(
-              fontSize: 9,
+              fontSize: 12,
               color: color.withOpacity(0.8),
               fontFamily: 'Cairo',
             ),

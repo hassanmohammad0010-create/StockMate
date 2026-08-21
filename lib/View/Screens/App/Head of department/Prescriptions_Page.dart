@@ -46,7 +46,7 @@ class PrescriptionsPage extends StatelessWidget {
                   alignment: AlignmentGeometry.centerRight,
                   child: CustomToggleButtom(
                     first: 'جديدة',
-                    second: 'مصروفة',
+                    second: 'جزئياً',
                     controller: controller,
                   ),
                 ),

@@ -6,9 +6,11 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Service/Refill_Delivery_Details_Controller.dart';
 import 'package:stock_mate_project/core/models/Refill_Delivery_Details_Model.dart';
 import 'package:stock_mate_project/core/models/Refill_Delivery_Model.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Build_Row.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
 
 class RefillDeliveryDetailsPage extends StatelessWidget {
   const RefillDeliveryDetailsPage({super.key, required this.deliveryId});
@@ -30,32 +32,18 @@ class RefillDeliveryDetailsPage extends StatelessWidget {
       body: Column(
         children: [
           const CustomBackContainer(),
-
-          // ── الهيدر ──
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-            child: Obx(() {
-              final d = c.details.value;
-              return Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'تفاصيل التسليم',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Cairo',
-                        color: constColor,
-                      ),
-                    ),
-                  ),
-                  if (d != null) _TypeBadge(type: d.type),
-                ],
-              );
-            }),
+          SizedBox(height: h * 0.005),
+          CustomHeadContainer(
+            title: 'تفاصيل التسليم',
+            trailing: Padding(
+              padding: EdgeInsets.symmetric(horizontal: w * 0.04),
+              child: Obx(() {
+                final d = c.details.value;
+                return d != null ? _TypeBadge(type: d.type) : Container();
+              }),
+            ),
           ),
           SizedBox(height: h * 0.015),
-
           Expanded(
             child: Obx(() {
               if (c.isLoading.value && c.details.value == null) {
@@ -80,22 +68,21 @@ class RefillDeliveryDetailsPage extends StatelessWidget {
                     icon: Icons.local_shipping_outlined,
                     color: constBlue,
                     children: [
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.local_shipping_outlined,
                         label: 'تاريخ التسليم',
                         value: d.formattedDeliveredAt,
                       ),
-                      _InfoRow(
+                      BuildRow(
                         icon: Icons.verified_outlined,
                         label: 'تاريخ التأكيد',
                         value: d.formattedConfirmedAt,
                       ),
                       if (d.hasNotes)
-                        _InfoRow(
+                        BuildRow(
                           icon: Icons.notes_outlined,
                           label: 'ملاحظات',
                           value: d.notes!,
-                          maxLines: 5,
                         ),
                     ],
                   ),
@@ -162,10 +149,10 @@ class RefillDeliveryDetailsPage extends StatelessWidget {
                       ? null
                       : () => _showConfirmDialog(context, c),
                   icon: confirming
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CustomLoadingIndicator(),
+                      ? SizedBox(
+                          width: w * 0.4,
+                          height: h * 0.03,
+                          child: CustomLoadingIndicator(size: 16),
                         )
                       : const Icon(Icons.verified_outlined, size: 20),
                   label: Text(
@@ -204,10 +191,15 @@ class RefillDeliveryDetailsPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         title: const Text(
           'تأكيد الاستلام',
-          style: TextStyle(fontFamily: 'Cairo', fontSize: 16),
+          style: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: SizedBox(
           width: double.maxFinite,
@@ -249,20 +241,18 @@ class RefillDeliveryDetailsPage extends StatelessWidget {
             onPressed: () => Navigator.of(ctx).pop(),
             child: const Text('إلغاء', style: TextStyle(fontFamily: 'Cairo')),
           ),
-          Obx(() {
-            final confirming = c.isConfirming.value;
-            return ElevatedButton(
-              onPressed: confirming ? null : c.confirmReceipt,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: constGreen,
-                foregroundColor: Colors.white,
-              ),
-              child: Text(
-                confirming ? 'جارٍ التأكيد...' : 'تأكيد',
-                style: const TextStyle(fontFamily: 'Cairo'),
-              ),
-            );
-          }),
+
+          ElevatedButton(
+            onPressed: () {
+              c.confirmReceipt();
+              Get.back();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: constGreen,
+              foregroundColor: Colors.white,
+            ),
+            child: Text('تأكيد', style: const TextStyle(fontFamily: 'Cairo')),
+          ),
         ],
       ),
     );
@@ -360,7 +350,7 @@ class _DialogItemRow extends StatelessWidget {
                   value: chosen,
                   min: 0,
                   max: item.shippedQuantity,
-                  accentColor: isFull ? constGreen : constOrange,
+                  accentColor: isFull ? constGreen : constRed,
                   onChanged: (v) =>
                       controller.updateReceivedQuantity(item.id, v),
                 );
@@ -586,13 +576,13 @@ class _ItemsCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: constOrange.withOpacity(0.1),
+                  color: constLightRed.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.inventory_2_outlined,
                   size: 18,
-                  color: constOrange,
+                  color: constRed,
                 ),
               ),
               const SizedBox(width: 8),
@@ -601,7 +591,7 @@ class _ItemsCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: constOrange,
+                  color: constRed,
                   fontFamily: 'Cairo',
                 ),
               ),
@@ -839,59 +829,6 @@ class _InfoCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           ...children,
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final int maxLines;
-
-  const _InfoRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-    this.maxLines = 1,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 16, color: Colors.grey.shade600),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 90,
-            child: Text(
-              '$label:',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              maxLines: maxLines,
-              style: const TextStyle(
-                fontSize: 13,
-                color: constColor,
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.w500,
-                height: 1.4,
-              ),
-            ),
-          ),
         ],
       ),
     );

@@ -25,10 +25,7 @@ class AddOrdinaryOrderPage extends GetView<AddOrdinaryOrderController> {
           Expanded(
             child: Obx(() {
               final index = controller.activeOrderIndex.value;
-              return OrdinaryOrderCard(
-                key: ValueKey(index),
-                orderIndex: index,
-              );
+              return OrdinaryOrderCard(key: ValueKey(index), orderIndex: index);
             }),
           ),
           const OrdinarySubmitSection(),
