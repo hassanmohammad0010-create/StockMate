@@ -1,19 +1,14 @@
 // ignore_for_file: constant_identifier_names
 abstract class AppRoutes {
-  static const ChatPage = '/ChatPage';
   static const DepartmentHeadsMainPage = '/DepartmentHeadsMainPage';
   static const AddOrdinaryOrderPage = '/AddOrdinaryOrderPage';
   static const AddRecurringOrderPage = '/AddRecurringOrderPage';
-  static const ArchiveDetailsPage = '/ArchiveDetailsPage';
-  static const ArchivePage = '/ArchivePage';
-  static const CartArchivePage = '/CartArchivePage';
   static const CartPage = '/CartPage';
   static const DepartmentHeadsAddNewOrderPage =
       '/DepartmentHeadsAddNewOrderPage';
   static const DepartmentHeadsHomePage = '/DepartmentHeadsHomePage';
   static const DepartmentHeadsInventoryPage = '/DepartmentHeadsInventoryPage';
   static const DepartmentOrdersPage = '/DepartmentOrdersPage';
-  static const OrderDetailsPage = '/OrderDetailsPage';
   static const OrdinaryConfirmPage = '/OrdinaryConfirmPage';
   static const PrescriptionArchivePage = '/PrescriptionArchivePage';
   static const RecurringConfirmPage = '/RecurringConfirmPage';
@@ -22,7 +17,6 @@ abstract class AppRoutes {
   static const ProcessedPrescriptionsPage = '/ProcessedPrescriptionsPage';
   static const MainPage = '/MainPage';
   static const NotificationPage = '/NotificationPage';
-  static const ReportPage = '/ReportPage';
   static const SettingPage = '/SettingPage';
   static const SplashViewPage = '/SplashViewPage';
   static const LoginPage = '/LoginPage';

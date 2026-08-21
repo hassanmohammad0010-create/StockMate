@@ -72,7 +72,6 @@ class DepartmentHeadsMainPage extends StatelessWidget {
                     size: 28,
                   ),
                   onPressed: () {
-                    // Get.toNamed(AppRoutes.ChatPage);
                     Get.to(ChatBotPage());
                   },
                 ),

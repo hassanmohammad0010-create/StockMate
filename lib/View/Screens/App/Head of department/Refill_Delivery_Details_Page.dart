@@ -8,6 +8,7 @@ import 'package:stock_mate_project/core/models/Refill_Delivery_Details_Model.dar
 import 'package:stock_mate_project/core/models/Refill_Delivery_Model.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class RefillDeliveryDetailsPage extends StatelessWidget {
   const RefillDeliveryDetailsPage({super.key, required this.deliveryId});
@@ -58,7 +59,7 @@ class RefillDeliveryDetailsPage extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (c.isLoading.value && c.details.value == null) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CustomLoadingIndicator());
               }
 
               if (c.errorMessage.value.isNotEmpty && c.details.value == null) {
@@ -164,10 +165,7 @@ class RefillDeliveryDetailsPage extends StatelessWidget {
                       ? const SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
+                          child: CustomLoadingIndicator(),
                         )
                       : const Icon(Icons.verified_outlined, size: 20),
                   label: Text(

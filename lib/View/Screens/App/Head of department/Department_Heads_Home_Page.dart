@@ -6,8 +6,7 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabController.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
-import 'package:stock_mate_project/Controller/Service/Get_Requests_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Refill_Deliveries_Page.dart';
+import 'package:stock_mate_project/Controller/Service/Unified_Requests_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
@@ -29,7 +28,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
   /// ✅ يضمن وجود MyRequestsController وFilterController بنفس الـ tag
   /// حتى لو المستخدم لسه ما فتحش تاب "الطلبات" فعليًا.
   /// آمن للاستدعاء أكثر من مرة (isRegistered check).
-  MyRequestsController _ensureOrdersController() {
+  UnifiedRequestsController _ensureOrdersController() {
     if (!Get.isRegistered<FilterController>(tag: _ordersFilterTag)) {
       Get.put<FilterController>(
         FilterController()..initFilters([
@@ -46,13 +45,13 @@ class DepartmentHeadsHomePage extends StatelessWidget {
       );
     }
 
-    if (!Get.isRegistered<MyRequestsController>(tag: _ordersFilterTag)) {
+    if (!Get.isRegistered<UnifiedRequestsController>(tag: _ordersFilterTag)) {
       return Get.put(
-        MyRequestsController(filterTag: _ordersFilterTag),
+        UnifiedRequestsController(filterTag: _ordersFilterTag),
         tag: _ordersFilterTag,
       );
     }
-    return Get.find<MyRequestsController>(tag: _ordersFilterTag);
+    return Get.find<UnifiedRequestsController>(tag: _ordersFilterTag);
   }
 
   /// ✅ تعيين الفلتر المناسب ثم الانتقال لتاب الطلبات (index 2).
@@ -67,13 +66,16 @@ class DepartmentHeadsHomePage extends StatelessWidget {
         : Get.put<FilterController>(
             FilterController()..initFilters([
               'الكل',
-              'معلق',
-              'منجز',
-              'طلبات مستلمة',
-              'بانتظار الموافقة',
-              'قيد التنفيذ',
-              'الطلبات الدورية',
-              'مرفوض',
+            'بانتظار التأكيد',
+            'بانتظار موافقة المشفى',
+            'بانتظار موافقة المدير',
+            'قيد التحضير',
+            'مكتمل جزئي',
+            'مكتمل',
+            'مرفوض مشفى',
+            'مرفوض مدير',
+            'ملغي',
+            'الطلبات الدورية',
             ]),
             tag: _ordersFilterTag,
           );
@@ -92,7 +94,8 @@ class DepartmentHeadsHomePage extends StatelessWidget {
     final h = context.screenHeight;
     final w = context.screenWidth;
 
-    final MyRequestsController ordersController = _ensureOrdersController();
+    final UnifiedRequestsController ordersController =
+        _ensureOrdersController();
 
     return Scaffold(
       backgroundColor: constBackgroundColor,
@@ -135,7 +138,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 title: 'طلبات منجزة',
                                 buttonColor: constGreen,
                                 buttonTitle: 'عرض التفاصيل',
-                                onTap: () => _goToOrdersTab('منجز'),
+                                onTap: () => _goToOrdersTab('مكتمل'),
                               ),
                               CustomCard(
                                 icon: Icon(
@@ -148,7 +151,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 title: 'طلبات قيد التنفيذ',
                                 buttonColor: constBlue,
                                 buttonTitle: 'عرض التفاصيل',
-                                onTap: () => _goToOrdersTab('قيد التنفيذ'),
+                                onTap: () => _goToOrdersTab('قيد التحضير'),
                               ),
                             ],
                           ),
@@ -165,7 +168,8 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 title: 'بانتظار الموافقة',
                                 buttonColor: constOrange,
                                 buttonTitle: 'عرض التفاصيل',
-                                onTap: () => _goToOrdersTab('بانتظار الموافقة'),
+                                onTap: () =>
+                                    _goToOrdersTab('بانتظار موافقة المشفى'),
                               ),
                               CustomCard(
                                 icon: Icon(
@@ -178,7 +182,7 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 title: 'طلبات مرفوضة',
                                 buttonColor: constRed,
                                 buttonTitle: 'عرض التفاصيل',
-                                onTap: () => _goToOrdersTab('مرفوض'),
+                                onTap: () => _goToOrdersTab('مرفوض مشفى'),
                               ),
                             ],
                           ),
@@ -243,16 +247,16 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                 },
                                 title: 'المتلفات',
                               ),
-                              CustomListTile(
-                                backgroundColor: constLightBlue,
-                                description: 'عرض تفاصيل (الطلبات الواصلة)',
-                                icon: Icons.local_shipping_outlined,
-                                iconColor: constBlue,
-                                onTap: () {
-                                  Get.to(() => const RefillDeliveriesPage());
-                                },
-                                title: 'الطلبات الواصلة',
-                              ),
+                              // CustomListTile(
+                              //   backgroundColor: constLightBlue,
+                              //   description: 'عرض تفاصيل (الطلبات الواصلة)',
+                              //   icon: Icons.local_shipping_outlined,
+                              //   iconColor: constBlue,
+                              //   onTap: () {
+                              //     Get.to(() => const RefillDeliveriesPage());
+                              //   },
+                              //   title: 'الطلبات الواصلة',
+                              // ),
                             ],
                           )
                         : Column(
@@ -282,6 +286,19 @@ class DepartmentHeadsHomePage extends StatelessWidget {
                                   Get.toNamed(AppRoutes.PrescriptionsPage);
                                 },
                                 title: 'الوصفات الطبية الجديدة',
+                              ),
+                              CustomListTile(
+                                backgroundColor: constLightBlue,
+                                description:
+                                    'عرض تفاصيل المتلفات (التسويات والإتلاف)',
+                                icon: Icons.inventory_2_outlined,
+                                iconColor: constBlue,
+                                onTap: () {
+                                  Get.toNamed(
+                                    AppRoutes.InventoryAdjustmentsPage,
+                                  );
+                                },
+                                title: 'المتلفات',
                               ),
                             ],
                           ),

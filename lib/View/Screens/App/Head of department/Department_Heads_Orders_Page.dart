@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/Filter_Controller.dart';
-import 'package:stock_mate_project/Controller/Service/Get_Requests_Controller.dart';
-import 'package:stock_mate_project/core/utils/New_Customs/RequestCard.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Request_Card.dart';
+import 'package:stock_mate_project/Controller/Service/Unified_Requests_Controller.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Filter_Bar.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
@@ -24,28 +24,30 @@ class DepartmentOrdersPage extends GetView<FilterController> {
     final h = context.screenHeight;
     final w = context.screenWidth;
 
-    // ✅ 1) أولاً: سجّل FilterController (قبل الكونترولر الآخر)
+    // ✅ فلاتر جديدة — كل حالة enum لوحدها + بانتظار التأكيد (بدون draft)
     if (!Get.isRegistered<FilterController>(tag: _filterTag)) {
       Get.put<FilterController>(
         FilterController()
           ..initFilters([
             'الكل',
-            'معلق',
-            'منجز',
-            'طلبات مستلمة',
-            'بانتظار الموافقة',
-            'قيد التنفيذ',
+            'بانتظار التأكيد',
+            'بانتظار موافقة المشفى',
+            'بانتظار موافقة المدير',
+            'قيد التحضير',
+            'مكتمل جزئي',
+            'مكتمل',
+            'مرفوض مشفى',
+            'مرفوض مدير',
+            'ملغي',
             'الطلبات الدورية',
-            'مرفوض',
           ])
           ..setFilter(initialFilter),
         tag: _filterTag,
       );
     }
 
-    // ✅ 2) ثانياً: أنشئ MyRequestsController (ليجد الفلتر في onInit)
     final c = Get.put(
-      MyRequestsController(filterTag: _filterTag),
+      UnifiedRequestsController(filterTag: _filterTag),
       tag: _filterTag,
     );
 
@@ -71,39 +73,61 @@ class DepartmentOrdersPage extends GetView<FilterController> {
                 return _buildErrorState(c);
               }
 
-              // ✅ حالة القائمة الفارغة (بعد الفلترة)
+              // ✅ حالة القائمة الفارغة
               if (c.isDisplayedEmpty) {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: _buildEmptyState(c.currentFilter.value, c.hasMore),
-                    ),
-                    // ✅ إذا كانت توجد صفحات غير محمّلة، يبقى زر "تحميل المزيد" ظاهراً
-                    if (c.hasMore) _buildLoadMoreFooter(c),
-                    const SizedBox(height: 12),
-                  ],
-                );
+                return _buildEmptyState(c);
               }
 
-              // ✅ القائمة المفلترة + فوتر تحميل المزيد
+              // ✅ القائمة المفلترة مع ScrollController + تحميل تلقائي
               return RefreshIndicator(
                 color: constBlue,
-                onRefresh: () => c.fetchRequests(),
+                onRefresh: () => c.fetchAll(),
                 child: ListView.builder(
+                  controller: c.scrollController,
                   padding: EdgeInsets.symmetric(
                     horizontal: w * 0.04,
                     vertical: h * 0.01,
                   ),
-                  itemCount: c.filteredRequests.length + (c.hasMore ? 1 : 0),
+                  // ✅ +1 فقط إذا كنا نحمل حالياً (CircularProgressIndicator)
+                  itemCount:
+                      c.filteredRequests.length +
+                      (c.isLoadingMore.value ? 1 : 0),
                   itemBuilder: (context, index) {
-                    // ✅ فوتر "تحميل المزيد"
+                    // ✅ Footer: مؤشر تحميل فقط (بدون زر)
                     if (index >= c.filteredRequests.length) {
-                      return _buildLoadMoreFooter(c);
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Center(
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: constBlue,
+                            ),
+                          ),
+                        ),
+                      );
                     }
+
                     final request = c.filteredRequests[index];
-                    return OrderCard2(
+                    final pendingDeliveries = c.getPendingDeliveries(
+                      request.id,
+                    );
+                    return RequestCard(
                       request: request,
+                      pendingDeliveries: pendingDeliveries,
                       onTap: () => c.openRequestDetails(request),
+                      onConfirmDelivery: pendingDeliveries.isNotEmpty
+                          ? () {
+                              final firstDelivery = c.getFirstPendingDelivery(
+                                request.id,
+                              );
+                              if (firstDelivery != null) {
+                                c.openDeliveryConfirm(firstDelivery.id);
+                              }
+                            }
+                          : null,
                     );
                   },
                 ),
@@ -115,32 +139,56 @@ class DepartmentOrdersPage extends GetView<FilterController> {
     );
   }
 
-  // ─── حالة القائمة الفارغة (رسالة ذكية حسب الفلتر والصفحات) ────────
-  Widget _buildEmptyState(String currentFilter, bool hasMore) {
-    final String message;
-
-    if (currentFilter == 'الكل') {
-      message = 'لا توجد طلبات بعد';
-    } else if (hasMore) {
-      // ✅ لا نتائج ضمن المحمّل، لكن قد توجد في صفحات أخرى
-      message =
-          'لا توجد نتائج ضمن الطلبات المحمّلة\nاضغط "تحميل المزيد" للبحث في الصفحات التالية';
-    } else {
-      message = 'لا توجد طلبات تحت فلتر "$currentFilter"';
+  // ─── حالة القائمة الفارغة (ذكية) ──────────────────────────────────
+  Widget _buildEmptyState(UnifiedRequestsController c) {
+    // ✅ إذا كنا نحمل تلقائياً (صفحات إضافية)
+    if (c.isLoadingMore.value) {
+      return const Center(child: CustomLoadingIndicator());
     }
 
+    // ✅ إذا وصلنا للنهاية ولا توجد نتائج
+    if (!c.hasMore) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.inbox_outlined, size: 64, color: Colors.grey.shade300),
+            const SizedBox(height: 16),
+            Text(
+              c.currentFilter.value == 'الكل'
+                  ? 'لا توجد طلبات بعد'
+                  : c.currentFilter.value == 'بانتظار التأكيد'
+                  ? 'لا توجد طلبات بانتظار التأكيد'
+                  : 'لا توجد طلبات تحت فلتر "${c.currentFilter.value}"',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 15,
+                color: Color(0xFF6B7280),
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // ✅ إذا كانت النتائج فارغة لكن هناك صفحات أخرى (يحمل تلقائياً)
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.inbox_outlined, size: 64, color: Colors.grey.shade300),
+          const SizedBox(
+            width: 32,
+            height: 32,
+            child: CircularProgressIndicator(strokeWidth: 2, color: constBlue),
+          ),
           const SizedBox(height: 16),
           Text(
-            message,
+            'جارٍ البحث في الصفحات التالية...',
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15,
-              color: Color(0xFF6B7280),
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade500,
               fontFamily: 'Cairo',
             ),
           ),
@@ -149,32 +197,8 @@ class DepartmentOrdersPage extends GetView<FilterController> {
     );
   }
 
-  // ─── فوتر تحميل المزيد ────────────────────────────────────────────
-  Widget _buildLoadMoreFooter(MyRequestsController c) {
-    return Obx(
-      () => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: c.isLoadingMore.value
-            ? const Center(child: CircularProgressIndicator())
-            : Center(
-                child: TextButton(
-                  onPressed: c.loadMore,
-                  child: const Text(
-                    'تحميل المزيد',
-                    style: TextStyle(
-                      color: constBlue,
-                      fontFamily: 'Cairo',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-      ),
-    );
-  }
-
   // ─── حالة الخطأ + إعادة المحاولة ──────────────────────────────────
-  Widget _buildErrorState(MyRequestsController c) {
+  Widget _buildErrorState(UnifiedRequestsController c) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -192,7 +216,7 @@ class DepartmentOrdersPage extends GetView<FilterController> {
           ),
           const SizedBox(height: 12),
           TextButton.icon(
-            onPressed: () => c.fetchRequests(),
+            onPressed: () => c.fetchAll(),
             icon: const Icon(Icons.refresh, size: 18),
             label: const Text('إعادة المحاولة'),
             style: TextButton.styleFrom(foregroundColor: constBlue),

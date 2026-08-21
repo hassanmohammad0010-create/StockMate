@@ -1,9 +1,9 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Main_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Adjustments_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Patients_Page.dart';
 import 'package:stock_mate_project/core/Bindings/Auth/Login_Page_Bending.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
@@ -27,7 +27,6 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Proce
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Recurring_Confirm_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Notification_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/ConfirmDisableLockScreen.dart';
 import 'package:stock_mate_project/View/Screens/Auth/LockScreen.dart';
@@ -35,13 +34,11 @@ import 'package:stock_mate_project/View/Screens/Auth/LockSetup_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
-import 'package:stock_mate_project/View/Screens/Chat/chat_page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/main.dart';
 
 abstract class AppPages {
   static final routes = [
-    GetPage(name: AppRoutes.ChatPage, page: () => ChatPage()),
     GetPage(
       name: AppRoutes.DepartmentHeadsMainPage,
       page: () => const DepartmentHeadsMainPage(),
@@ -64,11 +61,6 @@ abstract class AppPages {
       name: AppRoutes.DepartmentHeadsHomePage,
       page: () => DepartmentHeadsHomePage(),
     ),
-    // GetPage(
-    //   name: AppRoutes.DepartmentHeadsInventoryPage,
-    //   page: () =>  DepartmentHeadsInventoryPage(),
-    //   binding: DepartmentHeadsInventoryBinding(),
-    // ),
     GetPage(
       name: AppRoutes.DepartmentOrdersPage,
       page: () => const DepartmentOrdersPage(),
@@ -94,7 +86,6 @@ abstract class AppPages {
       name: AppRoutes.NotificationPage,
       page: () => const NotificationPage(),
     ),
-    GetPage(name: AppRoutes.ReportPage, page: () => const ReportPage()),
     GetPage(name: AppRoutes.SettingPage, page: () => const SettingPage()),
     GetPage(name: AppRoutes.MainPage, page: () => const MainPage()),
     GetPage(name: AppRoutes.SplashViewPage, page: () => SplashViewPage()),

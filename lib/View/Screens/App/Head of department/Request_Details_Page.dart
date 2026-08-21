@@ -3,11 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/utils/New_Customs/PriorityBadge.dart';
-import 'package:stock_mate_project/core/utils/New_Customs/RecurringBadge.dart';
+import 'package:stock_mate_project/Controller/Service/Unified_Requests_Controller.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/PriorityBadge.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/RecurringBadge.dart';
 import 'package:stock_mate_project/core/models/Order_Item_Details.dart';
+import 'package:stock_mate_project/core/models/Refill_Delivery_Model.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Request_Details_Controller.dart';
-import 'package:stock_mate_project/core/utils/New_Customs/StatusBadge.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Refill_Delivery_Details_Page.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/StatusBadge.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/custom_Head_Card.dart';
@@ -48,6 +51,9 @@ class RequestDetailsPage extends StatelessWidget {
                 return _buildErrorState(c);
               }
 
+              // ✅ جلب التسليمات الواردة من الـ Unified Controller
+              final pendingDeliveries = _getPendingDeliveries(requestId);
+
               // ✅ المحتوى
               return RefreshIndicator(
                 color: constBlue,
@@ -66,7 +72,11 @@ class RequestDetailsPage extends StatelessWidget {
                     if (d.notes != null && d.notes!.trim().isNotEmpty)
                       _buildNotesCard(d),
 
-                    // ─── ✅✅✅ زر إلغاء الطلب (من الكونترولر مباشرة) ───
+                    // ─── ✅ تسليمات واردة بانتظار التأكيد ─────────────────
+                    if (pendingDeliveries.isNotEmpty)
+                      _buildPendingDeliveriesCard(pendingDeliveries),
+
+                    // ─── ✅✅✅ زر إلغاء الطلب ─────────────────────────────
                     if (c.canCancel) _buildCancelButton(c, d),
 
                     SizedBox(height: h * 0.03),
@@ -74,6 +84,133 @@ class RequestDetailsPage extends StatelessWidget {
                 ),
               );
             }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── ✅ جلب التسليمات الواردة من الـ Unified Controller ────────────
+  List<RefillDelivery> _getPendingDeliveries(String requestId) {
+    try {
+      final unified = Get.find<UnifiedRequestsController>();
+      return unified.getPendingDeliveries(requestId);
+    } catch (_) {
+      return [];
+    }
+  }
+
+  // ─── ✅ كارد التسليمات الواردة ─────────────────────────────────────
+  Widget _buildPendingDeliveriesCard(List<RefillDelivery> deliveries) {
+    return _card(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: constOrange.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.local_shipping_outlined,
+                  size: 18,
+                  color: constOrange,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'تسليمات واردة بانتظار التأكيد',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Cairo',
+                  color: constOrange,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...deliveries.map((d) => _PendingDeliveryTile(delivery: d)),
+        ],
+      ),
+    );
+  }
+
+  // ─── ✅ بلاطة تسليم واحد ───────────────────────────────────────────
+  Widget _PendingDeliveryTile({required RefillDelivery delivery}) {
+    final isFinal = delivery.type.isFinal;
+    final color = isFinal ? constGreen : constOrange;
+    final bgColor = isFinal ? constLightGreen : constLightOrange;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9FAFB),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              isFinal ? Icons.done_all_rounded : Icons.local_shipping_outlined,
+              color: color,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isFinal ? 'الدفعة النهائية' : 'دفعة',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Cairo',
+                    color: color,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'تاريخ التسليم: ${delivery.formattedDeliveredAt}',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey.shade600,
+                    fontFamily: 'Cairo',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () => Get.to(
+              () => RefillDeliveryDetailsPage(deliveryId: delivery.id),
+              transition: Transition.rightToLeft,
+            ),
+            icon: const Icon(Icons.verified_outlined, size: 16),
+            label: const Text(
+              'تأكيد',
+              style: TextStyle(fontFamily: 'Cairo', fontSize: 12),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: color,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
           ),
         ],
       ),
@@ -198,8 +335,8 @@ class RequestDetailsPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              Navigator.of(ctx).pop(); // إغلاق الديالوغ
-              await ctrl.cancelRequest(); // ✅ الإلغاء + تحديث التفاصيل تلقائياً
+              Navigator.of(ctx).pop();
+              await ctrl.cancelRequest();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: constRed,

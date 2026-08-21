@@ -7,6 +7,7 @@ import 'package:stock_mate_project/Controller/Service/Unread_Notification_Contro
 import 'package:stock_mate_project/View/Screens/App/Boss/Boss_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Requests_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Chat_Bot_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
@@ -43,7 +44,7 @@ class MainPage extends StatelessWidget {
                     size: 28,
                   ),
                   onPressed: () {
-                    Get.toNamed(AppRoutes.ChatPage);
+                    Get.to(ChatBotPage());
                   },
                 ),
                 Stack(

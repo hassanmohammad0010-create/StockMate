@@ -6,7 +6,6 @@ import 'package:stock_mate_project/Controller/App/Setting_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_User_Profile_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
 import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
-import 'package:stock_mate_project/core/router/app_routes.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -128,18 +127,6 @@ class SettingPage extends StatelessWidget {
                 ),
               ),
             ),
-
-            CustomListTile(
-              backgroundColor: constLightBlue,
-              description: 'قم بتقديم اقتراح او ابلاغ',
-              icon: Icons.report,
-              iconColor: constBlue,
-              onTap: () {
-                Get.toNamed(AppRoutes.ReportPage);
-              },
-              title: 'تواصل معنا',
-            ),
-
             Obx(() {
               if (controller.isLoadingLockState.value) {
                 return const Padding(

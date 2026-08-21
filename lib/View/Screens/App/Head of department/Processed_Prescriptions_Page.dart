@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
-import 'package:stock_mate_project/core/utils/New_Customs/My_Prescription_Card.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Prescription_Card.dart';
 import 'package:stock_mate_project/Controller/Service/Pharmacy_Dispense_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Prescription_Details_Page.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Patient_Search_Field.dart';

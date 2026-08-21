@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Service/Head%20of%20department/Confirm_Delivery_Service.dart';
 import 'package:stock_mate_project/Service/Head%20of%20department/Get_Refill_Delivery_Details_Service.dart';
-import 'package:stock_mate_project/Controller/Service/Refill_Deliveries_Controller.dart';
+import 'package:stock_mate_project/Controller/Service/Unified_Requests_Controller.dart';
 import 'package:stock_mate_project/core/models/Refill_Delivery_Details_Model.dart';
 import 'package:stock_mate_project/core/Function/Custom_Snakbar.dart';
 
@@ -24,13 +24,8 @@ class RefillDeliveryDetailsController extends GetxController {
   final RxString errorMessage = ''.obs;
 
   // ─── ✅✅✅ حالة تأكيد الاستلام ───────────────────────────────────
-  /// الكمية المستلمة لكل صنف (تبدأ = الكمية المرسلة تلقائياً)
   final RxMap<String, int> receivedQuantities = <String, int>{}.obs;
-
-  /// حقل الملاحظات الاختياري
   final TextEditingController notesController = TextEditingController();
-
-  /// حالة الإرسال
   final RxBool isConfirming = false.obs;
 
   @override
@@ -75,19 +70,19 @@ class RefillDeliveryDetailsController extends GetxController {
     }
   }
 
-  /// ✅ تحديث كمية مستلمة (من الـ stepper في الديالوغ)
+  /// ✅ تحديث كمية مستلمة
   void updateReceivedQuantity(String itemId, int value) {
     receivedQuantities[itemId] = value;
   }
 
-  /// ✅ الكمية المستلمة المختارة لصنف (افتراضي = المرسلة)
+  /// ✅ الكمية المستلمة المختارة لصنف
   int quantityFor(DeliveryItem item) =>
       receivedQuantities[item.id] ?? item.shippedQuantity;
 
   /// ✅ هل تم تأكيد هذا التسليم مسبقاً؟
   bool get isConfirmed => details.value?.confirmedAt != null;
 
-  // ─── ✅✅✅ تأكيد الاستلام → POST .../confirm ─────────────────────
+  // ─── ✅✅✅ تأكيد الاستلام ────────────────────────────────────────
   Future<void> confirmReceipt() async {
     if (isConfirming.value) return;
 
@@ -96,7 +91,6 @@ class RefillDeliveryDetailsController extends GetxController {
 
     isConfirming.value = true;
     try {
-      // ✅ بناء العناصر: deliveryItemId + receivedQuantity
       final items = d.items
           .map(
             (item) => ConfirmDeliveryItemInput(
@@ -124,17 +118,16 @@ class RefillDeliveryDetailsController extends GetxController {
           messageColor: Colors.white,
         );
 
-        // ✅ 3) تحديث قائمة التسليمات
-        if (Get.isRegistered<RefillDeliveriesController>(tag: 'deliveries')) {
-          Get.find<RefillDeliveriesController>(tag: 'deliveries')
-              .fetchDeliveries();
+
+        // ✅ 4) تحديث الـ Unified Controller (الجديد)
+        if (Get.isRegistered<UnifiedRequestsController>()) {
+          Get.find<UnifiedRequestsController>().fetchAll();
         }
 
-        // ✅ 4) العودة لقائمة التسليمات
+        // ✅ 5) العودة لقائمة الطلبات
         await Future.delayed(const Duration(milliseconds: 250));
         Get.back();
       } else {
-        // ❌ فشل → البقاء في الديالوغ مع رسالة خطأ
         customSnackBar(
           title: 'فشل التأكيد',
           message: _translateError(_confirmService.lastError),

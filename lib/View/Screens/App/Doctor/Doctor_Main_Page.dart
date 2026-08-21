@@ -6,6 +6,7 @@ import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabController.dart';
 import 'package:stock_mate_project/Controller/Service/Get_User_Profile_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
+import 'package:stock_mate_project/View/Screens/App/Chat_Bot_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
@@ -46,7 +47,7 @@ class DoctorMainPage extends StatelessWidget {
                     size: 28,
                   ),
                   onPressed: () {
-                    Get.toNamed(AppRoutes.ChatPage);
+                    Get.to(ChatBotPage());
                   },
                 ),
                 Stack(

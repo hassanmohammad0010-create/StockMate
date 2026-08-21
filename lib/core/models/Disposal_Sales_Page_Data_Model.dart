@@ -1,5 +1,5 @@
 // lib/core/models/Disposal_Sale_Model.dart
-// ignore_for_file: file_names
+// ignore_for_file: file_names, duplicate_ignore
 
 // lib/core/models/Disposal_Sale_Request_Status.dart
 // ignore_for_file: file_names

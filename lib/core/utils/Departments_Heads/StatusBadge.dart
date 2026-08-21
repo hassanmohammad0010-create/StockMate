@@ -1,0 +1,192 @@
+// // ignore_for_file: file_names, use_key_in_widget_constructors
+
+// import 'package:flutter/material.dart';
+// import 'package:stock_mate_project/Constant/Const.dart';
+// import 'package:stock_mate_project/core/models/Order_Item.dart';
+
+// class StatusBadge extends StatelessWidget {
+//   final OrderStatus status;
+
+//   const StatusBadge({super.key, required this.status});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final h = context.screenHeight;
+//     final w = context.screenWidth;
+
+//     late String label;
+//     late Color bgColor;
+//     late Color textColor;
+
+//     switch (status) {
+//       // ── معلق (مسودة + بانتظار موافقة المشفى) ──
+//       case OrderStatus.draft:
+//         label = 'معلق';
+//         bgColor = constLightOrange;
+//         textColor = constOrange;
+//         break;
+//       case OrderStatus.pending_hospital_approval:
+//         label = 'بانتظار الموافقة';
+//         bgColor = constLightOrange;
+//         textColor = constOrange;
+//         break;
+//       // ── قيد التنفيذ (بانتظار المدير + قيد التجهيز) ──
+//       case OrderStatus.pending_manager_approval:
+//       case OrderStatus.preparing:
+//         label = 'قيد التنفيذ';
+//         bgColor = constLightBlue;
+//         textColor = constBlue;
+//         break;
+
+//       // ── مرفوض (مرفوض مشفى + مرفوض مدير + ملغي) ──
+//       case OrderStatus.hospital_rejected:
+//       case OrderStatus.manager_rejected:
+//       case OrderStatus.cancelled:
+//         label = 'مرفوض';
+//         bgColor = constLightRed;
+//         textColor = constRed;
+//         break;
+
+//       // ── منجز (مكتمل جزئياً) ──
+//       case OrderStatus.partially_complete:
+//         label = 'منجز';
+//         bgColor = constLightGreen;
+//         textColor = constGreen;
+//         break;
+
+//       // ── مستلم (مكتمل) ──
+//       case OrderStatus.complete:
+//         label = 'مستلم';
+//         bgColor = constLightGreen;
+//         textColor = constGreen;
+//         break;
+//     }
+
+//     return Container(
+//       padding: EdgeInsets.symmetric(vertical: h * 0.002, horizontal: w * 0.01),
+//       width: w * 0.22,
+//       decoration: BoxDecoration(
+//         color: bgColor,
+//         borderRadius: BorderRadius.circular(8),
+//       ),
+//       child: Center(
+//         child: Text(
+//           label,
+//           style: TextStyle(
+//             fontFamily: lateef,
+//             fontSize: 20,
+//             fontWeight: FontWeight.bold,
+//             color: textColor,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// ignore_for_file: file_names, use_key_in_widget_constructors
+
+import 'package:flutter/material.dart';
+import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/core/models/Order_Item.dart';
+
+class StatusBadge extends StatelessWidget {
+  final OrderStatus status;
+
+  const StatusBadge({super.key, required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final h = context.screenHeight;
+    final w = context.screenWidth;
+
+    late String label;
+    late Color bgColor;
+    late Color textColor;
+
+    switch (status) {
+      // ── بانتظار موافقة المشفى ──
+      case OrderStatus.pending_hospital_approval:
+        label = 'بانتظار المشفى';
+        bgColor = constLightOrange;
+        textColor = constOrange;
+        break;
+
+      // ── بانتظار موافقة المدير ──
+      case OrderStatus.pending_manager_approval:
+        label = 'بانتظار المدير';
+        bgColor = constLightOrange;
+        textColor = constOrange;
+        break;
+
+      // ── قيد التحضير ──
+      case OrderStatus.preparing:
+        label = 'قيد التحضير';
+        bgColor = constLightBlue;
+        textColor = constBlue;
+        break;
+
+      // ── مرفوض مشفى ──
+      case OrderStatus.hospital_rejected:
+        label = 'مرفوض مشفى';
+        bgColor = constLightRed;
+        textColor = constRed;
+        break;
+
+      // ── مرفوض مدير ──
+      case OrderStatus.manager_rejected:
+        label = 'مرفوض مدير';
+        bgColor = constLightRed;
+        textColor = constRed;
+        break;
+
+      // ── ملغي ──
+      case OrderStatus.cancelled:
+        label = 'ملغي';
+        bgColor = constLightRed;
+        textColor = constRed;
+        break;
+
+      // ── مكتمل جزئي ──
+      case OrderStatus.partially_complete:
+        label = 'مكتمل جزئي';
+        bgColor = constLightGreen;
+        textColor = constGreen;
+        break;
+
+      // ── مكتمل ──
+      case OrderStatus.complete:
+        label = 'مكتمل';
+        bgColor = constLightGreen;
+        textColor = constGreen;
+        break;
+
+      // ── مسودة (لا تُعرض في الفلاتر لكن نحتاجها هنا احتياطياً) ──
+      case OrderStatus.draft:
+        label = 'مسودة';
+        bgColor = Colors.grey.shade200;
+        textColor = Colors.grey.shade600;
+        break;
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: h * 0.002, horizontal: w * 0.01),
+      width: w * 0.22,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            fontFamily: lateef,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: textColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
