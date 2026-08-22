@@ -266,7 +266,9 @@ class RequestPage extends StatelessWidget {
   ) {
     switch (selectedFilter) {
       case 'بأنتظار موافقتك':
-        return items.where((r) => r.statusLabel == 'بأنتظار موافقتك').toList();
+        return items
+            .where((r) => r.statusLabel == 'بأنتظار مدير المستشفى')
+            .toList();
       case 'قيد التنفيذ':
         return items.where((r) => r.statusLabel == 'قيد التنفيذ').toList();
       case 'منجز':
@@ -274,10 +276,25 @@ class RequestPage extends StatelessWidget {
             .where((r) => r.statusLabel == 'منجز' || r.statusLabel == 'مستلم')
             .toList();
       case 'مرفوضة':
-        return items.where((r) => r.statusLabel == 'مرفوض').toList();
+        return items
+            .where(
+              (r) =>
+                  r.statusLabel == 'مرفوض مدير المستشفى' ||
+                  r.statusLabel == 'مرفوض مدير المستودع' ||
+                  r.statusLabel == 'مرفوض',
+            )
+            .toList();
       case 'الكل':
       default:
-        return items.where((r) => r.statusLabel != 'معلق').toList();
+        final filtered = items.where((r) => r.statusLabel != 'معلق').toList();
+        // ✅ الطلبات "بأنتظار مدير المستشفى" أولاً، وبعدها الباقي بنفس ترتيبها الأصلي
+        final pending = filtered
+            .where((r) => r.statusLabel == 'بأنتظار مدير المستشفى')
+            .toList();
+        final rest = filtered
+            .where((r) => r.statusLabel != 'بأنتظار مدير المستشفى')
+            .toList();
+        return [...pending, ...rest];
     }
   }
 
@@ -317,7 +334,17 @@ class RequestPage extends StatelessWidget {
             .toList();
       case 'الكل':
       default:
-        return items.where((r) => r.status != OrderStatus.draft).toList();
+        final filtered = items
+            .where((r) => r.status != OrderStatus.draft)
+            .toList();
+        // ✅ الطلبات "بأنتظار موافقة مدير المستشفى" أولاً، وبعدها الباقي
+        final pending = filtered
+            .where((r) => r.status == OrderStatus.pending_hospital_approval)
+            .toList();
+        final rest = filtered
+            .where((r) => r.status != OrderStatus.pending_hospital_approval)
+            .toList();
+        return [...pending, ...rest];
     }
   }
 }

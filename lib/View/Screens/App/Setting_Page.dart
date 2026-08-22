@@ -4,8 +4,11 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/App/Setting_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Get_User_Profile_Controller.dart';
+import 'package:stock_mate_project/Service/App/Logout_Service.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
-import 'package:stock_mate_project/core/Function/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/Function/show_Loading_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/Custom_Dialog.dart';
+import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Dialog/DialogType.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -154,10 +157,19 @@ class SettingPage extends StatelessWidget {
               icon: Icons.delete,
               iconColor: constBlue,
               onTap: () {
-                showConfirmDialog(
-                  onConfirm: () {},
-                  tital: 'هل انت متأكد',
-                  sub: 'انت على وشك حذف حسابك',
+                CustomDialog.show(
+                  title: 'هل انت متأكد',
+                  message: 'انت على وشك حذف حسابك',
+                  type: DialogType.danger,
+                  confirmText: 'حذف',
+                  cancelText: 'إلغاء',
+                  onConfirm: () {
+                    Get.back();
+                    // ⚠️ TODO: لما توفرلي endpoint حذف الحساب، بربطه هون
+                  },
+                  onCancel: () {
+                    Get.back();
+                  },
                 );
               },
               title: 'حذف الحساب',
@@ -169,10 +181,24 @@ class SettingPage extends StatelessWidget {
               icon: Icons.logout,
               iconColor: constBlue,
               onTap: () {
-                showConfirmDialog(
-                  onConfirm: () {},
-                  tital: 'هل انت متأكد',
-                  sub: 'انت على وشك تسجيل الخروج من حسابك ',
+                CustomDialog.show(
+                  title: 'هل انت متأكد',
+                  message: 'انت على وشك تسجيل الخروج من حسابك ',
+                  type: DialogType.warning,
+                  confirmText: 'تسجيل الخروج',
+                  cancelText: 'إلغاء',
+                  onConfirm: () async {
+                    Get.back(); // ← سكر ديالوج التأكيد أول
+                    showLoadingDialog(); // ← يظهر لحين ما يرجع الـ response
+                    await LogoutService.logout();
+                    // LogoutService.logout() بينهي بـ Get.offAllNamed(LoginPage)،
+                    // فديالوج التحميل أصلاً بينشال مع باقي الصفحات، بس
+                    // منستدعي hideLoadingDialog() احتياطياً بكل الأحوال
+                    hideLoadingDialog();
+                  },
+                  onCancel: () {
+                    Get.back();
+                  },
                 );
               },
               title: 'تسجيل الخروج',
