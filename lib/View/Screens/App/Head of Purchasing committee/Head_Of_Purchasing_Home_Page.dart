@@ -48,7 +48,7 @@ class HeadOfPurchasingHomePage extends StatelessWidget {
           child: Column(
             children: [
               CustomNameContainer(
-                empName: 'د. ${getNameRollOfUserController.name.value}' ?? '',
+                empName: 'د. ${getNameRollOfUserController.name.value}',
                 specializationName: 'رئيس لجنة الشراء',
               ),
               Wrap(

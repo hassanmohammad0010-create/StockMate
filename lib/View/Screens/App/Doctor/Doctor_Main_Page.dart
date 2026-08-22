@@ -11,8 +11,6 @@ import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Home_Page.dart
 import 'package:stock_mate_project/View/Screens/App/Setting_Page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 
-import '../Chat_Bot_Page.dart';
-
 class DoctorMainPage extends StatelessWidget {
   const DoctorMainPage({super.key});
 
