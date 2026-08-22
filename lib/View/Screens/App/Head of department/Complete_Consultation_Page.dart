@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Service/Patient_Details_Controller.dart';
+import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
 import 'package:stock_mate_project/core/models/Prescription_Model.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Send_Prescription_Page.dart';
 import 'package:stock_mate_project/core/models/Patient_Model.dart';
 import 'package:stock_mate_project/core/utils/Departments_Heads/Custom_Text_Field/Custom_My_TextFormFaild.dart';
+import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
 
 class CompleteConsultationPage extends StatelessWidget {
   const CompleteConsultationPage({super.key, required this.patient});
@@ -20,27 +22,38 @@ class CompleteConsultationPage extends StatelessWidget {
     final h = context.screenHeight;
     final w = context.screenWidth;
 
-    return Scaffold(
-      backgroundColor: constBackgroundColor,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: constBackgroundColor,
+        body: Column(
           children: [
-            _buildTopBar(context, w),
+            CustomBackContainer(),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.fromLTRB(
-                  w * 0.05,
+                  w * 0.02,
                   h * 0.01,
-                  w * 0.05,
+                  w * 0.02,
                   h * 0.04,
                 ),
                 children: [
-                  _buildPatientStrip(w, h),
+                  CustomNameContainer(
+                    empName: patient.name,
+                    specializationName:
+                        'اغلاق الزيارة الحالية للمريض وانهاء معاينته',
+                  ),
                   SizedBox(height: h * 0.03),
-                  _sectionLabel('التشخيص والملاحظات', Icons.assignment_outlined),
+                  _sectionLabel(
+                    'التشخيص والملاحظات',
+                    Icons.assignment_outlined,
+                  ),
                   SizedBox(height: h * 0.012),
-                  _buildTextCard(
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: w * 0.02,
+                      vertical: h * 0.005,
+                    ),
                     child: Column(
                       children: [
                         CustomMyTextFormField(
@@ -59,20 +72,25 @@ class CompleteConsultationPage extends StatelessWidget {
                       ],
                     ),
                   ),
+
                   SizedBox(height: h * 0.03),
                   _sectionLabel('أدوية خارجية', Icons.medication_outlined),
                   SizedBox(height: h * 0.012),
-                  _buildTextCard(
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: w * 0.02,
+                      vertical: h * 0.005,
+                    ),
                     child: CustomMyTextFormField(
                       prefixIcon: Icons.medication_outlined,
-                      label: 'أدوية خارجية (اختياري)',
+                      label: 'أدوية خارجية',
                       hint: 'أي أدوية خارجية يُوصى بها',
                       controller: c.externalMedicationsController,
                     ),
                   ),
-                  SizedBox(height: h * 0.03),
+                  SizedBox(height: h * 0.02),
                   _buildPrescriptionsHeader(c),
-                  SizedBox(height: h * 0.012),
+                  SizedBox(height: h * 0.01),
                   _buildPrescriptionsList(c, w),
                   SizedBox(height: h * 0.02),
                 ],
@@ -80,100 +98,7 @@ class CompleteConsultationPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: _buildConfirmBar(context, c, w),
-    );
-  }
-
-  // ─── الشريط العلوي ────────────────────────────────────────────────
-  Widget _buildTopBar(BuildContext context, double w) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(w * 0.03, w * 0.02, w * 0.05, w * 0.02),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(Icons.arrow_forward, color: constColor),
-          ),
-          const SizedBox(width: 4),
-          const Expanded(
-            child: Text(
-              'إنهاء المعاينة',
-              style: TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Cairo',
-                color: constColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─── شريط بيانات المريض المختصر ───────────────────────────────────
-  Widget _buildPatientStrip(double w, double h) {
-    return Container(
-      padding: EdgeInsets.all(w * 0.04),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerRight,
-          end: Alignment.centerLeft,
-          colors: [constBlue, constBlue.withOpacity(0.85)],
-        ),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: constBlue.withOpacity(0.25),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: w * 0.13,
-            height: w * 0.13,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.18),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.check_circle_outline,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-          SizedBox(width: w * 0.035),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  patient.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Cairo',
-                    color: Colors.white,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  'إغلاق الزيارة الحالية وحفظ بياناتها',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: 'Cairo',
-                    color: Colors.white.withOpacity(0.85),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        bottomNavigationBar: _buildConfirmBar(context, c, w),
       ),
     );
   }
@@ -196,30 +121,13 @@ class CompleteConsultationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextCard({required Widget child}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
-
   // ─── رأس قسم الوصفات + زر الإضافة ──────────────────────────────────
   Widget _buildPrescriptionsHeader(PatientDetailsController c) {
     return Row(
       children: [
-        Expanded(child: _sectionLabel('الوصفات الطبية', Icons.receipt_long_outlined)),
+        Expanded(
+          child: _sectionLabel('الوصفات الطبية', Icons.receipt_long_outlined),
+        ),
         TextButton.icon(
           onPressed: () => Get.to(
             () => const SendPrescriptionPage(),
@@ -308,7 +216,11 @@ class CompleteConsultationPage extends StatelessWidget {
                   color: constBlue.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.receipt_long, size: 15, color: constBlue),
+                child: const Icon(
+                  Icons.receipt_long,
+                  size: 15,
+                  color: constBlue,
+                ),
               ),
               const SizedBox(width: 8),
               Text(

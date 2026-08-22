@@ -47,7 +47,6 @@ dependencies:
   uuid: ^4.4.0
   connectivity_plus: ^6.0.3
   flutter_animate: ^4.5.0
-  flutter_dotenv: ^6.0.1
   local_auth: ^2.3.0
   flutter_secure_storage: ^9.2.2
   dots_indicator: ^4.0.1
@@ -93,7 +92,6 @@ flutter:
   assets:
     - assets/Image/
     - assets/Image/Logo/
-    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -110,7 +108,6 @@ flutter:
     - family: Cairo
       fonts:
         - asset: assets/Fonts/Cairo-VariableFont_slnt,wght.ttf
-        - asset: assets/prompts/system_prompt.txt
         # - asset: fonts/Schyler-Italic.ttf
         #   style: italic
     - family: Lateef

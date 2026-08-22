@@ -30,12 +30,15 @@ class ChatBotService {
   Future<ChatBotResponseModel?> sendMessage({
     required String message,
     required List<ChatMessageModel> history,
+    required String platform,
+
   }) async {
     return _dispatcher.send<ChatBotResponseModel?>(
       request: (token) {
         final body = jsonEncode({
           'message': message,
           'history': history.map((e) => e.toHistoryJson()).toList(),
+          'platform': platform,
         });
 
         return http.post(

@@ -49,6 +49,9 @@ class PatientListItem {
   /// ✅ id مدخل الطابور (تذكرة الانتظار) — لازم لإند بوينت الحجز
   final String? queueEntryId;
 
+  /// ✅ اسم الطبيب الذي حجز المريض (يُملأ فقط لحالة in_consultation)
+  final String? lockedByName;
+
   const PatientListItem({
     required this.id,
     required this.fullName,
@@ -60,6 +63,7 @@ class PatientListItem {
     required this.createdAt,
     required this.updatedAt,
     this.queueEntryId,
+    this.lockedByName,
   });
 
   factory PatientListItem.fromJson(Map<String, dynamic> json) {
@@ -79,7 +83,7 @@ class PatientListItem {
           DateTime.now(),
       updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? '') ??
           DateTime.now(),
-      // queueEntryId لا يأتي من هذا الإند بوينت — يُمرر من طابور القسم
+      // queueEntryId و lockedByName لا يأتيان من هذا الإند بوينت — يُمرران من طابور القسم
     );
   }
 
