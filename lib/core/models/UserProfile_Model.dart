@@ -72,9 +72,11 @@ class UserProfile {
       department: json['department'] is Map
           ? UserDepartment.fromJson(json['department'] as Map<String, dynamic>)
           : null,
-      createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? '') ??
+      createdAt:
+          DateTime.tryParse(json['createdAt']?.toString() ?? '') ??
           DateTime.now(),
-      updatedAt: DateTime.tryParse(json['updatedAt']?.toString() ?? '') ??
+      updatedAt:
+          DateTime.tryParse(json['updatedAt']?.toString() ?? '') ??
           DateTime.now(),
       permissions: (json['permissions'] as List<dynamic>? ?? [])
           .map((e) => e.toString())

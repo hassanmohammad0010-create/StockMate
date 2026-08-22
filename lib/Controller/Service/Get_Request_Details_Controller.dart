@@ -47,7 +47,8 @@ class RequestDetailsController extends GetxController {
       isLoading.value = false;
     }
   }
-    // ─── ✅✅✅ منطق إلغاء الطلب ─────────────────────────────────────
+
+  // ─── ✅✅✅ منطق إلغاء الطلب ─────────────────────────────────────
   final CancelRefillRequestService _cancelService =
       CancelRefillRequestService();
 

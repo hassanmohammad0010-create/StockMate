@@ -6,10 +6,7 @@ import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inven
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Patients_Page.dart';
 import 'package:stock_mate_project/core/Bindings/Auth/Login_Page_Bending.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Completed_Request_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Create_Employee_Account_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Inventory_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/Entry_And_Exit_Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Purchasing_Request_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Suppliers_Page.dart';
@@ -32,7 +29,6 @@ import 'package:stock_mate_project/View/Screens/Auth/ConfirmDisableLockScreen.da
 import 'package:stock_mate_project/View/Screens/Auth/LockScreen.dart';
 import 'package:stock_mate_project/View/Screens/Auth/LockSetup_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Login_Page.dart';
-import 'package:stock_mate_project/View/Screens/Auth/Reset_Password_Page.dart';
 import 'package:stock_mate_project/View/Screens/Auth/Splash_View_Page.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/main.dart';
@@ -94,11 +90,7 @@ abstract class AppPages {
       page: () => LoginPage(),
       binding: LoginBinding(),
     ),
-    GetPage(name: AppRoutes.ResetPasswordPage, page: () => ResetPasswordPage()),
-    GetPage(
-      name: AppRoutes.CompletedRequestPage,
-      page: () => CompletedRequestPage(),
-    ),
+
     GetPage(
       name: AppRoutes.UnderImplementationRequestPage,
       page: () => UnderImplementationRequestPage(),
@@ -115,15 +107,8 @@ abstract class AppPages {
       name: AppRoutes.ElectronicInventoryPage,
       page: () => ElectronicInventoryPage(),
     ),
-    GetPage(
-      name: AppRoutes.EntryAndExitReportPage,
-      page: () => EntryAndExitReportPage(),
-    ),
+
     GetPage(name: AppRoutes.SuppliersPage, page: () => SuppliersPage()),
-    GetPage(
-      name: AppRoutes.CreateEmployeeAccountPage,
-      page: () => CreateEmployeeAccountPage(),
-    ),
 
     GetPage(
       name: AppRoutes.HasanServiceTester,

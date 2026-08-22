@@ -154,7 +154,18 @@ class DiplayDisposalRequestPage extends StatelessWidget {
 
       case 'الكل':
       default:
-        return items;
+        // ✅ نرتب النسخة بس، من غير ما نلمس الليست الأصلية
+        final sorted = [...items];
+        sorted.sort((a, b) {
+          final aPending = a.status == DisposalSaleRequestStatus.pendingApproval
+              ? 0
+              : 1;
+          final bPending = b.status == DisposalSaleRequestStatus.pendingApproval
+              ? 0
+              : 1;
+          return aPending.compareTo(bPending);
+        });
+        return sorted;
     }
   }
 }

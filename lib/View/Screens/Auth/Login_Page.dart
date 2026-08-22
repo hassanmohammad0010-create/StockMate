@@ -141,6 +141,7 @@ class LoginPage extends StatelessWidget {
                             return CustomMainButtom(
                               widget: loadingIndicatorController.load
                                   ? CustomLoadingIndicator(
+                                      size: scale * 0.2,
                                       color: constLightBlue,
                                     )
                                   : null,

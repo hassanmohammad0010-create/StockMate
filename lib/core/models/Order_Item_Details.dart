@@ -64,14 +64,20 @@ class OrderItemDetails {
       requestNumber: json['requestNumber']?.toString() ?? '',
       departmentId: json['departmentId']?.toString() ?? '',
       department: json['department'] is Map
-          ? DetailDepartment.fromJson(json['department'] as Map<String, dynamic>)
+          ? DetailDepartment.fromJson(
+              json['department'] as Map<String, dynamic>,
+            )
           : null,
       requestedById: json['requestedById']?.toString() ?? '',
       requestedBy: json['requestedBy'] is Map
-          ? DetailRequestedBy.fromJson(json['requestedBy'] as Map<String, dynamic>)
+          ? DetailRequestedBy.fromJson(
+              json['requestedBy'] as Map<String, dynamic>,
+            )
           : null,
       status: OrderStatus.fromString(json['status']?.toString() ?? 'draft'),
-      priority: OrderPriority.fromString(json['priority']?.toString() ?? 'normal'),
+      priority: OrderPriority.fromString(
+        json['priority']?.toString() ?? 'normal',
+      ),
       requestType: requestTypeStr,
       recurringInterval: RecurringInterval.fromString(requestTypeStr),
       frequencyInterval: json['frequencyInterval'] != null
@@ -103,7 +109,8 @@ class OrderItemDetails {
       status == OrderStatus.cancelled;
 
   /// سبب الرفض (أياً كان مصدره)
-  String? get activeRejectionReason => hospitalRejectionReason ?? rejectionReason;
+  String? get activeRejectionReason =>
+      hospitalRejectionReason ?? rejectionReason;
 
   /// تاريخ الموافقة (أياً كان مصدره)
   DateTime? get activeApprovedAt => hospitalApprovedAt ?? approvedAt;
@@ -126,7 +133,11 @@ class DetailDepartment {
   final String name;
   final String type;
 
-  const DetailDepartment({required this.id, required this.name, required this.type});
+  const DetailDepartment({
+    required this.id,
+    required this.name,
+    required this.type,
+  });
 
   factory DetailDepartment.fromJson(Map<String, dynamic> json) {
     return DetailDepartment(
@@ -226,7 +237,11 @@ class DetailUnit {
   final String name;
   final String abbreviation;
 
-  const DetailUnit({required this.id, required this.name, required this.abbreviation});
+  const DetailUnit({
+    required this.id,
+    required this.name,
+    required this.abbreviation,
+  });
 
   factory DetailUnit.fromJson(Map<String, dynamic> json) {
     return DetailUnit(

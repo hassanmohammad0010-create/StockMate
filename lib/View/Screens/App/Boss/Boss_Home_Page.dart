@@ -7,7 +7,7 @@ import 'package:stock_mate_project/Controller/App/Urgent_RefillRequests_Controll
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
 import 'package:stock_mate_project/Controller/App/Urgent_Purchase_Requests_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Diplay_Disposal_Request_Page.dart';
-import 'package:stock_mate_project/View/Screens/App/Boss/DisplayInventoryAdjustmentsPage.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Inventory_Adjustments_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Display_Patient_Visits_Report_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Adjustments_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/User_Mangment_Page.dart';
