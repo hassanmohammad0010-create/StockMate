@@ -2,9 +2,11 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Doctor/Doctor_Main_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Department_Heads_Orders_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/In_Consultation_Patients_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Inventory_Adjustments_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Cart_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Patients_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Waiting_Patients_Page.dart';
 import 'package:stock_mate_project/core/Bindings/Auth/Login_Page_Bending.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Electronic_Inventory_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Nessery_Department_Request_Page.dart';
@@ -127,7 +129,15 @@ abstract class AppPages {
       name: AppRoutes.ConfirmDisableLockScreen,
       page: () => const ConfirmDisableLockScreen(),
     ),
-    GetPage(name: AppRoutes.PatientsPage, page: () => const PatientsPage()),
+    GetPage(name: AppRoutes.PatientsPage, page: () => PatientsPage()),
+    GetPage(
+      name: AppRoutes.WaitingPatientsPage,
+      page: () => WaitingPatientsPage(),
+    ),
+    GetPage(
+      name: AppRoutes.InConsultationPatientsPage,
+      page: () => InConsultationPatientsPage(),
+    ),
     GetPage(
       name: AppRoutes.InventoryAdjustmentsPage,
       page: () => const InventoryAdjustmentsPage(),

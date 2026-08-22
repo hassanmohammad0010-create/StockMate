@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Service/Patient_Details_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/CompleteConsultationPage.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Complete_Consultation_Page.dart';
 import 'package:stock_mate_project/core/models/Patient_Details_Info.dart';
 import 'package:stock_mate_project/core/models/Patient_Model.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
@@ -53,7 +53,6 @@ class PatientsDetailsPage extends StatelessWidget {
                     w * 0.04,
                     h * 0.01,
                     w * 0.04,
-                    // ✅ مساحة إضافية أسفل حتى لا يغطي الشريط الثابت آخر عنصر
                     h * 0.12,
                   ),
                   children: [
@@ -91,10 +90,10 @@ class PatientsDetailsPage extends StatelessWidget {
           onPressed: busy ? null : c.toggleBooking,
           icon: busy
               ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+                  width: 20,
+                  height: 20,
+                  child: CustomLoadingIndicator(
+                    size: 16,
                     color: Colors.white,
                   ),
                 )

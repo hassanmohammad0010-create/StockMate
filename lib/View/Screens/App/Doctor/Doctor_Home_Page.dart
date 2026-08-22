@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabController.dart';
 import 'package:stock_mate_project/Controller/Service/Get_Name_Roll_Of_User.dart';
-import 'package:stock_mate_project/View/Widget/App/Custom_ListTile.dart';
+import 'package:stock_mate_project/Controller/Service/Patients_Controller.dart';
 import 'package:stock_mate_project/View/Widget/App/Custom_Name_Container.dart';
-import 'package:stock_mate_project/core/router/app_routes.dart';
+import 'package:stock_mate_project/View/Widget/App/WaitingPatientsList.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Loading_Indicator.dart';
 
 class DoctorHomePage extends StatelessWidget {
@@ -33,45 +33,45 @@ class DoctorHomePage extends StatelessWidget {
             getNameRollOfUserController.departmentName.value;
 
         return (name == null || departmentName == null)
-            ? CustomLoadingIndicator()
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CustomNameContainer(
-                      empName: 'د. $name',
-                      specializationName: 'قسم $departmentName',
-                    ),
-                    SizedBox(height: h * 0.01),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: AlignmentGeometry.centerRight,
-                          child: Padding(
-                            padding: EdgeInsets.only(right: w * 0.05),
-                            child: Text(
-                              'المرضى',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: cairo,
-                                fontSize: 28,
+            ? const CustomLoadingIndicator()
+            : RefreshIndicator(
+                color: constBlue,
+                onRefresh: () async {
+                  if (Get.isRegistered<PatientsController>()) {
+                    await Get.find<PatientsController>().fetchPatients();
+                  }
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      CustomNameContainer(
+                        empName: 'د. $name',
+                        specializationName: 'قسم $departmentName',
+                      ),
+                      SizedBox(height: h * 0.01),
+                      Column(
+                        children: [
+                          Align(
+                            alignment: AlignmentGeometry.centerRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: w * 0.05),
+                              child: Text(
+                                'المرضى',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: cairo,
+                                  fontSize: 28,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: h * 0.01),
-                        CustomListTile(
-                          backgroundColor: constLightBlue,
-                          description: 'معاينة المرضى',
-                          icon: Icons.person_outline,
-                          iconColor: constBlue,
-                          onTap: () {
-                            Get.toNamed(AppRoutes.PatientsPage);
-                          },
-                          title: 'المرضى',
-                        ),
-                      ],
-                    ),
-                  ],
+                          SizedBox(height: h * 0.005),
+                          const WaitingPatientsList(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
       }),

@@ -2,12 +2,10 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_mate_project/Service/App/lock_service.dart';
 import 'package:stock_mate_project/View/Screens/OnBording/On_Bording_App_View.dart';
-import 'package:stock_mate_project/core/Function/prompt_manager.dart';
 import 'package:stock_mate_project/core/router/app_pages.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/firebase_options.dart';
@@ -22,10 +20,6 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
 
   onBordingSharedPreferences = prefs;
-
-  await dotenv.load(fileName: ".env");
-
-  await PromptManager.initialize();
 
   final isLockEnabled = await LockService.instance.isLockEnabled();
 

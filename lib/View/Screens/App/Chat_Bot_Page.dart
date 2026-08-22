@@ -32,47 +32,50 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: constBackgroundColor,
-      appBar: _buildAppBar(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Obx(() {
-                final messages = controller.messages;
-                final showTyping = controller.isSending.value;
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: constBackgroundColor,
+        appBar: _buildAppBar(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Obx(() {
+                  final messages = controller.messages;
+                  final showTyping = controller.isSending.value;
 
-                return ListView.builder(
-                  controller: controller.scrollController,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 12,
-                  ),
-                  itemCount: messages.length + (showTyping ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == messages.length) {
-                      return const TypingIndicatorWidget();
-                    }
-                    final message = messages[index];
-                    return ChatBubbleWidget(
-                      message: message,
-                      onRetry: message.isError
-                          ? () => controller.retryMessage(message)
-                          : null,
-                    );
-                  },
-                );
-              }),
-            ),
-            Obx(
-              () => ChatInputFieldWidget(
-                controller: controller.textController,
-                isSending: controller.isSending.value,
-                onSend: controller.sendMessage,
+                  return ListView.builder(
+                    controller: controller.scrollController,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
+                    itemCount: messages.length + (showTyping ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == messages.length) {
+                        return const TypingIndicatorWidget();
+                      }
+                      final message = messages[index];
+                      return ChatBubbleWidget(
+                        message: message,
+                        onRetry: message.isError
+                            ? () => controller.retryMessage(message)
+                            : null,
+                      );
+                    },
+                  );
+                }),
               ),
-            ),
-          ],
+              Obx(
+                () => ChatInputFieldWidget(
+                  controller: controller.textController,
+                  isSending: controller.isSending.value,
+                  onSend: controller.sendMessage,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -131,9 +134,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   void _confirmClearChat(BuildContext context) {
     Get.dialog(
       AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           'بدء محادثة جديدة',
           style: TextStyle(fontFamily: cairo, fontWeight: FontWeight.w700),

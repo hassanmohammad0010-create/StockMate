@@ -52,6 +52,7 @@ class ChatBotController extends GetxController {
     final response = await _service.sendMessage(
       message: text,
       history: history,
+      platform: 'mobile', // أو 'web' حسب المنصة
     );
 
     isSending.value = false;

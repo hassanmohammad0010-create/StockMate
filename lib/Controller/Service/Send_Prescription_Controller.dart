@@ -141,9 +141,42 @@ class SendPrescriptionController extends GetxController {
     prescriptions.refresh();
   }
 
-  // ─── helpers ──────────────────────────────────────────────────────
+    /// ✅ حذف الوصفات التي لا تحتوي على أي دواء (تُستخدم عند مغادرة الصفحة)
+  void removeEmptyPrescriptions() {
+    prescriptions.removeWhere((p) => p.items.isEmpty);
+  }
+
+    // ─── helpers ──────────────────────────────────────────────────────
 
   bool get hasPrescriptions => prescriptions.isNotEmpty;
 
   void clearAll() => prescriptions.clear();
+
+  /// ✅ التحقق من أن كل وصفة تحتوي على دواء واحد على الأقل
+  /// يُرجع true إذا كانت جميع الوصفات صالحة (يمكن تأكيدها)
+  bool validatePrescriptionsBeforeConfirm() {
+    if (prescriptions.isEmpty) {
+      customSnackBar(
+        title: 'تنبيه',
+        message: 'لا توجد وصفات لتأكيدها',
+        color: constRed,
+        messageColor: Colors.white,
+      );
+      return false;
+    }
+
+    final emptyIndex = prescriptions.indexWhere((p) => p.items.isEmpty);
+    if (emptyIndex != -1) {
+      customSnackBar(
+        title: 'تنبيه',
+        message:
+            'الرجاء اختيار دواء واحد على الأقل في الوصفة رقم ${emptyIndex + 1} قبل التأكيد',
+        color: constRed,
+        messageColor: Colors.white,
+      );
+      return false;
+    }
+
+    return true;
+  }
 }

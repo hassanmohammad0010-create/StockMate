@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
-import 'package:stock_mate_project/Service/App/NotificationListResult.dart';
+import 'package:stock_mate_project/Service/App/Notification_List_Result.dart';
 
 /// هذا الـ handler يجب أن يكون top-level function (خارج أي كلاس)
 /// لأن Firebase يستدعيه في background isolate منفصل عن التطبيق

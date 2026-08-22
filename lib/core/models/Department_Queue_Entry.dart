@@ -167,6 +167,7 @@ class DepartmentQueueEntry {
       updatedAt: addedAt,
       // ✅✅✅ id مدخل الطابور — لازم لزر الحجز
       queueEntryId: id,
+      lockedByName: lockedBy?.fullName,
     );
   }
 }

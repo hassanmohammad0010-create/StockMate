@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:stock_mate_project/Service/App/NotificationListResult.dart';
+import 'package:stock_mate_project/Service/App/Notification_List_Result.dart';
 
 /// Controller مسؤول فقط عن عدد الإشعارات غير المقروءة (لعرضه كـ badge)
 /// مسجّل بشكل دائم (permanent) عشان يبقى حياً طوال فترة تسجيل الدخول

@@ -2,7 +2,7 @@
 
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
-import 'package:stock_mate_project/Service/App/NotificationListResult.dart';
+import 'package:stock_mate_project/Service/App/Notification_List_Result.dart';
 import 'package:stock_mate_project/core/models/Notification_Model.dart';
 
 class NotificationController extends GetxController {
