@@ -189,15 +189,18 @@
 // }
 // ignore_for_file: file_names
 
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
 import 'package:stock_mate_project/Controller/Logic/DepartmentHeadsMainTabController.dart';
 import 'package:stock_mate_project/Controller/Logic/NotificationController.dart';
 import 'package:stock_mate_project/Controller/Service/Get_User_Profile_Controller.dart';
-import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Request_Details_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Boss/Display_Purchasing_Order_WithRecipts_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Disposal_Sale_Details_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Boss/Order_Details_Page.dart';
+import 'package:stock_mate_project/View/Screens/App/Head%20of%20department/Request_Details_Page.dart';
 import 'package:stock_mate_project/core/models/Notification_Model.dart';
 import 'package:stock_mate_project/core/router/app_routes.dart';
 import 'package:stock_mate_project/core/utils/Shared_Widget/Custom_Back_Container.dart';
@@ -300,9 +303,12 @@ class NotificationPage extends StatelessWidget {
   ) {
     controller.markAsRead(notification);
 
-    // ✅ نجيب بيانات دور المستخدم الحالي (بوس/رئيس قسم/طبيب/صيدلي...)
-    // عشان نحدد الصفحة الصح لكل دور لنفس نوع الإشعار
+    // ✅ نجيب بيانات دور المستخدم الحالي عشان نحدد الصفحة الصح
+    // لكل دور لنفس نوع الإشعار. الأدوار الخمسة المعتمدة:
+    // purchasing_manager - hospital_manager - doctor -
+    // department_manager - pharmacy_staff
     final UserProfileController userCtrl = Get.find<UserProfileController>();
+    final String role = userCtrl.roleName;
 
     // نؤجل التنقل خطوة زمنية بسيطة جداً بدل addPostFrameCallback،
     // لأن الأخير ينتظر "الإطار القادم الذي سيُرسم فعلياً" — ولو الشاشة
@@ -315,21 +321,16 @@ class NotificationPage extends StatelessWidget {
           final id = notification.refillRequestId;
           if (id == null) return;
 
-          if (userCtrl.isDepartmentManager) {
-            // TODO: ضع هون صفحة تفاصيل الطلب الخاصة برئيس القسم
-          } else if (userCtrl.isDoctor) {
-            // TODO: ضع هون صفحة تفاصيل الطلب الخاصة بالطبيب
-          } else if (userCtrl.isPharmacist) {
-            // TODO: ضع هون صفحة تفاصيل الطلب الخاصة بالصيدلي
+          if (role == 'hospital_manager') {
+            final id = notification.refillRequestId;
+            Get.to(DisOrderDetailsPage(requestId: id!));
           } else {
-            // TODO: ضع هون صفحة تفاصيل الطلب الخاصة بالمدير (Boss)
+            Get.to(
+              () => RequestDetailsPage(requestId: id),
+              transition: Transition.rightToLeft,
+            );
+            break;
           }
-
-          // ← السلوك الحالي (مؤقتاً) لحد ما تحدد الصفحات فوق
-          Get.to(
-            () => RequestDetailsPage(requestId: id),
-            transition: Transition.rightToLeft,
-          );
           break;
 
         case 'batch_expiration_alert' ||
@@ -346,32 +347,34 @@ class NotificationPage extends StatelessWidget {
         case 'disposal_sale_request_status_changed':
           final disposalId = notification.disposalSaleRequestId ?? '';
 
-          if (userCtrl.isDepartmentManager) {
-            // TODO: ضع هون صفحة تفاصيل طلب الإتلاف الخاصة برئيس القسم
-          } else {
-            // TODO: ضع هون صفحة تفاصيل طلب الإتلاف الخاصة بالمدير (Boss)
+          if (role == 'hospital_manager') {
+            Get.to(DisposalSaleDetailsPage(disposalSaleRequestId: disposalId));
+            break;
           }
-
-          // ← السلوك الحالي (مؤقتاً) لحد ما تحدد الصفحات فوق
-          Get.to(DisposalSaleDetailsPage(disposalSaleRequestId: disposalId));
           break;
 
         case 'periodic_refill_pending_approval' || 'periodic_refill_generated':
           final refillId = notification.refillRequestId ?? '';
-
-          if (userCtrl.isDepartmentManager) {
-            // TODO: ضع هون الصفحة الخاصة برئيس القسم لهذا النوع
-          } else {
-            // TODO: ضع هون الصفحة الخاصة بالمدير (Boss) لهذا النوع
+          if (role == 'hospital_manager') {
+            Get.to(DisOrderDetailsPage(requestId: refillId));
+            break;
           }
 
-          // ← السلوك الحالي (مؤقتاً) لحد ما تحدد الصفحات فوق
-          Get.to(DisOrderDetailsPage(requestId: refillId));
-          break;
-
         case 'queue_wait_exceeded':
-          Get.toNamed(AppRoutes.PatientsPage);
+          {
+            Get.toNamed(AppRoutes.PatientsPage);
 
+            break;
+          }
+        case 'purchase_request_status_changed':
+          final refillId = notification.data!['purchaseRequestId'] ?? '';
+          if (role == 'hospital_manager') {
+            Get.to(DisplayPurchasingOrderWithReciptsPage(requestId: refillId));
+            break;
+          } else if (role == 'purchasing_manager') {
+            Get.to(DisplayPurchasingOrderWithReciptsPage(requestId: refillId));
+            break;
+          }
           break;
         default:
           // نوع غير معروف: نكتفي بتعليمه كمقروء بدون تنقل
