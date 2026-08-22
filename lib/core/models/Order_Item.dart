@@ -146,12 +146,16 @@ class OrdertItem {
       case OrderStatus.draft:
         return 'معلق';
       case OrderStatus.pending_hospital_approval:
-        return 'بأنتظار موافقتك';
+        return 'بأنتظار مدير المستشفى';
       case OrderStatus.pending_manager_approval:
+        return 'بأنتظار مدير المستودع';
       case OrderStatus.preparing:
         return 'قيد التنفيذ';
       case OrderStatus.hospital_rejected:
+        return 'مرفوض مدير المستشفى';
       case OrderStatus.manager_rejected:
+        return 'مرفوض مدير المستودع';
+
       case OrderStatus.cancelled:
         return 'مرفوض';
       case OrderStatus.partially_complete:

@@ -12,9 +12,13 @@ class FindColor {
     } else if (word == 'بأنتظار موافقة المدير' ||
         word == 'بانتظار الموافقة' ||
         word == 'بانتظار التأكيد') {
-      // ✅ جديدة
       return constOrange;
     } else if (word == 'بأنتظار موافقة اللجنة') {
+      return constOrange;
+    } else if (word == 'بأنتظار مدير المستشفى') {
+      // ✅ جديدة
+      return constOrange;
+    } else if (word == 'بأنتظار مدير المستودع') {
       // ✅ جديدة
       return constOrange;
     } else if (word == 'ضروري') {
@@ -22,6 +26,12 @@ class FindColor {
     } else if (word == 'عادي') {
       return constBlue;
     } else if (word == 'مرفوض') {
+      return constRed;
+    } else if (word == 'مرفوض مدير المستشفى') {
+      // ✅ جديدة
+      return constRed;
+    } else if (word == 'مرفوض مدير المستودع') {
+      // ✅ جديدة
       return constRed;
     } else if (word == 'يومي' || word == 'شهري' || word == 'أسبوعي') {
       return constBlue;
@@ -38,9 +48,13 @@ class FindColor {
     } else if (word == 'بأنتظار موافقة المدير' ||
         word == 'بانتظار الموافقة' ||
         word == 'بانتظار التأكيد') {
-      // ✅ جديدة
       return constLightOrange;
     } else if (word == 'بأنتظار موافقة اللجنة') {
+      return constLightOrange;
+    } else if (word == 'بأنتظار مدير المستشفى') {
+      // ✅ جديدة
+      return constLightOrange;
+    } else if (word == 'بأنتظار مدير المستودع') {
       // ✅ جديدة
       return constLightOrange;
     } else if (word == 'ضروري') {
@@ -48,6 +62,12 @@ class FindColor {
     } else if (word == 'عادي') {
       return constLightBlue;
     } else if (word == 'مرفوض' || word == 'ملغى؛') {
+      return constLightRed;
+    } else if (word == 'مرفوض مدير المستشفى') {
+      // ✅ جديدة
+      return constLightRed;
+    } else if (word == 'مرفوض مدير المستودع') {
+      // ✅ جديدة
       return constLightRed;
     } else if (word == 'يومي' || word == 'شهري' || word == 'أسبوعي') {
       return constLightBlue;

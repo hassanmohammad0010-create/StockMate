@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stock_mate_project/Constant/Const.dart';
+import 'package:stock_mate_project/Controller/Service/Get_User_Profile_Controller.dart';
 import 'package:stock_mate_project/Controller/Service/Unread_Notification_Controller.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Head_Of_Purchasing_Home_Page.dart';
 import 'package:stock_mate_project/View/Screens/App/Head%20of%20Purchasing%20committee/Head_of_Purchasing_Request_Page.dart';
@@ -19,7 +20,9 @@ class MainPageHeadOfPurchasingPage extends StatelessWidget {
     }
     final UnreadNotificationController unreadCtrl =
         Get.find<UnreadNotificationController>();
-
+    final UserProfileController userProfileController = Get.put(
+      UserProfileController(),
+    );
     return DefaultTabController(
       length: 3,
       child: Scaffold(
